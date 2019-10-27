@@ -1,0 +1,49 @@
+html,body,header,section,footer,div,ul,ol,li,img,a,span,em,del,legend,center,strong,var,fieldset,form,label,dl,dt,dd,cite,input,hr,time,mark,code,figcaption,figure,textarea,h1,h2,h3,h4,h5,h6,p{
+	margin:0;
+	border:0;
+	padding:0;
+	font-style:normal;
+}
+fieldset {
+  border-color: #e6e6e6;
+  margin: 10px 0 20px;
+  border-width: 1px 0 0;
+  padding: 0;
+  border-style: solid;
+}
+
+fieldset legend{
+  margin-left: 20px;
+  padding: 0 10px;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+#footer{
+  background-color: #e6e6e6;
+  padding: 10px;
+}
+
+#left{
+  width: 220px;
+}
+#top{
+  height: 60px;
+  padding: 0px;
+  background-color: #393D49;
+}
+#top .left{
+  float: left;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+}
+#top .left .logo{
+  max-height: 60px;padding: 10px; box-sizing: border-box;cursor: pointer;
+}
+#top .left .system-name{
+  color: #fff;
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 2px solid #444953;
+}

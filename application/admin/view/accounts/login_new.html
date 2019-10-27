@@ -1,0 +1,108 @@
+{include file="header" /}
+<link rel="stylesheet" href="/public/static/admin/css/login.css" type="text/css">
+<style>
+  .el-card__header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .el-form-item__label {
+    color: rgba(255, 255, 255, 0.9)
+  }
+
+  input {
+    background-color: rgba(0, 0, 0, 0) !important;
+    color: #fff !important;
+  }
+</style>
+
+<body style="overflow: hidden;">
+  <div id="app" style="position: absolute;top: 50%;left:50%;margin-left:-200px;margin-top:-200px;">
+    <el-row>
+      <el-col :span="6">
+        <el-card style="padding:20px 20px 0px 20px;width:400px;background: rgba(0,0,0,0); border: none;">
+          <div slot="header" style="text-align: center;border:none;">
+            <img src="/public/static/images/fa-trademark.png" style="max-width: 100%;padding: 10px;box-sizing: border-box;">
+          </div>
+          <el-form :model="formData" ref="formData" :rules="rules" label-width="60px" label-position="left">
+            <el-form-item label="账号" prop="guid">
+              <el-input v-model="formData.guid" placeholder="请输入用户名" style="background: rgba(0,0,0,0);"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="formData.password" type="password" placeholder="请输入密码" style="background: rgba(0,0,0,0);" @keyup.native.enter="login"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button @click.stop="login" icon="el-icon-check" type="success" style="border-radius: 50%;padding: 12px;float: right;"
+                plain></el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
+  <!-- 3d陨石 -->
+  <div id="universe"></div>
+
+  <script>
+    function combinNavIconClass(navs) {
+      navs.map(i => {
+        if (i.icon) {
+          let iconClass = {};
+          iconClass[i.icon] = true;
+          i.icon = iconClass;
+        }
+        if (i._child) {
+          combinNavIconClass(i._child);
+        }
+      })
+    }
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          formData: {
+            guid: '',
+            password: '',
+          },
+          rules: {
+            guid: [
+              { required: true, message: '请输入账号', trigger: 'blur' },
+            ],
+            password: [
+              { required: true, message: '请输入密码', trigger: 'blur' },
+            ],
+          },
+        }
+      },
+      methods: {
+        login() {
+          this.$refs.formData.validate(valid => {
+            if (valid) {
+              httpRequest('POST', 'api_admins/admin_accounts/login', this.formData).then(resp => {
+                rmStorage('selectLeftNavId');
+                rmStorage('selectTopNavId');
+                resp.data.user.avatar = resp.data.user.avatar || '/public/static/images/avatar.png';
+                // 组合菜单类名
+                combinNavIconClass(resp.data.navs)
+                setStorage('adminNavs', resp.data.navs);
+                setStorage(getClientType() + 'User', resp.data.user);
+                setStorage(getClientType() + 'Token', resp.data.token);
+
+                this.$message.success(resp.msg);
+                setTimeout(_ => {
+                  location = location.origin + '/admin/data/index'
+                }, 1000);
+              })
+            } else {
+              return false;
+            }
+          })
+        }
+      }
+    })
+  </script>
+
+  <script src='/public/static/admin/script/three.min.js'></script>
+  <script src="/public/static/admin/script/login.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.theme.default.min.css">
+<script src="/public/static/OwlCarousel2-2.2.1/owl.carousel.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+    .setting-nav-borbtn-active{border-bottom: 2px solid #108ee9;padding:0 5px 20px;position: relative;z-index: 1}
+    .setting-nav-borbtn-active::before{content: "";height: 5px;width: 5px;background: #108ee9;display:inline-block;border-radius: 50%;margin: 0 5px;}
+    .setting-nav-borbtn-line{width: 883px;border: 1px solid #dedede; position: absolute;top: 64px;z-index: 0;}
+    .article-text p{margin: 5px 0;}
+    .article-text h5{margin: 20px 0;font-size: 16px;font-weight: bold}
+    .article-list{border-bottom: 1px solid #ededed}
+    .article-lookinfo{bottom: 0}
+    .goods-imgwid{width: 100px;}
+    .goods-imgwid img{width: 100px;height: 100px;}
+</style>
+</head>
+<body>
+    {include file="/index/header" /}
+    <div id="app">
+        <div class="w1200 margin-tt-15 over  black-text">
+                <div class="left">
+                        <!-- 个人信息卡 -->
+                        <div class=" card-title-wrap">
+                            <img  src="/public/static/portal/img/title-back.png" class="responsive-img">
+                            <div class="margin-10 over card-text-wrap">
+                                <div class="ridius-img left margin-15">
+                                    <img :src="user.avatar" alt="">
+                                </div>
+                                <div class="left margin-top-15">
+                                    <div class="font-size-18 margin-top-15 white-text"  v-text="user.nick_name || user.mobile"></div>
+                                    <div class="blue lighten-1 margin-top-5" style="border-radius: 4px;padding: 2px 4px;">
+                                        <img src="/public/static/portal/img/lr.png" alt="">
+                                        <span class="font-size-12 white-text" v-text="level"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rate-line font-size-12 blue-text text-lighten-5">
+                                <div class="rataing-nember  margin-15" v-text=" '成长值  ' + score"></div>
+                                <div class="ratas-nember right"></div>	
+                            </div>
+                        </div>
+                        <div class="white grey-text text-darken-3 margin-top-15" style="border-radius: 5px">
+                            <div class="card-right-nav-box  margin-10 padding-tt-10" style="border: none">
+                                <div class="card-right-nav">
+                                    <div class="font-size-18 over margin-tt-10">
+                                        <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                        <span class="left margin-top-5">交易管理</span>
+                                    </div>
+                                    <ul class="card-right-nav-ul">
+                                        <li class="margin-tt-13" @click="goto('cart_list')">购物车</li>
+                                        <li class="margin-tt-13" @click="goto('order_list')">我的订单</li>
+                                        <li class="margin-tt-13" @click="goto('comment_list')">我的评价</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-right-nav-box  margin-10 padding-tt-10">
+                                <div class="card-right-nav">
+                                    <div class="font-size-18 over margin-tt-10">
+                                            <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                        <span class="left margin-top-5">账号管理</span>
+                                    </div>
+                                    <ul class="card-right-nav-ul">
+                                        <li class="margin-tt-13" @click="goto('setting')">个人信息</li>
+                                        <li class="margin-tt-13" @click="goto('account')">账号安全</li>
+                                        <li class="margin-tt-13" @click="goto('idcard_auth')" >实名认证</li>
+                                        <li class="margin-tt-13" @click="goto('address_list')">地址管理</li>
+                                        <li class="margin-tt-13"  @click="goto('collection_list')">我的收藏</li>
+                                        <li class="margin-tt-13"  @click="goto('level')">成长值<span class="blue-text text-lighten-1" v-text="'('+score+')'"></span></li>
+                                        <li class="margin-tt-13"  @click="goto('bind')">第三方账户</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-right-nav-box margin-10 padding-tt-10">
+                                <div class="card-right-nav">
+                                    <div class="font-size-18 over margin-tt-10">
+                                            <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                        <span class="left margin-top-5">资产管理</span>
+                                    </div>
+                                    <ul class="card-right-nav-ul">
+                                        <li class="margin-tt-13" @click="goto('wallet')">我的钱包</li>
+                                        <li class="margin-tt-13" @click="goto('bankcard_list')">我的银行卡</li>
+                                        <li class="margin-tt-13" @click="goto('my_coupon_list')">我的优惠券<span class="blue-text text-lighten-2"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+            <div class="right right-content">
+                <div class="padding-15 white relative">
+                    <div class="setting-nav-borbtn-line"></div>
+                    <div class="font-size-16 grey-text text-darken-2 padding-tt-5 over">
+                        <div class="left " :class="{'setting-nav-borbtn-active': (activeStatus == 1 || activeStatus == '')}" style="margin-right: 30px" @click="changearticleType(1)">
+                            活动通知
+                        </div>
+                        <div class="left " :class="{'setting-nav-borbtn-active': (activeStatus == 2)}" style="margin-right: 30px" @click="changearticleType(2)">
+                            我的公告
+                        </div>
+                        <div class="left" :class="{'setting-nav-borbtn-active': (activeStatus == 3)}" style="margin-right: 30px" @click="changeOrderStatus(3)">
+                            物流通知
+                        </div>
+                    </div>
+                    <div class="margin-tt-15" v-for="order in orders" v-if="activeStatus == 3">
+                        <div class="margin-btn-15 article-list">
+                            <div class="over">
+                                <div class="left font-w">物流消息：你购买的商品有新的动态</div>
+                                <div class="right grey-text">×</div>
+                            </div>
+                            <div v-for="goods in order.order_goods_info">
+                            <div class="over margin-tt-15">
+                                <div class="left margin-right-10 goods-imgwid">
+                                    <img :src="goods.thum" alt="">
+                                </div>
+                                <div class="left grey-text text-darken-3">
+                                    <div class="margin-btn-5" v-text="'订单号：'+ order.order_no"></div>
+                                    <div class="font-w  black-text">您的订单已发货</div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="margin-tt-15" v-for="(article,key) in articles" :key="key" v-if="activeStatus == 1 || activeStatus == 2">
+                        <div class="margin-btn-15 article-list">
+                            <div class="over">
+                                <div class="left font-w font-size-16" v-text="article.title"></div>
+                                <div class="right grey-text">×</div>
+                            </div>
+                            <div class="flex margin-tt-15">
+                                <div  class=" margin-right-10" >
+                                    <img :src="article.thum" alt=""  v-if="article.thum">
+                                </div>
+                                <div class="flex1 grey-text text-darken-2 relative">
+                                    <div class="" v-text="article.intro + ' >>'"></div>
+                                    <div class="blue-text article-lookinfo bt" @click="goArticle(article)">查看详情</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w1200 white over margin-btn-15">
+            <div class="foot-list-title black-text text-lighten-1 margin-15 font-size-18 padding-left-15">猜你喜欢</div>
+            <div class="foot-list margin-15 over">
+                <div class="left foot-list-box" v-for="guessGood in guessGoods">
+                    <img :src="guessGood.thum" class="responsive-img">
+                    <div class="padding-10">
+                        <div class="font-size-16 black-text" v-text="guessGood.name"></div>
+                        <div class="margin-top-10 over">
+                            <div class="left">
+                                <span class="red-text font-size-16" v-text="'￥' + guessGood.sell_price"></span>
+                                <span class="font-size-10 grey-text lighten-1" v-text="'￥' + guessGood.sell_price"></span>
+                            </div>
+                            <div class="right font-size-12 grey-text lighten-1" v-text="'月销量：'+guessGood.sell_num"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {include file="index/footer" /}
+    <script>
+        var avatarDom = document.getElementById('avatar');
+        var page = 1;
+        var app = new Vue({
+            el: '#app',
+            data: {
+                currentPage: parseInt(querystring.currentPage) || 1, //当前页
+                currentPageSize: 10, //当前页容量
+                activeFooterIndex: 4,
+                title: '公告列表',
+                user: user,
+                haveNoData: false,
+                level: '',
+                score: '',
+                articles: [],
+                activeStatus:querystring.activeStatus || 1,
+                orders:[],
+                guessGoods:[],
+                type:1
+            },
+            methods: {
+                authentication: function () {
+                    httpRequest('POST', 'api_query/users/auth',{},function (resp) {
+                        var status = resp.data.status;
+                        if (status == 0 || status == 2) {
+                            goto('idcard_auth', {status: status, id: resp.data.id});
+                        } else if (status == 1 || status == 3) {
+                            goto('idcard_info');
+                        }
+                    })
+                },
+                // 改变查询的公告列表
+                changearticleType: function (type) {
+                    this.activeStatus = type;
+                    page = 1;
+                    this.articles = [];
+                     loadArticles(type);
+                },
+                // 改变查询的物流列表
+                changeOrderStatus: function (status) {
+                    this.activeStatus = status;
+                    page = 1;
+                    this.articles = [];
+                    loadOrders();
+                },
+                goArticle: function (article) {
+                    goto('article_detail', {articleId: article.id,})
+                }
+            },
+            mounted: function () {
+                // httpRequest('POST', 'api_query/users/asset').then(function (resp) {
+                //     app.level = resp.data.level;
+                //     app.score = resp.data.score;
+                //     return httpRequest('POST', 'api_articles/annoncements/lists', {}, {     
+                //         'page-num': this.currentPage,
+                //         'page-limit': this.currentPageSize
+                //     })
+                // }).then(function (resp) {
+                //     if (resp.data.length > 0) {
+                //         app.haveNoData = false;
+                //         app.type = "annoncements";
+                //         resp.data.forEach(function (item) {
+                //             app.articles.push(item);
+                //         })
+                //     } else {
+                //         app.haveNoData = true;
+                //      }
+                // //猜你喜欢
+                // return 
+                // })
+                httpRequest('POST','api_goods/goods/lists',{is_top:1},function(resp){
+                    app.guessGoods = resp.data;
+                },{'page-num':1,'page-limit':4})
+            }
+        })
+        //公告列表
+        loadArticles = function (id) {
+            app.articles = [];
+          httpRequest('POST', 'api_articles/articles/lists', {
+              type_id:id
+          }, function (resp) {
+            if (resp.data.length > 0) {
+              app.haveNoData = false;
+              app.articles = resp.data
+              if (resp.data.length == 10) {
+                page++;
+              } 
+            } else {
+              if (page == 1) {
+                app.haveNoData = true;
+              }
+            }
+          },{
+            'page-num': page,
+            'page-limit': 10
+          });
+        }
+        if (querystring.activeStatus == 1 ||  querystring.activeStatus == 2) {
+            loadArticles(querystring.activeStatus);
+        } else if (querystring.activeStatus == 3){
+            loadOrders()
+        } else{
+            loadArticles(1)
+        }
+       
+
+
+        //物流信息列表
+          function loadOrders() {
+          document.body.onscroll = null;
+          var data = {};
+           //物流通知
+           data.status = 3;
+           app.orders=[];
+          httpRequest('POST', 'api_orders/orders/lists', data, function (resp) {
+            if (resp.data.length > 0) {
+              app.haveNoData = false;
+              app.type = "orders";
+              resp.data.forEach(function (item) {
+                app.orders.push(item);
+              })
+              if (resp.data.length == 10) {
+                page++;
+                document.body.onscroll = scrollEvent;
+              } else {
+                document.body.onscroll = null;
+              }
+            } else {
+              if (page == 1) {
+                app.haveNoData = true;
+              }
+            }
+          },{
+            'page-num': page,
+            'page-limit': 10
+          });
+        }
+    </script>
+</body>
+
+</html>

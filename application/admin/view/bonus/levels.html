@@ -1,0 +1,294 @@
+{include file="header" /}
+
+<body>
+
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>分红商等级</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入等级名称" v-model="searchData.level_name">
+                        <template slot="prepend">等级名称</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>分红商等级列表</span>
+                    <el-button type="primary" style="float: right;" size="mini" icon="el-icon-plus" @click="goAdd()">新增分红商等级</el-button>
+                  </div>
+                  <!-- 批量操作 -->
+                  <!-- <div style="margin-bottom: 10px">
+                    <el-button type="danger" size="small" plain icon="el-icon-delete" @click="multiOperate('delete')" :disabled="multipleSelection.length == 0">批量删除</el-button>
+                    <el-button type="danger" size="small" plain icon="el-icon-error" @click="multiOperate('off_line')" :disabled="multipleSelection.length == 0">批量下线</el-button>
+                    <el-button type="success" size="small" plain icon="el-icon-success" @click="multiOperate('on_line')" :disabled="multipleSelection.length == 0">批量上线</el-button>
+                  </div> -->
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                      <el-table-column type="selection" width="55"> </el-table-column>
+                      <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
+                      <el-table-column prop="rank_weight" label="分红商等级" sortable></el-table-column>
+                      <el-table-column prop="level_name" label="分红商等级名称"></el-table-column>
+                      <el-table-column prop="rate" label="分红比例(%)"></el-table-column>
+                      <el-table-column prop="up_level_value" :label="up_level_condition_mapping[up_level_condition]"></el-table-column>
+                      <!-- <el-table-column prop="status" label="状态" :filters="statusFilters" :filter-method="statusFilterHandler">
+                        <template slot-scope="scope">
+                          <el-tag v-if="scope.row.status == 1" type="success" size="mini">上线</el-tag>
+                          <el-tag v-else-if="scope.row.status == 2" type="info" size="mini">下线</el-tag>
+                        </template>
+                      </el-table-column> -->
+                      <el-table-column prop="update_time" label="更新时间" sortable>
+                        <template slot-scope="scope">
+                          <i class="el-icon-time"></i>
+                          <span>{{ scope.row.update_time }}</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="操作" width="150" fixed="right">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                          <el-button v-if="scope.row.rank_weight != 0" @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete"
+                            plain></el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- dialog -->
+            <el-dialog title="编辑等级" :visible.sync="dialogVisible" width="70%">
+              <el-row :gutter="30">
+                <el-col :span="14" :offset="5">
+                  <el-form :model="selectData" ref="ruleForm" :rules="rules" label-position="left" label-width="160px">
+                    <el-form-item label="分红等级" prop="rank_weight">
+                      <el-input v-model="selectData.rank_weight" :readonly="selectData.id == 1" placeholder="请输入数字，按该字段进行等级排序，数值越大等级越高"></el-input>
+                    </el-form-item>
+                    <el-form-item label="分红等级名称" prop="level_name">
+                      <el-input v-model="selectData.level_name" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="分红比例(%)" prop="rate">
+                      <el-input v-model="selectData.rate" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item v-if="selectData.id != 1" :label="up_level_condition_mapping[up_level_condition]" prop="up_level_value">
+                      <el-input v-model="selectData.up_level_value" clearable></el-input>
+                    </el-form-item>
+                    <!-- <el-form-item label="状态" prop="status" v-if="selectData.id != 1">
+                      <el-radio v-model="selectData.status" :label="1">上线</el-radio>
+                      <el-radio v-model="selectData.status" :label="2">下线</el-radio>
+                    </el-form-item> -->
+                    <el-form-item>
+                      <el-button @click="dialogVisible = false;" plain>取消</el-button>
+                      <el-button type="primary" @click="submit">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          tableData: [],  //表格数据
+          currentPage: parseInt(querystring.currentPage) || 1, //当前页
+          currentPageSize: 20,  //当前页容量
+          pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          total: 0, //总页数
+          multipleSelection: [],  //多选项
+          // 状态过滤
+          statusFilters: [{
+            text: '上线',
+            value: 1
+          }, {
+            text: '下线',
+            value: 2
+          }],
+          // 查询条件
+          searchData: {
+            level_name: '',
+          },
+          // 团队升级条件
+          up_level_condition: '',
+          // 升级条件映射
+          up_level_condition_mapping: {
+            'bonus_money': '佣金满多少升级',
+            'order_money': '自购订单金额满多少升级',
+            'team_user_num': '团队人数满多少升级',
+            'order_num': '自购订单数量满多少升级'
+          },
+          // --------------- dialog -------------------
+          dialogVisible: false,
+          selectData: {},
+          rules: {
+            rules: {
+              rank_weight: [
+                { required: true, message: '请输入等级', trigger: 'blur' },
+              ],
+              level_name: [
+                { required: true, message: '请输入等级名称', trigger: 'blur' },
+              ],
+              rate: [
+                { required: true, message: '请输入分红比例', trigger: 'blur' },
+              ],
+              up_level_value: [
+                { required: true, message: '请输入升级所需的值', trigger: 'blur' },
+              ],
+            },
+          },
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_bonus/bonus_levels/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg);
+                this.tableData.splice(this.tableData.indexOf(data), 1);
+              })
+            })
+          } else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.dialogVisible = true;
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.type_ids = [];
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_bonus/bonus_levels/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 新增
+        goAdd() {
+          this.selectData = {
+            rank_weight: '',
+            level_name: '',
+            rate: '',
+            up_level_value: '',
+            status: 1
+          };
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_bonus/bonus_levels/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // -------------- dialog ----------------
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              // 通过校验
+              let router = this.selectData.id ? 'api_bonus/bonus_levels/update' : 'api_bonus/bonus_levels/save';
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500)
+              });
+            } else {
+              return false;
+            }
+          });
+        }
+      },
+      mounted() {
+        var that = this;
+        httpRequest('post', 'api_bonus/rules/index').then(resp => {
+          that.up_level_condition = resp.data.up_level_condition;
+          this.loadTableData();
+        });
+      },
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+</head>
+
+<body class="body-bg">
+	{include file="/index/header" /}
+	<div class="personal-center-top w1200 clearfix">
+		<div class="left">
+			<div class="img">
+				<img src="/public/static/portal/images/grzx.png" />
+			</div>
+			<div class="name">我的评论</div>
+			<div class="english">comment</div>
+		</div>
+		<div class="right">
+			<ul>
+				<li class="active">
+					<a href="">我的评价</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="my-appraise-bottom clearfix w1200">
+		<div class="left">
+			<div class="head-portrait">
+				<img id="avatar" src="" />
+			</div>
+			<div class="my-nav">
+				<ul>
+					<li>
+						<a href="{:url('Index/orders')}">我的订单</a>
+					</li>
+					<li class="active">
+						<a href="{:url('Index/comments')}">我的评价</a>
+					</li>
+					<li>
+						<a href="{:url('Index/addresses')}">收货地址</a>
+					</li>
+					<li>
+						<a href="{:url('Index/carts')}">我的购物车</a>
+					</li>
+					<li>
+						<a href="{:url('Index/collections')}">我的收藏</a>
+					</li>
+					<li>
+						<a href="{:url('Index/userinfo')}">账户安全</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="right" id="app">
+			<ul>
+				<li class="clearfix" v-for="comment in comments" v-bind:key="comment.id">
+					<div class="img" @click="goGoods(comment)">
+						<img v-bind:src="comment.order_goods_info.thum" />
+					</div>
+					<div class="title" @click="goGoods(comment)">
+						<div class="name" v-text="comment.order_goods_info.name"></div>
+						<div class="model" v-text="comment.order_goods_info.intro"></div>
+					</div>
+					<div class="rating">
+						<div class="star" v-if="comment.score == 0">
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+						</div>
+						<div class="star" v-else-if="comment.score == 1">
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+						</div>
+						<div class="star" v-else-if="comment.score == 2">
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+						</div>
+						<div class="star" v-else-if="comment.score == 3">
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star-empty"></i>
+							<i class="fa fa-star-empty"></i>
+						</div>
+						<div class="star" v-else-if="comment.score == 4">
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star-empty"></i>
+						</div>
+						<div class="star" v-else-if="comment.score == 5">
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+							<i class="fa fa-star"></i>
+						</div>
+						<div class="atlas">
+							<img :src="img" v-for="(img,index) in comment.imgs" :key="index" @click="preview(index,comment.imgs)" />
+						</div>
+					</div>
+					<div class="smalltext" v-text="comment.content"></div>
+				</li>
+			</ul>
+		</div>
+
+
+	</div>
+	<footer class="aui-bar aui-bar-tab" id="footer">
+  <div class="aui-bar-tab-item" onclick="goto('index')" :class="{'icon-footer-active' : (activeFooterIndex == 1 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 1" src="/public/static/wap/img/icon12.png">
+      <img v-else src="/public/static/wap/img/icon11.png">
+    </div>
+    <div class="aui-bar-tab-label">任务</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('personnel_page')"
+    :class="{'icon-footer-active' : (activeFooterIndex == 2 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 2" src="/public/static/wap/img/icon22.png">
+      <img v-else src="/public/static/wap/img/icon21.png">
+    </div>
+    <div class="aui-bar-tab-label">行政</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('home')" :class="{'icon-footer-active' : (activeFooterIndex == 3 )}">
+    <!-- <div class="aui-badge">99</div> -->
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 3" src="/public/static/wap/img/icon32.png">
+      <img v-else src="/public/static/wap/img/icon31.png">
+    </div>
+    <div class="aui-bar-tab-label">我的</div>
+  </div>
+</footer>
+	<script>
+		if (!user) {
+			location = "{:url('Index/login')}"
+		}
+		var page = 1;
+		//获取头像
+		document.getElementById('avatar').setAttribute('src', user.avatar);
+		var layer;
+		var app = new Vue({
+			el: '#app',
+			data: {
+				comments: [],
+			},
+			methods: {
+				preview: function (index, imgs) {
+					var imgData = [];
+					imgs.forEach(function (item, key) {
+						imgData.push({
+							src: item,
+							thumb: item
+						})
+					})
+					var json = {
+						start: index,
+						data: imgData
+					}
+					layer.photos({
+						photos: json,
+						anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+					});
+				},
+				goGoods: function (comment) {
+					location = "{:url('Index/goods')}?goodsId=" + comment.goods_id
+				}
+			}
+		});
+
+		layui.use(['flow', 'layer'], function () {
+			var flow = layui.flow;
+			var layer = layui.layer;
+			flow.load({
+				elem: '#app',
+				end: ' ',
+				mb: 300,
+				done: function (page, next) {
+					httpRequest('GET', 'goods_comments', {}, function (resp) {
+						if (resp.data.length > 0) {
+							if (resp.data.length < 10) {
+								next('', false)
+							} else {
+								next('', true);
+							}
+							page++;
+							resp.data.forEach(function (item) {
+								app.comments.push(item)
+							})
+						} else {
+							next('', false)
+						}
+					}, {
+							'page-num': page,
+							'page-limit': 10
+						})
+				}
+			});
+			initFooter();
+		});
+	</script>
+
+
+	</html>

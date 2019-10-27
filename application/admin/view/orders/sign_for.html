@@ -1,0 +1,181 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>签收管理</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col :span="24">
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入订单号" v-model="searchData.order_no">
+                        <template slot="prepend">订单号</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>签收列表</span>
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%">
+                      <el-table-column prop="id" label="ID" width="80" fixed sortable></el-table-column>
+                      <el-table-column prop="user_info.mobile" label="会员信息" fixed>
+                        <template slot-scope="scope">
+                          <span>{{scope.row.user_info.mobile}} ({{scope.row.user_info.nick_name || '匿名用户'}})</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="order_no" label="订单号" fixed></el-table-column>
+                      <el-table-column prop="express_no" label="物流单号" fixed></el-table-column>
+                      <el-table-column prop="total_money" label="订单金额" sortable></el-table-column>
+                      <el-table-column prop="status" label="订单状态" sortable>
+                        <template slot-scope="scope">
+                          <el-tag size="mini" v-show="scope.row.status == 1">待付款</el-tag>
+                          <el-tag size="mini" type="error" v-show="scope.row.status == 2">待发货</el-tag>
+                          <el-tag size="mini" type="warning" v-show="scope.row.status == 3">待签收</el-tag>
+                          <el-tag size="mini" type="success" v-show="scope.row.status == 4">已完成</el-tag>
+                          <el-tag size="mini" type="info" v-show="scope.row.status == 9">已取消</el-tag>
+                        </template>
+                      </el-table-column>
+
+                      <el-table-column prop="update_time" label="更新时间" sortable>
+                        <template slot-scope="scope">
+                          <i class="el-icon-time"></i>
+                          <span>{{ scope.row.update_time }}</span>
+                        </template>
+                      </el-table-column>
+                      <!-- 操作栏 两个操作width设置为140 三个200 -->
+                      <el-table-column label="操作" fixed="right" width="140">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" plain>帮助签收</el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        // 状态过滤
+        statusFilters: [{
+          text: '上线',
+          value: 1
+        }, {
+          text: '下线',
+          value: 2
+        }],
+        // 查询条件
+        searchData: {
+          order_no: '',
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type === 'edit') {
+            this.$confirm('确认帮助签收?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_orders/sign_orders/admin_sign', {
+                order_id: data.id
+              }).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 加载数据
+        loadTableData() {
+          this.searchData.status = 2;
+          httpRequest('POST', 'api_orders/sign_orders/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+</body>
+
+</html>

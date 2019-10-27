@@ -1,0 +1,320 @@
+<!-- 订单确认页 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<style>
+  .aui-bar-tab {
+    height: 2.5rem;
+    border-top: 1px solid #f4f4f4;
+    overflow: hidden;
+  }
+
+  .aui-bar-tab .price {
+    width: 75%;
+    text-align: right;
+    display: inline-block;
+    line-height: 2.5rem;
+    padding-right: 0.5rem;
+    font-size: 0.7rem;
+    height: 2.5rem;
+  }
+
+  .aui-bar-tab .submit {
+    display: inline-block;
+    height: 2.5rem;
+    width: 25%;
+    background: linear-gradient(to bottom, #41c4da, #34a3e4, #2680ef);
+    color: #fff;
+    text-align: center;
+    line-height: 2.5rem;
+  }
+
+  .aui-bar-tab .submit:active {
+    background-color: #1273f2
+  }
+
+  .line:after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+
+  .line .left {
+    color: #777;
+    font-size: 0.75rem;
+    height: 2rem;
+    line-height: 2rem;
+    float: left;
+  }
+
+  .line .right {
+    float: right;
+    color: #777;
+    font-size: 0.75rem;
+    height: 2rem;
+    line-height: 2rem;
+  }
+
+  .line-through-text {
+    text-decoration: line-through;
+  }
+</style>
+</head>
+
+<body>
+  <div id="app">
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header" style="background-image:none;">
+      <a class="aui-pull-left aui-btn" onclick="javascript:window.history.back(); return false;">
+        <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title" v-text="title"></div>
+    </header>
+    <!-- 默认地址 -->
+    <div class="aui-content aui-margin-b-10 aui-margin-t-5">
+      <ul class="aui-list aui-media-list" style="background-image:none;">
+        <li class="aui-list-item aui-list-item-arrow" style="background-image:none;" @click="selectAddress()">
+          <div class="aui-media-list-item-inner">
+            <div class="aui-list-item-label-icon">
+              <i class="aui-iconfont iconfont icon-dizhi1 aui-font-size-20 aui-text-info"></i>
+            </div>
+            <div class="aui-list-item-inner">
+              <div class="aui-list-item-text">
+                <div class="aui-list-item-title aui-font-weight" v-text="address.province + ' ' + address.city + ' ' + address.area + ' ' + address.address"></div>
+              </div>
+              <div class="aui-info aui-margin-t-10" style="padding:0">
+                <div class="aui-info-item">
+                  <span v-text="address.consignee_name"></span>
+                </div>
+                <div class="aui-info-item" v-text="address.mobile"></div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- 商品列表 -->
+    <div class="aui-content aui-padded-l-5 aui-padded-r-5 aui-padded-t-5 aui-bg-white" style="background-image:none;">
+      <ul class="aui-list aui-media-list">
+        <li class="aui-list-item aui-margin-b-5 aui-bg-default" v-for="(item,key) in goodsList" :key="key" style="background-image:none;">
+          <div class="aui-media-list-item-inner">
+            <!-- 商品缩略图 -->
+            <div class="aui-list-item-media">
+              <img v-if="item.select_spec_group_info.spec_group_id_str" :src="item.select_spec_group_info.thum || item.goods.goods_info.thum">
+              <img v-else :src="item.goods.goods_info.thum">
+            </div>
+            <div class="aui-list-item-inner">
+              <!-- 商品名称 -->
+              <div class="aui-list-item-text">
+                <div class="aui-list-item-title aui-ellipsis-2 aui-font-size-14" v-text="item.goods.goods_info.name"></div>
+              </div>
+              <!-- 商品简介 -->
+              <div class="aui-list-item-text">
+                <div class="aui-list-item-title aui-ellipsis-2 aui-text-pray  aui-font-size-12 aui-padded-t-5" v-text="item.goods.goods_info.intro"></div>
+              </div>
+              <!-- 规格名称 -->
+              <div class="aui-list-item-text" v-if="item.select_spec_group_info.spec_group_id_str">
+                <div class="aui-list-item-title aui-text-pray aui-font-size-12 aui-padded-t-5" v-text="'规格: ' + item.select_spec_group_info.spec_option_group"></div>
+              </div>
+              <!-- 价格和数量 -->
+              <div class="aui-list-item-text aui-margin-t-5">
+                <!-- 规格价格 -->
+                <div class="aui-list-item-title aui-text-price aui-font-size-14" v-if="item.select_spec_group_info.spec_group_id_str">
+                  <span class="aui-font-size-14" v-text="item.select_spec_group_info.score"></span>
+                  <span style="font-size: 0.5rem;">积分</span>
+                  <span v-if="item.select_spec_group_info.money > 0" style="font-size: 0.5rem;">+</span>
+                  <span v-if="item.select_spec_group_info.money > 0" class="aui-font-size-14" v-text="item.select_spec_group_info.money"></span>
+                  <span v-if="item.select_spec_group_info.money > 0" style="font-size: 0.5rem;">￥</span>
+                </div>
+                <!-- 商品价格 -->
+                <div class="aui-list-item-title aui-text-price aui-font-size-14" v-else>
+                  <span class="aui-font-size-14" v-text="item.goods.score"></span>
+                  <span style="font-size: 0.5rem;">积分</span>
+                  <span v-if="item.goods.money > 0" style="font-size: 0.5rem;">+</span>
+                  <span v-if="item.goods.money > 0" class="aui-font-size-14" v-text="item.goods.money"></span>
+                  <span v-if="item.goods.money > 0" style="font-size: 0.5rem;">￥</span>
+                </div>
+                <!-- 数量操作 -->
+                <div class="aui-list-item-right aui-text-price aui-margin-t-5" style="line-height: 1rem;">
+                  <i class="aui-iconfont iconfont icon-jian aui-font-size-20 aui-text-info" @click="changeNum(item, -1)"></i>
+                  <span class="aui-padded-l-5 aui-padded-r-5 aui-font-size-14" v-text="item.num" style="vertical-align: top;"></span>
+                  <i class="aui-iconfont iconfont icon-jia aui-font-size-20 aui-text-info" @click="changeNum(item, 1)"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- 其他信息 -->
+    <div class="aui-padded-l-5 aui-padded-r-5 aui-bg-white" style="margin-bottom:2.8rem;">
+      <div class="line">
+        <div class="left">买家留言:</div>
+        <div class="">
+          <textarea class="aui-padded-5" rows="18" cols="80" style="border:1px solid #f7f7f7;height:5rem;" v-model="message" placeholder="选填"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <footer class="aui-bar aui-bar-tab" id="footer">
+      <div class="price" style="background-color:#a0a0a0;">
+        <span style="color:#dedddd;">合计:
+          <span class="aui-text-white aui-font-size-18" v-text="total_score"></span>
+          <span class="aui-text-white aui-font-size-12">积分</span>
+          <span v-if="total_money > 0" class="aui-text-white aui-font-size-12">+</span>
+          <span v-if="total_money > 0" class="aui-text-white aui-font-size-18" v-text="total_money"></span>
+          <span v-if="total_money > 0" class="aui-text-white aui-font-size-12">￥</span>
+        </span>
+      </div>
+      <div class="submit" @click="submit()">提交订单</div>
+    </footer>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        isDiscountGoods: querystring.isDiscountGoods,
+        title: '确认订单',
+        message: '',
+        address: {
+          consignee_name: '',
+          province: '',
+          city: '',
+          area: '',
+          address: '',
+          mobile: '',
+        },
+        goodsList: getStorage('scoreGoodsList', sessionStorage),
+        freight_money: 0,
+        total_score: 0,
+        total_money: 0,
+      },
+      methods: {
+        // 改变数量
+        changeNum: function (item, num) {
+          if (num == -1 && item.num < 2) {
+            return;
+          }
+          item.num += num;
+          this.queryFreight_money();
+        },
+        // 提交订单
+        submit: function () {
+          if (typeof lastSubmitTime === 'undefined') {
+            lastSubmitTime = Date.now();
+          } else if (Date.now() - lastSubmitTime < 2000) {
+            lastSubmitTime = Date.now()
+            return;
+          }
+          // 组装订单数据
+          httpRequest('POST', 'api_score_shop/orders/save', {
+            address_id: this.address.id,
+            goods_id: this.goodsList[0].goods.goods_id,
+            num: this.goodsList[0].num,
+            spec_group_id_str: this.goodsList[0].select_spec_group_info.spec_group_id_str || 0,
+            memo: this.message
+          }).then(function (resp) {
+            layer.msg(resp.msg);
+            setTimeout(function () {
+              gotowap('score_order_list', { status: 0 });
+            }, 500)
+          }).catch(function () {
+          })
+        },
+        // 选择地址
+        selectAddress: function () {
+          var innerHeight = window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
+          layer.open({
+            type: 2,
+            title: '请选择地址',
+            content: location.origin + '/wap/index/address_list_select.html',
+            offset: 'b',
+            area: [document.body.offsetWidth + 'px', innerHeight * 0.6 + 'px'],
+            anim: 2,
+            fixed: true,
+            resize: false,
+          })
+        },
+        // 查询运费及可参与活动
+        queryFreight_money: function () {
+          var that = this;
+          // 订单预览
+          httpRequest('POST', 'api_score_shop/orders/view', {
+            address_id: this.address.id,
+            goods_id: this.goodsList[0].goods.goods_id,
+            num: this.goodsList[0].num,
+            spec_group_id_str: this.goodsList[0].select_spec_group_info.spec_group_id_str || 0
+          }).then(function (resp) {
+            that.total_score = resp.data.total_score;
+            that.total_money = resp.data.total_money;
+          })
+        }
+      },
+      watch: {
+        // 地址发生改变
+        address: function (address) {
+          this.queryFreight_money();
+        },
+      },
+      mounted: function () {
+        var that = this;
+        httpRequest('POST', 'api_query/users/default_address').then(function (resp) {
+          if (isEmptyObject(resp.data)) {
+            var innerHeight = window.innerHeight
+              || document.documentElement.clientHeight
+              || document.body.clientHeight;
+            layer.open({
+              type: 2,
+              title: '请先添加收货地址',
+              content: location.origin + '/wap/index/address_edit_select.html',
+              offset: 'b',
+              area: [document.body.offsetWidth + 'px', innerHeight * 0.6 + 'px'],
+              anim: 2,
+              fixed: true,
+              resize: false,
+            })
+          } else {
+            that.address = resp.data;
+          }
+        });
+      }
+    })
+  </script>
+</body>
+
+</html>

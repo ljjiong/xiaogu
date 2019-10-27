@@ -1,0 +1,485 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>商品运费模板</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col :span="24">
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入模板名" v-model="searchData.name">
+                        <template slot="prepend">模板名</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>商品运费模板列表</span>
+                    <el-button type="primary" style="float: right;" size="mini" icon="el-icon-plus" @click="goAdd()">新增商品运费模板</el-button>
+                  </div>
+                  <!-- 批量操作 -->
+                  <div style="margin-bottom: 10px;">
+                    <el-button type="danger" size="small" plain icon="el-icon-delete" @click="multiOperate('delete')" :disabled="multipleSelection.length == 0">批量删除</el-button>
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                      <el-table-column type="selection"> </el-table-column>
+                      <el-table-column prop="id" label="ID" width="80" fixed sortable></el-table-column>
+                      <el-table-column prop="name" label="模板名"></el-table-column>
+                      <el-table-column prop="intro" label="模板简介"></el-table-column>
+                      <el-table-column prop="type" label="计费方式">
+                        <template slot-scope="scope">
+                          <el-tag type="success" size="mini" v-if="scope.row.type==1">按重量计费</el-tag>
+                          <el-tag type="primary" size="mini" v-if="scope.row.type==2">按件计费</el-tag>
+                        </template>
+                      </el-table-column>
+                      <!-- 操作栏 两个操作width设置为140 三个200 -->
+                      <el-table-column label="操作" fixed="right" width="150">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                          <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 编辑dialog -->
+            <el-dialog title="模板编辑" :visible.sync="dialogVisible" :before-close="handleClose" width="70%" :close-on-click-modal="false">
+              <el-row :gutter="20">
+                <el-col :span="8" :offset="selectTemplate.content.length?0:8">
+                  <el-form ref="dialogForm" :model="selectTemplate" label-width="100px" label-position="left" :rules="dialogFormRules">
+                    <el-form-item label="模板名称" prop="name">
+                      <el-input v-model="selectTemplate.name" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="模板简介" prop="intro">
+                      <el-input v-model="selectTemplate.intro" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="计费方式" prop="intro">
+                      <el-radio v-model="selectTemplate.type" :label="1">按重量计费</el-radio>
+                      <el-radio v-model="selectTemplate.type" :label="2">按件计费</el-radio>
+                    </el-form-item>
+                    <el-form-item :label="selectTemplate.type == 1 ? '首重(千克)' : '首件(个)'" prop="basic_value">
+                      <el-input v-model="selectTemplate.basic_value" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="运费(元)" prop="basic_price">
+                      <el-input v-model="selectTemplate.basic_price" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item :label="selectTemplate.type == 1 ? '续重(千克)' : '续件(个)'" prop="add_value">
+                      <el-input v-model="selectTemplate.add_value" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="续费(元)" prop="add_price">
+                      <el-input v-model="selectTemplate.add_price" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item v-if="selectTemplate.name">
+                      <el-button type="primary" plain @click="addContent">增加特殊地区配送规则</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+                <!-- 特殊地区运费 -->
+                <el-col :span="16" v-if="selectTemplate.content.length">
+                  <el-table :data="selectTemplate.content" stripe border>
+                    <el-table-column label="地区" width="200">
+                      <template slot-scope="scope">
+                        <div v-if="scope.row.area_codes.length <= 3">
+                          <div v-for="(code, cKey) in scope.row.area_codes" :key="cKey">{{code | areaCodeFilter}}</div>
+                        </div>
+                        <div v-else>
+                          <div>{{scope.row.area_codes[0] | areaCodeFilter}}</div>
+                          <div>{{scope.row.area_codes[1] | areaCodeFilter}}</div>
+                          <div>{{scope.row.area_codes[2] | areaCodeFilter}}</div>
+                          <div>{{scope.row.area_codes[3] | areaCodeFilter}}</div>
+
+                          ...
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="basic_value" :label="selectTemplate.type == 1 ? '首重(千克)' : '首件(个)'"></el-table-column>
+                    <el-table-column prop="basic_price" label="运费(元)"></el-table-column>
+                    <el-table-column prop="add_value" :label="selectTemplate.type == 1 ? '续重(千克)' : '续件(个)'"></el-table-column>
+                    <el-table-column prop="add_price" label="续费(元)"></el-table-column>
+                    <el-table-column label="操作">
+                      <template slot-scope="scope">
+                        <el-button @click="updateContent(scope.row)" size="mini" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                        <el-button @click="deleteContent(scope.row)" size="mini" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </el-col>
+              </el-row>
+              <!-- 特殊地区运费编辑dialog -->
+              <el-dialog width="50%" title="地区选择" :visible.sync="innerVisible" append-to-body :close-on-click-modal="false">
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-card>
+                      <div slot="header">
+                        <span>特殊地区运费设置</span>
+                      </div>
+                      <el-form ref="innerDialogForm" :model="selectContent" label-width="100px" label-position="left" :rules="innerDialogFormRules">
+                        <el-form-item :label="selectTemplate.type == 1 ? '首重(千克)' : '首件(个)'" prop="basic_value">
+                          <el-input v-model="selectContent.basic_value" clearable></el-input>
+                        </el-form-item>
+                        <el-form-item label="运费(元)" prop="basic_price">
+                          <el-input v-model="selectContent.basic_price" clearable></el-input>
+                        </el-form-item>
+                        <el-form-item :label="selectTemplate.type == 1 ? '续重(千克)' : '续件(个)'" prop="add_value">
+                          <el-input v-model="selectContent.add_value" clearable></el-input>
+                        </el-form-item>
+                        <el-form-item label="续费(元)" prop="add_price">
+                          <el-input v-model="selectContent.add_price" clearable></el-input>
+                        </el-form-item>
+                      </el-form>
+                    </el-card>
+                    <div style="margin-top:20px;">
+                      <el-button type="primary" @click="submitContent" plain>确定</el-button>
+                    </div>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-card>
+                      <div slot="header">
+                        <span>特殊地区选择</span>
+                      </div>
+                      <el-input placeholder="搜索地区" v-model="filterText" style="margin-bottom: 10px;" prefix-icon="el-icon-search"></el-input>
+                      <el-tree :data="treeData" show-checkbox="true" node-key="id" ref="tree" :filter-node-method="filterNode" :default-checked-keys="defaultCheckedKeys"></el-tree>
+                      <span slot="footer" class="dialog-footer">
+                    </el-card>
+                  </el-col>
+                </el-row>
+              </el-dialog>
+              <!-- 尾部 -->
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="updateTemplate">确定</el-button>
+              </span>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    let regionsData = [];
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          tableData: [],  //表格数据
+          currentPage: parseInt(querystring.currentPage) || 1, //当前页
+          currentPageSize: 20,  //当前页容量
+          pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          total: 0, //总页数
+          multipleSelection: [],  //多选项
+          // 查询条件
+          searchData: {
+            name: '',
+          },
+          // regions
+          provinces: [],
+          // dialog
+          selectTemplate: {
+            name: '',
+            content: [],
+          },
+          dialogVisible: false,
+          dialogFormRules: {
+            name: [
+              { required: true, message: '请输入标题', trigger: 'blur' },
+            ],
+            basic_price: [
+              { required: true, message: '请输入数值', trigger: 'blur' },
+            ],
+            basic_value: [
+              { required: true, message: '请输入数值', trigger: 'blur' },
+            ],
+            add_price: [
+              { required: true, message: '请输入数值', trigger: 'blur' },
+            ],
+            add_value: [
+              { required: true, message: '请输入数值', trigger: 'blur' },
+            ],
+          },
+          // innerDialog
+          innerVisible: false,
+          innerDialogFormRules: {
+            basic_price: [
+              { required: true, message: '请输入数值', trigger: 'blur' },
+            ],
+            basic_value: [
+              { required: true, message: '请输入数值', trigger: 'blur' },
+            ],
+            add_price: [
+              { required: true, message: '请输入数值', trigger: 'blur' },
+            ],
+            add_value: [
+              { required: true, message: '请输入数值', trigger: 'blur' },
+            ],
+          },
+          treeData: [],
+          filterText: '',
+          defaultCheckedKeys: [],
+          selectContent: {},
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_goods/freight_templates/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            }).catch(e => {
+              this.$message.info('操作取消');
+            })
+          } else if (type === 'edit') {
+            this.$refs.dialogForm && this.$refs.dialogForm.clearValidate();
+            this.$refs.innerDialogForm && this.$refs.innerDialogForm.clearValidate();
+            this.selectTemplate = deepCopy(data);
+            this.dialogVisible = true;
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_goods/freight_templates/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          }).catch(_ => {
+            this.$message.info('操作取消');
+          });
+        },
+        // 新增
+        goAdd() {
+          this.selectTemplate = {
+            name: '',
+            intro: '',
+            basic_value: '',
+            basic_price: '',
+            add_value: '',
+            add_price: '',
+            content: [],
+            type: 1,
+          };
+          this.dialogVisible = true;
+          this.$refs.dialogForm && this.$refs.dialogForm.clearValidate();
+          this.$refs.innerDialogForm && this.$refs.innerDialogForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_goods/freight_templates/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // dialog 关闭
+        handleClose(done) {
+          this.$confirm('确认离开？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => { });
+        },
+        // 增加特殊运费
+        addContent() {
+          this.selectContent = {
+            basic_value: '',
+            basic_price: '',
+            add_value: '',
+            add_price: '',
+            area_codes: [],
+          }
+          // this.selectTemplate.content.push(this.selectContent);
+          this.innerVisible = true;
+        },
+        // 更新特殊地区运费
+        updateContent(data) {
+          if (this.$refs.tree) {
+            this.$refs.tree.setCheckedKeys(data.area_codes);
+          } else {
+            this.defaultCheckedKeys = data.area_codes;
+          }
+          this.selectContent = data;
+          this.innerVisible = true;
+        },
+        deleteContent(data) {
+          this.selectTemplate.content.splice(this.selectTemplate.content.indexOf(data), 1);
+        },
+        // 完成特殊地区运费编辑
+        submitContent() {
+          this.$refs.innerDialogForm.validate(valid => {
+            if (valid) {
+              let checkedKeys = this.$refs.tree.getCheckedKeys();
+              if (checkedKeys.length) {
+                this.selectContent.area_codes = this.$refs.tree.getCheckedKeys();
+                if (this.selectTemplate.content.indexOf(this.selectContent) == -1) {
+                  this.selectTemplate.content.push(deepCopy(this.selectContent));
+                };
+                this.innerVisible = false;
+              } else {
+                this.$message.error('请选择需要设置的特殊地区')
+              }
+            } else {
+              return false;
+            }
+          })
+        },
+        updateTemplate() {
+          this.$refs.dialogForm.validate(valid => {
+            if (valid) {
+              let router = this.selectTemplate.id ? 'api_goods/freight_templates/update' : 'api_goods/freight_templates/save';
+              httpRequest('POST', router, this.selectTemplate).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            } else {
+              return false;
+            }
+          })
+        },
+        // tree filter
+        filterNode(value, data) {
+          if (!value) return true;
+          return data.label.indexOf(value) !== -1;
+        },
+      },
+      watch: {
+        filterText(val) {
+          this.$refs.tree.filter(val);
+        },
+      },
+      filters: {
+        areaCodeFilter: function (value) {
+          let str = ''
+          regionsData.forEach(a => {
+            a.citys.forEach(b => {
+              b.areas.forEach(c => {
+                if (value == c.id) {
+                  str = a.name + ' ' + b.name + ' ' + c.name;
+                }
+              })
+            })
+          })
+          return str;
+        }
+      },
+      mounted() {
+        this.loadTableData();
+        // 加载地区
+        httpRequest('POST', 'api_systems/regions/index').then(resp => {
+          regionsData = resp.data;
+          let treeData = [];
+          // 遍历省
+          resp.data.forEach(p => {
+            let province = {
+              id: p.id,
+              label: p.name
+            };
+            if (p.citys) {
+              province.children = [];
+              //遍历市
+              p.citys.forEach(c => {
+                let city = {
+                  id: c.id,
+                  label: c.name
+                }
+                if (c.areas) {
+                  city.children = [];
+                  // 遍历县
+                  c.areas.forEach(a => {
+                    let area = {
+                      id: a.id,
+                      label: a.name
+                    }
+                    city.children.push(area)
+                  })
+                }
+                province.children.push(city)
+              })
+            }
+            treeData.push(province)
+          })
+          this.treeData = treeData;
+        })
+      }
+    });
+  </script>
+
+</body>
+
+</html>

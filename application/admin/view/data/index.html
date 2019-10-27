@@ -1,0 +1,334 @@
+{include file="header" /}
+
+<style type="text/css">
+  .index-body {
+    padding-left: 5%!important;
+    padding-right: 5%!important;
+    min-width: 1200px;
+  }
+
+  #left-navs-app.dinone {
+    display: none!important;
+  }
+
+  .index-top {
+    margin-bottom: 70px;
+  }
+
+  .index-top>div {
+    padding-right: 17px;
+    padding-left: 17px;
+  }
+
+  .index-top a {
+    display: block;
+  }
+
+  .dashboard-stat:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+
+  .dashboard-stat::before,
+  .dashboard-stat::after {
+    content: " ";
+    display: table;
+  }
+
+  .dashboard-stat {
+    display: block;
+    margin-bottom: 25px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .dashboard-stat .visual {
+    box-sizing: border-box;
+    width: 80px;
+    height: 115px;
+    display: block;
+    float: left;
+    padding-top: 45px;
+    padding-left: 15px;
+    margin-bottom: 15px;
+    font-size: 35px;
+    line-height: 35px;
+  }
+
+  .dashboard-stat .visual>img {
+    margin-left: -35px;
+  }
+
+  .dashboard-stat .details {
+    position: absolute;
+    right: 20px;
+  }
+
+  .dashboard-stat .details .number {
+    color: white;
+    padding-top: 35px;
+    text-align: right;
+    font-size: 15px;
+    line-height: 1;
+    margin-bottom: 7px;
+    font-weight: 300;
+  }
+
+  .dashboard-stat .details .number span {
+    padding-left: 18px;
+    font-size: 36px;
+    color: rgb(255, 255, 255);
+  }
+
+  .dashboard-stat .details .desc {
+    color: rgb(197, 230, 254)!important;
+    text-align: right;
+    font-size: 14px;
+    letter-spacing: 0px;
+    font-weight: 300;
+  }
+
+  .dashboard-stat .details .desc span {
+    font-size: 17px;
+    margin-left: 15px;
+  }
+
+  .dashboard-stat .block {
+    height: 30px;
+    width: 100%;
+    display: block;
+    position: relative;
+    clear: both;
+    z-index: 99;
+  }
+
+  .dashboard-stat:hover .number {
+    color: #dbe9f3;
+  }
+
+  .dashboard-stat:hover .number span {
+    color: #dbe9f3;
+  }
+
+  .dashboard-stat.blue-madison .block {
+    background-color: #217fbc;
+  }
+
+  .dashboard-stat.blue-madison .details .desc {
+    color: white;
+    opacity: 1;
+    filter: alpha(opacity=100);
+  }
+
+  .dashboard-stat.blue-madison .visual>img {
+    color: white;
+    filter: alpha(opacity=10);
+  }
+
+  .dashboard-stat.blue-madison {
+    background-color: #5babe6!important;
+  }
+
+  .dashboard-stat.red-intense .block {
+    background-color: #c43926;
+  }
+
+  .dashboard-stat.red-intense .details .desc {
+    color: rgb(252, 151, 137)!important;
+    opacity: 1;
+    filter: alpha(opacity=100);
+  }
+
+  .dashboard-stat.red-intense .visual {
+    padding-top: 60px;
+  }
+
+  .dashboard-stat.red-intense .visual>img {
+    margin-left: 0px!important;
+    color: white;
+    filter: alpha(opacity=10);
+  }
+
+  .dashboard-stat.red-intense {
+    background-color: #ea4b35!important;
+  }
+
+  .dashboard-stat.green-haze .block {
+    background-color: #01bf9d;
+  }
+
+  .dashboard-stat.green-haze .details .desc {
+    color: rgb(0, 233, 191)!important;
+    opacity: 1;
+    filter: alpha(opacity=100);
+  }
+
+  .dashboard-stat.green-haze .visual {
+    padding-top: 60px;
+  }
+
+  .dashboard-stat.green-haze .visual>img {
+    margin-left: -25px;
+    color: white;
+    filter: alpha(opacity=10);
+  }
+
+  .dashboard-stat.green-haze {
+    background-color: #01a187!important;
+  }
+
+  .dashboard-stat.purple-plum .block {
+    background-color: #f3c500;
+  }
+
+  .dashboard-stat.purple-plum .details .desc {
+    color: rgb(254, 232, 135)!important;
+    opacity: 1;
+    filter: alpha(opacity=100);
+  }
+
+  .dashboard-stat.purple-plum .visual>img {
+    color: white;
+    filter: alpha(opacity=10);
+  }
+
+  .dashboard-stat.purple-plum .visual {
+    padding-top: 75px;
+  }
+
+  .dashboard-stat.purple-plum .visual>img {
+    margin-left: 10px;
+    color: white;
+    filter: alpha(opacity=10);
+  }
+
+  .dashboard-stat.purple-plum {
+    background-color: #f59c00!important;
+  }
+
+  .index-bottom .bottom-left img {
+    max-width: 100%;
+    display: block;
+  }
+
+  .index-bottom .list-block {
+    margin-bottom: 30px;
+    padding-right: 15px;
+  }
+
+  .index-bottom .list-block:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+
+  .index-bottom .list-block .left {
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    text-align: center;
+    line-height: 80px;
+    float: left;
+    width: 80px;
+    height: 80px;
+    border-radius: 80px;
+    background-color: rgb(243, 247, 248);
+    margin-right: 20px;
+  }
+
+  .index-bottom .list-block .left i {
+    font-size: 40px;
+    color: #262536;
+  }
+
+  .index-bottom .list-block:hover .left i {
+    color: rgb(15, 55, 95);
+  }
+
+  .index-bottom .list-block:hover .left {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 10px 2px #c7e8f9;
+  }
+
+  .index-bottom .bottom-left {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 430px;
+  }
+
+  .index-bottom .bottom-right {
+    position: absolute;
+    right: 0px;
+    width: 390px;
+    top: 0px;
+  }
+
+  .index-bottom .list-block .midden {
+    float: left;
+    padding-top: 9px;
+  }
+
+  .index-bottom .list-block .midden .title {
+    font-size: 15px;
+    color: rgb(15, 55, 95);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .index-bottom .list-block .midden .text {
+    color: rgb(15, 55, 95);
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .index-bottom .list-block .midden .mun {
+    color: #0f375f;
+    font-size: 27px;
+    line-height: 1;
+  }
+
+  .index-bottom .list-block .right {
+    float: right;
+    font-size: 48px;
+    color: rgb(15, 55, 95);
+    line-height: 80px;
+    text-align: right;
+  }
+
+  .index-bottom .list-block .more {
+    float: right;
+    width: 64px;
+    margin-top: 24px;
+    height: 32px;
+    border-radius: 4px;
+    background-color: rgb(15, 55, 95);
+    color: #ffffff;
+    text-align: center;
+    line-height: 32px;
+    display: block;
+    font-size: 13px;
+    text-decoration: none;
+  }
+
+  .index-bottom .list-block .more:hover {
+    transition: all .3s;
+    -moz-transition: all .3s;
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    background-color: #3d5772;
+  }
+</style>
+<link rel="stylesheet" type="text/css" href="/public/static/common/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css">
+
+<body> 
+
+  <!-- echarts -->
+  <script src="/public/static/echart/echarts.min.js"></script>
+ 
+
+</body>
+
+</html>

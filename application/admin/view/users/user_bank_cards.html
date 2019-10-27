@@ -1,0 +1,129 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>会员银行卡</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <!-- 筛选条件 -->
+                  <el-row :gutter="20">
+                    <el-col :span="5">
+                      <el-input placeholder="请输入持卡人" v-model="searchData.card_holder">
+                        <template slot="prepend">持卡人</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-card>
+              <div slot="header">
+                <span>银行卡列表</span>
+              </div>
+              <!-- 表格 -->
+              <template>
+                <el-table :data="tableData" stripe style="width: 100%">
+                  <el-table-column prop="id" label="ID" fixed sortable width="80"></el-table-column>
+                  <el-table-column prop="user_info.mobile" label="用户手机号" sortable></el-table-column>
+                  <el-table-column prop="user_info.nick_name" label="用户昵称" sortable></el-table-column>
+                  <el-table-column prop="card_holder" label="持卡人"></el-table-column>
+                  <el-table-column prop="card_number" label="银行卡号"></el-table-column>
+                  <el-table-column prop="bank_name" label="银行名称"></el-table-column>
+                </el-table>
+              </template>
+              <!-- 分页 -->
+              <template>
+                <div class="block" style="margin-top: 20px;">
+                  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                    :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                  </el-pagination>
+                </div>
+              </template>
+            </el-card>
+
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        // 查询条件
+        searchData: {
+          card_holder: '',
+        }
+      },
+      methods: {
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        filterHandler(value, row, column) {
+          return row['update_time'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_users/bank_cards/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<style>
+	body {
+		transition: top 300ms;
+	}
+
+	.layui-form-checked,
+	.layui-form-checked:hover {
+		border-color: #000;
+	}
+
+	.layui-form-checked i,
+	.layui-form-checked:hover i {
+		color: #000;
+	}
+
+	.layui-form-select dl dd.layui-this {
+		background-color: #fff;
+		color: #000;
+	}
+
+	.layui-form-checkbox[lay-skin=primary]:hover i {
+		border-color: #000;
+		color: #000;
+	}
+
+	.layui-form-checked[lay-skin=primary] i {
+		color: #000;
+		background-color: #fff;
+		border-color: #000;
+	}
+</style>
+</head>
+
+<body>
+	{include file="/index/header" /}
+	<div id="app">
+		<div class="w1200 margin-tt-15 over  black-text">
+			<div class="left">
+				<!-- 个人信息卡 -->
+				<div class=" card-title-wrap">
+					<img src="/public/static/portal/img/title-back.png" class="responsive-img">
+					<div class="margin-10 over card-text-wrap">
+						<div class="ridius-img left margin-15">
+							<img :src="user.avatar" alt="">
+						</div>
+						<div class="left margin-top-15">
+							<div class="font-size-18 margin-top-15 white-text" v-text="user.nick_name || user.mobile"></div>
+							<div class="blue lighten-1 margin-top-5" style="border-radius: 4px;padding: 2px 4px;">
+								<img src="/public/static/portal/img/lr.png" alt="">
+								<span class="font-size-12 white-text" v-text="level"></span>
+							</div>
+						</div>
+					</div>
+					<div class="rate-line font-size-12 blue-text text-lighten-5">
+						<div class="rataing-nember  margin-15" v-text=" '成长值  ' + score"></div>
+						<div class="ratas-nember right"></div>
+					</div>
+				</div>
+				<div class="white grey-text text-darken-3 margin-top-15" style="border-radius: 5px">
+					<div class="card-right-nav-box  margin-10 padding-tt-10" style="border: none">
+						<div class="card-right-nav">
+							<div class="font-size-18 over margin-tt-10">
+								<i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+								<span class="left margin-top-5">交易管理</span>
+							</div>
+							<ul class="card-right-nav-ul">
+								<li class="margin-tt-13" @click="goto('cart_list')">购物车</li>
+								<li class="margin-tt-13" @click="goto('order_list')">我的订单</li>
+								<li class="margin-tt-13" @click="goto('comment_list')">我的评价</li>
+							</ul>
+						</div>
+					</div>
+					<div class="card-right-nav-box  margin-10 padding-tt-10">
+						<div class="card-right-nav">
+							<div class="font-size-18 over margin-tt-10">
+								<i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+								<span class="left margin-top-5">账号管理</span>
+							</div>
+							<ul class="card-right-nav-ul">
+								<li class="margin-tt-13" @click="goto('setting')">个人信息</li>
+								<li class="margin-tt-13" @click="goto('account')">账号安全</li>
+								<li class="margin-tt-13" @click="goto('idcard_auth')">实名认证</li>
+								<li class="margin-tt-13" @click="goto('address_list')">地址管理</li>
+								<li class="margin-tt-13" @click="goto('collection_list')">我的收藏</li>
+								<li class="margin-tt-13" @click="goto('level')">成长值
+									<span class="blue-text text-lighten-1" v-text="'('+score+')'"></span>
+								</li>
+								<li class="margin-tt-13" @click="goto('bind')">第三方账户</li>
+							</ul>
+						</div>
+					</div>
+					<div class="card-right-nav-box margin-10 padding-tt-10">
+						<div class="card-right-nav">
+							<div class="font-size-18 over margin-tt-10">
+								<i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+								<span class="left margin-top-5">资产管理</span>
+							</div>
+							<ul class="card-right-nav-ul">
+								<li class="margin-tt-13" @click="goto('wallet')">我的钱包</li>
+								<li class="margin-tt-13" @click="goto('bankcard_list')">我的银行卡</li>
+								<li class="margin-tt-13" @click="goto('my_coupon_list')">我的优惠券
+									<span class="blue-text text-lighten-2"></span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="right right-content">
+				<div class="padding-15 white">
+					<div class="font-size-16 black-text padding-tt-15 border-btn">地址管理</div>
+					<div class="margin-tt-15">
+						已保存收货地址（
+						<span class="grey-text">
+							地址最多
+							<span v-text="total"></span>条， 还能保存
+							<span v-text="shengyu"></span>
+							条
+						</span>）
+					</div>
+					<div class="border-grey center" style="border-bottom: none;">
+						<div class="flex grey lighten-3 grey-text padding-tt-10">
+							<div class="addresses-username">收货人</div>
+							<div class="addresses-text flex1">地址</div>
+							<div class="addresses-mobile">联系方式</div>
+							<div class="addresses-type">操作</div>
+							<div class="addresses-set"></div>
+						</div>
+						<div class="" v-for="add in adds">
+							<div class="grey-text text-darken-2 flex addresses-list border-btn">
+								<div class="addresses-username" v-text="add.consignee_name"></div>
+								<div class="addresses-text flex1" v-text="add.address_info"></div>
+								<div class="addresses-mobile" v-text="add.mobile"></div>
+								<div class="addresses-type blue-text">
+									<span class="margin-5 bt" @click="modifyAddress(add)">编辑</span>
+									<span class="margin-5 bt" @click="delAddress(add)">删除</span>
+								</div>
+								<div class="addresses-set ">
+									<div class="addresses-active bt" v-if="add.is_default == 1">默认地址</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="blue-text margin-tt-15 bt">添加新地址</div>
+					<div class="addresses-add">
+						<div class="flex margin-tt-15">
+							<div class="addresses-add-text">
+								<img src="/public/static/portal/img/red-xin.png" class="responsive-img"> 所在地区
+							</div>
+							<div class="flex1">
+								<select v-model="address.province_code" @change="provinceChange(address.province_code);">
+									<option value="">请选择省份</option>
+									<option :value="province.id" v-for="(province, provinceKey) in provinces" :key="provinceKey" v-text="province.name"></option>
+								</select>
+							</div>
+							<div class="flex1 margin-lr-15">
+								<select v-model="address.city_code" @change="cityChange(address.city_code);">
+									<option value="">请选择城市</option>
+									<option :value="city.id" v-for="(city, cityKey) in cities" :key="cityKey" v-text="city.name"></option>
+								</select>
+							</div>
+							<div class="flex1">
+								<select v-model="address.area_code">
+									<option value="">请选择县</option>
+									<option :value="area.id" v-for="(area, areaKey) in areas" :key="areaKey" v-text="area.name"></option>
+								</select>
+							</div>
+						</div>
+						<div class="flex margin-tt-15">
+							<div class="addresses-add-text">
+								<img src="/public/static/portal/img/red-xin.png" class="responsive-img"> 所在地区
+							</div>
+							<div class="flex1 border-grey padding-10">
+								<textarea name="" id="" cols="30" rows="10" v-model="address.address"></textarea>
+							</div>
+						</div>
+						<div class="flex margin-tt-15">
+							<div class="addresses-add-text">
+								<img src="/public/static/portal/img/red-xin.png" class="responsive-img"> 收货人：
+							</div>
+							<div class="border-grey flex1">
+								<input type="text" v-model="address.consignee_name">
+							</div>
+							<div class="addresses-add-text">
+								<img src="/public/static/portal/img/red-xin.png" class="responsive-img"> 手机号码：
+							</div>
+							<div class="border-grey flex1">
+								<input type="text" pattern="[0-9]*" onkeyup="value=value.replace(/[^\d]/g,'')" v-model="address.mobile">
+							</div>
+						</div>
+						<div class="flex margin-tt-15">
+							<div class="addresses-add-text">
+								<!-- <img  src="/public/static/portal/img/red-xin.png" class="responsive-img"> -->
+
+							</div>
+							<div class="flex1 over margin-tt-15">
+								<div class="left">
+									<div class="">
+										<span class="addres-moren  margin-right-15" :class="{'addres-moren-active':(address.is_default == 1)}" @click="changedefault(address)"></span>
+										设为默认
+									</div>
+								</div>
+								<div class="right">
+									<span class="address-yes bt" @click="submit();">保存</span>
+									<span class="address-no bt" @click="cancel();">取消</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="margin-top-15">
+					<img src="/public/static/portal/img/lien-img.png" alt="" class="responsive-img">
+				</div>
+			</div>
+			<div class="w1200 white over margin-btn-15">
+				<div class="foot-list-title black-text text-lighten-1 margin-15 font-size-18 padding-left-15">猜你喜欢</div>
+				<div class="foot-list margin-15 over">
+					<div class="left foot-list-box" v-for="guessGood in guessGoods" @click="goto('goods_detail',{goodsId:guessGood.id})">
+						<img :src="guessGood.thum" class="responsive-img">
+						<div class="padding-10">
+							<div class="font-size-16 black-text" v-text="guessGood.name"></div>
+							<div class="margin-top-10 over">
+								<div class="left">
+									<span class="red-text font-size-16" v-text="'￥' + guessGood.sell_price"></span>
+									<span class="font-size-10 grey-text lighten-1" v-text="'￥' + guessGood.sell_price"></span>
+								</div>
+								<div class="right font-size-12 grey-text lighten-1" v-text="'月销量：'+guessGood.sell_num"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="aui-bar aui-bar-tab" id="footer">
+  <div class="aui-bar-tab-item" onclick="goto('index')" :class="{'icon-footer-active' : (activeFooterIndex == 1 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 1" src="/public/static/wap/img/icon12.png">
+      <img v-else src="/public/static/wap/img/icon11.png">
+    </div>
+    <div class="aui-bar-tab-label">任务</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('personnel_page')"
+    :class="{'icon-footer-active' : (activeFooterIndex == 2 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 2" src="/public/static/wap/img/icon22.png">
+      <img v-else src="/public/static/wap/img/icon21.png">
+    </div>
+    <div class="aui-bar-tab-label">行政</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('home')" :class="{'icon-footer-active' : (activeFooterIndex == 3 )}">
+    <!-- <div class="aui-badge">99</div> -->
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 3" src="/public/static/wap/img/icon32.png">
+      <img v-else src="/public/static/wap/img/icon31.png">
+    </div>
+    <div class="aui-bar-tab-label">我的</div>
+  </div>
+</footer>
+
+
+<script>
+	var app = new Vue({
+		el: '#app',
+		data: {
+			user: user,
+			currentPage: parseInt(querystring.currentPage) || 1, //当前页
+			currentPageSize: 2, //当前页容量
+			activeFooterIndex: 4,
+			title: '地址管理',
+			haveNoData: false,
+			user: user,
+			level: '',
+			score: '',
+			adds: [],
+			provinces: [],
+			cities: [],
+			areas: [],
+			guessGoods: [],
+			addressId: querystring.addressId,
+			total: 10,
+			shengyu: 10,
+			address: {
+				province_code: '',
+				city_code: '',
+				area_code: '',
+				consignee_name: '',
+				mobile: '',
+				address: '',
+				is_default: 1,
+			}
+		},
+		methods: {
+			authentication: function () {
+				httpRequest('POST', 'api_query/users/auth', {}, function (resp) {
+					var status = resp.data.status;
+					if (status == 0 || status == 2) {
+						goto('idcard_auth', { status: status, id: resp.data.id });
+					} else if (status == 1 || status == 3) {
+						goto('idcard_info');
+					}
+				})
+			},
+			//修改地址
+			modifyAddress: function (address) {
+				goto('address_list', {
+					addressId: address.id
+				})
+			},
+			//删除地址
+			delAddress: function (address) {
+				layer.alert('确定删除地址?', { title: '提示' }, function (index) {
+					layer.close(index)
+					httpRequest('POST', 'api_users/addresses/delete', { id: address.id }, function (resp) {
+						location.reload();
+					})
+				})
+			},
+			provinceChange: function (province_code) {
+				var that = this;
+				this.address.city_code = '';
+				this.address.area_code = ''
+				this.cities = [];
+				this.areas = [];
+				this.provinces.forEach(function (item) {
+
+					if (item.id == province_code) {
+						that.cities = item.citys;
+					}
+				})
+			},
+			cityChange: function (city_code) {
+				var that = this;
+				this.address.area_code = '';
+				this.areas = [];
+				this.cities.forEach(function (item) {
+					if (item.id == city_code) {
+						that.areas = item.areas;
+					}
+				})
+			},
+			changedefault: function (type) {
+				if (type.is_default == 1) {
+					this.address.is_default = 0;
+				} else {
+					this.address.is_default = 1;
+				}
+			},
+			submit: function () {
+				if (!this.address.province_code || !this.address.area_code || !this.address.city_code || !this.address.consignee_name || !this.address.mobile || !this.address.address) {
+					layer.msg('请填写完整的信息');
+					return;
+				};
+				if (!variTelephone(this.address.mobile)) {
+					layer.msg('请填写正确的手机号码');
+					return;
+				}
+				if (this.shengyu < 1) {
+					layer.msg('你最多能保存10条地址');
+					return;
+				}
+				var router = querystring.addressId ? 'api_users/addresses/update' : 'api_users/addresses/save'
+				httpRequest('POST', router, this.address, function (resp) {
+					layer.msg(resp.msg);
+					if (querystring.type == "order_confirm") {
+						setTimeout(function(resp){
+							goto('order_confirm')
+						}, 500);
+					} else {
+						setTimeout(function(resp){
+							goto('address_list')
+						}, 500)
+					}
+				})
+
+			},
+			cancel: function () {
+				this.address = {
+					province_code: '',
+					city_code: '',
+					area_code: '',
+					consignee_name: '',
+					mobile: '',
+					address: '',
+					is_default: 1,
+				}
+			}
+		},
+		mounted: function () {
+			httpRequest('POST', 'api_query/users/asset',{},function (resp) {
+				app.level = resp.data.level;
+				app.score = resp.data.score;
+				httpRequest('POST', 'api_users/addresses/lists',{},function (resp) {
+				app.shengyu = app.total - resp.page.data_count;
+				if (resp.data.length > 0) {
+					app.haveNoData = false;
+					resp.data.forEach(function (item) {
+						app.adds.push(item);
+					})
+					console.log(app.adds);
+				} else {
+					app.haveNoData = true;
+				}
+				httpRequest('POST', 'api_systems/regions/index',{},function (resp) {
+				app.provinces = resp.data;
+				console.log(app.provinces);
+				if (querystring.addressId) {
+					httpRequest('POST', 'api_users/addresses/read', {
+						id: querystring.addressId
+					},function (resp) {
+				if (querystring.addressId) {
+					app.address = resp.data;
+					//  设置省市县
+					app.provinces.forEach(function (item) {
+						if (item.id == app.address.province_code) {
+							app.cities = item.citys;
+						}
+					});
+					app.cities.forEach(function (item) {
+						if (item.id == app.address.city_code) {
+							app.areas = item.areas;
+						}
+					})
+				}
+				
+			})
+				}
+			})
+			})
+			})
+
+			//猜你喜欢
+			httpRequest('POST', 'api_goods/goods/lists', { is_top: 1 },function (resp) {
+				app.guessGoods = resp.data;
+			}, { 'page-num': 1, 'page-limit': 4 })
+		}
+	})
+</script>
+</body>
+</html>

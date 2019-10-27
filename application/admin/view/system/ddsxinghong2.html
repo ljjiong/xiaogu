@@ -1,0 +1,543 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>新虹水电站二厂设备台帐</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入设备台帐名称" v-model="searchData.name">
+                        <template slot="prepend">设备台帐名称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="厂" v-model="searchData.chang">
+                        <template slot="prepend">厂</template>
+                      </el-input>
+                    </el-col>
+        <!--             <el-col :span="5">
+                      <el-input placeholder="请输入设备台帐数据表名" v-model="searchData.table_name">
+                        <template slot="prepend">设备台帐数据表名</template>
+                      </el-input>
+                    </el-col> -->
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>自定义设备台帐列表</span>
+                    <el-button type="primary" icon="el-icon-plus" style="float:right;" @click="goAdd()" size="mini">新增设备台帐</el-button>
+                  </div>
+                  <div style="margin-bottom: 10px">
+                    <el-button type="danger" size="small" v-if="is_role != -1" plain icon="el-icon-delete" @click="multiOperate('delete')" :disabled="multipleSelection.length == 0">批量删除</el-button>
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                      <el-table-column type="selection" width="55"> </el-table-column>
+                      <el-table-column prop="id" label="ID" width="80" fixed sortable></el-table-column>
+                      <el-table-column prop="chang" label="厂" fixed></el-table-column>
+                      <el-table-column prop="name" label="设备台帐名称" fixed></el-table-column>
+                      <!-- <el-table-column prop="table_name" label="设备台帐数据表名" fixed></el-table-column> -->
+                      <el-table-column prop="intro" label="设备台帐说明"></el-table-column>
+                      <el-table-column prop="update_time" label="更新时间" sortable>
+                        <template slot-scope="scope">
+                          <i class="el-icon-time"></i>
+                          <span>{{ scope.row.update_time}}</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="操作" width="450" fixed="right">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'key')" size="small">设备台帐属性</el-button>
+                          <el-button @click="handleClick(scope.row, 'value')" size="small">设备台帐数据</el-button>
+                          <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                          <!-- <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button> -->
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- dialog -->
+            <el-dialog title="编辑设备台帐" :visible.sync="dialogVisible">
+              <el-row :gutter="20">
+                <el-col :span="16" :offset="4">
+                  <el-form :model="selectData" ref="ruleForm" label-position="left" label-width="150px" :rules="rules">
+                    <el-form-item label="厂" prop="chang">
+                      <el-input v-model="selectData.chang" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="设备台帐名称" prop="name">
+                      <el-input v-model="selectData.name" clearable></el-input>
+                    </el-form-item>
+                      <el-form-item label="设备台帐数据表名" prop="table_name">
+                        <el-input v-model="selectData.table_name" :disabled="selectData.id"></el-input>
+                      </el-form-item>
+                    <el-form-item label="设备台帐简介" prop="intro">
+                      <el-input v-model="selectData.intro" clearable type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-form-item>
+                        <el-button @click="dialogVisible = false;" plain>取消</el-button>
+                        <el-button type="primary" @click="submit">提交</el-button>
+                      </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+            </el-dialog>
+            <!-- attrDialog -->
+            <el-dialog title="设备台帐属性" :visible.sync="attrDialogVisible" width="75%">
+              <el-card>
+                <div style="margin-bottom: 20px;">
+                  <el-button size="small" plain type="primary" @click="addAttr">增加属性</el-button>
+                </div>
+                <el-table :data="attrTableData" stripe>
+                  <el-table-column prop="attr" label="属性名"></el-table-column>
+                  <el-table-column prop="abbr" label="字段名"></el-table-column>
+                  <el-table-column prop="type" label="字段类型">
+                    <template slot-scope="scope">
+                      <el-tag v-if="scope.row.type == 1" type="success" size="mini">文本</el-tag>
+                      <el-tag v-else-if="scope.row.type == 2" type="primary" size="mini">图片</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" width="150" fixed="right">
+                    <template slot-scope="scope">
+                      <el-button @click="attrHandleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                      <el-button @click="attrHandleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-card>
+              <!-- attrInnerDialog -->
+              <el-dialog title="编辑设备台帐属性" :visible.sync="attrInnerDialogVisible" append-to-body>
+                <el-row :gutter="20">
+                  <el-col :span="16" :offset="4">
+                    <el-form :model="selectAttrData" ref="attrForm" label-position="left" label-width="150px" :rules="attrRules">
+                      <el-form-item label="属性名" prop="attr">
+                        <el-input v-model="selectAttrData.attr" clearable></el-input>
+                      </el-form-item>
+                      <el-form-item label="字段名" prop="abbr">
+                        <el-input v-model="selectAttrData.abbr" :disabled="isEdit"></el-input>
+                      </el-form-item>
+                      <el-form-item label="类型" prop="type">
+                        <el-select v-model="selectAttrData.type" placeholder="请选择">
+                          <el-option v-for="item in attrOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-form-item>
+                          <el-button @click="attrInnerDialogVisible = false;" plain>取消</el-button>
+                          <el-button type="primary" @click="attrSubmit">提交</el-button>
+                        </el-form-item>
+                    </el-form>
+                  </el-col>
+                </el-row>
+              </el-dialog>
+            </el-dialog>
+            <!-- valueDialog -->
+            <el-dialog title="设备台帐数据" :visible.sync="valueDialogVisible" width="75%">
+              <el-card>
+                <div style="margin-bottom: 20px;">
+                  <el-button size="small" plain type="primary" @click="addValue">增加数据</el-button>
+                </div>
+                <el-table :data="valueTableData" stripe style="margin-top: 10px;">
+                  <el-table-column v-for="(key, index) in keys" :key="index" :prop="key.abbr" :label="key.attr">
+                    <template slot-scope="scope">
+                      <span v-if="key.type == 1">{{scope.row[key.abbr]}}</span>
+                      <img v-else-if="key.type == 2" :src="scope.row[key.abbr]" style="max-width: 45%; padding: 10px;">
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" width="380">
+                    <template slot-scope="scope">
+                      <el-button @click="valueHandleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                      <el-button @click="valueHandleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="block" style="margin-top: 20px;">
+                  <el-pagination @size-change="valueHandleSizeChange" @current-change="valueHandleCurrentChange" :current-page="valueCurrentPage"
+                    :page-sizes="valuePageSize" :page-size="valueCurrentPageSize" layout="total, sizes, prev, pager, next, jumper"
+                    :total="valueTotal">
+                  </el-pagination>
+                </div>
+              </el-card>
+              <!-- valueInnerDialog -->
+              <el-dialog title="编辑设备台帐数据" :visible.sync="valueInnerDialogVisible" append-to-body>
+                <el-row :gutter="20">
+                  <el-col :span="16" :offset="4">
+                    <el-form :model="selectValueData" ref="valueForm" label-position="left" label-width="150px" :rules="attrRules">
+                      <el-form-item :label="key.attr" :prop="key.abbr" v-for="(key, index) in keys" :key="index">
+                        <el-input v-if="key.type == 1" v-model="selectValueData[key['abbr']]" clearable></el-input>
+                        <div v-else>
+                          <ul class="el-upload-list el-upload-list--picture-card">
+                            <li class="el-upload-list__item is-ready" v-if="selectValueData[key['abbr']]">
+                              <img :src="selectValueData[key['abbr']]" alt="" class="el-upload-list__item-thumbnail">
+                              <span class="el-upload-list__item-actions">
+                                <span class="el-upload-list__item-delete" @click="fileClick(key['abbr'])">
+                                  <i class="el-icon-edit"></i>
+                                </span>
+                              </span>
+                            </li>
+                            <div class="el-upload el-upload--picture-card" v-else @click="fileClick(key['abbr'])">
+                              <i class="el-icon-plus"></i>
+                            </div>
+                          </ul>
+                        </div>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-form-item>
+                          <el-button @click="valueInnerDialogVisible = false;" plain>取消</el-button>
+                          <el-button type="primary"  @click="valueSubmit">提交</el-button>
+                        </el-form-item>
+                    </el-form>
+                  </el-col>
+                </el-row>
+                <input @change="fileChange($event)" type="file" id="imgAdd" style="display: none">
+              </el-dialog>
+            </el-dialog>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          is_role:$.inArray(3,user.role_ids), 
+          tableData: [],  //表格数据
+          currentPage: parseInt(querystring.currentPage) || 1, //当前页
+          currentPageSize: 20,  //当前页容量
+          pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          total: 0, //总页数
+          multipleSelection: [],  //多选项
+          // 查询条件
+          searchData: {
+            name: '',
+            table_name: ''
+          },
+          // -------------- dialog ---------------
+          dialogVisible: false,
+          selectData: {},
+          rules: {
+            name: [
+              { required: true, message: '请输入设备台帐名称', trigger: 'blur' },
+            ],
+            table_name: [
+              { required: true, message: '请输入设备台帐数据表名', trigger: 'blur' },
+            ],
+          },
+          // -------------- attrDialog -----------------
+          attrDialogVisible: false,
+          attrTableData: [],  //表格数据
+          // -------------- attrInnerDialog --------------
+          attrInnerDialogVisible: false,
+          selectAttrData: {},
+          attrOptions: [
+            {
+              label: '文本',
+              value: 1
+            }, {
+              label: '图片',
+              value: 2
+            }
+          ],
+          attrRules: {
+            attr: [
+              { required: true, message: '请输入属性名称', trigger: 'blur' },
+            ],
+            abbr: [
+              { required: true, message: '请输入字段名', trigger: 'blur' },
+            ],
+            type: [
+              { required: true, message: '请选择属性类型', trigger: 'blur' },
+            ],
+          },
+          isEdit: false,
+          // -------------- valueDialog -----------------
+          valueDialogVisible: false,
+          valueTableData: [],
+          valueCurrentPage: 1, //当前页
+          valueCurrentPageSize: 20,  //当前页容量
+          valuePageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          valueTotal: 0, //总页数
+          keys: [],
+          // -------------- valueInnerDialog ----------------
+          valueInnerDialogVisible: false,
+          selectValueData: {},
+          currentAbbr: ''
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_systems/dds/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                this.tableData.splice(this.tableData.indexOf(data), 1);
+              })
+            })
+          } else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.dialogVisible = true;
+          } else if (type === 'key') {
+            this.selectData = deepCopy(data);
+            this.attrLoadTableData();
+          } else if (type === 'value') {
+            this.selectData = deepCopy(data);
+            httpRequest('POST', 'api_systems/dds/table_info', {
+              table_name: data.table_name
+            }).then(resp => {
+              this.keys = resp.data;
+              this.valueLoadTableData();
+              this.valueDialogVisible = true;
+            })
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', `api_systems/dds/batch_${type}`, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 新增
+        goAdd() {
+          this.selectData = {
+            name: '',
+            area: '新虹水电站二厂',
+            table_name: '',
+            intro: ''
+          }
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          this.searchData.area = '新虹水电站二厂';
+          httpRequest('POST', 'api_systems/dds/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // --------------- dialog ---------------
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              let router = this.selectData.id ? 'api_systems/dds/update' : 'api_systems/dds/save';
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            } else {
+              return false;
+            }
+          });
+        },
+        attrLoadTableData() {
+          httpRequest('POST', 'api_systems/dds/table_info', {
+            table_name: this.selectData.table_name
+          }).then(resp => {
+            this.attrTableData = resp.data;
+            this.attrDialogVisible = true;
+          })
+        },
+        // -------------- attrDialog ----------------
+        attrHandleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_systems/dds/del_table_field', {
+                table_name: this.selectData.table_name,
+                abbr: data.abbr
+              }).then(resp => {
+                this.$message.success(resp.msg);
+                this.attrTableData.splice(this.attrTableData.indexOf(data), 1);
+              })
+            })
+          } else if (type == 'edit') {
+            this.selectAttrData = deepCopy(data);
+            this.isEdit = true;
+            this.attrInnerDialogVisible = true;
+          }
+        },
+        addAttr() {
+          this.selectAttrData = {
+            attr: '',
+            abbr: '',
+            type: '',
+          };
+          this.isEdit = false;
+          this.attrInnerDialogVisible = true;
+        },
+        // -------------- attrInnerDialog --------------
+        attrSubmit() {
+          this.$refs.attrForm.validate(valid => {
+            if (valid) {
+              this.selectAttrData.table_name = this.selectData.table_name;
+              let router = this.isEdit ? 'api_systems/dds/mod_table_field' : 'api_systems/dds/add_table_field';
+              httpRequest('POST', router, this.selectAttrData).then(resp => {
+                this.$message.success(resp.msg);
+                this.attrLoadTableData();
+                this.attrInnerDialogVisible = false;
+              })
+            } else {
+              return false;
+            }
+          })
+        },
+        // -------------- valueDialog ----------------
+        valueLoadTableData() {
+          httpRequest('POST', 'api_systems/dds/all_table_data', {
+            table_name: this.selectData.table_name
+          }, {
+              'page-num': this.valueCurrentPage,
+              'page-limit': this.valueCurrentPageSize
+            }).then(resp => {
+              this.valueTableData = resp.data;
+              this.valueTotal = resp.page.data_count || 0;
+            })
+        },
+        // 跳页
+        valueHandleCurrentChange(val) {
+          this.valueCurrentPage = val;
+          this.valueLoadTableData();
+        },
+        // 改变页容量
+        valueHandleSizeChange(val) {
+          this.valueCurrentPageSize = val;
+          this.valueLoadTableData();
+        },
+        valueHandleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_systems/dds/del_table_data', {
+                table_name: this.selectData.table_name,
+                id: data.id
+              }).then(resp => {
+                this.$message.success(resp.msg);
+                this.valueTableData.splice(this.valueTableData.indexOf(data), 1);
+              })
+            })
+          } else if (type == 'edit') {
+            this.selectValueData = deepCopy(data);
+            this.valueInnerDialogVisible = true;
+          }
+        },
+        // 增加设备台帐数据
+        addValue() {
+          this.valueInnerDialogVisible = true;
+        },
+        // -------------- valueInnerDialog ----------------
+        // 设备台帐数据提交
+        valueSubmit() {
+          let router = this.selectValueData.id ? 'api_systems/dds/mod_table_data' : 'api_systems/dds/add_table_data';
+          this.selectValueData.table_name = this.selectData.table_name;
+          httpRequest('POST', router, this.selectValueData).then(resp => {
+            this.$message.success(resp.msg);
+            setTimeout(_ => {
+              location.reload();
+            }, 500);
+          })
+        },
+        fileClick(abbr) {
+          this.currentAbbr = abbr;
+          document.getElementById('imgAdd').click();
+        },
+        fileChange(el) {
+          Array.from(el.target.files).forEach(item => {
+            let formData = new FormData();
+            formData.append('file', item);
+            formData.append('save_path', userImagePath);
+            formData.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData).then(resp => {
+              Vue.set(this.selectValueData, this.currentAbbr, resp.data.host_file_path)
+            })
+          })
+        },
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,636 @@
+{include file="header" /}
+<link href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+    <body>
+        <section class="el-container is-vertical">
+            {include file="top" /}
+            <section class="el-container">
+                {include file="left" /}
+                <section class="el-container is-vertical">
+                    <main class="el-main" id="main">
+                        <div id="app">
+                            <fieldset>
+                                <legend>
+                                    会员列表
+                                </legend>
+                            </fieldset>
+                            <!-- 筛选 -->
+                            <el-row style="margin-bottom: 10px;">
+                                <el-col>
+                                    <el-card>
+                                        <div slot="header">
+                                            <span>
+                                                查询
+                                            </span>
+                                        </div>
+                                        <!-- 筛选条件 -->
+                                        <el-row :gutter="20">
+                                            <el-col :span="5">
+                                                <el-input placeholder="请输入手机号码" v-model="searchData.mobile">
+                                                    <template slot="prepend">
+                                                        手机号码
+                                                    </template>
+                                                </el-input>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-input placeholder="请输入用户昵称" v-model="searchData.nick_name">
+                                                    <template slot="prepend">
+                                                        用户昵称
+                                                    </template>
+                                                </el-input>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-button @click="search();" icon="el-icon-search">
+                                                </el-button>
+                                                <el-button @click="refresh();" icon="el-icon-refresh">
+                                                </el-button>
+                                            </el-col>
+                                        </el-row>
+                                    </el-card>
+                                </el-col>
+                            </el-row>
+                            <!-- 列表 -->
+                            <el-row>
+                                <el-col>
+                                    <el-card>
+                                        <div slot="header">
+                                            <span>
+                                                会员列表
+                                            </span>
+                                            <span>
+                                                <el-button v-if="is_role != -1" @click="excel_import()" icon="el-icon-success" plain="" size="small" style="float: right" type="primary">
+                                                    会员批量导入
+                                                </el-button>
+                                            </span>
+                                            >
+                                        </div>
+                                        <div style="margin-bottom: 10px;">
+                                            <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('pull_black')" icon="el-icon-error" plain="" size="small" type="danger" v-if="is_role != -1">
+                                                批量拉黑
+                                            </el-button>
+                                            <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('recover_normal')" icon="el-icon-success" plain="" size="small" type="success" v-if="is_role != -1">
+                                                批量恢复
+                                            </el-button>
+                                            <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('delete')" icon="el-icon-error" plain="" size="small" type="danger">
+                                                删除
+                                            </el-button>
+                                            <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float: right;" type="primary">
+                                                新增会员
+                                            </el-button>
+                                        </div>
+                                        <!-- 表格 -->
+                                        <template>
+                                            <el-table :data="tableData" @selection-change="handleSelectionChange" stripe="" style="width: 100%">
+                                                <el-table-column type="selection" width="55">
+                                                </el-table-column>
+                                                <el-table-column fixed="" type="expand" width="55">
+                                                    <template slot-scope="scope">
+                                                        <el-form label-position="left">
+                                                            <el-form-item label="头像">
+                                                                <img :src="scope.row.avatar" alt="">
+                                                                </img>
+                                                            </el-form-item>
+                                                            <el-form-item label="邮箱">
+                                                                <span>
+                                                                    {{scope.row.email}}
+                                                                </span>
+                                                            </el-form-item>
+                                                        </el-form>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column fixed="" label="ID" prop="id" sortable="" width="80">
+                                                </el-table-column>
+                                                <el-table-column fixed="" label="手机号" prop="mobile">
+                                                </el-table-column>
+                                                <el-table-column :filter-method="statusFilterHandler" :filters="statusFilters" fixed="" label="状态" prop="status">
+                                                    <template slot-scope="scope">
+                                                        <el-tag size="mini" type="success" v-if="scope.row.status == 1">
+                                                            正常
+                                                        </el-tag>
+                                                        <el-tag size="mini" type="info" v-else-if="scope.row.status == 9">
+                                                            黑名单
+                                                        </el-tag>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column  fixed="" label="是否查看发电量" prop="is_show">
+                                                    <template slot-scope="scope">
+                                                        <el-tag size="mini" type="success" v-if="scope.row.is_show == 1">
+                                                            是
+                                                        </el-tag>
+                                                        <el-tag size="mini" type="info" v-else-if="scope.row.is_show == 0">
+                                                            否
+                                                        </el-tag>
+                                                    </template>
+                                                </el-table-column>
+                                                <el-table-column fixed="" label="部门" prop="department">
+                                                </el-table-column>
+                                                <el-table-column label="昵称" prop="nick_name">
+                                                </el-table-column>
+                                                <!-- <el-table-column label="会员等级" prop="user_level">
+                                                    <template slot-scope="scope">
+                                                        <el-tag size="mini">
+                                                            {{scope.row.user_level}}
+                                                        </el-tag>
+                                                    </template>
+                                                </el-table-column> -->
+                                                <el-table-column fixed="right" label="操作" width="390">
+                                                    <template slot-scope="scope">
+                                                        <el-button @click="handleClick(scope.row, 'position')" plain="" size="small" type="success" v-if="scope.row.record.id">
+                                                            查看档案
+                                                        </el-button>
+                                                        <el-button @click="goAdd1(scope.row)" plain="" size="small" type="success" v-else-if="!scope.row.record.id">
+                                                            新增档案
+                                                        </el-button>
+                                                        <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                        </el-button>
+                                                        <el-button v-if="is_role != -1" @click="handleClick(scope.row, 'editPassword')" plain="" size="small" type="primary">
+                                                            重置密码
+                                                        </el-button>
+                                                        <el-button @click="handleClick(scope.row, 'editMobile')" type="primary" size="small" plain>修改手机号</el-button>
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                        </template>
+                                        <!-- 分页 -->
+                                        <template>
+                                            <div class="block" style="margin-top: 20px;">
+                                                <el-pagination :current-page="currentPage" :page-size="currentPageSize" :page-sizes="pageSize" :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="total, sizes, prev, pager, next, jumper">
+                                                </el-pagination>
+                                            </div>
+                                        </template>
+                                    </el-card>
+                                </el-col>
+                            </el-row>
+                            <!-- dialog 编辑会员-->
+                            <el-dialog :visible.sync="dialogVisible" title="编辑会员">
+                                <el-row :gutter="20">
+                                    <el-col :offset="4" :span="16">
+                                        <el-form :model="selectData" :rules="rules" label-position="left" label-width="80px" ref="ruleForm">
+                                            <el-form-item label="手机号码" prop="mobile">
+                                                <el-input v-if="!selectData.id"  v-model.number="selectData.mobile">
+                                                </el-input>
+                                                <el-input v-if="selectData.id"  :disabled="true" v-model.number="selectData.mobile">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="登录密码" prop="password" v-if="!selectData.id">
+                                                <el-input type="password" v-model="selectData.password">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="会员昵称" prop="nick_name">
+                                                <el-input v-model="selectData.nick_name">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="状态" prop="status">
+                                                <el-radio :label="1" v-model="selectData.status">
+                                                    正常
+                                                </el-radio>
+                                                <el-radio :label="9" v-model="selectData.status">
+                                                    黑名单
+                                                </el-radio>
+                                            </el-form-item>
+                                            <el-form-item label="是否查看发电量" prop="is_show">
+                                                <el-radio :label="1" v-model="selectData.is_show">
+                                                    是
+                                                </el-radio>
+                                                <el-radio :label="0" v-model="selectData.is_show">
+                                                    否
+                                                </el-radio>
+                                            </el-form-item>
+                                            <el-form-item label="性别" prop="gender">
+                                                <el-radio :label="0" v-model="selectData.gender">
+                                                    保密
+                                                </el-radio>
+                                                <el-radio :label="1" v-model="selectData.gender">
+                                                    男
+                                                </el-radio>
+                                                <el-radio :label="2" v-model="selectData.gender">
+                                                    女
+                                                </el-radio>
+                                            </el-form-item>
+                                            <el-form-item label="部门" prop="department">
+                                                <el-select placeholder="请选择" v-model="selectData.department">
+                                                    <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
+                                                    </el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                            <!-- <el-form-item label="qq号" prop="qq">
+                                                <el-input v-model="selectData.qq">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="微信号" prop="wechat">
+                                                <el-input v-model="selectData.wechat">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="邮箱" prop="email">
+                                                <el-input v-model="selectData.email">
+                                                </el-input>
+                                            </el-form-item> -->
+                                            <el-form-item label="备注" prop="memo">
+                                                <el-input type="textarea" v-model="selectData.memo">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="会员头像" prop="sort">
+                                                <ul class="el-upload-list el-upload-list--picture-card">
+                                                    <li class="el-upload-list__item is-ready" v-if="selectData.avatar">
+                                                        <img :src="selectData.avatar" class="el-upload-list__item-thumbnail">
+                                                            <span class="el-upload-list__item-actions">
+                                                                <span @click="fileClick('avatar')" class="el-upload-list__item-edit">
+                                                                    <i class="el-icon-edit">
+                                                                    </i>
+                                                                </span>
+                                                                <span @click="viewBigImg(selectData.avatar)" class="el-upload-list__item-edit">
+                                                                    <i class="el-icon-view">
+                                                                    </i>
+                                                                </span>
+                                                            </span>
+                                                        </img>
+                                                    </li>
+                                                    <div @click="fileClick('avatar')" class="el-upload el-upload--picture-card" v-else="">
+                                                        <i class="el-icon-plus">
+                                                        </i>
+                                                    </div>
+                                                </ul>
+                                            </el-form-item>
+                                            <el-form-item label="合同档案" prop="sort">
+                                                <ul class="el-upload-list el-upload-list--picture-card">
+                                                    <li class="el-upload-list__item is-ready" v-if="selectData.contract">
+                                                        <img :src="selectData.contract" class="el-upload-list__item-thumbnail">
+                                                            <span class="el-upload-list__item-actions">
+                                                                <span @click="fileClick('contract')" class="el-upload-list__item-edit">
+                                                                    <i class="el-icon-edit">
+                                                                    </i>
+                                                                </span>
+                                                                <span @click="viewBigImg(selectData.contract)" class="el-upload-list__item-edit">
+                                                                    <i class="el-icon-view">
+                                                                    </i>
+                                                                </span>
+                                                            </span>
+                                                        </img>
+                                                    </li>
+                                                    <div @click="fileClick('contract')" class="el-upload el-upload--picture-card" v-else="">
+                                                        <i class="el-icon-plus">
+                                                        </i>
+                                                    </div>
+                                                </ul>
+                                            </el-form-item>
+                                            <el-form-item label="社保" prop="welfare">
+                                                <ul class="el-upload-list el-upload-list--picture-card">
+                                                    <li class="el-upload-list__item is-ready" v-if="selectData.welfare">
+                                                        <img :src="selectData.welfare" class="el-upload-list__item-thumbnail">
+                                                            <span class="el-upload-list__item-actions">
+                                                                <span @click="fileClick('welfare')" class="el-upload-list__item-edit">
+                                                                    <i class="el-icon-edit">
+                                                                    </i>
+                                                                </span>
+                                                                <span @click="viewBigImg(selectData.welfare)" class="el-upload-list__item-edit">
+                                                                    <i class="el-icon-view">
+                                                                    </i>
+                                                                </span>
+                                                            </span>
+                                                        </img>
+                                                    </li>
+                                                    <div @click="fileClick('welfare')" class="el-upload el-upload--picture-card" v-else="">
+                                                        <i class="el-icon-plus">
+                                                        </i>
+                                                    </div>
+                                                </ul>
+                                            </el-form-item>
+                                            <el-form-item>
+                                                <el-button @click="dialogVisible = false;" plain="">
+                                                    取消
+                                                </el-button>
+                                                <el-button @click="submit" type="primary" v-if="is_role != -1">
+                                                    提交
+                                                </el-button>
+                                            </el-form-item>
+                                        </el-form>
+                                    </el-col>
+                                </el-row>
+                            </el-dialog>
+                            <!-- dialog 查看档案-->
+                            <el-dialog :visible.sync="positionVisible" title="档案管理">
+                                <el-row :gutter="20">
+                                    <el-col :offset="4" :span="16">
+                                        <el-form :model="selectData" :rules="rules" label-position="left" label-width="80px" ref="ruleForm1">
+                                            <el-form-item label="学习经历" prop="study_experience">
+                                                <el-input :autosize="{ minRows: 2, maxRows: 4}" type="textarea" v-model="selectData.record.study_experience">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="工作经历" prop="work_experience">
+                                                <el-input :autosize="{ minRows: 2, maxRows: 4}" type="textarea" v-model="selectData.record.work_experience">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="技能" prop="skills">
+                                                <el-input v-model="selectData.record.skills">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="社会关系" prop="social_relations">
+                                                <el-input :autosize="{ minRows: 2, maxRows: 4}" type="textarea" v-model="selectData.record.social_relations">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item>
+                                                <el-button @click="positionVisible = false;" plain="">
+                                                    取消
+                                                </el-button>
+                                                <el-button @click="submit1" type="primary" v-if="is_role != -1">
+                                                    提交
+                                                </el-button>
+                                            </el-form-item>
+                                        </el-form>
+                                    </el-col>
+                                </el-row>
+                            </el-dialog>
+                            <input @change="fileChange($event,'avatar')" id="imgAdd" style="display: none" type="file">
+                            </input>
+                            <input @change="fileChange($event,'contract')" id="imgAdd1" style="display: none" type="file">
+                            </input>
+                            <input @change="fileChange($event,'welfare')" id="imgAdd2" style="display: none" type="file">
+                            </input>
+                            <input @change="fileChange1($event)" id="excelAdd" style="display: none" type="file">
+                            </input>
+                        </div>
+                    </main>
+                    {include file="footer" /}
+                </section>
+            </section>
+        </section>
+        <script type="text/javascript">
+            var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        is_role:$.inArray(3,user.role_ids), 
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        // 状态过滤
+        statusFilters: [{
+          text: '正常',
+          value: 1
+        }, {
+          text: '黑名单',
+          value: 9
+        }],
+         options: [],   //数据
+        // 查询条件
+        searchData: {
+          mobile: '',
+          nick_name: '',
+        },
+        // dialog
+        dialogVisible: false,
+        positionVisible: false,
+        selectData: {
+            record:[],
+        },
+        rules: {
+          mobile: [
+            { required: true, message: '请输入手机号码', trigger: 'blur' },
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' },
+          ]
+        }, 
+      },
+      methods: {
+        fileChange(el,map) { 
+          Array.from(el.target.files).forEach(item => {
+            let formData2 = new FormData();
+            formData2.append('file', item);
+            formData2.append('save_path', userImagePath);
+            formData2.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData2).then(resp => {
+                if(map == 'avatar'){ 
+                    this.selectData.avatar = resp.data.host_file_path;
+                }
+                if(map == 'contract'){ 
+                    this.selectData.contract = resp.data.host_file_path;
+                }
+                if(map == 'welfare'){ 
+                    this.selectData.welfare = resp.data.host_file_path;
+                }
+            })
+          })
+        },
+        excel_import(){
+          document.getElementById('excelAdd').click();
+        },
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_users/users/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          } else if (type === 'position') {
+            this.$refs.ruleForm1 && this.$refs.ruleForm1.clearValidate();
+            this.selectData = deepCopy(data);
+            this.positionVisible = true;
+          }else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.dialogVisible = true;
+          } else if (type === 'editPassword') {
+            this.$prompt('请输入新密码', '提示').then(({ value }) => {
+              httpRequest('POST', 'api_users/users/admin_mod_password', {
+                id: data.id,
+                password: value,
+                password_confirm: value
+              }).then(resp => {
+                this.$message.success(resp.msg)
+              })
+            })
+          } else if (type == 'editMobile') {
+            this.$prompt('请输入新手机号码', '提示', {
+              inputPattern: /^1\d{10}$/,
+              inputErrorMessage: '手机号码格式不正确'
+            }).then(({ value }) => {
+              httpRequest('POST', 'api_users/users/admin_mod_mobile', {
+                id: data.id,
+                mobile: value,
+              }).then(resp => {
+                this.$message.success(resp.msg);
+                data.mobile = value;
+              })
+            })
+          }else if (type == 'setting_project_manager') {
+           this.$confirm('是否设定为项目经理?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_users/users/update', { id: data.id,project_manager:1}).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          }else if (type == 'notsetting_project_manager') {
+           this.$confirm('是否取消项目经理?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_users/users/update', { id: data.id,project_manager:0}).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_users/users/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 新增
+        goAdd() {
+          this.selectData = {
+            mobile: '',
+            nick_name: '',
+            telephone: '',
+            qq: '',
+            wechat: '',
+            email: '',
+            address: '',
+            memo: '',
+            avatar: '',
+            record:'',
+            department:'',
+            status: 1,
+          };
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        goAdd1(map) { 
+          this.selectData.record = {
+            uid: map.id,
+            study_experience: '',
+            work_experience: '',
+            skills: '',
+            social_relations: '',
+          };
+          this.positionVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+ 
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_users/users/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => { 
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          }) ;
+          httpRequest('POST', 'api_users/users/poindex', this.searchData, {
+           }).then(resp => { 
+            resp.data.position.forEach(function (item) {
+                var cate = {
+                  value: item.position_name,
+                  label: item.position_name
+                } 
+                app.options.push(cate);
+              }) 
+          })
+        },
+
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              // 通过校验
+              let router = this.selectData.id ? 'api_users/users/update' : 'api_users/users/save';
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500)
+              });
+            } else {
+              return false;
+            }
+          });
+        },
+        submit1() {
+              // 通过校验
+              let router = this.selectData.record.id ? 'api_users/users/recordupdate' : 'api_users/users/recordsave';
+              httpRequest('POST', router, this.selectData.record).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500)
+              });
+        },
+        fileClick(map) {
+          if(map == 'avatar'){ 
+              document.getElementById('imgAdd').click();
+          }    
+          if(map == 'contract'){ 
+              document.getElementById('imgAdd1').click();
+          } 
+          if(map == 'welfare'){ 
+              document.getElementById('imgAdd2').click();
+          }
+         
+        },
+
+         fileChange1(el) {
+          Array.from(el.target.files).forEach(item => {
+            let formData = new FormData();
+            formData.append('file', item);
+            formData.append('save_path', userImagePath);
+            formData.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData).then(resp => {
+            httpRequest('POST', 'api_users/users/plzc', { excel_pass: resp.data.file_path }).then(resp => {})
+            })
+          })
+        },
+        viewBigImg(img){
+          window.open(img);
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+        </script>
+    </body>
+</link>

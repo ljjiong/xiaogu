@@ -1,0 +1,284 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>基础设置</legend>
+            </fieldset>
+              <el-row :gutter="40">
+                <el-col :span="20" :offset="1">
+                  <el-form :model="formData" ref="ruleForm" label-position="left" label-width="270px" :rules="rules">
+                    
+                    <el-form-item label="系统名称" prop="system_title">
+                      <el-input v-model="formData.system_title" clearable></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="版权所有" prop="copyright">
+                      <el-input v-model="formData.copyright" clearable></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="Wancll版本" prop="version">
+                      <el-input v-model="formData.version" clearable></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="客服电话" prop="customer_telephone">
+                      <el-input v-model="formData.customer_telephone" clearable></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="ICON图标" prop="web_icon">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="formData.web_icon">
+                          <img :src="formData.web_icon" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick('web_icon')">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                            <span class="el-upload-list__item-edit" @click="viewBigImg(formData.web_icon)">
+                              <i class="el-icon-view"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('web_icon')">
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+
+                    <el-form-item label="管理员端登录页logo" prop="admin_login_logo">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="formData.admin_login_logo">
+                          <img :src="formData.admin_login_logo" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick('admin_login_logo')">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                            <span class="el-upload-list__item-edit" @click="viewBigImg(formData.admin_login_logo)">
+                              <i class="el-icon-view"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('admin_login_logo')">
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+
+                    <el-form-item label="管理员端内容页logo" prop="admin_index_logo">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="formData.admin_index_logo">
+                          <img :src="formData.admin_index_logo" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick('admin_index_logo')">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                            <span class="el-upload-list__item-edit" @click="viewBigImg(formData.admin_index_logo)">
+                              <i class="el-icon-view"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('admin_index_logo')">
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+
+                    <el-form-item label="PC端logo" prop="home_pc_logo">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="formData.home_pc_logo">
+                          <img :src="formData.home_pc_logo" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick('home_pc_logo')">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                            <span class="el-upload-list__item-edit" @click="viewBigImg(formData.home_pc_logo)">
+                              <i class="el-icon-view"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('home_pc_logo')">
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+
+                    <el-form-item label="WAP&微信&APP&小程序端首页logo" prop="wap_index_logo">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="formData.wap_index_logo">
+                          <img :src="formData.wap_index_logo" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick('wap_index_logo')">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                            <span class="el-upload-list__item-edit" @click="viewBigImg(formData.wap_index_logo)">
+                              <i class="el-icon-view"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('wap_index_logo')">
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+
+                    <el-form-item label="WAP&微信&APP&小程序端登录页logo" prop="wap_login_logo">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="formData.wap_login_logo">
+                          <img :src="formData.wap_login_logo" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick('wap_login_logo')">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                            <span class="el-upload-list__item-edit" @click="viewBigImg(formData.wap_login_logo)">
+                              <i class="el-icon-view"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('wap_login_logo')">
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+
+                    <el-form-item label="会员默认头像" prop="avatar">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="formData.avatar">
+                          <img :src="formData.avatar" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick('avatar')">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                            <span class="el-upload-list__item-edit" @click="viewBigImg(formData.avatar)">
+                              <i class="el-icon-view"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('avatar')">
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+
+                    <el-form-item label="分享二维码背景图" prop="share_img">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="formData.share_img">
+                          <img :src="formData.share_img" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick('share_img')">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                            <span class="el-upload-list__item-edit" @click="viewBigImg(formData.share_img)">
+                              <i class="el-icon-view"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('share_img')">
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+
+                    <el-form-item>
+                      <el-button  type="warning" @click="reset">重置</el-button>
+                      <el-button type="primary" @click="submit">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+              <input @change="fileChange($event)" type="file" id="imgAdd" style="display: none">
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    let ue = {};
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          formData: {},
+          currentUploadType: '',
+          currentUploadIndex: '',
+          rules: {
+            system_title: [
+              { required: true, message: '请输入标题', trigger: 'blur' },
+            ]
+          },
+        }
+      },
+      methods: {
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_systems/Params/getParams', {'type':'basic'}).then(resp => {
+            this.formData = resp.data;
+          })
+        },
+        // ------------------- dialog ---------------------
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              let router = 'api_systems/Params/updateParams';
+              this.formData.update_type = 'basic';
+              httpRequest('POST', router, this.formData).then(resp => {
+                this.$message.success(resp.msg);
+                httpRequest('post', 'api_systems/params/getParams', {
+                  type: 'basic'
+                }, {}, false).then(resp => {
+                  setStorage('basic_info', resp.data);
+                });
+                setTimeout(_ => {
+                  location.reload();
+                }, 500)
+              });
+            } else {
+              return false;
+            }
+          });
+        },
+        reset(){
+          let router = 'api_systems/Params/resetParams';
+            this.formData.update_type = 'basic';
+            httpRequest('POST', router).then(resp => {
+              this.$message.success(resp.msg)
+              setTimeout(_ => {
+                location.reload();
+              }, 500)
+            });
+        },
+        fileClick(type, index) {
+          this.currentUploadType = type;
+          document.getElementById('imgAdd').click();
+        },
+        fileChange(el) {
+          Array.from(el.target.files).forEach(item => {
+            let formData = new FormData();
+            formData.append('file', item);
+            formData.append('save_path', userImagePath);
+            formData.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData).then(resp => {
+              this.formData[this.currentUploadType] = resp.data.host_file_path;
+            })
+          })
+        },
+        viewBigImg(img){
+          window.open(img);
+        }
+      },
+      watch: {
+        
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,189 @@
+/* form */
+.area .tips {
+	margin-bottom: 0.8rem;
+	color: #696969;
+}
+
+.area {
+	margin: 0.5rem 0.5rem;
+}
+
+.area .input {
+	height: 2.4rem;
+	background-color: #fff;
+	margin-bottom: 0.5rem;
+	padding-left: 1.3rem;
+	border-radius: 0.15rem;
+	letter-spacing: 0.05rem;
+}
+
+.area .submit {
+	height: 2.4rem;
+	background-color: #358cff;
+	text-align: center;
+	line-height: 2.4rem;
+	color: #fff;
+	letter-spacing: 0.2rem;
+	border-radius: 0.2rem;
+}
+
+.area .submit:active {
+	background-color: #1772ea
+}
+
+.area .mix {
+	position: relative;
+	display: flex;
+}
+
+.area .mix i {
+	position: absolute;
+	margin-top: -0.9rem;
+	top: 55%;
+	left: 0.3rem;
+}
+
+.area .mix .short {
+	width: 65%;
+	display: inline-block;
+	margin-right: 0.5rem;
+}
+
+.area .mix .get-varicode {
+	display: inline-block;
+	background-color: #358cff;
+	text-align: center;
+	height: 2.2rem;
+	color: #fff;
+	line-height: 2.2rem;
+	border-radius: 0.2rem;
+	width: 35%;
+}
+
+.area .mix .get-varicode:active {
+	background-color: #1772ea;
+}
+
+.area .other {
+	margin: 0.4rem 0rem 0.5rem 0rem;
+	width: 100%;
+}
+
+.area .other:after {
+	display: block;
+	content: "";
+	clear: both;
+}
+
+.area .other a {
+	color: #a39c9c;
+}
+
+.third {
+	color: #999999;
+	margin-top: 2rem;
+	text-align: center;
+}
+
+.icon {
+	text-align: center;
+	margin-top: .6rem;
+	display: flex;
+	display: -webkit-flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.icon img {
+	width: 1.5rem;
+	display: inline-block;
+	margin: 0rem 1rem;
+}
+
+/* 头部 */
+#header {
+	background-color: #fff;
+	color: #000 !important;
+}
+
+.aui-bar-nav.aui-bar-light .aui-iconfont {
+	color: #000 !important;
+}
+
+/* 订单按钮组 */
+.order-buttons {
+	width: 100%;
+}
+
+.order-buttons:after {
+	display: block;
+	content: "";
+	clear: both;
+}
+
+.order-buttons .button {
+	text-align: center;
+	width: 23%;
+	height: 1.5rem;
+	line-height: 1.5rem;
+	border-radius: 1.5rem;
+	border: 1px solid #a8a8a8;
+	float: right;
+	color: #555;
+	margin: 6px 2px 0 6px;
+	font-size: 12px;
+}
+
+.order-buttons .mini-button {
+	text-align: center;
+	width: 70%;
+	height: 1rem;
+	line-height: 1rem;
+	border-radius: 1rem;
+	border: 1px solid #a8a8a8;
+	float: right;
+	color: #555;
+	margin: 6px 2px 0 6px;
+	font-size: 12px;
+}
+
+.order-buttons .active {
+	color: #358cff;
+	border: 1px solid #358cff;
+}
+
+.icon-div {
+	position: relative;
+	height: 26px;
+}
+
+.icon-div img {
+	position: absolute;
+	width: 22px;
+	height: 22px;
+	left: 50%;
+	top: 50%;
+	margin-left: -11px;
+	margin-top: -11px;
+}
+
+.icon-div.aui-bar-tab-label {
+	color: #898989;
+}
+
+.icon-footer-active {
+	color: #E75151;
+}
+
+img {
+	display: block;
+}
+
+footer {
+	box-shadow: 0px 0px 15px 4px #f1f1f1;
+}
+
+/* 优化界面 */
+.Leave_blank {
+	margin-top: 1rem;
+}

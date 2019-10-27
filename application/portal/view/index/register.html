@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<script src="/public/static/common/script/qrcode.min.js"></script>
+<style>
+    .register-qrode-img img {
+        width: 100%;
+    }
+</style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="white padding-tt-15">
+            <div class="w1200 over">
+                <div class="over">
+                    <div class="left margin-right-10 pointer" onclick="goto('index')" v-for="(logo,key) in logos" :key="key">
+                        <img :src="logo.img" alt="">
+                        <div class="center margin-5 grey-text text-darken-2" v-text="logo.title"></div>
+                    </div>
+                    <div class="login-ti-border-left left grey-text text-ligthen-1 font-size-20 padding-10 margin-5">欢迎注册</div>
+                </div>
+                <div class="right">
+                    <span class="grey-text font-size-14">已有账号？</span>
+                    <span class="blue-text font-size-14 bt" onclick="goto('login')">请登录></span>
+                </div>
+            </div>
+        </div>
+        <div class="w1200 margin-tt-15 white">
+            <div class="over regoster-content">
+                <div class="left black-text" style="width: 440px;">
+                    <div class="flex margin-tt-10">
+                        <div class="register-input-set ">手机号码：</div>
+                        <div class="flex1 register-border ">
+                            <input type="text" onkeyup="value=value.replace(/[^\d]/g,'')" v-model="register.mobile">
+                        </div>
+                    </div>
+                    <div class="flex margin-tt-15">
+                        <div class="register-input-set ">验证码：</div>
+                        <div class="flex1 flex register-border ">
+                            <input type="text" @keyup.enter="doRegister() " class="flex1" v-model="register.varicode">
+                            <div class="padding-10 blue white-text  getyanzh bt " onclick="sendVaricode(this,1)">获取验证码</div>
+                        </div>
+                    </div>
+                    <div class="flex margin-tt-15">
+                        <div class="register-input-set ">设置登录密码：</div>
+                        <div class="flex1 register-border ">
+                            <input type="password" placeholder="密码要求必须大于6位" v-model="register.password">
+                        </div>
+                    </div>
+                    <div class="flex margin-tt-15">
+                        <div class="register-input-set ">确认登录密码：</div>
+                        <div class="flex1 register-border ">
+                            <input type="password" placeholder="再次输入密码" v-model="register.repassword">
+                        </div>
+                    </div>
+                    <div class="flex margin-tt-10">
+                        <div class="register-input-set"></div>
+                        <div class="flex1 grey-text text-ligthen-1">
+                            <i class="iconfont icon-yuanxingweixuanzhong left margin-right-5 " @click="isTrues()" v-if="!isTrue"></i>
+                            <i class="iconfont icon-roundcheckfill left margin-right-5 blue-text" @click="isTrues()" v-else></i>
+                            用户注册即是代表
+                            <span class="blue-text bt" @click="goto('article', {articleId: 6})">《网开创 服务条例》
+                        </div>
+                    </div>
+                    <div class="flex margin-tt-15">
+                        <div class="register-input-set"></div>
+                        <div class="flex1 blue white-text center font-size-16 padding-15 bt" @click="doRegister()">
+                            确认提交
+                        </div>
+                    </div>
+                </div>
+                <div class="right center">
+                    <div class="register-qrode-img">
+                        <img src="/public/static/portal/img/appios.png" alt=""> 下载ios版本app
+                    </div>
+                    <div class="register-qrode-img">
+                        <img src="/public/static/portal/img/appios.png" alt="">
+                        <span class=""> 下载安卓版本app</span>
+
+                    </div>
+                    <div class="register-qrode-text black-text center" style="width:300px;">
+                        扫描此二维码下载网开创手机版app吧！
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="margin-top-15 padding-tt-15 center white">
+            <div class="over black-text inline-black margin-tt-15 padding-top-15">
+                <div class="left login-border-right margin-left-15  padding-right-15 pointer" v-for="(blogroll,key) in blogrolls" :key="key" v-text="blogroll.name" @click="gogoblogroll(blogroll.href)"></div>
+            </div>
+            <div class="black-text margin-tt-10">网络文化经营许可证：浙网文[2016]0155-055号 网开亿面公司版权所有©1997-2018 </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    var parent_mobile = querystring.parent_mobile;
+    var thirdType = getStorage('thirdType')
+    var app = new Vue({
+        el: '#app',
+        data: {
+            login: {},
+            register: {},
+            reset: {},
+            currentScene: 'login',
+            isTrue: false,
+            parent_mobile: parent_mobile || '',
+            openid: querystring.openid,
+            isBtn: true,
+            logos: '',
+            blogrolls:''
+        },
+        methods: {
+            gogoblogroll:function(href){
+			window.open(href)
+		    },
+            isTrues: function () {
+                this.isTrue = !this.isTrue;
+            },
+            doRegister: function () {
+
+                if (this.register.mobile == '' || !variTelephone(this.register.mobile)) {
+                    layer.msg('请填写正确的手机号')
+                    return;
+                }
+                if (this.register.password == '' || this.register.password == undefined || this.register.password == null) {
+                    layer.msg('请填写密码')
+                    return;
+                }
+                if (!variPassword(this.register.password)) {
+                    layer.msg('密码限制6-20位大小写字母数字组合');
+                    return;
+                }
+                if (this.register.varicode == '' || this.register.varicode == undefined || this.register.varicode == null) {
+                    layer.msg('请填写验证码')
+                    return;
+                }
+                if (this.register.password !== this.register.repassword) {
+                    layer.msg('两次输入密码不一致')
+                    this.reset.repassword = '';
+                    return;
+                }
+                if (!this.isTrue) {
+                    layer.msg('请勾选我同意')
+                    return;
+                }
+                var data = {
+                    parent_mobile: this.parent_mobile || '',
+                    mobile: this.register.mobile,
+                    password: this.register.password,
+                    code: this.register.varicode,
+                }
+                if (thirdType == 'third_qq') {
+                    data.qq_openid = this.openid
+                } else if (thirdType == 'third_wechat') {
+                    data.wechat_openid = this.openid
+                }
+                httpRequest('POST', 'api_users/user_accounts/register', data, function (resp) {
+                    layer.msg(resp.msg)
+                    resp.data.user.avatar = resp.data.user.avatar || '/public/static/images/avatar.png';
+                    user = resp.data.user;
+                    token = resp.data.token;
+                    setStorage(getClientType() + 'User', resp.data.user);
+                    setStorage(getClientType() + 'Token', resp.data.token);
+                    layer.msg(resp.msg);
+                    setTimeout(function () {
+                        goto('index')
+                    }, 500)
+                })
+            },
+        },
+        mounted: function () {
+             //    首页logo
+			httpRequest('POST', 'api_systems/params/index', {
+				type:"basic"
+			}, function (resp) {
+				if (resp.code == 1) {
+				var title = document.getElementsByTagName('title')[0];
+				  title.text = resp.data.system_name;
+				};
+			})
+            // pclogo
+            httpRequest('POST', 'api_query/configs/pc_logo', {}, function (resp) {
+                if (resp.code == 1) {
+                    app.logos = resp.data;
+                }
+            });
+            // 底部
+            httpRequest('post', 'api_articles/friendly_links/lists', { type: "foots" }, function (resp) {
+                app.blogrolls = resp.data
+            });
+        }
+    })
+
+    sendVaricode = function (evn, type) {
+        var mobile = app.register.mobile;
+        if (!variTelephone(mobile)) {
+            layer.msg('请填写正确的手机号码')
+            return;
+        }
+        if (!app.isBtn) {
+            return;
+        }
+        httpRequest('POST', 'api_systems/helper/send_code', {
+            mobile: mobile,
+            type: type
+        }, function (resp) {
+            layer.msg(resp.msg)
+            if (resp.code == 1) {
+                sendclick(evn);
+            }
+        })
+    }
+
+
+    wait = 90;
+    sendclick = function (evn) {
+        var obj = $(evn);
+        if (wait == 0) {
+            // obj.attr('disabled', false);
+            // obj.text('获取验证码');
+            // obj.css('backgroundColor', '#358cff');
+            app.isBtn = true;
+            obj.text("获取验证码");
+            wait = 90;
+        } else {
+            // obj.css('backgroundColor', '#696969');
+            // obj.attr('disabled', true);
+            app.isBtn = false;
+            obj.text(wait + '秒再次发送');
+            wait--;
+            setTimeout(function () {
+                sendclick(evn);
+            }, 1000);
+        }
+    }
+    new QRCode(document.getElementById("my_qu"), "http://192.168.1.116:81/portal");
+</script>
+
+</html>

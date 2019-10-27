@@ -1,0 +1,244 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>订单列表</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col :span="24">
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <span>订单状态</span>
+                      <el-select v-model="searchData.status">
+                        <el-option :value="1" label="待付款"></el-option>
+                        <el-option :value="2" label="待发货"></el-option>
+                        <el-option :value="3" label="待收货"></el-option>
+                        <el-option :value="4" label="已完成"></el-option>
+                        <el-option :value="9" label="已取消"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入订单号" v-model="searchData.order_no">
+                        <template slot="prepend">订单号</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="会员手机号" v-model="searchData.user_mobile">
+                        <template slot="prepend">手机号</template>
+                      </el-input>
+                    </el-col>
+                    <br /><br />
+                    <el-col :span="5">
+                      <span>支付类型</span>
+                      <el-select v-model="searchData.pay_type">
+                        <el-option :value="1" label="支付宝"></el-option>
+                        <el-option :value="2" label="微信"></el-option>
+                        <el-option :value="3" label="钱包"></el-option>
+                      </el-select>
+                    </el-col>
+                    <br /><br />
+
+                    <el-col :spen="5">
+                      <spen>开始日期</spen>
+                      <el-date-picker v-model="searchData.begin_time" type="datetime" placeholder="请输入开始日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                      </el-input>
+                    </el-col>
+                    <br /><br />
+                    <el-col :spen="5">
+                      <spen>结束日期</spen>
+                      <el-date-picker v-model="searchData.end_time" type="datetime" placeholder="请输入结束日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                      </el-input>
+                    </el-col>
+                    <br /><br />
+                    <!-- 筛选按钮 -->
+                    <el-col :span="10">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                      <el-button icon="el-icon-download" @click="export_data();">导出订单</el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>订单列表</span>
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%">
+                      <el-table-column prop="id" label="ID" width="80" fixed sortable></el-table-column>
+                      <el-table-column prop="user_info.mobile" label="会员信息" fixed>
+                        <template slot-scope="scope">
+                          <span>{{scope.row.user_info.mobile}} ({{scope.row.user_info.nick_name || '匿名用户'}})</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="order_no" label="订单号" fixed></el-table-column>
+                      <el-table-column prop="total_money" label="订单金额" sortable></el-table-column>
+                      <el-table-column prop="deliver_tip_num" label="提醒发货次数" sortable></el-table-column>
+                      <el-table-column prop="status" label="订单状态" sortable :filters="statusFilters" :filter-method="statusFilterHandler">
+                        <template slot-scope="scope">
+                          <el-tag size="mini" v-show="scope.row.status == 1">待付款</el-tag>
+                          <el-tag size="mini" type="danger" v-show="scope.row.status == 2">待发货</el-tag>
+                          <el-tag size="mini" type="warning" v-show="scope.row.status == 3">待签收</el-tag>
+                          <el-tag size="mini" type="success" v-show="scope.row.status == 4">已完成</el-tag>
+                          <el-tag size="mini" type="info" v-show="scope.row.status == 9">已取消</el-tag>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="update_time" label="创建时间" sortable>
+                        <template slot-scope="scope">
+                          <i class="el-icon-time"></i>
+                          <span>{{ scope.row.create_time }}</span>
+                        </template>
+                      </el-table-column>
+                      <!-- 操作栏 两个操作width设置为140 三个200 -->
+                      <el-table-column label="操作" fixed="right" width="140">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        // 状态过滤
+        statusFilters: [{
+          text: '待付款',
+          value: 1
+        }, {
+          text: '待发货',
+          value: 2
+        }, {
+          text: '待收货',
+          value: 3
+        }, {
+          text: '已完成',
+          value: 4
+        }, {
+          text: '已取消',
+          value: 9
+        }],
+        // 查询条件
+        searchData: {
+          order_no: '',
+          user_mobile: '',
+          pay_type: '',
+          begin_time: '',
+          end_time: '',
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_orders/orders/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          } else if (type === 'edit') {
+            location = location.origin + '/admin/orders/edit' + querystringStringify({ orderId: data.id, currentPage: this.currentPage });
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 导出数据
+        export_data() {
+          this.$confirm('确认导出?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_orders/orders/export', this.searchData).then(resp => {
+                this.$message.success(resp.msg);
+                window.open(resp.data);
+              })
+          })
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_orders/orders/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+
+  </script>
+
+</body>
+
+</html>

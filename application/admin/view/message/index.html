@@ -1,0 +1,310 @@
+{include file="header" /}
+<link href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+    <body>
+        <section class="el-container is-vertical">
+            {include file="top" /}
+            <section class="el-container">
+                {include file="left" /}
+                <section class="el-container is-vertical">
+                    <main class="el-main" id="main">
+                        <div id="app">
+                            <fieldset>
+                                <legend>
+                                    会员列表
+                                </legend>
+                            </fieldset>
+                            <!-- 筛选 -->
+                            <el-row style="margin-bottom: 10px;">
+                                <el-col>
+                                    <el-card>
+                                        <div slot="header">
+                                            <span>
+                                                查询
+                                            </span>
+                                        </div>
+                                        <!-- 筛选条件 -->
+                                        <el-row :gutter="20">
+                                            <el-col :span="5">
+                                                <el-input placeholder="文章标题" v-model="searchData.messageTitle">
+                                                    <template slot="messageTitle">
+                                                        文章标题
+                                                    </template>
+                                                </el-input>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-input placeholder="文章内容" v-model="searchData.content">
+                                                    <template slot="content">
+                                                        文章内容
+                                                    </template>
+                                                </el-input>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-button @click="search();" icon="el-icon-search">
+                                                </el-button>
+                                                <el-button @click="refresh();" icon="el-icon-refresh">
+                                                </el-button>
+                                            </el-col>
+                                        </el-row>
+                                    </el-card>
+                                </el-col>
+                            </el-row>
+                            <!-- 列表 -->
+                            <el-row>
+                                <el-col>
+                                    <el-card>
+                                        <div slot="header">
+                                            <span>
+                                                文章列表
+                                            </span>
+                                        </div>
+                                        <div style="margin-bottom: 10px;">
+                                            <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('pull_black')" icon="el-icon-error" plain="" size="small" type="danger">
+                                                批量删除
+                                            </el-button>
+                                            <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float: right;" type="primary">
+                                                新增公告
+                                            </el-button>
+                                        </div>
+                                        <!-- 表格 -->
+                                        <template>
+                                            <el-table :data="tableData" @selection-change="handleSelectionChange" stripe="" style="width: 100%">
+                                                <el-table-column type="selection" width="55">
+                                                </el-table-column>
+                                                <el-table-column fixed="" label="公告标题" prop="messageTitle">
+                                                </el-table-column>
+                                                 <el-table-column fixed="" label="公告内容" prop="content" height='200'>
+                                                </el-table-column>
+                                                <el-table-column fixed="" label="上传者" prop="users.nick_name">
+                                                </el-table-column>
+                                                <el-table-column fixed="" label="上传时间" prop="create_time">
+                                                </el-table-column>
+                                                <el-table-column fixed="right" label="操作" width="390">
+                                                    <template slot-scope="scope">
+                                                        <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                        </el-button>
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                        </template>
+                                        <!-- 分页 -->
+                                        <template>
+                                            <div class="block" style="margin-top: 20px;">
+                                                <el-pagination :current-page="currentPage" :page-size="currentPageSize" :page-sizes="pageSize" :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="total, sizes, prev, pager, next, jumper">
+                                                </el-pagination>
+                                            </div>
+                                        </template>
+                                    </el-card>
+                                </el-col>
+                            </el-row>
+                            <!-- dialog -->
+                            <el-dialog :visible.sync="dialogVisible" title="编辑文章">
+                                <el-row :gutter="20">
+                                    <el-col :offset="4" :span="16">
+                                        <el-form :model="selectData" :rules="rules" label-position="left" label-width="80px" ref="ruleForm">
+                                            <el-form-item label="公告标题" prop="messageTitle">
+                                                <el-input v-model="selectData.messageTitle">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="公告内容" prop="content">
+                                                <el-input :autosize="{ minRows: 2, maxRows: 20}" type="textarea" v-model="selectData.content">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item>
+                                                <el-button @click="dialogVisible = false;" plain="">
+                                                    取消
+                                                </el-button>
+                                                <el-button @click="submit" type="primary">
+                                                    提交
+                                                </el-button>
+                                            </el-form-item>
+                                        </el-form>
+                                    </el-col>
+                                </el-row>
+                            </el-dialog>
+                            <input @change="fileChange($event)" id="imgAdd" style="display: none" type="file">
+                            </input>
+                        </div>
+                    </main>
+                    {include file="footer" /}
+                </section>
+            </section>
+        </section>
+        <script type="text/javascript">
+            this.show=false;
+            var app = new Vue({
+              el: '#app',
+              data: {
+                tableData: [],  //表格数据
+                currentPage: parseInt(querystring.currentPage) || 1, //当前页
+                currentPageSize: 20,  //当前页容量
+                pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+                total: 0, //总页数
+                multipleSelection: [],  //多选项
+                // 查询条件
+                searchData: {
+                  mobile: '',
+                  nick_name: '',
+                },is_pushFilters: [{
+                  text: '正常',
+                  value: 1
+                }, {
+                  text: '未发放',
+                  value: 0
+                }],
+                // dialog
+                dialogVisible: false,
+                selectData: {},
+                rules: {
+                  mobile: [
+                    { required: true, message: '请输入手机号码', trigger: 'blur' },
+                  ],
+                  password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' },
+                  ]
+                }, 
+              },
+              methods: {
+                handleRemove(file, fileList) {
+                    console.log(file, fileList);
+                },
+                 handlePreview(file) {
+                    console.log(file);
+                },
+                handleExceed(files, fileList) {
+                    this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+                },
+                beforeRemove(file, fileList) {
+                    return this.$confirm(`确定移除 ${ file.name }？`);
+                },
+                fileChange(el,map) { 
+                  Array.from(el.target.files).forEach(item => {
+                    let formData2 = new FormData();
+                    formData2.append('file', item);
+                    formData2.append('save_path', userImagePath);
+                    formData2.append('is_rename', 1);
+                    httpRequest('POST', 'api_systems/helper/upload_file', formData2).then(resp => {
+                        if(map == 'avatar'){ 
+                            this.selectData.file_name = resp.data.host_file_path;
+                        }
+                        if(map == 'contract'){ 
+                            this.selectData.contract = resp.data.host_file_path;
+                        }
+                    })
+                  })
+                },
+                // 点击代理
+                handleClick(data, type) {
+                  if (type == 'del') {
+                    this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+                      httpRequest('POST', 'api_remuneration/about/delete', { id: data.id }).then(resp => {
+                        this.$message.success(resp.msg)
+                        setTimeout(_ => {
+                          location.reload();
+                        }, 500);
+                      })
+                    })
+                  }else if (type === 'edit') {
+                    this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+                    this.selectData = deepCopy(data);
+                    this.dialogVisible = true;
+                  } 
+                },
+                // 跳页
+                handleCurrentChange(val) {
+                  this.currentPage = val;
+                  this.loadTableData();
+                },
+                // 改变页容量
+                handleSizeChange(val) {
+                  this.currentPageSize = val;
+                  this.loadTableData();
+                },
+                // 过滤
+                is_pushFilterHandler(value, row, column) {
+                  return row['is_push'] === value;
+                },
+                // 搜索
+                search() {
+                  this.currentPage = 1;
+                  this.loadTableData();
+                },
+                // 重置
+                refresh() {
+                  this.currentPage = 1;
+                  for (var key in this.searchData) {
+                    this.searchData[key] = ''
+                  }
+                  this.loadTableData();
+                },
+                // 多选监听
+                handleSelectionChange(val) {
+                  this.multipleSelection = val;
+                },
+                // 批量操作
+                multiOperate(type) {
+
+                  let ids = this.multipleSelection.map(item => item.id);
+                  this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+                    httpRequest('POST', 'api_file/message/batch_' + type, { id: ids }).then(resp => {
+                      this.$message.success(resp.msg);
+                      setTimeout(_ => {
+                        location.reload();
+                      }, 500);
+                    })
+                  })
+                },
+                // 新增
+                goAdd() {
+                  this.selectData = {
+                    base_pay: '',
+                    overtime_wage: '',
+                    mission_allowance: '',
+                    belate: '',
+                    salary: '',
+                    absenteeism: '',
+                    start_time: '',
+                    users: '',
+                    end_time: '',
+                    expiry_time:'',
+                  };
+                  this.dialogVisible = true;
+                  this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+
+                },
+                // 加载数据
+                loadTableData() {
+                  httpRequest('POST', 'api_file/message/index', this.searchData, {
+                    'page-num': this.currentPage,
+                    'page-limit': this.currentPageSize
+                  }).then(resp => { 
+                    this.tableData = resp.data;
+                    this.total = resp.page.data_count || 0;
+                  })
+                },
+                submit() {
+                  this.$refs.ruleForm.validate(valid => {
+                    if (valid) {
+                      // 通过校验
+                      let router = this.selectData.id ? 'api_file/message/update' : 'api_file/message/save';
+                      httpRequest('POST', router, this.selectData).then(resp => {
+                        this.$message.success(resp.msg)
+                        setTimeout(_ => {
+                          location.reload();
+                        }, 500)
+                      });
+                    } else {
+                      return false;
+                    }
+                  });
+                },
+                fileClick() {
+                  document.getElementById('imgAdd').click();
+                },
+              },
+              mounted() {
+                this.loadTableData();
+              }
+            });
+        </script>
+    </body>
+</link>

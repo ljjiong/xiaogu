@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.theme.default.min.css">
+<script src="/public/static/OwlCarousel2-2.2.1/owl.carousel.min.js"></script>
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+	<style type="text/css">
+		@font-face
+		{
+		font-family:'047';
+		src: url(/public/static/portal/fonts/047-cai978.ttf);
+		}
+		body{background-color:#f4f4f4;}
+		.coupon-banner{width:100%;margin-bottom:20px;}
+		.coupon-banner img{width:100%;display:block;}
+		.coupon-content1{margin-bottom:25px;background-color:#ffffff;}
+		.coupon-content1 .cont1-left{display:block;width:576px;position:relative;margin-right:24px;float:left;}
+		.coupon-content1 .cont1-left img{width:100%;display:block;height:auto;}
+		.coupon-content1 .cont1-left .title{position:absolute;bottom:27px;left:19px;color:#ffffff;letter-spacing:1.6px;}
+		.coupon-content1 .cont1-right{width:600px;float:left;padding-top:20px;}
+		.coupon-content1 .cont1-right li{width:168px;height:340px;background:url(/public/static/portal/images/sy-cont-img2.png) center no-repeat;float:left;margin-right:32px;text-align:center;padding-top:40px;box-sizing:border-box;}
+		.coupon-content1 .cont1-right li:htn-child(3n){margin-right:0px;}
+		.coupon-content1 .cont1-right li .text1{color:#ffffff;margin-bottom:;font-size: 13px;letter-spacing:2px;}
+		.coupon-content1 .cont1-right li .price{font-family:'047';color:#ffffff;font-size:90px;}
+		.coupon-content1 .cont1-right li .button{width:28px;height:28px;background-color:#000000;text-align:center;line-height:28px;color:#ffffff;border-radius:28px;margin-bottom:35px;}
+		.coupon-content1 .cont1-right li .title{font-size: 18px;color: rgb(247, 255, 253);font-weight:normal;}	
+		.coupon-content1 .cont1-right li .line{width:30px;margin:0 auto;border-top:3px solid #ffffff;}
+		.coupon-content2 img{width:100%;display:block;height:auto;}
+		.coupon-content2 a{display:block;}
+		.coupon-content3{width:100%;background-color:#0f0c37;padding-top:62px;padding-bottom:45px;padding-left:14px;padding-right:14px;box-sizing:border-box;}
+		.coupon-content3 li{float:left;width:293px;text-align:center;}
+		.coupon-content3 li div{margin-bottom:10px;}
+		.coupon-content3 li .title{font-family:'047';color:#ffffff;font-size:60px;display:inline-block;margin-right:2px;}
+		.coupon-content3 li .ftitle{display:inline-block;color:#ffffff;line-height:1.65;} 
+		.coupon-content3 li .button{width:166px;height:26px;text-align:center;line-height:26px;color:#ffffff;background-color:#ff192f;transition:all .3s;-moz-transition:all .3s;-webkit-transition:all .3s;-o-transition:all .3s;}
+		.coupon-content3 li .button:hover{background-color:#e40016;}
+		.coupon-content4{padding-top:55px;}
+		.cont4-title{text-align:center;width:140px;height:24px;line-height:24px;color:#000000;font-size: 20px;margin:0 auto;letter-spacing:1.4px;margin-bottom:30px;position:relative;}
+		.cont4-title:before{content:"";width:109px;height:1px;background-color:#b5b5b5;position:absolute;left:-100%;top:13px;}
+		.cont4-title:after{content:"";width:109px;height:1px;background-color:#b5b5b5;position:absolute;right:-100%;top:13px;}	
+		.cont5-bottom{width:100%;}
+		.cont5-bottom li{position:relative;float:left;width:291px;margin-right:12px;margin-bottom:16px;background-color:#ffffff;border-radius:4px;}
+		.cont5-bottom li:nth-child(4n){margin-right:0px;}
+		.cont5-bottom li a{display:block;position:relative;padding-top:25px;padding-bottom:28px;}
+		.cont5-bottom li a .cont5-left{float:left;width:130px;height:114px;text-align:center;}
+		.cont5-bottom li a .cont5-left img{max-height:100%;}
+		.cont5-bottom li a .cont5-right{float:left;width:161px;text-align:left;padding-top:2px;padding-right:7px;box-sizing:border-box;}
+		.cont5-bottom li .cont5-right .title{font-family:'047';color:#000000;font-size:36px;display:inline-block;margin-right:2px;}
+		.cont5-bottom li .cont5-right .ftitle{display:inline-block;color:#000000;line-height:1.5;padding-top:2px;font-weight:bold;font-size:11px;} 	
+		.cont5-bottom li .cont5-right .text{color: rgb( 0, 0, 0 );font-size:10px;}
+		.cont5-title{font-size:20px;color:#000000;text-align:center;width:140px;margin:0 auto;margin-top:55px;margin-bottom:30px;letter-spacing:1.2px;position:relative;font-weight:bold;}
+		.cont5-title:before{content:"";position:absolute;top:15px;width:110px;height:1px;background-color:#b5b5b5;left:-100%;}
+		.cont5-bottom{padding-bottom:130px;}
+		.cont5-title:after{content:"";position:absolute;top:15px;width:110px;height:1px;background-color:#b5b5b5;right:-100%;}
+		.cont5-bottom li .right-img{position:absolute;bottom:0px;right:0px;}
+	</style>
+
+</head>
+<body>
+	{include file="/index/header" /}
+	<div class="coupon-banner ">
+		<img src="/public/static/portal/images/yh-banner.jpg">
+	</div>
+	
+	<div class="w1200" id="app">
+		<div class="coupon-content1 clearfix">
+			<a class="cont1-left" href="">
+				<img src="/public/static/portal/images/lj-sont1-img.jpg">
+				<p class="title font-size-18">茶理理家居生活馆</p>
+			</a>
+			<div class="cont1-right">
+				<ul class="clearfix">
+					<li v-for="(coupon,couKey) in coupons" :key="couKey" v-if="couKey == 1">
+						<p class="text1 margin-btn-15">- RMB -</p>
+						<h2 class="price margin-btn-10">{{coupon.change_value}}</h2>
+						<a  class="button font-size-14 pointer" @click="getCoupon(coupon)">领</a>
+						<h4 class="title margin-btn-15">满299元使用</h4>
+						<div class="line"></div>
+					</li>
+					<li v-for="(coupon,couKey) in coupons" :key="couKey" v-if="couKey == 3">
+						<p class="text1 margin-btn-15">- RMB -</p>
+						<h2 class="price margin-btn-10">{{coupon.change_value}}</h2>
+						<a  class="button font-size-14 pointer" @click="getCoupon(coupon)">领</a>
+						<h4 class="title margin-btn-15">满299元使用</h4>
+						<div class="line"></div>
+					</li>
+					<li v-for="(coupon,couKey) in coupons" :key="couKey" v-if="couKey == 4">
+						<p class="text1 margin-btn-15">- RMB -</p>
+						<h2 class="price margin-btn-10">{{coupon.change_value}}</h2>
+						<a  class="button font-size-14 pointer" @click="getCoupon(coupon)">领</a>
+						<h4 class="title margin-btn-15">满{{coupon.reach_money}}元使用</h4>
+						<div class="line"></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="coupon-content2">
+			<a href="">
+				<img src="/public/static/portal/images/yh-cont2-img.jpg">
+			</a>
+		</div>
+		<div class="coupon-content3">
+			<ul class="clearfix">
+				<li v-for="(coupon,couKey) in coupons" :key="couKey" v-if="couKey < 4">
+					<div>
+						<h4 class="title">{{coupon.change_value}}</h4>
+						<p class="ftitle">元优惠券<br>满{{coupon.reach_money}}元用</p>
+					</div>
+					<a  class="pointer button" @click="getCoupon(coupon)">立即领取</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="coupon-content5">
+			<h4 class="cont5-title">更多优惠</h4>
+			<div class="cont5-bottom">
+				<ul class="clearfix">
+					<li v-for="coupon in coupons">
+						<a class="clearfix">
+							<div class="cont5-left">
+								<img src="/public/static/portal/images/goods4.png">
+							</div>
+							<div class="cont5-right">
+								<div>
+									<h4 class="title">{{coupon.change_value}}</h4>
+									<p class="ftitle font-size-12">元优惠券<br>满{{coupon.reach_money}}元用</p>
+								</div>
+								<p class="text font-size-10">购买商城内满减商品可使用</p>
+							</div>
+							<img @click="getCoupon(coupon)" class="right-img pointer"  src="/public/static/portal/images/title-icon.png">
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	{include file="index/footer" /}
+	<script>
+	</script>
+</body>
+<script>
+  var app = new Vue({
+	el: '#app',
+	data: {
+	  title: '领券中心',
+	  coupons: [],
+	  couponType: {
+		discount: '折扣券',
+		full: '满减券'
+	  },
+	  haveNoData: false,
+	},
+	methods: {
+	  getCoupon: function (coupon) {
+		httpRequest('POST', 'api_users/user_coupons/save', {
+		  activity_coupon_id: coupon.id
+		},function(resp){
+		  layer.msg(resp.msg)
+		})
+	  },
+	},
+	computed: {
+
+	},
+	filters: {
+
+	},
+	mounted: function () {  
+	}
+  })
+  var page = 1;
+  loadData = function () {
+	document.body.onscroll = null;
+	httpRequest('POST', 'api_query/market/coupon', {},function (resp) {
+	  
+		if (resp.data.length > 0) {
+		  app.haveNoData = false;
+		  resp.data.forEach(function (item) {
+			item.change_value = Number(item.change_value).toPrecision();
+			item.reach_money = Number(item.reach_money).toPrecision();
+			app.coupons.push(item);
+		  })
+		  if (resp.data.length == 10) {
+			page++;
+			document.body.onscroll = scrollEvent;
+		  } else {
+			document.body.onscroll = null;
+		  }
+		} else {
+		  if (page == 1) {
+			app.haveNoData = true;
+		  }
+		}
+	  },{
+	  'page-num': page,
+	  'page-limit': 16
+	})
+  }
+  loadData();
+</script>
+</html>

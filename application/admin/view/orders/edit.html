@@ -1,0 +1,460 @@
+{include file="header" /}
+<style>
+  .order-text {
+    color: #606266 !important;
+    font-size: 14px;
+  }
+</style>
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>订单详情</legend>
+            </fieldset>
+
+            <!-- 会员基本信息 -->
+            <el-row :gutter="40" class="order-text">
+              <el-col :span="12">
+                <el-card>
+                  <div slot="header">
+                    <span>基本信息</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="returnIndex();">返回</el-button>
+                  </div>
+                  <!-- 订单号 -->
+                  <el-row style="padding: 10px;">
+                    <el-col :span="4">订单号</el-col>
+                    <el-col :span="20" v-text="order.order_no"></el-col>
+                  </el-row>
+                  <el-row style="padding: 10px;">
+                    <el-col :span="4">状态</el-col>
+                    <el-col :span="20">
+                      <el-tag size="mini" v-if="order.status == 1">待付款</el-tag>
+                      <el-tag size="mini" type="danger" v-else-if="order.status == 2">待发货</el-tag>
+                      <el-tag size="mini" type="warning" v-else-if="order.status == 3">待签收</el-tag>
+                      <el-tag size="mini" type="success" v-else-if="order.status == 4">已完成</el-tag>
+                      <el-tag size="mini" type="info" v-else-if="order.status == 9">已取消</el-tag>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding: 10px;">
+                    <el-col :span="4">订单价格</el-col>
+                    <el-col :span="20">
+                      <div>商品总价:
+                        <span style="font-weight: bold;color: #df0303" v-text="'￥' + order.goods_money"></span>
+                      </div>
+                      <div>
+                        运费总价:
+                        <span style="font-weight: bold;color: #df0303" v-text="'￥' + order.freight_money"></span>
+                      </div>
+                      <div v-if="order.market_activity_id != 0">
+                        优惠价格:
+                        <span style="font-weight: bold;color: #df0303" v-text="'-￥' + order.market_reduce_money"></span>
+                      </div>
+                      <div> 合计:
+                        <span style="font-weight: bold;color: #df0303" v-text="'￥' + order.total_money"></span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding: 10px;">
+                    <el-col :span="4">收货信息</el-col>
+                    <el-col :span="20">
+                      <div>收货人:
+                        <span v-text="order.consignee_name"></span>
+                      </div>
+                      <div>联系电话:
+                        <span v-text="order.mobile"></span>
+                      </div>
+                      <div>收货地址:
+                        <span v-text="order.province + ' ' + order.city + ' ' + order.area + ' '+ order.address"></span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding: 10px;">
+                    <el-col :span="4">时间节点</el-col>
+                    <el-col :span="20">
+                      <div>订单创建时间:
+                        <span v-text="order.create_time"></span>
+                      </div>
+                      <div v-if="order.pay_time">订单支付时间:
+                        <span v-text="order.pay_time"></span>
+                        <!-- <i v-show="order.pay_type == 1" class="aui-iconfont iconfont icon-zhifubao" style="font-size: 1.5rem;color: #0ae"></i>
+                        <i v-show="order.pay_type == 2" class="aui-iconfont iconfont icon-weixinzhifu" style="font-size: 1.5rem;color:#09bb07;"></i>
+                        <i v-show="order.pay_type == 3" class="aui-iconfont iconfont icon-yue" style="font-size: 1.5rem;color: #eb661b;"></i> -->
+                      </div>
+                      <div v-else-if="order.deliver_time">发货时间:
+                        <span v-text="order.deliver_time"></span>
+                      </div>
+                      <div v-else-if="order.finish_time">确认收货时间:
+                        <span v-text="order.finish_time"></span>
+                      </div>
+                      <div v-else-if="order.cancel_time">取消订单时间:
+                        <span v-text="order.cancel_time"></span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding: 10px;">
+                    <el-col :span="4">买家留言</el-col>
+                    <el-col :span="20">
+                      <div v-text="order.memo"></div>
+                    </el-col>
+                  </el-row>
+                  <el-row style="padding: 10px;">
+                    <el-col :span="4">商家留言</el-col>
+                    <el-col :span="20">
+                        <el-input v-model="order.reply_memo" type="textarea"></el-input>
+                        <br /><br />
+                        <el-button @click="reply_memo()">提交留言</el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+              <el-col :span="12" v-if="order.status && order.status != 1 && order.status != 9">
+                <el-card>
+                  <el-form :model="deliverFormData" ref="deliverForm" label-position="left" label-width="140px">
+                    <el-form-item label="是否开启电子面单" prop="is_open_eorder">
+                      <el-radio v-model="deliverFormData.is_open_eorder" :label="0">否</el-radio>
+                      <el-radio v-model="deliverFormData.is_open_eorder" :label="1">是</el-radio>
+                    </el-form-item>
+                    <transition name="el-fade-in-linear">
+                      <el-form-item label="快递方式" prop="express_type" v-show="!deliverFormData.is_open_eorder">
+                        <el-select v-model="deliverFormData.express_type">
+                          <el-option :label="option.label" :value="option.value" v-for="(option, key) in options" :key="key"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </transition>
+                    <transition name="el-fade-in-linear">
+                      <el-form-item label="快递方式" prop="eorder_express_type" v-show="deliverFormData.is_open_eorder">
+                        <el-select v-model="deliverFormData.eorder_express_type">
+                          <el-option :label="option.label" :value="option.value" v-for="(option, key) in eOrderOptions" :key="key"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </transition>
+                    <el-form-item label="快递单号" prop="express_no">
+                      <el-input v-model="deliverFormData.express_no" :disabled="deliverFormData.is_open_eorder"></el-input>
+                    </el-form-item>
+                    <transition name="el-fade-in-linear">
+                      <el-form-item v-show="!deliverFormData.is_open_eorder">
+                        <el-button @click="deliver('save','order')" v-if="order.status == 2">发货</el-button>
+                        <el-button @click="deliver('update','order')" v-if="order.status == 3 && order.is_open_eorder == 0">更新发货信息</el-button>
+                        <el-button @click="query()" v-if="order.status == 3 || order.status == 4">查询物流</el-button>
+                      </el-form-item>
+                    </transition>
+                    <transition name="el-fade-in-linear">
+                      <el-form-item v-show="deliverFormData.is_open_eorder">
+                        <el-button @click="deliver('save','eorder')" v-if="order.status == 2">发货</el-button>
+                        <el-button @click="deliver('update','eorder')" v-if="order.status == 3 && order.is_open_eorder == 0">更新发货信息</el-button>
+                        <el-button @click="query()" v-if="order.status == 3 || order.status == 4">查询物流</el-button>
+                      </el-form-item>
+                    </transition>
+                  </el-form>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 商品列表 -->
+            <el-row style="margin-top: 20px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>商品信息</span>
+                  </div>
+                  <el-table :data="order.order_goods_info" stripe border>
+                    <el-table-column type="expand">
+                      <template slot-scope="scope">
+                        <el-card v-if="scope.row.commission_info.length != 0">
+                          <div slot="header">
+                            <span>分销信息</span>
+                          </div>
+                          <el-table :data="scope.row.commission_info" stripe border>
+                            <el-table-column label="分销层级">
+                              <template slot-scope="scope2">
+                                <el-tag size="mini" type="success" v-if="scope2.row.level == 1">一级</el-tag>
+                                <el-tag size="mini" type="primary" v-else-if="scope2.row.level == 2">二级</el-tag>
+                                <el-tag size="mini" type="warning" v-else-if="scope2.row.level == 3">三级</el-tag>
+                              </template>
+                            </el-table-column>
+                            <el-table-column label="用户id" prop="user_id"></el-table-column>
+                            <el-table-column label="用户手机号" prop="user_info.mobile"></el-table-column>
+                            <el-table-column label="用户昵称" prop="user_info.nick_name"></el-table-column>
+                            <el-table-column v-if="order.status == 1 || order.status == 2 || order.status == 3 || order.status == 9" label="预计分佣金额" prop="expect_money">
+                              <template slot-scope="scope">
+                                <span style="font-weight: bold;color: #df0303">￥ {{scope.row.expect_money}}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column v-else label="分佣得到金额" prop="real_money">
+                              <template slot-scope="scope">
+                                <span style="font-weight: bold;color: #df0303">￥ {{scope.row.real_money}}</span>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                        </el-card>
+                        <el-card style="margin-top: 20px;" v-if="scope.row.bonus_info.length != 0">
+                          <div slot="header">
+                            <span>分红信息</span>
+                          </div>
+                          <el-table :data="scope.row.bonus_info" stripe border>
+                            <el-table-column label="分红类型">
+                              <template slot-scope="scope2">
+                                <el-tag size="mini" type="success" v-if="scope2.row.bonus_type == 1">等级代理分红
+                                  <span>{{scope2.row.current_bonus_level_name}}</span>
+                                </el-tag>
+                                <el-tag size="mini" type="primary" v-else-if="scope2.row.bonus_type == 2">地区代理分红
+                                  <span v-if="scope2.row.region_type == 'area'">县级区域代理分红</span>
+                                  <span v-if="scope2.row.region_type == 'city'">市级区域代理分红</span>
+                                  <span v-if="scope2.row.region_type == 'province'">省级区域代理分红</span>
+                                </el-tag>
+                                <el-tag size="mini" type="warning" v-else-if="scope2.row.bonus_type == 3">全球代理分红</el-tag>
+                              </template>
+                            </el-table-column>
+                            <el-table-column label="用户id" prop="user_id"></el-table-column>
+                            <el-table-column label="用户手机号" prop="user_info.mobile"></el-table-column>
+                            <el-table-column label="用户昵称" prop="user_info.nick_name"></el-table-column>
+                            <el-table-column v-if="order.status == 1 || order.status == 2 || order.status == 3 || order.status == 9" label="预计分佣金额" prop="expect_money">
+                              <template slot-scope="scope">
+                                <span style="font-weight: bold;color: #df0303">￥ {{scope.row.expect_money}}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column v-else label="分佣得到金额" prop="real_money">
+                              <template slot-scope="scope">
+                                <span style="font-weight: bold;color: #df0303">￥ {{scope.row.real_money}}</span>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                        </el-card>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="goods_id" label="商品id" width="80"></el-table-column>
+                    <el-table-column prop="thum" label="缩略图">
+                      <template slot-scope="scope">
+                        <img :src="scope.row.thum" style="max-width: 40%; ">
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="name" label="商品名称"></el-table-column>
+                    <el-table-column prop="name" label="规格">
+                      <template slot-scope="scope">
+                        <el-tag size="mini" v-show="scope.row.spec_group_id == 0 && scope.row.standard">{{scope.row.standard}}</el-tag>
+                        <el-tag size="mini" v-show="scope.row.spec_group_id != 0">{{scope.row.spec_group_info}}</el-tag>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="sell_price" label="单价(￥)"></el-table-column>
+                    <el-table-column prop="real_price" label="成交价(￥)">
+                    </el-table-column>
+                    <el-table-column prop="weight" label="重量(g)"></el-table-column>
+                    <el-table-column prop="num" label="数量"></el-table-column>
+                    <el-table-column prop="return_goods_status" label="退货状态">
+                      <template slot-scope="scope">
+                        <span v-if="scope.row.return_goods_status == 0">未退货</span>
+                        <span v-else-if="scope.row.return_goods_status == 1">申请退货中</span>
+                        <span v-else-if="scope.row.return_goods_status == 2">拒绝退货</span>
+                        <span v-else-if="scope.row.return_goods_status == 3">已退货</span>
+                      </template>
+                    </el-table-column>
+
+                  </el-table>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 订单操作 -->
+            <el-row style="margin-top: 20px;">
+              <el-button type="info" icon="el-icon-d-arrow-left" @click="returnIndex()" plain>返回</el-button>
+              <el-button plain v-if="order.is_open_eorder && order.status == 3" @click="printEorder()">打印电子面单</el-button>
+              <el-button plain type="primary" v-if="order.status == 3" @click="signFor()">系统签收</el-button>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <div id="eorder"></div>
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data: {
+        order: {
+          order_no: '',
+          status: '',
+          create_time: '',
+          pay_time: '',
+          deliver_time: '',
+          finish_time: '',
+          cancel_time: '',
+          memo: '',
+          total_money: '',
+          freight_money: '',
+          goods_money: '',
+          order_goods_info: [],
+          pay_type: '',
+        },
+        deliverFormData: {
+          express_type: '',
+          express_no: '',
+          eorder_express_type: '',
+          is_open_eorder: 0
+        },
+        eOrderOptions: [
+          {
+            value: 'SF',
+            label: '顺丰'
+          },
+          // {
+          //   value: 'FAST',
+          //   label: '快捷快递'
+          // },
+          // {
+          //   value: 'ZJS',
+          //   label: '宅急送'
+          // },
+        ],
+        options: [
+          {
+            value: 'huitongkuaidi',
+            label: '百世汇通'
+          },
+          {
+            value: 'ems',
+            label: 'EMS'
+          },
+          {
+            value: 'shentong',
+            label: '申通'
+          },
+          {
+            value: 'shunfeng',
+            label: '顺丰'
+          },
+          {
+            value: 'tiantian',
+            label: '天天快递'
+          },
+          {
+            value: 'yuantong',
+            label: '圆通速递'
+          },
+          {
+            value: 'yunda',
+            label: '韵达快运'
+          },
+          {
+            value: 'zhongtong',
+            label: '中通速递'
+          },
+          {
+            value: 'youzhengguonei',
+            label: '邮政快递包裹'
+          },
+          {
+            value: 'kuaijiesudi',
+            label: '快捷快递'
+          },
+          {
+            value: 'zhaijisong',
+            label: '宅急送'
+          },
+        ],
+      },
+      methods: {
+        // 返回列表页
+        returnIndex() {
+          let controllerType = querystring.controllerType ? querystring.controllerType : 'index'
+          if (controllerType == 'distribution_users') {
+            location = location.origin + '/admin/distribution/users';
+          }else if(controllerType == 'bonus_users'){
+            location = location.origin + '/admin/bonus/users';
+          }else{
+            location = location.origin + '/admin/orders/' + controllerType + querystringStringify({ currentPage: querystring.currentPage });
+          }
+        },
+        // 发货
+        deliver(type, eType) {
+          let data = {
+            order_id: this.order.id,
+            is_open_eorder: this.deliverFormData.is_open_eorder
+          }
+          if (eType == 'order') {
+            if (!this.deliverFormData.express_no) {
+              this.$message.warning('请输入快递单号');
+              return;
+            } else if (!this.deliverFormData.express_type) {
+              this.$message.warning('请选择快递公司');
+              return;
+            }
+            data.express_no = this.deliverFormData.express_no;
+            data.express_type = this.deliverFormData.express_type;
+          } else if (eType == 'eorder') {
+            if (!this.deliverFormData.eorder_express_type) {
+              this.$message.warning('请选择电子面单公司');
+              return;
+            }
+            data.eorder_express_type = this.deliverFormData.eorder_express_type;
+          }
+          this.$confirm('确认操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', `api_orders/deliver_goods/${type}`, data).then(resp => {
+              this.$message.success(resp.msg)
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 打印电子面单
+        printEorder() {
+          this.$confirm('确认打印电子面单?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_orders/eorder/print_eorder', {
+              order_id: this.order.id
+            }).then(resp => {
+              document.getElementById('eorder').innerHTML = resp.data;
+              form1.submit();
+            })
+          })
+        },
+        // 帮助签收
+        signFor() {
+          this.$confirm('确认帮助签收?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_orders/sign_orders/admin_sign', {
+              order_id: this.order.id
+            }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 回复留言
+        reply_memo() {
+          this.$confirm('确认提交?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_orders/orders/reply_memo', {
+              id: this.order.id,
+              reply_memo: this.order.reply_memo,
+            }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 查询物流
+        query() {
+          location = location.origin + '/admin/orders/query_logistics/' + querystringStringify({ express_type: this.deliverFormData.express_type, express_no: this.deliverFormData.express_no })
+        }
+      },
+      mounted() {
+        httpRequest('POST', 'api_orders/orders/read', { id: querystring.orderId }).then(resp => {
+          this.order = resp.data;
+          this.deliverFormData.express_type = app.order.express_type;
+          this.deliverFormData.express_no = app.order.express_no;
+          this.deliverFormData.eorder_express_type = app.order.eorder_express_type;
+          this.deliverFormData.is_open_eorder = app.order.is_open_eorder;
+        })
+      }
+    });
+  </script>
+</body>
+
+</html>

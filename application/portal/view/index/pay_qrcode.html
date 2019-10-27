@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<script src="/public/static/common/script/qrcode.min.js"></script>
+</head>
+<style>
+	body,
+	html {
+		background: #f4f4f4!important;
+	}
+
+	#my_qu {
+		width: 300px;
+		height: 300px;
+		background: #fff;
+		padding: 20px;
+		margin: 10px auto 30px;
+		border: 1px solid #f4f4f4;
+	}
+
+	#my_qu img {
+		height: 100%;
+		width: 100%;
+	}
+	.yao{
+		margin:80px 150px 80px 0;
+	}
+	.payimg{
+		margin: 30px  0 0 200px;
+	}
+</style>
+
+<body class="body-bg">
+	{include file="/index/header" /}
+	<div id="app">
+		<div class="w1200 white margin-tt-15 over" style="padding: 0 50px;">
+			<div class="pay-success-top">
+				<h4 class="font-size-22">订单提交成功，现在只差最后一步</h4>
+				<p class="font-size-14">微信扫描二维码，完成支付。</p>
+			</div>
+			
+		</div>
+		<div class="w1200 white over" style="margin: 30px auto;">
+				<div class="left  payimg">
+						<div class="center margin-tt-5">
+							<img src="/public/static/portal/images/weixin.png" alt="" style="width: 140px;margin: 20px auto;">
+						</div>
+						<div id="my_qu">
+		
+						</div>
+					</div>
+					<div class="right yao" >
+							<img src="/public/static/portal/images/example.jpg" alt="">
+					</div>
+		</div>
+	</div>
+	<footer class="aui-bar aui-bar-tab" id="footer">
+  <div class="aui-bar-tab-item" onclick="goto('index')" :class="{'icon-footer-active' : (activeFooterIndex == 1 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 1" src="/public/static/wap/img/icon12.png">
+      <img v-else src="/public/static/wap/img/icon11.png">
+    </div>
+    <div class="aui-bar-tab-label">任务</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('personnel_page')"
+    :class="{'icon-footer-active' : (activeFooterIndex == 2 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 2" src="/public/static/wap/img/icon22.png">
+      <img v-else src="/public/static/wap/img/icon21.png">
+    </div>
+    <div class="aui-bar-tab-label">行政</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('home')" :class="{'icon-footer-active' : (activeFooterIndex == 3 )}">
+    <!-- <div class="aui-badge">99</div> -->
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 3" src="/public/static/wap/img/icon32.png">
+      <img v-else src="/public/static/wap/img/icon31.png">
+    </div>
+    <div class="aui-bar-tab-label">我的</div>
+  </div>
+</footer>
+</body>
+
+</html>
+<script type="text/javascript">
+	if (!user) {
+		location = "{:url('Index/login')}"
+	}
+	httpRequest('post', 'api_orders/pay/wechat_pay_qrcode', {
+		order_no: querystring.order_no,
+	}, function (resp) {
+		if (resp.code == 1) {
+			new QRCode(document.getElementById("my_qu"), resp.data);
+			setInterval(function () {
+				httpRequest('POST', 'api_query/pay/is_pay', {
+					order_no: querystring.order_no
+				}, function (resp) {
+					if (resp.data.is_pay == 1) {
+						goto('pay_waiting')
+						clearInterval(intervalInt)
+					}
+				})
+			}, 300)
+		}
+	})
+</script>

@@ -1,0 +1,353 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+
+          <div id="app">
+            <fieldset>
+              <legend>分红商</legend>
+            </fieldset>
+
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <!-- 筛选条件 -->
+                  <el-row :gutter="20">
+                    <el-col :span="5">
+                      <el-input placeholder="请输入手机号" v-model="searchData.mobile">
+                        <template slot="prepend">手机号</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入昵称" v-model="searchData.nick_name">
+                        <template slot="prepend">昵称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-card>
+              <div slot="header">
+                <span>分红商列表</span>
+              </div>
+              <!-- 表格 -->
+              <template>
+                <el-table :data="tableData" stripe style="width: 100%">
+                  <el-table-column prop="id" label="ID" sortable width="80"></el-table-column>
+                  <el-table-column label="用户信息">
+                    <template slot-scope="scope">
+                      <div>{{scope.row.mobile}} ({{scope.row.nick_name || '匿名用户'}})</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="parent_user_info" label="上级信息">
+                    <template slot-scope="scope">
+                      <el-tag v-if="!scope.row.parent" type="info" size="mini">无</el-tag>
+                      <div v-else>{{scope.row.parent.mobile}} ({{scope.row.parent.nick_name || '匿名用户'}})</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="level_name" label="分红等级" sortable>
+                    <template slot-scope="scope">
+                      <el-tag type="primary" size="mini">{{scope.row.level_name}}</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="team_user_nums.total_num" label="团队人数" sortable></el-table-column>
+                  <el-table-column prop="user_info.total_real_bonus_money" label="累计佣金" sortable>
+                    <template slot-scope="scope">
+                      <span style="font-weight: bold;color: #df0303">￥ {{scope.row.user_info.total_real_bonus_money}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="user_info.already_drawcash_bonus_money" label="已打款佣金" sortable>
+                    <template slot-scope="scope">
+                      <span style="font-weight: bold;color: #df0303">￥ {{scope.row.user_info.already_drawcash_bonus_money}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="region_bonus" label="区域代理" sortable>
+                    <template slot-scope="scope">
+                      <div v-if="scope.row.region_bonus.create_time">
+                        <el-tag v-if="scope.row.region_bonus.type == 1" type="success" size="mini">{{scope.row.region_bonus.province}}</el-tag>
+                        <el-tag v-else-if="scope.row.region_bonus.type == 2" type="warning" size="mini">{{scope.row.region_bonus.province}} {{scope.row.region_bonus.city}}</el-tag>
+                        <el-tag v-else-if="scope.row.region_bonus.type == 3" type="primary" size="mini">{{scope.row.region_bonus.province}} {{scope.row.region_bonus.city}} {{scope.row.region_bonus.area}}</el-tag>
+                      </div>
+                      <el-tag v-else type="info" size="mini">否</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="global_bonus" label="是否全球分红" sortable>
+                    <template slot-scope="scope">
+                      <el-tag v-if="scope.row.global_bonus.create_time" type="success" size="mini">是</el-tag>
+                      <el-tag v-else type="info" size="mini">否</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" fixed="right" width="240">
+                    <template slot-scope="scope">
+                      <el-button @click="changeLevel(scope.row)" type="primary" size="mini" plain>调整分红商等级</el-button>
+                      <el-button @click="viewLogs(scope.row)" type="primary" size="mini" plain>分红记录</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </template>
+              <!-- 分页 -->
+              <template>
+                <div class="block" style="margin-top: 20px;">
+                  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                    :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                  </el-pagination>
+                </div>
+              </template>
+            </el-card>
+            <!-- 分红商等级选择 -->
+            <el-dialog title="分红商等级选择" :visible.sync="dialogTableVisible">
+              <el-table :data="levels" @row-click="rowClick">
+                <el-table-column prop="id" label="ID" sortable></el-table-column>
+                <el-table-column prop="rank_weight" label="分红商等级" sortable></el-table-column>
+                <el-table-column prop="level_name" label="分红商等级名称"></el-table-column>
+              </el-table>
+            </el-dialog>
+            <!-- 分红订单 -->
+            <el-dialog title="订单列表" :visible.sync="dialogTableVisible2" width="80%">
+              <el-row :gutter="20">
+                <el-col :span="8">
+                  <el-input placeholder="请输入订单号" v-model="searchData2.order_no">
+                    <template slot="prepend">订单号</template>
+                  </el-input>
+                </el-col>
+                <el-col :span="4">
+                  <el-button icon="el-icon-search" @click="search2();"></el-button>
+                  <el-button icon="el-icon-refresh" @click="refresh2();"></el-button>
+                </el-col>
+              </el-row>
+              <el-table :data="tableData2">
+                <el-table-column property="order_id" label="日志ID" width="80"></el-table-column>
+                <el-table-column property="order_info.order_no" label="订单号"></el-table-column>
+                <el-table-column property="source_user_info" label="来源会员信息">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.source_user_info.mobile}} ({{scope.row.source_user_info.nick_name || '匿名用户'}})</span>
+                  </template>
+                </el-table-column>
+                <el-table-column property="order_status" label="订单状态">
+                  <template slot-scope="scope">
+                    <el-tag size="mini" type="warning" v-if="scope.row.order_status == 1">待付款</el-tag>
+                    <el-tag size="mini" type="primary" v-if="scope.row.order_status == 2">已付款</el-tag>
+                    <el-tag size="mini" type="success" v-if="scope.row.order_status == 3">已完成</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column property="bonus_type" label="分红类型">
+                  <template slot-scope="scope">
+                    <el-tag size="mini" type="warning" v-if="scope.row.bonus_type == 1">等级分红_{{scope.row.current_bonus_level_name}}</el-tag>
+                    <el-tag size="mini" type="primary" v-else-if="scope.row.bonus_type == 2">地区分红_
+                      <span v-if="scope.row.region_type == 'province'">省级代理</span>
+                      <span v-else-if="scope.row.region_type == 'city'">市级代理</span>
+                      <span v-else-if="scope.row.region_type == 'area'">县级代理</span>
+                    </el-tag>
+                    <el-tag size="mini" type="success" v-else-if="scope.row.bonus_type == 3">全球分红</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column property="real_money" label="实际佣金">
+                  <template slot-scope="scope">
+                    <span style="font-weight: bold;color: #df0303" v-if="scope.row.real_money">￥ {{scope.row.real_money}}</span>
+                    <span v-else>无</span>
+                  </template>
+                </el-table-column>
+                <el-table-column property="status" label="'是否打款">
+                  <template slot-scope="scope">
+                    <el-tag size="mini" type="success" v-if="scope.row.status == 3">是</el-tag>
+                    <el-tag size="mini" type="info" v-else>否</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="create_time" label="创建时间" sortable>
+                  <template slot-scope="scope">
+                    <i class="el-icon-time"></i>
+                    <span>{{ scope.row.create_time }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" fixed="right" width="100">
+                  <template slot-scope="scope">
+                    <el-button @click="viewOrderDetail(scope.row)" type="primary" size="mini" plain>查看订单</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="margin-top: 20px;">
+                <el-pagination @size-change="handleSizeChange2" @current-change="handleCurrentChange2" :current-page="currentPage2" :page-sizes="pageSize2"
+                  :page-size="currentPageSize2" layout="total, sizes, prev, pager, next, jumper" :total="total2">
+                </el-pagination>
+              </div>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          tableData: [],  //表格数据
+          currentPage: parseInt(querystring.currentPage) || 1, //当前页
+          currentPageSize: 20,  //当前页容量
+          pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          total: 0, //总页数
+          multipleSelection: [],  //多选项
+          // 查询条件
+          searchData: {
+            mobile: '',
+            nick_name: ''
+          },
+          // 分红商等级
+          levels: [],
+          // dialog
+          dialogTableVisible: false,
+          // dialog2
+          dialogTableVisible2: false,
+          tableData2: [],
+          currentPage2: 1, //当前页
+          currentPageSize2: 10,  //当前页容量
+          pageSize2: [10, 20], //分页大小
+          total2: 0, //总页数
+          searchData2: {
+            order_no: ''
+          },
+          // 操作中的会员
+          selectUser: {},
+        }
+      },
+      methods: {
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        filterHandler(value, row, column) {
+          return row['update_time'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_bonus/bonus_users/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            resp.data = resp.data.map(item => {
+              item.level_name = this.levels.filter(l => l.id == item.bonus_level_id)[0].level_name;
+              return item;
+            })
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // 某一行被点击
+        rowClick(row) {
+          this.$confirm(`确认将手机号为 ${this.selectUser.mobile}(${this.selectUser.nick_name || '匿名用户'}) 会员改为 ${row.level_name}?`, '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_users/users/update', {
+              id: this.selectUser.id,
+              bonus_level_id: row.id
+            }).then(resp => {
+              this.$message.success(resp.msg);
+              this.selectUser.bonus_level_id = row.id;
+              this.selectUser.level_name = this.levels.filter(l => l.id == row.id)[0].level_name;
+            })
+          });
+          this.dialogTableVisible = false;
+        },
+        // 改变分红商等级
+        changeLevel(data) {
+          this.dialogTableVisible = true;
+          this.selectUser = data;
+        },
+        // 加载分红订单
+        loadLogs() {
+          httpRequest('POST', 'api_bonus/bonus_orders/logs', {
+            user_id: this.selectUser.id,
+            order_no: this.searchData2.order_no,
+            mobile: this.searchData2.mobile
+          }, {
+              'page-num': this.currentPage2,
+              'page-limit': this.currentPageSize2
+            }).then(resp => {
+              this.tableData2 = resp.data;
+              this.total2 = resp.page.data_count || 0;
+            })
+        },
+        // 查看分红商订单
+        viewLogs(data) {
+          this.selectUser = data;
+          this.loadLogs();
+          this.dialogTableVisible2 = true;
+        },
+        // 跳页
+        handleCurrentChange2(val) {
+          this.currentPage2 = val;
+          this.loadLogs();
+        },
+        // 改变页容量
+        handleSizeChange2(val) {
+          this.currentPageSize2 = val;
+          this.loadLogs();
+        },
+        // 搜索
+        search2() {
+          this.loadLogs();
+        },
+        // 重置搜索条件
+        refresh2() {
+          for (let key in this.searchData2) {
+            this.searchData2[key] = ''
+          }
+          this.loadLogs();
+        },
+        // 查看订单
+        viewOrderDetail(data) {
+          location = location.origin + '/admin/orders/edit' + querystringStringify({ orderId: data.order_id, currentPage: this.currentPage, controllerType: 'bonus_users' });
+        }
+      },
+      mounted() {
+        // 查询分红商等级等级列表
+        httpRequest('POST', 'api_bonus/bonus_levels/index').then(resp => {
+          this.levels = resp.data;
+          this.loadTableData();
+        });
+      }
+    });
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,437 @@
+{include file="header" /}
+<body>
+    <section class="el-container is-vertical">
+        {include file="top" /}
+        <section class="el-container">
+            {include file="left" /}
+            <section class="el-container is-vertical">
+                <main class="el-main" id="main">
+                    <div id="this">
+                        <fieldset>
+                            <legend>
+                                机组日数据统计
+                            </legend>
+                        </fieldset>
+                        <!-- 筛选 -->
+                        <el-row style="margin-bottom: 10px;">
+                            <el-col>
+                                <el-card>
+                                    <div slot="header">
+                                        <span>
+                                            查询
+                                        </span>
+                                    </div>
+                                    <!-- 筛选条件 -->
+                                    <el-row :gutter="20">
+                                        <el-col :span="5">
+                                            <el-input placeholder="请输入水电站全称" v-model="searchData.name">
+                                                <template slot="prepend">
+                                                    水电站名称
+                                                </template>
+                                            </el-input>
+                                        </el-col>
+                                        <el-col :span="5">
+                                            <el-date-picker placeholder="请输入日期" type="datetime" v-model="searchData.dateline" value-format="yyyy-MM-dd">
+                                            </el-date-picker>
+                                        </el-col>
+                                        <el-col :span="4">
+                                            <el-button @click="search();" icon="el-icon-search">
+                                            </el-button>
+                                            <el-button @click="refresh();" icon="el-icon-refresh">
+                                            </el-button>
+                                        </el-col>
+                                    </el-row>
+                                </el-card>
+                            </el-col>
+                        </el-row>
+                        <!-- 列表 -->
+                        <el-row>
+                            <el-col>
+                                <el-card>
+                                    <div slot="header">
+                                        <span>
+                                            统计列表
+                                        </span>
+                    <el-button icon="el-icon-download" @click="export_data();">导出数据</el-button>
+                                        <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float:right;" type="primary">
+                                            新增日数据
+                                        </el-button>
+                                    </div>
+                                    <!-- 表格 -->
+                                    <template>
+                                        <el-table :data="tableData" stripe="" style="width: 100%">
+                                            <el-table-column fixed="" label="日期" prop="dateline">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="电站名称" prop="name">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="水电站/厂名" prop="plant_name">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="机组" prop="unit">
+                                            </el-table-column>
+<<<<<<< .merge_file_a19336
+                                            <el-table-column fixed="" label="运行状态" prop="running_status">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="有功电量/KW.H" prop="active_power">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="无功电量/Kvar.h" prop="idle_work">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="备注" prop="remark">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="电厂归属片区" prop="district">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="各水电厂/站年计划" prop="annual_program">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="录入时间" prop="create_time">
+                                            </el-table-column>
+                                            <el-table-column fixed="right" label="操作" width="300">
+                                                <template slot-scope="scope">
+                                                    <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                    </el-button>
+                                                    <el-button @click="handleClick(scope.row, 'del')" v-if="is_role != -1" icon="el-icon-delete" plain="" size="small" type="danger">
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </template>
+                                    <!-- 分页 -->
+                                    <template>
+                                        <div class="block" style="margin-top: 20px;">
+                                            <el-pagination :current-page="currentPage" :page-size="currentPageSize" :page-sizes="pageSize" :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="total, sizes, prev, pager, next, jumper">
+                                            </el-pagination>
+                                        </div>
+                                    </template>
+                                </el-card>
+                            </el-col>
+                        </el-row>
+                        <!-- dialog -->
+                        <el-dialog :visible.sync="dialogVisible" title="编辑机组数据">
+                            <el-row :gutter="20">
+                                <el-col :offset="4" :span="16">
+                                    <el-form :model="selectData" :rules="rules" label-position="left" label-width="280px" ref="ruleForm">
+                                        
+                                        <el-form-item label="电站名称" prop="name">
+                                            <el-input clearable="" placeholder="请输入水电站全称" v-model="selectData.name">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="水电站/厂名" prop="plant_name">
+                                            <el-input clearable="" placeholder="请输入水电厂/站全称" v-model="selectData.plant_name">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="机组名称" prop="unit">
+                                            <el-input clearable="" placeholder="请输入机组名称" v-model="selectData.unit">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="运行状态" prop="running_status">
+                                            <el-input clearable="" placeholder="请输入水电站全称" v-model="selectData.running_status">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="有功电量/KW.H" prop="active_power">
+                                            <el-input clearable="" v-model="selectData.active_power">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="无功电量/Kvar.h" prop="idle_work">
+                                            <el-input clearable="" v-model="selectData.idle_work">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="备注" prop="remark">
+                                            <el-input clearable="" v-model="selectData.remark">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="电厂归属片区" prop="district">
+                                            <el-input clearable="" v-model="selectData.district">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="各水电厂/站年计划" prop="annual_program">
+                                            <el-input clearable="" v-model="selectData.annual_program">
+                                            </el-input>
+                                        </el-form-item>
+                                        <!--  <el-form-item label="降雨（MM）" prop="rainfall">
+=======
+                      <!-- <el-table-column fixed="" label="运行状态" prop="running_status">
+                      </el-table-column> -->
+                      <el-table-column :filter-method="statusFilterHandler" :filters="statusFilters" fixed=""
+                        label="运行状态" prop="running_status"> 
+                        <template slot-scope="scope">
+                          <el-tag size="mini" type="success" v-if="scope.row.running_status == '运行'">
+                            运行
+                          </el-tag>
+                          <el-tag size="mini" type="danger" v-else-if="scope.row.running_status == '备用'">
+                            备用
+                          </el-tag>
+                          <el-tag size="mini" type="info" v-else-if="scope.row.running_status == '检修'">
+                            检修
+                          </el-tag>
+                        </template>
+                      </el-table-column>
+                      <el-table-column fixed="" label="有功电量/万KW.H" prop="active_power">
+                      </el-table-column>
+                      <el-table-column fixed="" label="无功电量/Kvar.h" prop="idle_work">
+                      </el-table-column>
+                      <el-table-column fixed="" label="备注" prop="remark">
+                      </el-table-column>
+                      <el-table-column fixed="" label="电厂归属片区" prop="district">
+                      </el-table-column>
+                      <!-- <el-table-column fixed="" label="各水电厂/站年计划" prop="annual_program">
+                      </el-table-column> -->
+                      <el-table-column fixed="" label="当前功率/KW.H" prop="annual_program">
+                      </el-table-column>
+                      <el-table-column fixed="" label="录入时间" prop="create_time">
+                      </el-table-column>
+                      <el-table-column fixed="right" label="操作" width="300">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain=""
+                            size="small" type="primary">
+                          </el-button>
+                          <el-button @click="handleClick(scope.row, 'del')" icon="el-icon-delete" plain="" size="small"
+                            type="danger">
+                          </el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination :current-page="currentPage" :page-size="currentPageSize" :page-sizes="pageSize"
+                        :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange"
+                        layout="total, sizes, prev, pager, next, jumper">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- dialog -->
+            <el-dialog :visible.sync="dialogVisible" title="编辑机组数据">
+              <el-row :gutter="20">
+                <el-col :offset="4" :span="16">
+                  <el-form :model="selectData" :rules="rules" label-position="left" label-width="280px" ref="ruleForm">
+                    <el-form-item label="日期" prop="dateline">
+                      <el-input clearable="" placeholder="请输入如期 如“201906" v-model="selectData.dateline">
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item label="电站名称" prop="name">
+                      <el-input clearable="" placeholder="请输入水电站全称" v-model="selectData.name">
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item label="水电站/厂名" prop="plant_name">
+                      <el-input clearable="" placeholder="请输入水电厂/站全称" v-model="selectData.plant_name">
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item label="机组名称" prop="unit">
+                      <el-input clearable="" placeholder="请输入机组名称" v-model="selectData.unit">
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item label="运行状态" prop="running_status">
+                      <el-input clearable="" placeholder="请输入水电站全称" v-model="selectData.running_status">
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item label="有功电量/KW.H" prop="active_power">
+                      <el-input clearable="" v-model="selectData.active_power">
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item label="无功电量/Kvar.h" prop="idle_work">
+                      <el-input clearable="" v-model="selectData.idle_work">
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item label="备注" prop="remark">
+                      <el-input clearable="" v-model="selectData.remark">
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item label="电厂归属片区" prop="district">
+                      <el-input clearable="" v-model="selectData.district">
+                      </el-input>
+                    </el-form-item>
+                    <el-form-item label="各水电厂/站年计划" prop="annual_program">
+                      <el-input clearable="" v-model="selectData.annual_program">
+                      </el-input>
+                    </el-form-item>
+                    <!--  <el-form-item label="降雨（MM）" prop="rainfall">
+>>>>>>> .merge_file_a18096
+                                            <el-input clearable="" v-model="selectData.rainfall">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="天气情况" prop="weather">
+                                            <el-input clearable="" v-model="selectData.weather">
+                                            </el-input>
+                                        </el-form-item> -->
+                                        <el-form-item label="录入时间" prop="dateline">
+                                            <el-date-picker placeholder="请输入开始日期" type="datetime" v-model="selectData.dateline" value-format="yyyy-MM-dd HH:mm:ss">
+                                            </el-date-picker>
+                                        </el-form-item>
+                                        <el-form-item>
+                                            <el-button @click="dialogVisible = false;" plain="">
+                                                取消
+                                            </el-button>
+                                            <el-button @click="submit" type="primary" v-if="is_role != -1">
+                                                提交
+                                            </el-button>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                            </el-row>
+                        </el-dialog>
+                    </div>
+                </main>
+                {include file="footer" /}
+            </section>
+        </section>
+    </section>
+    <script type="text/javascript">
+        let app = new Vue({
+      el: '#this',
+      data: {
+        tableData: [],  //表格数据
+        is_role:$.inArray(3,user.role_ids), 
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60], //分页大小
+        total: 0, //总页数
+        searchData: { // 查询条件
+        },
+        // --------------- dialog --------------
+        dialogVisible: false,
+        selectData: {},
+        options: [],
+        rules: {
+          name: [
+            { required: true, message: '请输入电站名称', trigger: 'blur' },
+          ],
+          unit: [
+            { required: true, message: '请输入机组名称', trigger: 'blur' },
+          ],
+        },
+        // -------------- dialog2 ---------------
+        dialogVisible2: false,
+        isSelectedAll: false,
+        treeData: [],
+        defaultCheckedKeys: [],
+        nav_powers: [],
+        filterText: '',
+        treeIds: [],
+        // 状态过滤
+        statusFilters: [{
+          text: '运行',
+          value: '运行'
+        }, {
+          text: '备用',
+          value: '备用'
+        }, {
+          text: '检修',
+          value: '检修'
+        }],
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_operation/operation/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          } else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.dialogVisible = true;
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['running_status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+          // 导出数据
+          export_data() {
+          this.$confirm('确认导出?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_operation/operation/export', this.searchData).then(resp => {
+                this.$message.success(resp.msg);
+                window.open(resp.data);
+              })
+          })
+        },
+        // 新增
+        goAdd() {
+          /* this.selectData = {
+            name: '',
+            type: '',
+            intro: ''
+          }, */
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_operation/operation/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // ------------- dialog ----------------
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              let router = this.selectData.id ? 'api_operation/operation/update' : 'api_operation/operation/save';
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            } else {
+              return false;
+            }
+          });
+        },
+        selectAll() {
+          if (this.isSelectedAll) {
+            this.$refs.treeData.setCheckedKeys([])
+          } else {
+            this.$refs.treeData.setCheckedKeys(this.treeIds)
+          }
+          this.isSelectedAll = !this.isSelectedAll;
+        },
+        filterNode(value, data) {
+          if (!value) return true;
+          return data.label.indexOf(value) !== -1;
+        }
+      },
+      watch: {
+        filterText(val) {
+          this.$refs.treeData.filter(val);
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+    </script>
+</body>

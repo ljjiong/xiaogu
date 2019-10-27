@@ -1,0 +1,1996 @@
+{include file="header" /}
+<body>
+    <section class="el-container is-vertical">
+        {include file="top" /}
+        <section class="el-container">
+            {include file="left" /}
+            <section class="el-container is-vertical">
+                <main class="el-main" id="main">
+                    <div id="app">
+                        <fieldset>
+                            <legend>
+                                绩效考核管理
+                            </legend>
+                        </fieldset>
+                        <!-- 筛选 -->
+                        <el-row style="margin-bottom: 10px;">
+                            <el-col :span="24">
+                                <el-card>
+                                    <div slot="header">
+                                        <span>
+                                            查询
+                                        </span>
+                                    </div>
+                                    <el-row :gutter="20">
+                                        <!-- 筛选条件 -->
+                                        <el-col :span="5">
+                                            <el-select placeholder="请选择年份" v-model="searchData.year">
+                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options1">
+                                                </el-option>
+                                            </el-select>
+                                        </el-col>
+                                        <el-col :span="5">
+                                            <el-select placeholder="请选择月份" v-model="searchData.month">
+                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
+                                                </el-option>
+                                            </el-select>
+                                        </el-col>
+                                        <!-- 筛选按钮 -->
+                                        <el-col :span="4">
+                                            <el-button @click="search" icon="el-icon-search">
+                                            </el-button>
+                                            <el-button @click="refresh" icon="el-icon-refresh">
+                                            </el-button>
+                                        </el-col>
+                                    </el-row>
+                                </el-card>
+                            </el-col>
+                        </el-row>
+                        <!-- 列表 -->
+                        <el-row>
+                            <el-col>
+                                <el-card>
+                                    <div slot="header">
+                                        <span>
+                                            绩效考核列表
+                                        </span>
+                                        <el-button icon="el-icon-download" @click="export_data();">导出数据</el-button>
+                                        <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float: right;" type="primary">
+                                            新增绩效考核
+                                        </el-button>
+                                    </div>
+                                    <!-- 批量操作 -->
+                                    <div style="margin-bottom: 10px;">
+                                        <el-button :disabled="multipleSelection.length == 0" v-if="is_role != -1"  @click="multiOperate('delete')" icon="el-icon-delete" plain="" size="small" type="danger">
+                                            批量删除
+                                        </el-button>
+                                    </div>
+                                    <!-- 表格 -->
+                                    <template>
+                                        <el-table :data="tableData" @selection-change="handleSelectionChange" v-if="is_role != -1" stripe="" style="width: 100%">
+                                            <el-table-column type="selection" width="55">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="年份" prop="year">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="月份" prop="month">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="用户名" prop="users.nick_name">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="所属部门" prop="users.department">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="总评分" prop="grade">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="备注" prop="remark">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="管理员" prop="admins.nick_name">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="评分时间" prop="update_time">
+                                            </el-table-column>
+                                            <el-table-column fixed="right" label="操作" width="290">
+                                                <template slot-scope="scope">
+                                                    <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </template>
+                                    <!-- 分页 -->
+                                    <template>
+                                        <div class="block" style="margin-top: 20px;">
+                                            <el-pagination :current-page="currentPage" :page-size="currentPageSize" :page-sizes="pageSize" :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="total, sizes, prev, pager, next, jumper">
+                                            </el-pagination>
+                                        </div>
+                                    </template>
+                                </el-card>
+                            </el-col>
+                        </el-row>
+                        <el-dialog :visible.sync="dialogVisible" title="绩效考核" width="80%">
+                            <el-row :gutter="20">
+                                <el-col :offset="5" :span="10">
+                                    <el-form :model="selectData" :rules="rules" label-position="left" label-width="120px" ref="ruleForm">
+                                        <el-form-item label="年份" prop="year" >
+                                            <el-select placeholder="请选择"  v-on:change="ym" v-model="selectData.year"  >
+                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options1">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label="月份" prop="month">
+                                            <el-select placeholder="请选择"  v-on:change="ym"  v-model="selectData.month">
+                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options" >
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label="用户名" prop="uid">
+                                            <el-input disabled="" placeholder="请选择员工" style="width: 240px;" v-model="selectData.users.nick_name">
+                                            </el-input>
+                                            <el-button @click="innerDialogVisible = true" plain="" type="primary" v-if="selectData.ym_state == true"> 
+                                                请选择员工
+                                            </el-button>
+                                        </el-form-item>
+                                        <el-form-item label="部门" prop="pid">
+                                            <el-input disabled="" v-model="selectData.users.department">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="项目扣分" prop="project_kf">
+                                            <el-input disabled="" v-model="selectData.project_kf">
+                                            </el-input>
+                                        </el-form-item>
+                                        <!-- <el-form-item label="考核标准" prop="standard">
+                                            <el-input disabled="" type="textarea" v-model="standard">
+                                            </el-input>
+                                        </el-form-item> -->
+                                        <el-form-item label="总评分" prop="grade">
+                                            <el-button @click="dialogVisible1 = true" plain="" type="primary">
+                                                基础考核
+                                            </el-button>
+                                            <el-button @click="dialogVisible2 = true" plain="" type="primary">
+                                                工作考核
+                                            </el-button>
+                                            <el-input disabled="" v-model="selectData.grade">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="备注" prop="remark">
+                                            <el-input type="textarea" v-model="selectData.remark">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item>
+                                            <el-button @click="dialogVisible = false;" plain="">
+                                                取消
+                                            </el-button>
+                                            <el-button @click="submit" type="primary" v-if="is_role != -1">
+                                                提交
+                                            </el-button>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                            </el-row>
+                            <!-- 用户列表 -->
+                            <el-dialog :visible.sync="innerDialogVisible" append-to-body="" title="成员列表">
+                                <el-row :gutter="20">
+                                    <el-col :span="10">
+                                        <el-input placeholder="成员名称" v-model="innerDialogSearchData.nick_name">
+                                            <template slot="prepend">
+                                                成员名称
+                                            </template>
+                                        </el-input>
+                                    </el-col>
+                                    <el-col :span="4">
+                                        <el-button @click="innerDialogSearch();" icon="el-icon-search">
+                                        </el-button>
+                                        <el-button @click="innerDialogRefresh();" icon="el-icon-refresh">
+                                        </el-button>
+                                    </el-col>
+                                </el-row>
+                                <el-table :data="innerDialogTableData" @row-click="innerDialogRowClick">
+                                    <el-table-column label="id" property="id">
+                                    </el-table-column>
+                                    <el-table-column label="姓名" property="nick_name">
+                                    </el-table-column>
+                                    <el-table-column label="电话" property="mobile">
+                                    </el-table-column>
+                                    <el-table-column label="所属部门" property="department">
+                                    </el-table-column>
+                                </el-table>
+                                <div style="margin-top: 20px;">
+                                    <el-pagination :current-page="innerDialogCurrentPage" :page-size="innerDialogCurrentPageSize" :page-sizes="innerDialogPageSize" :total="innerDialogTotal" @current-change="innerDialogHandleCurrentChange" @size-change="innerDialogHandleSizeChange" layout="total, sizes, prev, pager, next, jumper">
+                                    </el-pagination>
+                                </div>
+                            </el-dialog>
+                        </el-dialog>
+                        <el-dialog :visible.sync="dialogVisible1" title="基础考核" width="80%">
+                            <el-row :gutter="25">
+                                <el-col :offset="5" :span="15">
+                                    <el-form :model="selectData" :rules="rules" label-position="left" label-width="350px" ref="ruleForm">
+                                        <el-form-item label="违反考勤制度，无故迟到、早退、串岗、溜岗。" prop="adc">
+                                            <el-input v-model="selectData.publics.j">
+                                            </el-input>
+                                            <el-tag>
+                                                无故迟到早退每次扣0.5分；旷工一次扣5分；串岗、溜岗一次扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item label="认真执行工作纪律。上班时间不准串岗、溜岗、闲聊，办私事，不准吃零食，不准上网聊天、玩游戏、炒股、买菜、带小孩等做与工作无关的事情。" prop="adc">
+                                            <el-input v-model="selectData.publics.a">
+                                            </el-input>
+                                            <el-tag>
+                                                第一次发现扣分1分，第二次扣2分，以此类推，一个星期如发现3次以上，
+                                            </el-tag>
+                                            <el-tag>
+                                                取消个人当月绩效工资。凡全年发现处理3次以上的，在年终考核时不得评先、评优。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item label="搞好办公室的内务工作，每天保持办公室整洁，办公桌上办公物品摆放整齐，资料及时归档并存放档案室。按规定搞好办公区域的卫生。" prop="adc">
+                                            <el-input v-model="selectData.publics.b">
+                                            </el-input>
+                                            <el-tag>
+                                                每次检查不合格的扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item label="违反公司制度受到谈话、通报、记过的，或者受到其他行政主管部门处罚的，影响公司声誉的。" prop="adc">
+                                            <el-input v-model="selectData.publics.c">
+                                            </el-input>
+                                            <el-tag>
+                                                违反一次的扣10-15分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item label="自觉维护内部团结，服从领导的工作安排，认真执行交办的工作任务。在本岗位职责范围内的工作任务无正当理由的，不得拒绝接受。" prop="adc">
+                                            <el-input v-model="selectData.publics.d">
+                                            </el-input>
+                                            <el-tag>
+                                                出现一次扣1分。出现三次以上的扣10分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item label="要有团结协作精神。对工作任务中需要相互协助共同完成的，不得推诿、扯皮。" prop="adc">
+                                            <el-input v-model="selectData.publics.e">
+                                            </el-input>
+                                            <el-tag>
+                                                因个人原因拖延工作造成整个工作任务延期完成的扣1分，造成该项工作无法完成的，
+                                            </el-tag>
+                                            <el-tag>
+                                                扣5分。造成该项工作无法完成且产生负面影响的扣10分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item label="同事间要团结互助，齐心协力。不挑拨是非，不刁难别人，虚心接受意见和建议，不得因工作中意见分歧而出现不文明的行为举止。" prop="adc">
+                                            <el-input v-model="selectData.publics.f">
+                                            </el-input>
+                                            <el-tag>
+                                                出现一次扣2分。造成严重影响的扣10分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item label="按公司要求参加公司组织的会议、学习及活动，认真做好学习笔记。" prop="adc">
+                                            <el-input v-model="selectData.publics.g">
+                                            </el-input>
+                                            <el-tag>
+                                                未参加会议、学习及活动的每次扣1分；无学习笔记的每次扣0.5分；
+                                            </el-tag>
+                                            <el-tag>
+                                                无故缺席的每次扣5分；参加学习、活动取得优异成绩的每次加5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item label="不能以文件落实文件，所有转发的文件、通知必须有纸质存档。" prop="adc">
+                                            <el-input v-model="selectData.publics.h">
+                                            </el-input>
+                                            <el-tag>
+                                                未做到的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item label="及时完成公司下达的各项工作和临时交办的任务。" prop="adc">
+                                            <el-input v-model="selectData.publics.i">
+                                            </el-input>
+                                            <el-tag>
+                                                临时下达的工作未完成扣0.5分/次；无故未完成工作的扣1分/次。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item>
+                                            <el-button @click="dialogVisible1 = false;" plain="">
+                                                取消
+                                            </el-button>
+                                            <el-button @click="submit1" type="primary">
+                                                提交
+                                            </el-button>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                            </el-row>
+                        </el-dialog>
+                        <el-dialog :visible.sync="dialogVisible2" title="部门考核" width="80%">
+                            <el-row :gutter="25">
+                                <el-col :offset="5" :span="15">
+                                    <el-form :model="selectData" :rules="rules" label-position="left" label-width="350px" ref="ruleForm">
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            综合部部长
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item v-if="selectData.users.department == '综合部部长'" label="负责公司内部行政规章制度的制订、监督、执行，对其他部门以公司名义起草的文件、通知负责核稿工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '综合部部长'" label="协助领导做好各部门之间的综合协调，促进各项工作的规范和管理。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '综合部部长'"    label="协助领导做好公司行政管理和日常事务性事务处理。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '综合部部长'"     label="具体安排公司会议，会务准备工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '综合部部长'"     label="组织公司年度计划的制定，总结材料的撰写。按时向上级部门报送公司考勤等各类报表。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '综合部部长'"     label="做好部门业务培训工作，提高部门人员素质。组织部门人的业务学习，做好协调和思想工作、保密工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            综合部副部长
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item  v-if="selectData.users.department == '综合部副部长'"    label="负责公司所有资料、文件的打印工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '综合部副部长'"   label="负责公司职工的考勤管理，每月按时、实事求是提供职工出勤表。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '综合部副部长'"   label="负责综合部仓库的保管工作，做好办公用品等物品出入库登记。做好办公室各种日常消耗用品的领用和登记工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '综合部副部长'"   label="负责会务准备工作及会议服务工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '综合部副部长'"    label="完成公司领导安排的其它临时性工作，协助部长做好本部门的日常事务。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                不服从安排的每次扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            综合部后勤管理员
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item   v-if="selectData.users.department == '综合部后勤管理员'"   label="负责公司固定资产的登记管理工作；每月底核对公司固定资产的增、减情况。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '综合部后勤管理员'"    label="办理单位人员离职时所用物品的清交手续。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '综合部后勤管理员'"    label="做好安全保卫工作与安全检查，负责公司各类设备、设施维护，水、电、空调等能源后勤保障管理工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '综合部后勤管理员'"    label="做好公司机关院内花草树木的修整工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '综合部后勤管理员'"   label="完成公司领导安排的其它临时性工作，协助部长做好本部门的日常事务。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            综合部驾驶员
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item  v-if="selectData.users.department == '综合部驾驶员'"    label="坚守工作岗位，随时做好出车准备，并按领导安排热情、认真地完成出车任务，严禁私自出车。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分，私自出车的每次扣5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '综合部驾驶员'"   label="未做好的每次扣1分，私自出车的每次扣5分。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '综合部驾驶员'"    label="做好车辆的日常检查、清洁；定期做好车辆保养，发现故障及时维修。按时做好车辆的年审。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '综合部驾驶员'"    label="班前、班中不准饮酒。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                违规饮酒的每次扣5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '综合部驾驶员'"    label="妥善保管车辆证件，适时检点证件的有效性。出车时要保证证件齐全。因证件不齐全或丢失造成的罚款，由司机承担。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '综合部驾驶员'"   label="在每日出车前，收车后，要适时清洗车内外卫生、例行保养，检查安全装置，轮胎气压、水、油等情况，确保车辆的正常行驶。" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '综合部驾驶员'"    label="司机随领导外出办事，应随时在车内待命。未经同意，不得参与政事，干扰领导的思路。" prop="adc">
+                                            <el-input v-model="selectData.departments.g">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            综合部图书室管理员
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item   v-if="selectData.users.department == '综合部图书室管理员'"   label="认真做好图书登记、整理、保管、借阅等工作，所有书刊要分类上架，做到书帐相符。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '综合部图书室管理员'"   label="负责公司报刊、邮件的收发工作。收发时，重要邮件要直接送达当事人签收。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '综合部图书室管理员'"   label="负责办公室内文件、资料、书刊、报纸的整理工作，做到整齐、有序、无丢失。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '综合部图书室管理员'"   label="保持图书室的清洁卫生，书刊摆放整齐，室内优雅舒适。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '综合部图书室管理员'"   label="完成公司领导安排的其它临时性工作，协助部长做好部门的日常事务。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                不服从安排的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            综合部食堂人员
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item   v-if="selectData.users.department == '综合部食堂人员'"    label="食堂人员要树立全心全意为职工服务的思想，讲究职业道德，文明服务、态度和蔼，主动热情。做到饭熟菜香，味美可口，饭菜定量，不浪费。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '综合部食堂人员'"    label="食堂人员要讲究个人卫生，做到勤洗手、洗头等。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '综合部食堂人员'"   label="食堂人员应妥善保管好所有食品，杜绝霉烂变质的食品下锅，确保就餐人员饮食安全，防止食物中毒事故的发生。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '综合部食堂人员'"   label="食堂人员每天要及时打扫食堂卫生，及时清洁炊具，食堂配餐设备应当定期消毒、餐具消毒柜要定时开启，物品摆放整齐有序，保证食堂有良好的通风。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '综合部食堂人员'"   label="食堂人员在使用电、气、水时必须依据安全规范进行操作，防止安全事故的发生。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '综合部食堂人员'"   label="食堂人员在下班前应做到“三关”，即关气源、关电源、关水源。且必须把窗户关好，门锁好后方可下班。上班后应及时打开门窗进行通风，防止液化气泄漏造成安全事故。" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '综合部食堂人员'"    label="食堂人员严格按照生活委员会提供的菜谱进行，确需变更时要征求生活委员会报菜谱人员的同意。" prop="adc">
+                                            <el-input v-model="selectData.departments.g">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            人力资源部部长
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item   v-if="selectData.users.department == '人力资源部部长'"    label="制定部门年度工作计划，做好部门年度工作总结，做好每月工作部署，认真审核各项数据。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好工作计划、总结扣1分/次；
+                                            </el-tag>
+                                            <el-tag>
+                                                无部署或部署不当扣1分；审核错误的扣1分/次。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '人力资源部部长'"    label="督促部门人员遵守公司规章制度，认真履行其职能、职责。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                督促不到位每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '人力资源部部长'"   label="协助领导做好公司人员岗位安排，做好职工思想工作，保证职工干部队伍稳定。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '人力资源部部长'"    label="组织相关人员的培训工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                不及时组织培训，每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '人力资源部部长'"   label="按时召开部门会议，组织部门人员进行学习。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                未按时召开会议、组织学习的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '人力资源部部长'"    label="制定部门人员工作职责。" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                无工作职责扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '人力资源部部长'"    label="做好公司绩效考核日常管理工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.g">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的扣1-5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            人力资源部副部长
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item v-if="selectData.users.department == '人力资源部副部长'"    label="做好公司职工健康体检工作，建立职工健康档案。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                无工作职责扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '人力资源部副部长'"  label="做好年度考核工作，并按规定转接、存档。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                无工作职责扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '人力资源部副部长'"  label="做好外出人员管理工作，及时签订外出务工合同，建立外出人员管理台账。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '人力资源部副部长'"  label="做好人事档案的安全、保密、保管与保护工作，及时收集、鉴别和整理人事档案材料，把好档案入口关，及时清理所缺材料。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                档案管理不规范扣1分，资料归档不及时扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '人力资源部副部长'"  label="做好“五险一金”的造表、基数核定、缴纳等办理工作；收集各项社会保险的相关信息、政策等工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                造表不及时扣1分；造表错误一次扣1分。
+                                            </el-tag>
+                                            <el-tag>
+                                                因造表不及时造成公司损失的扣5分；
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '人力资源部副部长'"  label="完成公司领导安排的其它临时性工作，协助部长做好部门的日常事务。" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                不服从安排的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            劳资管理员
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item  v-if="selectData.users.department == '劳资管理员'"  label="按时造好工资、奖金、福利等表，及时交公司财务。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                造表不及时扣0.5分；造表错误一次扣1分。
+                                            </el-tag>
+                                            <el-tag>
+                                                因造表不及时造成公司损失的扣5分；
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '劳资管理员'"   label="对薪酬管理的各项报表、文件、表单的及时整理和归档。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                未及时整理归档的扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '劳资管理员'"  label="完成公司领导安排的其它临时性工作，协助部长做好部门的日常事务。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                不服从安排的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            营销财务部部长
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item  v-if="selectData.users.department == '营销财务部部长'"   label="每月应认真按时完成报表报送。会计凭证编织、审核。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                缺少一次扣当事人2分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '营销财务部部长'"   label="按时申报税务局各项税金及报表。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                缺少一次扣当事人2分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '营销财务部部长'"   label="制定好每月资金安排表" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                缺少一次扣当事人1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '营销财务部部长'"   label="按时完成领导交给的其他任务" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                缺少一次扣当事人1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            营销财务部办事员
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item v-if="selectData.users.department == '营销财务部办事员'"   label="按时结算武冈、新宁电费" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                不按时结算电费每次扣2分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '营销财务部办事员'"  label="按时审计财务凭证、报表" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                缺少一次扣2分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '营销财务部办事员'"  label="服从协助其他工作" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                不服从每次扣当事人5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '营销财务部办事员'"  label="协助会计完成每月的月工" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                不服从每次扣当事人5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            公司安全生产
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'" label="无安全生产责任事故发生" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                发生安全生产责任事故造成直接经济损失每1000元扣0.1分
+                                            </el-tag>
+                                            <el-tag>
+                                                以此类推，共30分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="层层签订安全目标责书；每月召开安全生产例会。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="安全台账、记录等基础资料齐全、记录规范真实完整。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符扣0.5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="各种工作计划、总结、报表上报及时。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                每漏报1次扣1分，迟报1次扣0.5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="按要求参加公司及上级安排的安全会议、教育培圳、考核。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                每缺席1人扣1分，考核不合格每1人扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="按要求开展安全文化宣传活动，及时张帖标语、出黑版报、悬挂横幅、展板等。 " prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合，扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="按要求进行管理人员和职工安全培训考核；按要求进行转岗、复工、新工艺、新技术、新设备投产前安全培训。" prop="adc">
+                                            <el-input v-model="selectData.departments.g">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合，扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="按要求制定应急预案，建立完善应急指挥与救援系统，明确职责；建立重点部位处置预案并上墙；发生事故时能及时启动应急预案，开展应急救援工作；按照事故处理原则，对事故进行调查处理和总结。 " prop="adc">
+                                            <el-input v-model="selectData.departments.h">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="按公司要求进行应急培训和演练，并对演练效果进行评价、对预案进行评审和修订。" prop="adc">
+                                            <el-input v-model="selectData.departments.i">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '公司安全生产'" label="站领导每周不少于2次安全检查，巡检人员每班不少于2次设备巡查，消防设施每月不少于一次检查，发现问题和隐患及时整改，并按要求上报。" prop="adc">
+                                            <el-input v-model="selectData.departments.j">
+                                            </el-input>
+                                            <el-tag>
+                                                每少一次检查扣1分，不及时整改安全隐患每处扣5分，
+                                            </el-tag>
+                                            <el-tag>
+                                                隐患不及时上报每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label=" 对上级下达的隐患整改项目，落实责任人、整改时间、验收人，按计划完成治理。 " prop="adc">
+                                            <el-input v-model="selectData.departments.k">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="对暂时不具备整改条件的隐患，制定可靠的监控措施和应急方案。" prop="adc">
+                                            <el-input v-model="selectData.departments.l">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="认真、及时组织落实公司安排的专顶安全活动。" prop="adc">
+                                            <el-input v-model="selectData.departments.n">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="按专项活动要求及时上报各表格、总结及活动情况。" prop="adc">
+                                            <el-input v-model="selectData.departments.m">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣2分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="严格执行危险作业许可制度，作业前进行风险分析，制定控制措施。" prop="adc">
+                                            <el-input v-model="selectData.departments.o">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="作业现场警示标识符合要求，配备了必要的安全防护用品（具）及消防设施与器材。" prop="adc">
+                                            <el-input v-model="selectData.departments.p">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '公司安全生产'" label="严格执行操作规程，不违章作业，不违反安全纪律、工艺纪律、劳动纪律和环保纪律。" prop="adc">
+                                            <el-input v-model="selectData.departments.q">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="严格进行检修作业前的安全条件确认及作业完成后的安全验收，并做到“工完、料尽、场地清”。" prop="adc">
+                                            <el-input v-model="selectData.departments.r">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣0.5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="做好清洁文明生产，严防“跑、冒、滴、漏”，保证岗位、场所、宿舍整洁干净。" prop="adc">
+                                            <el-input v-model="selectData.departments.s">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '公司安全生产'" label="按要求（组织）参加职业健康检查。" prop="adc">
+                                            <el-input v-model="selectData.departments.t">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合，扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="建立完善综合治理各组织机构，明确职责。做好各项工作，严防综治事件发生。" prop="adc">
+                                            <el-input v-model="selectData.departments.u">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '公司安全生产'"  label="及时报送综合治理各项计划、总结；每季度召开一次工作会议，并做好计录。" prop="adc">
+                                            <el-input v-model="selectData.departments.v">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item    v-if="selectData.users.department == '公司安全生产'" label=" 按要求及时完成公司布置的其它综合治理工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.w">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合，扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            生技安监部综合治理
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item   v-if="selectData.users.department == '生技安监部综合治理'"  label="贯彻落实上级综治工作会议精神。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                未按规定参加综治工作会议每次扣1分；
+                                            </el-tag>
+                                            <el-tag>
+                                                未落实会议精神的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部综合治理'"   label="建立完善综治领导机构和管理制度。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                机构不健全每项扣2分；制度不完善每项扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部综合治理'"   label="维稳应急工作预案。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未制定工作预案每项扣1分;
+                                            </el-tag>
+                                            <el-tag>
+                                                应急管理应对失策造成不良后果和社会影响的每次扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部综合治理'"   label="综合工作纳入单位年底工作计划，落实综治责任，层层签订综治管理责任状。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                未签订责任状扣5分；每缺一份责任状扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部综合治理'"   label="积极开展综治活动及“平安家庭”“平安厂房”创建活动" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                一项都未开展的扣2.5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '生技安监部综合治理'"  label="积极参加年度普法学习考试" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                合格率达95％计5分；不参加学习考试的及不合格的扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '生技安监部综合治理'"  label="单位无治安案件或刑事案件发生" prop="adc">
+                                            <el-input v-model="selectData.departments.g">
+                                            </el-input>
+                                            <el-tag>
+                                                每发生一起治安案件扣5分；每发生一起刑事案件扣
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '生技安监部综合治理'"  label="及时报送工作总结，按要求参加上级举行的有关竞赛活动" prop="adc">
+                                            <el-input v-model="selectData.departments.h">
+                                            </el-input>
+                                            <el-tag>
+                                                及时报送工作总结（半年总结6月20日前，全年总结11月20日前）
+                                            </el-tag>
+                                            <el-tag>
+                                                每漏报一次扣0.5分，迟报一次扣0.5分；
+                                            </el-tag>
+                                            <el-tag>
+                                                不参加竞赛活动的扣分，参加活动的加分，得到名次的奖分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部综合治理'"   label="建立信访维稳、禁毒禁赌、反邪教工作台账，每季度进行一次综治隐患排查。" prop="adc">
+                                            <el-input v-model="selectData.departments.i">
+                                            </el-input>
+                                            <el-tag>
+                                                无工作台账每缺一项扣0.5分；每缺一次隐患排查扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            生技安监部设备管理办
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部设备管理办'"   label="熟知各站设备运行状况" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                不符合要求扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '生技安监部设备管理办'"   label="负责电气、机械、水工运行规程的审查、编修；审查有关技术措施方案、图纸资料和技术总结报告。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                不符合要求一次扣2分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部设备管理办'"  label="作好各电站的生产技术台账和各项记录的审查、管理工作，负责电站生产技术原始资料的收集、整理、统计、归档工作；" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                不符合要求一次扣2分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部设备管理办'"  label="熟悉公司设备、设施管理标准；" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                不符合要求扣2分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '生技安监部设备管理办'"   label="定期对各水电站设备、设施进行完好率评定" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                不符合要求每处一次扣0.5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部设备管理办'"  label="组织各水电站设备检修、技改和制定相关的安全、技术措施并监督、检查、严格执行" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                不符合要求一次扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '生技安监部设备管理办'"   label="掌握设备、设施的维修计划并安排实施" prop="adc">
+                                            <el-input v-model="selectData.departments.g">
+                                            </el-input>
+                                            <el-tag>
+                                                不符合要求一次扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部设备管理办'"  label="掌握各水电站设备的检修消缺情况，直接参加各项工程的施工组织、技术管理和质量验收工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.h">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '生技安监部设备管理办'"   label="制订各水电站生产费用计划" prop="adc">
+                                            <el-input v-model="selectData.departments.i">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '生技安监部设备管理办'"   label="制订各水电站电气备品配件材料采购计划" prop="adc">
+                                            <el-input v-model="selectData.departments.j">
+                                            </el-input>
+                                            <el-tag>
+                                                每少一次检查扣1分，不及时整改安全隐患每处扣5分，
+                                            </el-tag>
+                                            <el-tag>
+                                                隐患不及时上报每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部设备管理办'"  label="按要求制订年度培训计划" prop="adc">
+                                            <el-input v-model="selectData.departments.k">
+                                            </el-input>
+                                            <el-tag>
+                                                1项不符合扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            生技安监部调度室
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部调度室'"  label="及时正确完成、报送生产报表（统计表每天9:30以前）" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                一次不及时完成扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '生技安监部调度室'"  label="按要求整理、归档" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                不符合要求扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部调度室'"   label="熟悉《汇报和传达流程》" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                不熟悉扣0.5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部调度室'"   label="做好上情下达、下情上报工作，对上级有关通知、通报、指令认真按时落实处理；" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                发现一次扣0.5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '生技安监部调度室'"  label="对基层单位反映的安全生产信息，根据具体情况及时解决或向有关领导汇报" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                处理或汇报不及时，发现一次扣5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部调度室'"   label="实时了解渠道、闸门、各站设备运行情况；监督各站对调度指令的执行情况" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                发现一次扣0.5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '生技安监部调度室'"  label="各项记录齐全、整洁" prop="adc">
+                                            <el-input v-model="selectData.departments.g">
+                                            </el-input>
+                                            <el-tag>
+                                                一项不符合0.5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '生技安监部调度室'"  label="合理调配利用水资源，杜绝浪费" prop="adc">
+                                            <el-input v-model="selectData.departments.h">
+                                            </el-input>
+                                            <el-tag>
+                                                一次不合理0.5分，浪费一次0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '生技安监部调度室'"   label="完成公司生产指标任务。" prop="adc">
+                                            <el-input v-model="selectData.departments.i">
+                                            </el-input>
+                                            <el-tag>
+                                                每次加5分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '生技安监部调度室'"  label="超过公司生产任务" prop="adc">
+                                            <el-input v-model="selectData.departments.j">
+                                            </el-input>
+                                            <el-tag>
+                                                每超过1%加1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            工会
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item   v-if="selectData.users.department == '工会'"  label="工会组织机构健全，分工明确。公司行政重视工会工作，每年要专题研究工会工作会议1-2次，经费保障。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                没做到的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '工会'"   label="组织工会会员认真学习和严格执行《工会法》、《劳动法》，维护职工合法权益。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                每发生一起侵害职工权益且未处理到位的扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '工会'"   label="全年定期召开职代会两次；做好各项会议记录和资料收集。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                每少一次扣0.5分；没有和不完整的，扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '工会'"   label="组织义务植树、三八妇女节等节日慰问庆祝活动。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                未做到扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '工会'"   label="做好职代会重要意见收集工作，并及时上报主管局党委、主管局行政。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                没做到扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '工会'"   label="加强对殡葬管理政策、规定的宣传，凡本单位有因对殡葬管理政策、规定不知道、不清楚，纠纷或上访的。" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                每人次扣0.5分，
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '工会'"  label="对本部门干部职工（含直系亲属）在治丧中，存在违规现象被查处的，及治丧中引起纠纷矛盾上访、和被查处的。" prop="adc">
+                                            <el-input v-model="selectData.departments.g">
+                                            </el-input>
+                                            <el-tag>
+                                                每起扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '工会'"  label="存在违规土葬、乱埋乱葬、修建大墓、豪华墓现象等被查处的。" prop="adc">
+                                            <el-input v-model="selectData.departments.h">
+                                            </el-input>
+                                            <el-tag>
+                                                每起扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '工会'"  label="建立站（公司）务公开领导机构，完善站（公司）务公开规章制度。" prop="adc">
+                                            <el-input v-model="selectData.departments.i">
+                                            </el-input>
+                                            <el-tag>
+                                                未做的每项扣1分，
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '工会'"   label="按月在固定场公开，公开的内容具体真实；要经职工代表、工会委员、纪检委员等签字；纸质文档备查。" prop="adc">
+                                            <el-input v-model="selectData.departments.j">
+                                            </el-input>
+                                            <el-tag>
+                                                不符合要求的每项次扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '工会'"  label="做到职工对站（公司）务公开满意度达到80%以上，保持干部职工思想稳定，" prop="adc">
+                                            <el-input v-model="selectData.departments.k">
+                                            </el-input>
+                                            <el-tag>
+                                                如发生较大异议或引发上访，每起扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item   v-if="selectData.users.department == '工会'"  label="每年年初拟定出全年工作计划，年终做出总结。" prop="adc">
+                                            <el-input v-model="selectData.departments.l">
+                                            </el-input>
+                                            <el-tag>
+                                                未做到扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            总支部
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item  v-if="selectData.users.department == '总支部'"   label="班子建设:1、支部班子健全，支委分工明确，按期换届。2、制定年初计划，年中有推进、年终有总结。3、重大事项，均经过总支委审议。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                没做到的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '总支部'" label="党员管理:1、主题党日，三会一课，各项部署工作。2、开展推进工作，组织开展评选活动，开展联系帮扶工作。3、开展教育与培训。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                未做到的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '总支部'" label="组织生活会:1、认真落实“三会一课”制度；2、召开组织生活会，并开展民主评议党员；（个人自评、党员互评、民主测评、组织评定。）3、经常性开展谈心谈话，全年开展一次调研工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做到的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '总支部'" label="制度落实:1、及时做好组织关系接转工作；2、按月定额收缴党费；3、及时做好先进事迹宣传；4、及时做好党务公开工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                未做到的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '总支部'" label="基础工作：1、开展“六有”党员活动场所建设；2、党费使用合理规范；3、开展党建工作宣传。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                未做到的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '总支部'"  label="加强对殡葬管理政策、规定的宣传，凡本单位有因对殡葬管理政策、规定不知道、不清楚，纠纷或上访的。" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                未做到的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <!-- 
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                            纪检监察
+                                            ------------------------------------------------------------------------------------------------------------------------------------------
+                                         -->
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="全面贯彻落实中央、省委、市委及局党委党风廉政建设和反腐败工作的部署和决策，全年专题研究或部署党风廉政建设和反腐败工作不少于4次。" prop="adc">
+                                            <el-input v-model="selectData.departments.a">
+                                            </el-input>
+                                            <el-tag>
+                                                每少1次扣1分。未按要求落实纪检监察的工作部署的，每次扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="研究制定党风廉政建设工作计划、目标要求和具体措施，对党风廉政建设工作任务进行细化分解，明确领导班子在党风廉政建设中的职责分工。" prop="adc">
+                                            <el-input v-model="selectData.departments.b">
+                                            </el-input>
+                                            <el-tag>
+                                                无组织机构、工作计划、责任分解，每少一项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="建立和落实所属党组织履行党风廉政建设主体责任报告制度，抓好所属党组织党风廉政建设主体责任的落实，加强对落实情况的监督检查和考核。" prop="adc">
+                                            <el-input v-model="selectData.departments.c">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="积极推进本部门本单位党风廉政建设工作，及时传达上级有关党风廉政建设和反腐败工作的部署和要求，领导责任履行到位，“四个亲自”作用发挥好。" prop="adc">
+                                            <el-input v-model="selectData.departments.d">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="带头上廉政党课，对班子成员及各部门、水电站主要负责人定期开展廉政谈话和落实主体责任约谈，加强教育监管，督促其廉洁从政，管好班子，带好队伍，并建档立卷。" prop="adc">
+                                            <el-input v-model="selectData.departments.e">
+                                            </el-input>
+                                            <el-tag>
+                                                未上党课的，扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'"  label="按照公司党支部及本单位领导班子的部署要求，定期研究、部署、检查和报告分管范围内的党风廉政建设工作情况，指导研究制定加强党风廉政建设的具体措施，对分管部门、分管站的党员干部加强经常性教育，并建档立卷。" prop="adc">
+                                            <el-input v-model="selectData.departments.f">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'"  label="严格执行廉洁从政各项规定，管好亲属和身边工作人员，自觉接受监督，无违纪违法问题。" prop="adc">
+                                            <el-input v-model="selectData.departments.g">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="完善党组依法决策机制，认真贯彻执行“三重一大”事项集体决策制度、主要领导执行末位表态制度和党政主要负责人“三个不直接分管”制度。" prop="adc">
+                                            <el-input v-model="selectData.departments.h">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="落实党内监督制度，规范权力运行。按照规定公开权力清单和权力运行流程，推动党务、政务和办事公开工作科学化、规范化、制度化，推进权力阳光运行。" prop="adc">
+                                            <el-input v-model="selectData.departments.i">
+                                            </el-input>
+                                            <el-tag>
+                                                未按规定公开，扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="对上级巡视、行政监察和党风廉政建设责任制检查中发现的问题，按要求落实整改或作出处理，并按规定时间上报整改结果。" prop="adc">
+                                            <el-input v-model="selectData.departments.j">
+                                            </el-input>
+                                            <el-tag>
+                                                未按要求整改并报结果的，每件次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="认真抓好中央八项规定、省委九项规定和市委十条规定精神的贯彻落实，建立领导班子、领导干部作风状况定期分析机制。" prop="adc">
+                                            <el-input v-model="selectData.departments.k">
+                                            </el-input>
+                                            <el-tag>
+                                                发生各类违反作风建设问题的，每件次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="严格规范“三公”消费行为，按要求公开“三公”经费，落实五年内“三公”经费只减不增的硬性要求。" prop="adc">
+                                            <el-input v-model="selectData.departments.l">
+                                            </el-input>
+                                            <el-tag>
+                                                未按要求公开“三公”经费的，扣1分，
+                                            </el-tag>
+                                            <el-tag>
+                                                “三公经费”比上年增加的扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="建立完善落实党风廉政建设责任制专题报告，落实廉政谈话、约谈等制度。" prop="adc">
+                                            <el-input v-model="selectData.departments.n">
+                                            </el-input>
+                                            <el-tag>
+                                                每少1项扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="学习有计划，把党风廉政建设作为党组织学习、民主生活会和“三会一课”的重要内容，加大落实“两个责任”工作力度。" prop="adc">
+                                            <el-input v-model="selectData.departments.m">
+                                            </el-input>
+                                            <el-tag>
+                                                无计划扣1分，全年组织学习不少于6次，每少一次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="积极协助党组织加强党风廉政建设和组织协调反腐败工作，及时向局党委和局纪委报告反腐败重大工作情况，及时贯彻党委和纪委的工作部署。" prop="adc">
+                                            <el-input v-model="selectData.departments.o">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="指导督促本单位完成上级党风廉政建设和反腐败工作任务，协助党组加强对党风廉政建设和反腐败工作任务的责任分解和检查考核。" prop="adc">
+                                            <el-input v-model="selectData.departments.p">
+                                            </el-input>
+                                            <el-tag>
+                                                无责任分解、工作计划、相关制度等，每项扣1分
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="落实纪检组长是党风廉政建设监督责任第一责任人责任，做到亲自研究部署、组织协调和检查督办反腐败各项工作。" prop="adc">
+                                            <el-input v-model="selectData.departments.q">
+                                            </el-input>
+                                            <el-tag>
+                                                未做好的每项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="加强对中央八项规定、省委九项规定和市委十条规定精神执行情况的督查，特别是对厉行节约、公车配备、公务接待、职务消费、领导干部在企业兼职、操办婚丧喜庆事宜、参赌涉赌等规定执行情况的监督检查。" prop="adc">
+                                            <el-input v-model="selectData.departments.r">
+                                            </el-input>
+                                            <el-tag>
+                                                督查不到位的每次扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="畅通信访举报渠道，落实首办责任制，认真受理对党组织、党员和监察对象违反党纪政纪行为的检举、控告，及时妥善办理信访举报问题。" prop="adc">
+                                            <el-input v-model="selectData.departments.s">
+                                            </el-input>
+                                            <el-tag>
+                                                每发生一起因处置不当违反信访条例上访问题，造成严重后果的，扣1分；
+                                            </el-tag>
+                                            <el-tag>
+                                                市纪委组织的专项检查中，发现对信访问题处理不及时的，每起扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="认真办理并按时回复上级纪委交办、督办的信访件。" prop="adc">
+                                            <el-input v-model="selectData.departments.t">
+                                            </el-input>
+                                            <el-tag>
+                                                未按时完成的每件扣0.5分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="监督领导班子执行民主集中制，督促落实“三重一大”事项集体决策、党政正职“三个不直接分管”“一把手末位表态”等制度。" prop="adc">
+                                            <el-input v-model="selectData.departments.u">
+                                            </el-input>
+                                            <el-tag>
+                                                无制度或有制度未按制度执行的，各项扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectData.users.department == '纪检监察'"  label="加强对党风廉政宣传教育和廉政文化建设的组织协调，每年至少组织班子、各部门、各水电站主要负责人接受一次警示教育。未组织开展警示教育的，扣1分。" prop="adc">
+                                            <el-input v-model="selectData.departments.v">
+                                            </el-input>
+                                            <el-tag>
+                                                未组织开展警示教育的，扣1分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item  v-if="selectData.users.department == '纪检监察'" label="制订全年工作计划，6月25和12月20日前上报半年和全年党风廉政建设责任执行情况报告，按要求上报需要上报的资料。" prop="adc">
+                                            <el-input v-model="selectData.departments.w">
+                                            </el-input>
+                                            <el-tag>
+                                                无工作计划、未按要求上报资料的，每件次扣2分。
+                                            </el-tag>
+                                        </el-form-item>
+                                        <el-form-item>
+                                            <el-button @click="dialogVisible2 = false;" plain="">
+                                                取消
+                                            </el-button>
+                                            <el-button @click="submit1" type="primary" v-if="is_role != -1">
+                                                提交
+                                            </el-button>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                            </el-row>
+                        </el-dialog>
+                        <input @change="fileChange($event,'img')" id="imgAdd" style="display: none" type="file">
+                            <input @change="fileChange($event,'project_documentation')" id="imgAdd1" style="display: none" type="file">
+                            </input>
+                        </input>
+                    </div>
+                </main>
+                {include file="footer" /}
+            </section>
+        </section>
+    </section>
+    <script type="text/javascript">
+        var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        is_role:$.inArray(3,user.role_ids), 
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        // 状态过滤
+        statusFilters: [{
+          text: '上架',
+          value: 1
+        }, {
+          text: '下架',
+          value: 2
+        }], 
+        options: [
+                {
+                  label: '01',
+                  value: '01'
+                },{
+                  label: '02',
+                  value: '02'
+                },{
+                  label: '03',
+                  value: '03'
+                },{
+                  label: '04',
+                  value: '04'
+                },{
+                  label: '05',
+                  value: '05'
+                },{
+                  label: '06',
+                  value: '06'
+                },{
+                  label: '07',
+                  value: '07'
+                },{
+                  label: '08',
+                  value: '08'
+                },{
+                  label: '09',
+                  value: '09'
+                },{
+                  label: '10',
+                  value: '10'
+                },{
+                  label: '11',
+                  value: '11'
+                },{
+                  label: '12',
+                  value: '12'
+                },
+                 ],   //数据
+        options1: [
+                {
+                  label: '2019',
+                  value: '2019',
+                },{
+                  label: '2020',
+                  value: '2020',
+                },{
+                  label: '2021',
+                  value: '2021',
+                },{
+                  label: '2022',
+                  value: '2022',
+                },{
+                  label: '2023',
+                  value: '2023',
+                },{
+                  label: '2024',
+                  value: '2024',
+                },{
+                  label: '2025',
+                  value: '2025',
+                },{
+                  label: '2026',
+                  value: '2026',
+                },{
+                  label: '2027',
+                  value: '2027',
+                },{
+                  label: '2028',
+                  value: '2028',
+                },{
+                  label: '2029',
+                  value: '2029',
+                },{
+                  label: '2030',
+                  value: '2030',
+                },
+                 ],   //数据
+        scoreShopParams: {},
+        // 查询条件 
+        searchData: {
+          month:'',
+          year:'',
+
+        },
+        // 查询条件 
+        searchData1: {
+          month:'',
+          year:'',
+
+        },
+        standard:'',
+        // ----------------- dialog -----------------
+        dialogVisible: false,
+        selectData: {
+             publics:{
+            a:'0',
+            b:'0',
+            c:'0',
+            d:'0',
+            e:'0',
+            f:'0',
+            g:'0',
+            h:'0',
+            i:'0',
+            j:'0',
+            k:'0',
+            l:'0',
+            n:'0',
+            m:'0',
+            o:'0',
+            p:'0',
+            q:'0',
+            r:'0',
+            s:'0',
+            t:'0',
+            u:'0',
+            v:'0',
+            w:'0',
+            x:'0',
+            y:'0',
+            z:'0',
+            },
+            departments:{
+            a:'0',
+            b:'0',
+            c:'0',
+            d:'0',
+            e:'0',
+            f:'0',
+            g:'0',
+            h:'0',
+            i:'0',
+            j:'0',
+            k:'0',
+            l:'0',
+            n:'0',
+            m:'0',
+            o:'0',
+            p:'0',
+            q:'0',
+            r:'0',
+            s:'0',
+            t:'0',
+            u:'0',
+            v:'0',
+            w:'0',
+            x:'0',
+            y:'0',
+            z:'0',
+        },
+          department:'',
+          goods_info: {},
+          users: {nick_name:''},
+          spec_group_info: [],
+
+        },
+
+        // ----------------- dialog -----------------
+        dialogVisible1: false,
+        // ----------------- dialog -----------------
+        dialogVisible2: false,
+        publics:{
+            a:'0',
+            b:'0',
+            c:'0',
+            d:'0',
+            e:'0',
+            f:'0',
+            g:'0',
+            h:'0',
+            i:'0',
+            j:'0',
+            k:'0',
+            l:'0',
+            n:'0',
+            m:'0',
+            o:'0',
+            p:'0',
+            q:'0',
+            r:'0',
+            s:'0',
+            t:'0',
+            u:'0',
+            v:'0',
+            w:'0',
+            x:'0',
+            y:'0',
+            z:'0',
+            },
+        departments:{
+            a:'0',
+            b:'0',
+            c:'0',
+            d:'0',
+            e:'0',
+            f:'0',
+            g:'0',
+            h:'0',
+            i:'0',
+            j:'0',
+            k:'0',
+            l:'0',
+            n:'0',
+            m:'0',
+            o:'0',
+            p:'0',
+            q:'0',
+            r:'0',
+            s:'0',
+            t:'0',
+            u:'0',
+            v:'0',
+            w:'0',
+            x:'0',
+            y:'0',
+            z:'0',
+        },
+        grade:0.00,
+        rules: {
+          year: [
+            { required: true, message: '请选择年份', trigger: 'blur' },
+          ],
+          month: [
+            { required: true, message: '请选择年份选择月份', trigger: 'blur' },
+          ]
+        },
+        // 快速编辑规格
+        quickSpecData: {
+          score: '',
+          money: ''
+        },
+        // --------------- innerDialog -------------------
+        innerDialogVisible: false,
+        innerDialogTableData: [],
+        innerDialogCurrentPage: 1,
+        innerDialogCurrentPageSize: 10,
+        innerDialogPageSize: [10, 20],
+        innerDialogTotal: 0,
+        innerDialogSelectData: {},
+        innerDialogSearchData: {
+          name: ''
+        }, 
+        ym_state:false,
+      },
+      methods: { 
+        // 年月发生改变
+        ym(){
+            if(this.selectData.year != null  && this.selectData.month != null){
+                this.selectData.ym_state=true;
+                if(this.selectData.uid != null){
+                    this.loadTableDatas();//查询该员工有木有扣分
+                }
+                this.submit1();//计算分数
+            }
+        },
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_project/project/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                this.tableData.splice(this.tableData.indexOf(data), 1);
+              })
+            })
+          } else if (type === 'edit') {
+
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            if(this.selectData.publics==null){
+                    this.selectData.publics=this.publics;
+            };
+            if(this.selectData.departments==null){
+                    this.selectData.departments=this.departments;
+            };
+            this.dialogVisible = true;
+            
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        is_urgencyFilterHandler(value, row, column) {
+          return row['is_urgency'] === value;
+        },
+        // 过滤
+        is_achieveFilterHandler(value, row, column) {
+          return row['is_achieve'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', `api_performance/performance/batch_${type}`, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+
+         // 导出数据
+         export_data() {
+          this.$confirm('确认导出?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_performance/performance/export', this.searchData).then(resp => {
+                this.$message.success(resp.msg);
+                window.open(resp.data);
+              })
+          })
+        },
+
+        // 新增
+        goAdd() {
+          this.selectData = {
+            grade:0.00,
+            goods_info: {},
+            score: '',
+            publics:this.publics,
+            departments:this.departments,
+            project_documentation:'',
+            project_kf:'',
+            project_details:'',
+            users: {nick_name:''},
+            spec_group_info: []
+          }
+          this.dialogVisible = true; 
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_performance/performance/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          });
+        },
+
+        // 加载数据
+        loadTableDatas() {
+          httpRequest('POST', 'api_performance/performance/project_self_deduct', this.selectData,{
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.selectData.project_kf = resp.data;
+            this.selectData.grade -=this.selectData.project_kf;
+          });
+        },
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              let router = this.selectData.id ? 'api_performance/performance/update' : 'api_performance/performance/save';
+              if (this.scoreShopParams.type == 1) {
+                this.selectData.money = 0;
+              }
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(() => {
+                  location.reload();
+                }, 500);
+              })
+            } else {
+              return false;
+            }
+          })
+        },
+        //计算总分
+        submit1() {
+          this.selectData.grade=0;
+          for (let key in this.selectData.publics) {
+            this.selectData.grade -=this.selectData.publics[key];
+          };
+          for (let key in this.selectData.departments) {
+            this.selectData.grade -=this.selectData.departments[key];
+          }
+          this.selectData.grade -=this.selectData.project_kf;
+          console.log(111);
+          this.dialogVisible1 = false;
+          this.dialogVisible2 = false;
+        },
+
+                // --------------- innerDialog -------------------
+        // 跳页
+        innerDialogHandleCurrentChange(val) {
+            this.innerDialogCurrentPage = val;
+            this.innerDialogLoadTableData();
+        },
+        // 改变页容量
+        innerDialogHandleSizeChange(val) {
+            this.innerDialogCurrentPageSize = val;
+            this.innerDialogLoadTableData();
+        },
+        // 某一行被点击
+        innerDialogRowClick(row) {
+          this.selectData.uid = row.id;
+          this.selectData.users.nick_name = row.nick_name;
+          this.selectData.users.department = row.department;
+          this.selectData.goods_info = row;
+          this.loadTableDatas();
+          this.innerDialogVisible = false;
+        },
+        // 搜索
+        innerDialogSearch() {
+          this.innerDialogCurrentPage = 1;
+          this.innerDialogLoadTableData();
+        },
+        // 重置
+        innerDialogRefresh() {
+            this.innerDialogCurrentPage = 1;
+          for (let key in this.innerDialogSearchData) {
+            this.innerDialogSearchData[key] = ''
+          }
+          this.innerDialogLoadTableData();
+        },
+        innerDialogLoadTableData() {
+          httpRequest('POST', 'api_performance/performance/index_user', this.innerDialogSearchData, {
+            'page-num': this.innerDialogCurrentPage,
+            'page-limit': this.innerDialogCurrentPageSize
+          }).then(resp => {
+            this.innerDialogTableData = resp.data;
+            this.innerDialogTotal = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+        this.innerDialogLoadTableData();
+        // httpRequest('POST', 'api_users/users/index',{ position_name: this.selectData.department }).then(resp => {
+        //   this.scoreShopParams = resp.data;
+        // })
+      }
+    });
+    </script>
+</body>

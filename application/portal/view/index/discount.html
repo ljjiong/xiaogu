@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.theme.default.min.css">
+<script src="/public/static/OwlCarousel2-2.2.1/owl.carousel.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href='http://cdn.webfont.youziku.com/webfonts/nomal/116163/46972/5ad6b8b5f629d91254ccbcf1.css' rel='stylesheet' type='text/css' />
+
+<link href='http://cdn.webfont.youziku.com/webfonts/nomal/116163/19673/5af59051f629d9110cc2faf6.css' rel='stylesheet' type='text/css' />
+<link href='http://cdn.webfont.youziku.com/webfonts/nomal/116163/19673/5af592d9f629d9110cc2faf7.css' rel='stylesheet' type='text/css' />
+
+	<style type="text/css">
+		body{background-color:#f4f4f4;}
+		.zk-title{text-align:center;color:#ffffff;margin-bottom:30px;font-weight:normal;font-size:80px;}
+		.zk-title-img{display:block;margin:0 auto;margin-bottom:40px;}
+		.zk-content1{width:769px;height:99px;background:url(/public/static/portal/images/zk-time.png) center no-repeat;margin:0 auto;line-height:99px;text-align:center;font-weight:normal;font-size:28px;color: rgb(255, 255, 255);letter-spacing:1.3px;margin-bottom:85px;}
+		.simply-countdown{display:inline-block;margin:0 40px;font-family:'Arial';font-weight:bold;font-size:40px;width:270px;letter-spacing:1px;}
+
+		.zk-content2{margin:0 auto;margin-bottom:80px;width:1200px;width:1029px;}
+		.zk-content2 li{float:left;width:313px;margin-right:45px;}
+		.zk-content2 li:nth-child(3n){margin-right:0px;}
+
+
+
+
+		.zk-content{background:url(/public/static/portal/images/jm-bk-images.jpg) center top no-repeat;background-size:cover;padding-top:110px;padding-bottom:100px;}
+		.zk-content3{width:1200px;padding:;box-sizing:box-border;}
+		.zk-content3 li{float:left;width:227px;height:323px;background-color:#ffffff;border:1px solid #d2d2d2;margin-right:4px;padding:0px 12px 5px 12px;    box-sizing: border-box;margin-bottom:4px;}
+		.zk-content3 li:nth-child(5n){margin-right:0px;}
+		.zk-content3 li div{display:block;position:relative;}
+		.zk-content3 li div .cont3-img img{display:block;width:100%;height:220px;}
+		.zk-content3 li .title{font-size: 15px;color: rgb( 51, 51, 51 );line-height:1.4;margin-bottom:6px;margin-top:0px;font-weight:bold;}
+		.zk-content3 li .price1{font-size: 12px;color: rgb( 97, 94, 94 );text-decoration:line-through;margin-bottom:6px;}
+		.zk-content3 li .price{font-size: 14px;color: rgb( 246, 48, 48 );font-weight:normal;margin-top:0px;margin-bottom:0px;}
+		.zk-content3 li .price span{font-weight:bold;font-size:20px;font-family:'Arial';}
+		.zk-content3 li .button{width:85px;height:27px;border-radius:5px;color:#ffffff;background-color:#f63030;line-height:30px;text-align:center;display:block;position:absolute;bottom:2px;right:0px;transition:all .3s;-moz-transition:all .3s;-webkit-transition:all .3s;-o-transition:all .3s;}
+		.zk-content3 li .button:hover{background-color:#e30000;}
+
+
+	.cont2-block{position:absolute;width:100%;height:100%;bottom:0px;top:13px;left:0px;right:0px;z-index:1;box-sizing:border-box;padding-left:26px;padding-top:17px;}
+	.zk-content2 li{position:relative;}
+
+	.cont2-block .top .bt-money{display:inline-block;color:#ffffff;font-family:'Impact';font-size:46px;letter-spacing:1.3px;font-weight:normal;line-height:1;font-weight:normal;}
+	.cont2-block .top .bz-money{display:inline-block;color:#ffffff;font-family:'jdzhonyuanjian11f46eead51c5c3';font-size:22px;vertical-align:top;padding-top:15px;letter-spacing:1px;}
+	.cont2-block p{width:223px;height:27px;box-sizing:border-box;border:1px solid #ffffff;text-align:center;line-height:25px;color:#ffffff;margin-top:5px;font-family:'jdzhonyuanjian11f46eead51c5c3';letter-spacing:1.2px;font-size:14.5px;font-weight:normal;}	
+
+
+
+	</style>
+
+</head>
+<body>
+	{include file="/index/header" /}
+	
+	<div class="zk-content" id="app">
+		<div class="w1200">
+			<h2 class="zk-title" style="font-family:'MyriadSetPro-Thin';">WancllShop</h2>
+			<img class="zk-title-img" src="/public/static/portal/images/zk-title-imh.png">
+			<div class="zk-content1">
+				距离活动结束还剩:<p class="simply-countdown">{{discountActivity.deadline | timeFilter}}</p>(秒)
+			</div>
+			<div class="zk-content2">
+				<ul class="clearfix">
+					<li class="bt"  v-for="(coupon,couKey) in coupons" :key="couKey" v-if="couKey < 3" @click="getCoupon(coupon)">
+							<img src="/public/static/portal/images/yh-img41.png">
+							<div class="cont2-block">
+								<div class="top">
+									<div class="bt-money" v-text="coupon.change_value">100</div>
+									<div class="bz-money">元优惠券</div>
+								</div>
+								<p>购买商城内满{{coupon.reach_money}}可使用</p >
+							</div>
+						</li>
+				</ul>
+			</div>
+			<div class="zk-content3">
+				<ul class="clearfix">
+					<li v-for="(rule, key) in discountActivity.rule_info">
+						<div>
+							<div class="cont3-img">
+								<img :src="rule.goods_info.thum">
+							</div>
+							<h4 class="title" v-text="rule.goods_info.name"></h4>
+							<p class="price1" v-text="'原价:￥'+ rule.goods_info.sell_price"></p>
+							<h4 class="price">限时价: ¥<span v-text="rule.discount_price"></span> </h4>
+							<a  class="button bt" @click="goGoodsDetail(rule)">立即抢购</a>
+						</div>
+					</li>
+
+		
+
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="home-time"  style="width:0px;height:0px;overflow:hidden;">2018/4/20</div>
+
+	{include file="index/footer" /}
+<script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        title: '限时折扣',
+        coupons: [],
+        // 折扣活动
+        discountActivity: {
+          rule_info: []
+        }
+      },
+      methods: {
+		getCoupon: function (coupon) {
+			httpRequest('POST', 'api_users/user_coupons/save', {
+			  activity_coupon_id: coupon.id
+			},function(resp){
+			  layer.msg(resp.msg)
+			})
+		},
+        goGoodsDetail: function (rule) {
+          location = rule.href;
+        }
+      },
+      computed: {
+
+      },
+      filters: {
+        timeFilter: function (value) {
+          if(!value){
+            return '';
+          }
+          value = Math.floor(value / 1000);
+          var day = Math.floor(value / 86400);
+          value %= 86400;
+          var hour = Math.floor(value / 3600);
+          value %= 3600;
+          var minute = Math.floor(value / 60);
+          var second = value %= 60;
+					function times(hour){
+						var t = (hour+'').length,
+              s = '';
+           for(var i=0; i<2-t; i++){
+                 s += '0';
+             }
+						 return s 
+					}
+          return times(day) + day + ': ' + times(hour) + hour + ': ' +  times(minute) + minute + ': ' + times(second) + second;
+        }
+      },
+      mounted: function () {
+        var that = this;
+        // 获取优惠卷
+        httpRequest('POST', 'api_query/market/coupon',{},function (resp) {
+          that.coupons = resp.data;
+        })
+        // 加载限时折扣
+        httpRequest('POST', 'api_query/market/activity', {},function (resp) {
+          if (resp.data.discount) {
+            // 计算截至时间
+            resp.data.discount[0].deadline = resp.data.discount[0].end_timestamp * 1000 - Date.now();
+            // 限时折扣跳转
+            resp.data.discount[0].rule_info.forEach(function (item) {
+              item.href = location.origin + '/portal/index/goods_detail?isDiscountGoods=1&goodsId=' + item.goods_id
+            })
+            that.discountActivity = resp.data.discount[0];
+            // 倒计时
+            setInterval(function () {
+              that.discountActivity.deadline -= 1000;
+            }, 1000)
+          }
+				})
+				// .catch(function (e) {
+        //   console.log(e)
+        // })
+      }
+    })
+</script>
+<script>
+	/*
+    	var Htime = $('#home-time').text();
+	    var starttime = new Date(Htime);
+	    setInterval(function () {
+	        var nowtime = new Date();
+	        var time = starttime - nowtime;
+	        var day = parseInt(time / 1000 / 60 / 60 / 24);
+	        var hour = parseInt(time / 1000 / 60 / 60 % 24);
+	        var minute = parseInt(time / 1000 / 60 % 60);
+	        var seconds = parseInt(time / 1000 % 60);
+	        // $('.timespan').html(day + "天" + hour + "小时" + minute + "分钟" + seconds + "秒");
+	        $('.simply-countdown').html("<span>"+ hour +"</span>：<span>"+ minute +"</span>：<span>"+ seconds +"</span>");
+	    }, 1000);
+	*/
+</script>
+</body>
+</html>

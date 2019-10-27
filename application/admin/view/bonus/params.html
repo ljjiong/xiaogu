@@ -1,0 +1,414 @@
+{include file="header" /}
+
+<body>
+
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>分红配置</legend>
+            </fieldset>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-card>
+                  <div slot="header">
+                    <span>基本参数设置</span>
+                  </div>
+                  <el-form :model="formData" ref="ruleForm" label-width="150px" label-position="left">
+                    <el-form-item label="分红系统状态">
+                      <el-switch v-model="formData.is_open"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="分红计算方式">
+                      <!-- <el-radio v-model="formData.bonus_way" label="bonus_price">红包价</el-radio> -->
+                      <el-radio v-model="formData.bonus_way" label="sell_price">销售价</el-radio>
+                      <!-- <el-radio v-model="formData.bonus_way" label="market_price">市场价</el-radio> -->
+                      <!-- <el-radio v-model="formData.bonus_way" label="cost_price">进价</el-radio> -->
+                    </el-form-item>
+                    <el-form-item label="是否开启内购">
+                      <el-switch v-model="formData.is_open_self"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="最小提现金额">
+                      <el-input v-model="formData.min_drawcash_money"></el-input>
+                    </el-form-item>
+                    <el-form-item label="分红商等级升级条件">
+                      <el-select v-model="formData.up_level_condition">
+                        <el-option value="bonus_money" label="佣金满多少升级"></el-option>
+                        <el-option value="order_money" label="自购订单金额满多少升级"></el-option>
+                        <el-option value="team_user_num" label="团队人数满多少升级"></el-option>
+                        <el-option value="order_num" label="自购订单数量满多少升级"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="submitForm('ruleForm')" icon="el-icon-check">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+              <el-col :span="12">
+                <el-card>
+                  <div slot="header">
+                    <span>成为分红商条件配置</span>
+                  </div>
+                  <el-form :model="formDataCondition" ref="formDataCondition" label-width="200px" label-position="left">
+                    <el-form-item label="成为分红商条件">
+                      <el-select v-model="formDataCondition.become_bonus_condition">
+                        <el-option value="no" label="无"></el-option>
+                        <el-option value="apply" label="个人申请"></el-option>
+                        <el-option value="order_num" label="订单达到一定数量"></el-option>
+                        <el-option value="order_money" label="订单达到一定金额"></el-option>
+                        <el-option value="goods" label="购买特定商品"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <transition name="el-fade-in">
+                      <el-form-item :label="become_bonus_condition_label" v-show="formDataCondition.become_bonus_condition == 'order_num' || formDataCondition.become_bonus_condition == 'order_money'">
+                        <el-input v-model="formDataCondition.become_bonus_value" clearable></el-input>
+                      </el-form-item>
+                    </transition>
+
+                    <transition name="el-fade-in-linear">
+                      <div v-show="formDataCondition.become_bonus_condition == 'goods'">
+                        <el-form-item :label="become_bonus_condition_label">
+                          <el-tag style="margin-right: 10px;" size="medium" closable @close="closeTag(index)" v-for="(tag, index) in dynamicTags" closable
+                            :disable-transitions="false">{{tag && tag.name}}</el-tag>
+                          <div>
+                            <el-button @click="dialogTableVisible = true" size="medium">增加商品</el-button>
+                          </div>
+                        </el-form-item>
+                      </div>
+                    </transition>
+
+                    <el-form-item label="是否需要完善个人信息 ">
+                      <el-switch v-model="formDataCondition.is_need_complete_user_info "></el-switch>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="changeConditionSubmit('formDataCondition')" icon="el-icon-check ">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20" style="margin-top: 20px;">
+              <el-col :span="8">
+                <el-card>
+                  <div slot="header">
+                    <span>代理分红商基本设置</span>
+                  </div>
+                  <el-form :model="levelBonusCondition" label-position="left" label-width="150px">
+                    <el-form-item label="是否开启代理分红">
+                      <el-switch v-model="levelBonusCondition.is_agent"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="是否开启极差模式">
+                      <el-switch v-model="levelBonusCondition.is_open_range_agent"></el-switch>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="changeLevelBonusSetting()" icon="el-icon-check ">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+              <el-col :span="8">
+                <el-card>
+                  <div slot="header">
+                    <span>地区代理基本设置</span>
+                  </div>
+                  <el-form :model="areaBonusCondition" label-position="left" label-width="180px" ref="">
+                    <el-form-item label="是否开启地区代理分红">
+                      <el-switch v-model="areaBonusCondition.is_region"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="是否开启极差模式">
+                      <el-switch v-model="areaBonusCondition.is_open_range_region"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="省级代理分红比例(%)">
+                      <el-input v-model="areaBonusCondition.region_province_rate"></el-input>
+                    </el-form-item>
+                    <el-form-item label="市级代理分红比例(%)">
+                      <el-input v-model="areaBonusCondition.region_city_rate"></el-input>
+                    </el-form-item>
+                    <el-form-item label="县级代理分红比例(%)">
+                      <el-input v-model="areaBonusCondition.region_area_rate"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="changeAreaBonusSetting()" icon="el-icon-check ">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+              <el-col :span="8">
+                <el-card>
+                  <div slot="header">
+                    <span>全球分红基本设置</span>
+                  </div>
+                  <el-form :model="globalBonusCondition" label-position="left" label-width="180px" ref="">
+                    <el-form-item label="是否开启全球分红">
+                      <el-switch v-model="globalBonusCondition.is_global"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="全球分红比例(%)">
+                      <el-input v-model="globalBonusCondition.global_rate"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="changeGlobleBonusSetting()" icon="el-icon-check ">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+            </el-row>
+            <el-dialog title="商品列表" :visible.sync="dialogTableVisible">
+              <el-row :gutter="20">
+                <el-col :span="10">
+                  <el-input placeholder="请输入商品名称" v-model="searchData.name">
+                    <template slot="prepend">商品名称</template>
+                  </el-input>
+                </el-col>
+                <el-col :span="4">
+                  <el-button icon="el-icon-search" @click="search();"></el-button>
+                  <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                </el-col>
+              </el-row>
+              <el-table :data="tableData" @row-click="rowClick">
+                <el-table-column property="id" label="商品ID"></el-table-column>
+                <el-table-column property="name" label="商品名称"></el-table-column>
+                <el-table-column property="sell_price" label="商品价格"></el-table-column>
+              </el-table>
+              <div style="margin-top: 20px;">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                  :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                </el-pagination>
+              </div>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script>
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          // 基本设置数据
+          formData: {
+            is_open: false,
+            level: '',
+            // 是否开启内购
+            is_open_self: false,
+            // 分红计算方式
+            up_level_condition: '',
+            // 最小提现金额
+            min_drawcash_money: ''
+          },
+          // 成为分销商条件数据
+          formDataCondition: {
+            // 成为分红商的条件
+            become_bonus_condition: '',
+            // 成为分红商达到条件所需的值
+            become_bonus_value: '',
+            // 是否需要完善个人信息
+            is_need_complete_user_info: false,
+          },
+          // 等级代理分红数据
+          levelBonusCondition: {
+            is_agent: false,
+            is_open_range_agent: false
+          },
+          // 地区代理分红数据
+          areaBonusCondition: {
+            is_agent: false,
+            is_open_range_region: false,
+            region_province_rate: '',
+            region_city_rate: '',
+            region_area_rate: '',
+          },
+          // 全球代理分红数据
+          globalBonusCondition: {
+            is_global: false,
+            global_rate: ''
+          },
+          // 所需值对应的label
+          become_bonus_condition_label: '',
+          // 动态标签
+          dynamicTags: [],
+          // dialog
+          dialogTableVisible: false,
+          tableData: [],
+          currentPage: 1, //当前页
+          currentPageSize: 10,  //当前页容量
+          pageSize: [10, 20], //分页大小
+          total: 0, //总页数
+          searchData: {
+            name: ''
+          }
+        }
+      },
+      methods: {
+        // 更改基础设置
+        submitForm(formName) {
+          this.$confirm('确认修改?', '提示', { type: 'warning' }).then(_ => {
+            let data = deepCopy(app.formData);
+            httpRequest('post', 'api_bonus/rules/update', data).then(resp => {
+              this.$message.success(resp.msg);
+            });
+          })
+        },
+        // 更改成为分红商的条件
+        changeConditionSubmit(formName) {
+          let data = app.formDataCondition;
+          if (data.become_bonus_condition == 'goods') {
+            if (!this.dynamicTags.length) {
+              this.$message.warning('请选择成为分红商需要购买的商品');
+              return;
+            }
+            data.become_bonus_value = this.dynamicTags.map(item => item.id);
+          } else if (data.become_bonus_condition == 'order_num' || data.become_bonus_condition == 'order_money') {
+            let msg = {
+              'order_num': '请填写成为分红商需达到的订单数',
+              'order_money': '请填写成为分红商需达到的订单金额'
+            }
+            if (!this.formDataCondition.become_bonus_value) {
+              this.$message.warning(msg[data.become_bonus_condition]);
+              return
+            }
+          }
+          this.$confirm('确认修改?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('post', 'api_bonus/rules/update_become_bonus_info', data).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            });
+          })
+        },
+        // 更改代理分红商默认设置
+        changeLevelBonusSetting() {
+          this.$confirm('确认修改?', '提示', { type: 'warning' }).then(_ => {
+            let data = deepCopy(this.levelBonusCondition)
+            httpRequest('post', 'api_bonus/rules/update_agent_bonus_info', data).then(resp => {
+              this.$message.success(resp.msg);
+            });
+          })
+        },
+        // 更改地区代理商设置
+        changeAreaBonusSetting() {
+          this.$confirm('确认修改?', '提示', { type: 'warning' }).then(_ => {
+            let data = deepCopy(this.areaBonusCondition)
+            httpRequest('post', 'api_bonus/rules/update_region_bonus_info', data).then(resp => {
+              this.$message.success(resp.msg);
+            });
+          })
+        },
+        // 更改全球代理设置
+        changeGlobleBonusSetting() {
+          this.$confirm('确认修改?', '提示', { type: 'warning' }).then(_ => {
+            let data = deepCopy(this.globalBonusCondition)
+            httpRequest('post', 'api_bonus/rules/update_global_bonus_info', data).then(resp => {
+              this.$message.success(resp.msg);
+            });
+          }).catch((e) => {
+            this.$message.info('操作已取消')
+          });
+        },
+        // 关闭标签
+        closeTag(index) {
+          this.dynamicTags.splice(index, 1);
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 某一行被点击
+        rowClick(row) {
+          if (!this.dynamicTags.filter(item => item == row.id).length) {
+            this.dynamicTags.push(row.id);
+          }
+          this.dialogTableVisible = false;
+        },
+        // 某一行被点击
+        rowClick(row) {
+          if (!this.dynamicTags.filter(item => item.id == row.id).length) {
+            this.dynamicTags.push(row);
+          }
+          this.dialogTableVisible = false;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        loadTableData() {
+          this.searchData.status = 1;
+          httpRequest('POST', 'api_goods/goods/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      watch: {
+        // 条件变化
+        'formDataCondition.become_bonus_condition'(value) {
+          if (value == 'no') {
+            this.formDataCondition.become_bonus_value = '';
+          } else if (value == 'apply') {
+            this.formDataCondition.become_bonus_value = '';
+          } else if (value == 'order_num') {
+            this.become_bonus_condition_label = '成为分红商需达到订单数';
+          } else if (value == 'order_money') {
+            this.become_bonus_condition_label = '成为分红商需达到订单金额';
+          } else if (value == 'goods') {
+            this.become_bonus_condition_label = '成为分红商需购买的商品';
+          }
+        }
+      },
+      mounted() {
+        // 获取全部参数
+        httpRequest('post', 'api_bonus/rules/index').then(resp => {
+          this.formData = resp.data;
+        });
+        // 查询成为分红商条件
+        httpRequest('POST', 'api_bonus/rules/become_bonus_info').then(resp => {
+          this.formDataCondition = resp.data;
+          if (this.formDataCondition.become_bonus_condition == 'goods') {
+            this.dynamicTags = this.formDataCondition.goods_info;
+          }
+        })
+        // 查询等级分红商设置
+        httpRequest('POST', 'api_bonus/rules/agent_bonus_info').then(resp => {
+          this.levelBonusCondition = resp.data;
+        })
+        // 查询地区分红商设置
+        httpRequest('POST', 'api_bonus/rules/region_bonus_info').then(resp => {
+          this.areaBonusCondition = resp.data;
+        })
+        // 查询全球分红商设置
+        httpRequest('POST', 'api_bonus/rules/global_bonus_info').then(resp => {
+          this.globalBonusCondition = resp.data;
+        })
+        // 获取商品
+        this.loadTableData();
+      }
+    })
+  </script>
+</body>
+
+</html>

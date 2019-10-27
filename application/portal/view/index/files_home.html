@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.theme.default.min.css">
+<script src="/public/static/OwlCarousel2-2.2.1/owl.carousel.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+    .setting-coupon-list{height:80px;background: url(/public/static/portal/img/coupon.png)  center no-repeat}
+</style>
+</head>
+
+<body>
+    {include file="/index/header" /}
+    <div id="app">
+        <div class="overhidden" :class="{on:(cancelOrder == 1)}"></div>
+        <div class="w900 content-wl" :class="{on:(cancelOrder == 1)}">
+            <div class="">
+                <ul>
+                    <li class="padding-top-15 font-size-14 border-btn">
+                        <span class="font-w font-size-18  grey-text text-darken-3 padding-btn-15 inline-black">请选择不想购买的原因</span>
+                    </li>
+                    <li class="padding-tt-15 font-size-14 border-btn grey-text text-darken-2" v-for="(cancelOrdertext,reasonkey) in cancelOrdertexts"
+                        :key="reasonkey" @click="setfrm(reasonkey)">
+                        <i class="iconfont icon-roundcheckfill padding-lr-15" v-if="reasonIcon == reasonkey"></i>
+                        <i class="iconfont icon-yuanxingweixuanzhong padding-lr-15" v-else></i>
+                        <span class=" " v-text="cancelOrdertext.reason"></span>
+                    </li>
+                    <li class="padding-tt-15 font-size-14 red-text" style="height: 52px;">
+                        <span class="" v-if="redtext">请选择取消订单原因</span>
+                    </li>
+                </ul>
+            </div>
+            <button class="button transition border-grey " @click="closecancel()" style="margin-left: 170px;background: #fff;border: 1px solid #dedede;color: #616161 !important">取消</button>
+            <button class="button transition" @click="closepage()">确定</button>
+        </div>
+
+        <div class="w1200 margin-tt-15 over  black-text">
+            <div class="left">
+                <!-- 个人信息卡 -->
+                <div class=" card-title-wrap">
+                    <img src="/public/static/portal/img/title-back.png" class="responsive-img">
+                    <div class="margin-10 over card-text-wrap">
+                        <div class="ridius-img left margin-15">
+                            <img :src="user.avatar" alt="">
+                        </div>
+                        <div class="left margin-top-15">
+                            <div class="font-size-18 margin-top-15 white-text" v-text="user.nick_name || user.mobile"></div>
+                            <div class="blue lighten-1 margin-top-5" style="border-radius: 4px;padding: 2px 4px;">
+                                <img src="/public/static/portal/img/lr.png" alt="">
+                                <span class="font-size-12 white-text" v-text="level"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rate-line font-size-12 blue-text text-lighten-5">
+                        <div class="rataing-nember  margin-15" >{{'成长值' + score}}</div>
+                        <div class="ratas-nember right"></div>
+                    </div>
+                </div>
+                <div class="white grey-text text-darken-3 margin-top-15" style="border-radius: 5px">
+                    <div class="card-right-nav-box  margin-10 padding-tt-10" style="border: none">
+                        <div class="card-right-nav">
+                            <div class="font-size-18 over margin-tt-10">
+                                <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                <span class="left margin-top-5">交易管理</span>
+                            </div>
+                            <ul class="card-right-nav-ul">
+                                <li class="margin-tt-13" @click="goto('cart_list')">购物车</li>
+                                <li class="margin-tt-13" @click="goto('order_list')">我的订单</li>
+                                <li class="margin-tt-13" @click="goto('comment_list')">我的评价</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-right-nav-box  margin-10 padding-tt-10">
+                        <div class="card-right-nav">
+                            <div class="font-size-18 over margin-tt-10">
+                                <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                <span class="left margin-top-5">账号管理</span>
+                            </div>
+                            <ul class="card-right-nav-ul">
+                                <li class="margin-tt-13" @click="goto('setting')">个人信息</li>
+                                <li class="margin-tt-13" @click="goto('account')">账号安全</li>
+                                <li class="margin-tt-13" @click="goto('idcard_auth')">实名认证</li>
+                                <li class="margin-tt-13" @click="goto('address_list')">地址管理</li>
+                                <li class="margin-tt-13" @click="goto('collection_list')">我的收藏</li>
+                                <li class="margin-tt-13" @click="goto('level')">成长值
+                                    <span class="blue-text text-lighten-1" v-text="'('+score+')'"></span>
+                                </li>
+                                <li class="margin-tt-13" @click="goto('bind')">第三方账户</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-right-nav-box margin-10 padding-tt-10">
+                        <div class="card-right-nav">
+                            <div class="font-size-18 over margin-tt-10">
+                                <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                <span class="left margin-top-5">资产管理</span>
+                            </div>
+                            <ul class="card-right-nav-ul">
+                                <li class="margin-tt-13" @click="goto('wallet')">我的钱包</li>
+                                <li class="margin-tt-13" @click="goto('bankcard_list')">我的银行卡</li>
+                                <li class="margin-tt-13" @click="goto('my_coupon_list')">我的优惠券
+                                    <span class="blue-text text-lighten-2" v-if="coupons.length"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right right-content">
+                <div class="padding-15 white">
+                    <div class="margin-15 font-size-18 black-text padding-tt-5 over">
+                        <div class="left over margin-lr-15 padding-right-15 bt" @click="goto('order_list',{status:1})">
+                            <div class="left radius50 stting-order-icon">
+                                <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                            </div>
+                            <div class="right center margin-lr-10 bt">
+                                <div class="font-size-16">待付款</div>
+                                <div class="font-size-16" v-text="orderCount.wait_pay_num"></div>
+                            </div>
+                        </div>
+                        <div class="left over margin-lr-15 bt padding-right-15 bt" @click="goto('order_list',{status:2})">
+                            <div class="left radius50 stting-order-icon">
+                                <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                            </div>
+                            <div class="right center margin-lr-10">
+                                <div class="font-size-16">待发货</div>
+                                <div class="font-size-16" v-text="orderCount.wait_ship_num"></div>
+                            </div>
+                        </div>
+                        <div class="left over margin-lr-15 padding-right-15 bt" @click="goto('order_list',{status:3})">
+                            <div class="left radius50 stting-order-icon">
+                                <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                            </div>
+                            <div class="right center margin-lr-10 bt">
+                                <div class="font-size-16">待收货</div>
+                                <div class="font-size-16" v-text="orderCount.wait_finish_num"></div>
+                            </div>
+                        </div>
+                        <div class="left over margin-lr-15 padding-right-15 bt" @click="goto('order_list',{status:4})">
+                            <div class="left radius50 stting-order-icon">
+                                <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                            </div>
+                            <div class="right center margin-lr-10">
+                                <div class="font-size-16">待评价</div>
+                                <div class="font-size-16" v-text="orderCount.wait_comment_num"></div>
+                            </div>
+                        </div>
+                        <div class="left over margin-lr-15 bt">
+                            <div class="left radius50 stting-order-icon" @click="goto('order_list',{status:-1})">
+                                <!--@click="changeStatus(-1)">-->
+                                <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                            </div>
+                            <div class="right center margin-lr-10">
+                                <div class="font-size-16">售后</div>
+                                <div class="font-size-16" v-text="orderCount.return_goods_num"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="margin-tt-15 padding-15 white" style="min-height: 371px;" v-if='orderHaveNoData'>
+                    <div class="margin-tt-10 over setting-order-title padding-btn-15 grey-text text-darken-2">
+                        <div class="left setting-blue-border padding-left-5">我的订单</div>
+                        <div class="right bt">查看全部订单></div>
+                    </div>
+                    <div class="center">
+                        <img src="/public/static/portal/img/404.png" alt="" class="responsive-img setting-go-coupon">
+                        <br>
+                        <div class="setting-go-btn white-text blue inline-black margin-15 bt" @click="goto('index')">去逛逛</div>
+                    </div>
+                </div>
+                <div class="margin-tt-15 padding-15 white" style="min-height: 371px;" v-else>
+                    <div class="margin-tt-10 over setting-order-title padding-btn-15 grey-text text-darken-2">
+                        <div class="left setting-blue-border padding-left-5">我的订单</div>
+                        <div class="right bt" @click="changeStatus(0)">查看全部订单></div>
+                    </div>
+                    <div class="margin-btn-15" v-for="order in orders">
+                        <div class="">
+                            <div class="setting-border-name grey lighten-3 grey-text padding-5 font-size-14">
+                                <span class="margin-right-15" v-text="'下单时间：' + order.create_time"></span>
+                                <span v-text="'订单编号：' + order.order_no"></span>
+                            </div>
+                        </div>
+                        <div class="flex grey-text text-darken-2 setting-order-box" v-for="(goods,index) in order.order_goods_info">
+                            <div class="setting-goods-img pointer " @click="goto('goods_detail',{goodsId:goods.goods_id})" >
+                                <img :src="goods.thum" alt="" >
+                            </div>
+                            <div class="flex1 setting-goods-info font-size-14 padding-5">
+                                <div class="margin-top-5" v-text='goods.name'></div>
+                                <div class="margin-top-5" v-text="goods.sell_price"></div>
+                            </div>
+                            <div class="setting-goods-num" v-text="'×' + goods.num"></div>
+                            <div class="setting-price center">
+                                <div class="margin-top-10" v-text="order.total_money"></div>
+                                <div class="grey-text text-lighten-1" v-text="'(含运费' + order.freight_money + ')'"></div>
+                            </div>
+                            <div class="blue-text setting-order-type">
+                                <span v-if="order.status == 1 && goods.return_goods_status == 0">待付款</span>
+                                <span v-else-if="order.status == 2 && goods.return_goods_status == 0">待发货</span>
+                                <span v-else-if="order.status == 3 && goods.return_goods_status == 0">待收货</span>
+                                <span v-else-if="order.status == 4 && goods.return_goods_status == 0">待评价</span>
+                                <span v-else-if="order.status == 5 && goods.return_goods_status == 0">已完成</span>
+                                <span v-else-if="order.status == 9 && goods.return_goods_status == 0">已取消</span>
+                                <span v-else-if="goods.return_goods_status == 1">申请退货</span>
+                                <span v-else-if="goods.return_goods_status == 2">拒绝退货</span>
+                                <span v-else-if="goods.return_goods_status == 3">已退货</span>
+                            </div>
+                            <div class="center setting-order-btn font-size-12">
+                                <div class="blue white-text margin-top-10 setting-order-btn-active bt" v-if="order.status == 1" @click.stop="pay(order) ">付款</div>
+                                <div class="grey-text text-lighten-1 margin-5 bt" @click="goto('order_detail',{orderId:order.id})">查看详情</div>
+                                <div class="grey-text text-lighten-1 bt" @click.stop="cancel(order) " v-if="order.status == 1">取消订单</div>
+                                <div class="grey-text text-lighten-1 bt" @click.stop="refund(order,goods.goods_id) " v-if="(order.status==2 || order.status==3) && (goods.return_goods_status == 0 || goods.return_goods_status == 2)">退货</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="over">
+                    <div class="left white setting-comment radius5 padding-15" v-if="collections.length > 0">
+                        <div class="margin-tt-10 over grey-text text-darken-2">
+                            <div class="left setting-blue-border padding-left-5">近期收藏</div>
+                            <div class="right bt" @click="goto('collection_list')">查看全部收藏></div>
+                        </div>
+                        <div class="over">
+                            <div class="left setting-comment-list margin-5 border-grey pointer" @click="goto('goods_detail',{goodsId:collection.goods_id})"  v-for="collection in collections">
+                                <div class="setting-comment-img">
+                                    <img class="responsive-img" :src="collection.goods_info.thum">
+                                </div>
+                                <div class="padding-10">
+                                    <div class="font-size-14 grey-text text-darken-2" v-text="collection.goods_info.name" style="height: 42px;">
+                                    </div>
+                                    <div class="red-text font-14 margin-tt-5">
+                                        <span class="redtext" v-text="'￥'+collection.goods_info.sell_price"></span>
+                                        <span class="grey-text font-size-12" v-text="'￥'+collection.goods_info.sell_price"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="left white setting-comment radius5 padding-15" v-else>
+                        <div class="margin-tt-10 over grey-text text-darken-2">
+                            <div class="left setting-blue-border padding-left-5">近期收藏</div>
+                            <div class="right bt" @click="goto('collection_list')">查看全部收藏></div>
+                        </div>
+                        <div class="over">
+                            <div class="center font-size-16 setting-go-coupon">
+                                <div class="grey-text margin-tt-15">没有收藏</div>
+                                <div class="setting-go-btn white-text blue inline-black bt" @click="goto('index')">去逛逛</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right setting-notice">
+                        <div class="setting-my-notice white radius5 over padding-10" v-if="annoncementsHaveNoData == false">
+                            <div class="margin-tt-10 over  grey-text text-darken-2">
+                                <div class="left setting-blue-border padding-left-5 bt" @click="goto('article_list')">我的公告</div>
+                            </div>
+                            <div class="font-size-14 grey-text" v-for="article in articles">
+                                <div class="truncate margin-top-5 setting-notice-list bt" v-text="article.title" @click="goArticle(article)"></div>
+                            </div>
+                        </div>
+                        <div class="setting-my-notice white radius5 over padding-10" v-if="annoncementsHaveNoData">
+                            <div class="margin-tt-10 over  grey-text text-darken-2">
+                                <div class="left setting-blue-border padding-left-5 bt">我的公告</div>
+                            </div>
+                            <div class="margin-tt-15 font-size-16 grey-text center bt">
+                                暂无公告
+                            </div>
+                        </div>
+                        <div class=" white radius5 margin-top-15 padding-10" style="height: 238px;" v-if="couponsHaveNoData">
+                            <div class="margin-tt-10 over  grey-text text-darken-2">
+                                <div class="left setting-blue-border padding-left-5">我的优惠券</div>
+                            </div>
+                            <div class="center font-size-16 setting-go-coupon">
+                                <div class="grey-text margin-tt-15">没有优惠卷</div>
+                                <div class="setting-go-btn white-text blue inline-black bt" @click="goto('coupon')">去领卷中心逛逛</div>
+                            </div>
+                        </div>
+                        <div class=" white radius5 margin-top-15 padding-10" style="height: 238px;" v-if="couponsHaveNoData == false">
+                            <div class="margin-tt-10 over  grey-text text-darken-2">
+                                <div class="left setting-blue-border padding-left-5 bt">我的优惠券</div>
+                            </div>
+                            <div v-for="coupon in coupons">
+                                <div class="setting-coupon-list flex">
+                                    <div class="blue-text font-size-12" style="margin: auto 10px">
+                                        <div class="font-size-14" v-if="coupon.coupon_type == 'full'">
+                                            <span v-text="'￥'+coupon.change_value"></span>
+                                        </div>
+                                        <div class="font-size-14" v-else-if="coupon.coupon_type == 'discount'">
+                                            <span v-text="coupon.change_value+'折'"></span>
+                                        </div>
+                                        <div class="">优惠券</div>
+                                    </div>
+                                    <div class="grey-text text-darken-2 flex1" style="margin: auto">
+                                        <div class="font-size-12" v-text="'购买商品满'+coupon.reach_money+'元可使用'"></div>
+                                        <div class="grey-text text-lighten-1 font-size-10" v-text="coupon.create_time"></div>
+                                    </div>
+                                    <div class="bt red white-text radius5 font-size-10" style="margin: 29px 10px; padding: 2px 4px;" @click="goto('index')">
+                                        立即使用
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="margin-top-15">
+                    <img src="/public/static/portal/img/lien-img.png" alt="" class="responsive-img">
+                </div>
+            </div>
+        </div>
+        <div class="w1200 white over margin-btn-15">
+            <div class="foot-list-title black-text text-lighten-1 margin-15 font-size-18 padding-left-15">猜你喜欢</div>
+            <div class="foot-list margin-15 over">
+                <div class="left foot-list-box" v-for="guessGood in guessGoods" @click="goto('goods_detail',{goodsId:guessGood.id})">
+                    <img :src="guessGood.thum" class="responsive-img">
+                    <div class="padding-10">
+                        <div class="font-size-16 black-text" v-text="guessGood.name"></div>
+                        <div class="margin-top-10 over">
+                            <div class="left">
+                                <span class="red-text font-size-16" v-text="'￥' + guessGood.sell_price"></span>
+                                <span class="font-size-10 grey-text lighten-1" v-text="'￥' + guessGood.sell_price"></span>
+                            </div>
+                            <div class="right font-size-12 grey-text lighten-1" v-text="'月销量：'+guessGood.sell_num"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {include file="index/footer" /}
+
+    <script>
+        var avatarDom = document.getElementById('avatar');
+        var cancelOrdertext = [
+            { reason: '我不想买了' },
+            { reason: '信息填写错误，重新下单' },
+            { reason: '商家缺货' },
+            { reason: '其他原因' }
+        ]
+        var app = new Vue({
+            el: '#app',
+            data: {
+                redtext: false,
+                cancelOrdertexts: cancelOrdertext,
+                cancelOrder: 0,
+                reasonIcon: 10,
+                currentPage: parseInt(querystring.currentPage) || 1, //当前页
+                currentPageSize: 2, //当前页容量
+                activeFooterIndex: 4,
+                title: '个人中心',
+                user: user,
+                orderHaveNoData: false,
+                collectionHaveNoData: false,
+                couponsHaveNoData: false,
+                annoncementsHaveNoData: false,
+                orderCount: {},
+                level: '',
+                score: '',
+                coupons: '',
+                orders: {},
+                collections: [],
+                activeStatus: querystring.status,
+                coupons: [],
+                articles: [],
+                guessGoods: [],
+                reasonIcon: ''
+            },
+            methods: {
+                setfrm: function (data) {
+                    app.reasonIcon = data
+                },
+                cancel: function (order) {
+                    this.orderids = order;
+                    this.cancelOrder = 1
+                },
+                // 取消取消订单
+                closecancel: function () {
+                    app.cancelOrder = 0;
+                },
+                // 取消订单
+                closepage: function () {
+                    if (app.reasonIcon == 10) {
+                        app.redtext = true;
+                        return;
+                    }
+                    var cancel_reasons = app.cancelOrdertexts[app.reasonIcon].reason
+                    httpRequest('POST', 'api_orders/cancel_orders/user_cancel', {
+                        order_id: this.orderids.id,
+                        cancel_reason: cancel_reasons
+                    }, function (resp) {
+                        app.cancelOrder = 0;
+                        layer.msg(resp.msg);
+                        setTimeout(function () {
+                            app.activeStatus = 0;
+                            page = 1;
+                            app.orderids = '';
+                            app.orders = [];
+                            loadOrders();
+                        }, 500)
+                    })
+                },
+                authentication: function () {
+                    httpRequest('POST', 'api_query/users/auth', {}, function (resp) {
+                        var status = resp.data.status;
+                        if (status == 0 || status == 2) {
+                            goto('idcard_auth', { status: status, id: resp.data.id });
+                        } else if (status == 1 || status == 3) {
+                            goto('idcard_info');
+                        }
+                    })
+                },
+                // 改变查询的订单状态
+                changeStatus: function (status) {
+                    goto('order_list')
+                },
+                goArticle: function (article) {
+                    goto('article_detail', { articleId: article.id, type: 'annoncements' })
+                },
+                //付款
+                pay: function (order) {
+                    httpRequest('POST', 'api_orders/pay/pre_pay', {
+                        order_id: order.id
+                    }, function (resp) {
+                        goto('pay_select', { order_no: order.order_no, total_money: order.total_money, order_id: order.id });
+                    })
+                },
+                refund: function (order, id) {
+                    setStorage('order', order, sessionStorage)
+                    goto('order_refund', { goodsId: id });
+                },
+            },
+            mounted: function () {
+                httpRequest('POST', 'api_query/orders/count', {}, function (resp) {
+                    app.orderCount = resp.data;
+                })
+                httpRequest('POST', 'api_query/users/asset', {}, function (resp) {
+                    app.level = resp.data.level;
+                    app.score = resp.data.score;
+                    return
+                });
+
+                httpRequest('POST', 'api_orders/orders/lists', {}, function (resp) {
+                    if (resp.data.length > 0) {
+                        app.orderHaveNoData = false;
+                        app.orders = resp.data;
+                    } else {
+                        app.orderHaveNoData = true
+                    }
+
+                }, {
+                        'page-num': 1,
+                        'page-limit': 2
+                    })
+                httpRequest('POST', 'api_goods/goods_collections/lists', {}, function (resp) {
+                    if (resp.data.length > 0) {
+                        app.collectionHaveNoData = false;
+                        resp.data.forEach(function (item) {
+                            app.collections.push(item);
+                        })
+                    } else {
+                        app.collectionHaveNoData = true;
+                    }
+
+                }, {
+                        'page-num': 1,
+                        'page-limit': 3
+                    })
+
+                httpRequest('POST', 'api_users/user_coupons/lists', {}, function (resp) {
+                    if (resp.data.length > 0) {
+                        app.couponsHaveNoData = false;
+                        resp.data.forEach(function (item) {
+                            item.change_value = Number(item.change_value).toPrecision();
+                            item.reach_money = Number(item.reach_money).toPrecision();
+                            app.coupons.push(item);
+                        })
+                        console.log(app.coupons.length);
+                    } else {
+                        app.couponsHaveNoData = true;
+                    }
+                }, {
+                        'page-num': 1,
+                        'page-limit': 2
+                    })
+
+
+
+                httpRequest('POST', 'api_articles/articles/lists', {}, function (resp) {
+                    if (resp.data.length > 0) {
+                        app.annoncementsHaveNoData = false;
+                        resp.data.forEach(function (item) {
+                            app.articles.push(item);
+                        })
+                    } else {
+                        app.annoncementsHaveNoData = true;
+                    }
+                }, {
+                        'page-num': 1,
+                        'page-limit': 2
+                    })
+                // 猜你喜欢
+                httpRequest('POST', 'api_goods/goods/lists', { is_top: 1 }, function (resp) {
+                    app.guessGoods = resp.data;
+                }, { 'page-num': 1, 'page-limit': 4 })
+            }
+        })
+        loadOrders = function () {
+            document.body.onscroll = null;
+            var data = {};
+            if (app.activeStatus == -1) {
+                // 售后订单
+                data.is_return_goods = 1;
+            } else {
+                if (app.activeStatus != 0) {
+                    // 待付款 待发货 待收货
+                    data.status = app.activeStatus;
+                } else if (app.activeStatus == 4) {
+                    // 待评价订单
+                    data.is_comment = 0
+                }
+            }
+            console.log(app.orders);
+            httpRequest('POST', 'api_orders/orders/lists', data, function (resp) {
+                if (resp.data.length > 0) {
+                    app.orderHaveNoData = false;
+                    resp.data.forEach(function (item) {
+                        app.orders.push(item);
+                    })
+                    if (resp.data.length == 10) {
+                        page++;
+                        document.body.onscroll = scrollEvent;
+                    } else {
+                        document.body.onscroll = null;
+                    }
+                } else {
+                    if (page == 1) {
+                        app.orderHaveNoData = true;
+                    }
+                }
+            }, {
+                    'page-num': page,
+                    'page-limit': 2
+                });
+        }
+    </script>
+</body>
+
+</html>

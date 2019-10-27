@@ -1,0 +1,274 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset class="layui-elem-field layui-field-title site-demo-button">
+              <legend>七牛云存储</legend>
+            </fieldset>
+            <div class="demo-block demo-box demo-zh-CN demo-upload" style="margin-bottom: 20px;">
+              <div class="source">
+                <div class="upload-demo" style="text-align: center;">
+                  <div tabindex="0" class="el-upload el-upload--text">
+                    <div class="el-upload-dragger" @click="uploadFile()">
+                      <i class="el-icon-upload"></i>
+                      <div class="el-upload__text">
+                        <!-- 将文件拖到此处，或 -->
+                        <em>点击上传文件</em>
+                      </div>
+                    </div>
+                    <input type="file" id="uploadInput" name="file" multiple="multiple" class="el-upload__input" @change="uploadInputChange($event)">
+                  </div>
+                  <div class="el-upload__tip">支持文件类型：jpg | gif | jpeg | png | txt | doc | docx | xls | xlsx | ppt | pptx | mp3 | mp4 | pdf | rar | zip，
+                    (文件大小限4M)
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <!-- 筛选 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入文件名称" v-model="searchData.file_name">
+                        <template slot="prepend">文件名称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入文件类型" v-model="searchData.file_type">
+                        <template slot="prepend">文件类型</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+
+            <!-- 批量操作 -->
+            <el-row style="margin-top: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>批量操作</span>
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <el-button type="danger" size="small" plain icon="el-icon-delete" @click="multiOperate('delete')" :disabled="multipleSelection.length == 0">批量删除</el-button>
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                      <el-table-column type="selection" width="55"> </el-table-column>
+                      <el-table-column prop="id" label="ID" width="80" fixed sortable></el-table-column>
+                      <el-table-column prop="file_name" label="文件名" fixed></el-table-column>
+                      <el-table-column prop="file_type" label="文件类型" fixed></el-table-column>
+                      <el-table-column prop="file_size" label="文件大小" fixed></el-table-column>
+                      <el-table-column prop="file_url" label="文件地址"></el-table-column>
+                      <el-table-column prop="update_time" label="上传时间" sortable>
+                        <template slot-scope="scope">
+                          <i class="el-icon-time"></i>
+                          <span>{{ scope.row.update_time }}</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="操作" width="100" fixed="right">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer"/}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var allowTypes = [".jpg", ".gif", ".jpeg", ".png", ".txt", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".mp3", ".mp4", ".rar", ".zip"];
+    var uploadFile = {};
+    var uploadFileName = '';
+    var uploadFileSize = 0;
+    var uploadFileType = '';
+    var qiniuToken = '';
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        searchData: {
+          file_name: '',
+          file_type: ''
+        }
+      },
+      methods: {
+        uploadFile() {
+          document.getElementById('uploadInput').click();
+        },
+        uploadInputChange(el) {
+          if (!el.target.files[0].size) return;
+          uploadFile = el.target.files[0];
+          // 文件名称
+          uploadFileName = uploadFile.name;
+          // 文件类型
+          uploadFileType = uploadFile.name.substr(uploadFile.name.lastIndexOf('.')).toLowerCase();
+          if (allowTypes.indexOf(uploadFileType) === -1) {
+            this.$message.error('不允许上传' + fileType + '类型的文件')
+            return;
+          }
+          // 文件大小
+          uploadFileSize = uploadFile.size / 1024 / 1024;
+          if (uploadFileSize >= 4) {
+            this.$message.error('文件大小限于4M');
+            return;
+          }
+          // 获取七牛token
+          httpRequest('post', 'api_systems/qiniu/create_qiniu_token', { type: uploadFileType }).then(resp => {
+            qiniuToken = resp.data;
+            this.doUpload();
+          });
+
+        },
+        doUpload() {
+          var formData = new FormData();
+          formData.append('token', qiniuToken);
+          formData.append('file', uploadFile);
+
+          var upload_qiniu_url = 'http://up-z2.qiniup.com';
+          if (location.protocol == 'https:') {
+             upload_qiniu_url = 'https://up-z2.qiniup.com';
+          }
+
+          axios.post(upload_qiniu_url, formData).then(resp => {
+            // 文件大小转换
+            if (uploadFileSize >= 1) {
+              uploadFileSize = uploadFileSize.toFixed(2).toString() + 'MB';
+            } else {
+              uploadFileSize = uploadFileSize * 1024;
+              if (uploadFileSize >= 1) {
+                uploadFileSize = uploadFileSize.toFixed(2).toString() + 'KB';
+              } else {
+                uploadFileSize = uploadFileSize * 1024;
+                uploadFileSize = uploadFileSize.toFixed(2).toString() + 'B';
+              }
+            }
+            // 存储数据
+            var data = {
+              'file_name': uploadFileName.replace(uploadFileType, ''),
+              'file_type': uploadFileType.substr(1),
+              'file_size': uploadFileSize,
+              'key': resp.data.key,
+            };
+            return httpRequest('post', 'api_systems/qiniu/save', data);
+          }).then(resp => {
+            this.$message.success(resp.msg || '上传成功');
+            setTimeout(function () {
+              location.reload();
+            }, 700)
+          }).catch((e) => {
+            console.log(e);
+            this.$message.error('上传失败');
+          })
+        },
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_systems/qiniu/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg);
+                this.tableData.splice(app.tableData.indexOf(data), 1)
+              });
+            })
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          var ids = this.multipleSelection.map(item => item.id);
+          if (type === 'delete') {
+            // 批量删除
+            this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_systems/qiniu/batch_delete', { id: ids }).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          }
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_systems/qiniu/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+</body>
+
+</html>

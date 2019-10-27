@@ -1,0 +1,152 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+
+          <div id="app">
+            <fieldset>
+              <legend>会员访问日志</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入手机号码" v-model="searchData.mobile">
+                        <template slot="prepend">手机号码</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入会员昵称" v-model="searchData.nick_name">
+                        <template slot="prepend">会员昵称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入IP" v-model="searchData.ip">
+                        <template slot="prepend">IP</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-card>
+              <div slot="header">
+                <span>会员访问日志列表</span>
+              </div>
+              <!-- 表格 -->
+              <template>
+                <el-table :data="tableData" stripe style="width: 100%">
+                  <el-table-column prop="id" label="ID" fixed sortable width="80"></el-table-column>
+                  <el-table-column prop="mobile" label="会员手机号" fixed></el-table-column>
+                  <el-table-column prop="nick_name" label="会员昵称"></el-table-column>
+                  <el-table-column prop="client_type" label="登录端" sortable>
+                    <template slot-scope="scope">
+                      <span v-if="scope.row.client_type == 'wechat'">微信端</span>
+                      <span v-else-if="scope.row.client_type == 'pc'">电脑端</span>
+                      <span v-else-if="scope.row.client_type == 'app'">app端</span>
+                      <span v-else-if="scope.row.client_type == 'wap'">手机端</span>
+                      <span v-else-if="scope.row.client_type == 'applet'">小程序端</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="ip" label="登录ip"></el-table-column>
+                  <el-table-column prop="login_time" label="登录时间" sortable>
+                    <template slot-scope="scope">
+                      <i class="el-icon-time"></i>
+                      <span>{{ scope.row.update_time }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </template>
+              <!-- 分页 -->
+              <template>
+                <div class="block" style="margin-top: 20px;">
+                  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                    :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                  </el-pagination>
+                </div>
+              </template>
+            </el-card>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        // 查询条件
+        searchData: {
+          mobile: '',
+          nick_name: '',
+          ip: '',
+        }
+      },
+      methods: {
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_users/user_visit_logs/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+
+  </script>
+</body>
+
+</html>

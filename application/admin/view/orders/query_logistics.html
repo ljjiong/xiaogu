@@ -1,0 +1,126 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset class="layui-elem-field layui-field-title site-demo-button">
+              <legend>物流查询</legend>
+            </fieldset>
+            <br />
+            <el-row>
+              <el-col :span="8" offset="8">
+                <el-input placeholder="请输入快递单号" v-model="formData.express_no" class="input-with-select">
+                  <el-select v-model="formData.express_type" slot="prepend" placeholder="请选择快递" style="width:130px;">
+                    <el-option :label="option.label" :value="option.value" v-for="(option, key) in options" :key="key"></el-option>
+                  </el-select>
+                  <el-button slot="append" icon="el-icon-search" @click="search();"></el-button>
+                  <el-button slot="append" icon="el-icon-refresh" @click="refresh();"></el-button>
+                </el-input>
+              </el-col>
+            </el-row>
+            <el-row v-if="tableData.length != 0" style="margin-top: 40px;">
+              <el-col :span="16" offset="4">
+                <el-table :data="tableData" border stripe>
+                  <el-table-column prop="time" label="时间" width="200" sortable></el-table-column>
+                  <el-table-column prop="location" label="地点" width="300"></el-table-column>
+                  <el-table-column prop="context" label="备注" header-align="left"></el-table-column>
+                </el-table>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        formData: {
+          express_type: querystring.express_type || '',
+          express_no: querystring.express_no || ''
+        },
+        tableData: [],
+        options: [
+          {
+            value: 'huitongkuaidi',
+            label: '百世汇通'
+          },
+          {
+            value: 'ems',
+            label: 'EMS'
+          },
+          {
+            value: 'shentong',
+            label: '申通'
+          },
+          {
+            value: 'shunfeng',
+            label: '顺丰'
+          },
+          {
+            value: 'tiantian',
+            label: '天天快递'
+          },
+          {
+            value: 'yuantong',
+            label: '圆通速递'
+          },
+          {
+            value: 'yunda',
+            label: '韵达快运'
+          },
+          {
+            value: 'zhongtong',
+            label: '中通速递'
+          },
+          {
+            value: 'youzhengguonei',
+            label: '邮政快递包裹'
+          },
+          {
+            value: 'kuaijiesudi',
+            label: '快捷快递'
+          },
+          {
+            value: 'zhaijisong',
+            label: '宅急送'
+          },
+        ]
+      },
+      methods: {
+        search() {
+          app.tableData = [];
+          httpRequest('post', 'api_query/transport/read_by_kd100', this.formData).then(resp => {
+            if (resp.data.status == 0) {
+              this.$message.info(resp.data.message);
+            } else if (resp.data.status == 2) {
+              this.$message.error('接口异常');
+            } else {
+              this.tableData = resp.data.data;
+            }
+          });
+        },
+        refresh() {
+          this.formData.express_type = '';
+          this.formData.express_no = ''
+        }
+      },
+      mounted() {
+        if (querystring.express_type) {
+          setTimeout(_ => {
+            this.search();
+          }, 300)
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

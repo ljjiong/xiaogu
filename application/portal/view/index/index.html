@@ -1,0 +1,722 @@
+ <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<script src="/public/static/common/script/qrcode.min.js"></script>
+<style>
+  .indexgoods-img {
+    height: 160px;
+    padding-top: 20px;
+    width: 140px;
+  }
+
+  .next-btn {
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    line-height: 42px;
+    opacity: 0.4;
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+  .last-btn {
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    line-height: 42px;
+    opacity: 0.4;
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+  .banner-btn {
+    width: 1400px;
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: 200px;
+    transform: translate(-50%, -50%)
+  }
+
+  .banner-btn div:hover {
+    opacity: 0.8;
+  }
+
+  .nav-li:hover .nav-beijin {
+    opacity: 0.9;
+  }
+
+  .nav-li:hover .line {
+    background: #333
+  }
+
+  .index-red-btn {
+    background: #f63030;
+    color: #fff;
+    height: 32px;
+    line-height: 32px;
+    width: 167px;
+    text-align: center
+  }
+
+  .get-Coupon {
+    color: #282828;
+    text-align: center;
+    height: 22px;
+    line-height: 22px;
+    width: 70%;
+    cursor: pointer;
+  }
+
+  #activity-qrcode img {
+    width: 100%
+  }
+
+  .actives {
+    background-color: #108ee9 !important;
+    color: #fff !important;
+  }
+
+  .con {
+    width: 300px;
+    height: 30px;
+    overflow: hidden;
+    float: right;
+    margin-top: 1px;
+  }
+
+  .list {
+    width: 100%;
+  }
+
+  .list li {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    float: left;
+    text-align: left;
+  }
+
+  .list li a {
+    float: left;
+  }
+</style>
+</head>
+
+<body>
+
+  {include file="/index/header" /}
+
+  <div class="contine minwid1200" id="app">
+  
+    <div class="banner-btn">
+      <div class="next-btn  white-text black radius50 left">
+        <i class="iconfont icon-xiangzuo1" style="font-size: 20px;"></i>
+      </div>
+      <div class="last-btn white-text black radius50 right">
+        <i class="iconfont icon-xiangyou1" style="font-size: 20px;"></i>
+      </div>
+    </div>
+     
+    <div class="banner white">
+      <div class="carousel carousel-slider" style="height: 420px;width: 1903px;transform: translateX(-50%);left: 50%;">
+        <a class="carousel-item" :href="banner.href" v-for="(banner,key) in banners">
+          <img :src="banner.img">
+        </a>
+      </div>
+    </div>
+
+    <div class="white widmin1200">
+      <div class="w1200 row " style="margin-top: 0;height: 38px;line-height: 32px;">
+        <div class="col s3">
+          <div class="left grey-text zhtui bt">
+            <i class="iconfont icon-zhengpinbaozheng" style="font-size: 28px"></i>
+            <span style="position: relative;top:-4px;">100%正品</span>
+          </div>
+          <div class="left grey-text margin-left-15 zhtui bt">
+            <i class="iconfont  icon-tuihuochuli" style="font-size: 28px"></i>
+            <span style="position: relative;top:-4px;">30天无忧退货</span>
+          </div>
+        </div>
+        <div class="col s3 offset-s6 grey-text text-darken-4 bt flex">
+          <i class="iconfont icon-laba- blue-text"></i>
+          <div class="con margin-left-5" id="list_con">
+            <ul class="list" id="news_list">
+              <li class="truncate" v-for="(article,key) in articles" :key="key" v-text="article.title" @click="goArticle('article.id')"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="right-nav black white-text">
+      <div class="home_icon center">
+        <i class="iconfont icon-wode bt" @click="gohome()" style="font-size: 24px;"></i>
+      </div>
+      <div class="card_icon margin-tt-10 padding-tt-10 center bt" @click="gocart()">
+        <i class="iconfont icon-gouwuche1" style="font-size: 24px;"></i>
+        <div class="font-size-14 white-text padding-10">购物车</div>
+        <div class="sblue white-text margin-5 center" style="border-radius: 50px;" v-text="carts"></div>
+      </div>
+      <div class="footer_icon bt center relative">
+        <div class="relative right-qr">
+          <i class="iconfont icon-saoyisao white-text" style="font-size: 25px;"></i>
+          <div id="right-qrcode">
+
+          </div>
+        </div>
+        <div class="gotopicon" id="gotoicon">
+          <i class="iconfont white-text icon-xiangzuo1"></i>
+        </div>
+        <div class="sblue padding-5  white-text back-text" id="last">返回顶部</div>
+      </div>
+    </div>
+    <div class="w1200 left-nav">
+      <div class="navs bt" id="loutinav">
+        <div class=" white blue-text lighten-1 font-size-14 padding-tt-10 active">限时折扣</div>
+        <div class=" white blue-text lighten-1 font-size-14 padding-tt-10" v-for=" (content,key) in contents" :key="key" v-text="content.title">母婴儿童</div>
+
+        <div class=" white blue-text lighten-1 font-size-14 padding-tt-10">为你推荐</div>
+        <div class="lasts">
+          <div id="activity-qrcode" class="white padding-10"></div>
+          <p class="white grey-text text-darken-3 font-size-14">APP下单更优惠</p>
+        </div>
+      </div>
+    </div>
+    <div class="row w1200">
+      <div class="left margin-right-5 pointer" v-for="(advertising,key) in advertisings" :key="key" @click="goOuter(advertising);">
+        <img :src="advertising.img" class="responsive-img">
+      </div>
+    </div>
+    <div class="w1200">
+
+      <!-- 限时折扣 -->
+      <div class="louti">
+        <div class="artile-title over  margin-tt-10">
+          <div class="left border-left font-size-18 black-text padding-left-15">限时折扣</div>
+          <div class="left font-size-12 margin-top-5 margin-left-15 times grey-text">距结束
+
+            <span v-for="(timesta,key) in timestam[0]" v-text="timesta"></span>
+            <span v-for="(timesta,key) in timestam[1]" v-text="timesta"></span>
+            :
+            <span v-for="(timesta,key) in timestam[3]" v-text="timesta"></span>
+            <span v-for="(timesta,key) in timestam[4]" v-text="timesta"></span>
+            :
+            <span v-for="(timesta,key) in timestam[6]" v-text="timesta"></span>
+            <span v-for="(timesta,key) in timestam[7]" v-text="timesta"></span>
+            :
+            <span v-for="(timesta,key) in timestam[9]" v-text="timesta"></span>
+            <span v-for="(timesta,key) in timestam[10]" v-text="timesta"></span>
+
+          </div>
+        </div>
+        <div class="content over">
+          <div class="left" style="width: 220px;">
+            <img :src="discounts[0].img" class="responsive-img">
+          </div>
+          <div class="left over wids100 pointer" style="width:calc(100% - 220px);">
+            <div class="left wids50 over white index-discount" v-for="rule in discountActivity.rule_info">
+              <div class="left relative" style="height: 190px;width: 190px">
+                  <img src="/public/static/portal/images/shouxin.png" v-if="rule.stock == 0" class="shouxin" alt="">
+                  <img :src="rule.goods_info.thum">
+              </div>
+              <div class="left width188  padding-15 ">
+                <div class="font-size-16 font-w black-text" v-text="rule.goods_info.name" style="height: 60px;"></div>
+                <div class="price font-size-12 red-text margin-tt-15 ">限时价：￥
+                  <span class="font-size-18 margin-right-10">{{rule.discount_price}}</span>
+                  <span class="black-text">原价：</span>
+                  <span class="black-text font-size-14 cost_price">{{rule.goods_info.sell_price}}</span>
+                </div>
+                <div class="radius5 index-red-btn bt" @click="goGoodsDetail(rule.goods_id,1)">立即抢购</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="content-footer">
+          <div class="left getjuan">
+            <img src="/public/static/portal/img/back-blue.png" class="responsive-img">
+            <div class="getgo bt" @click="goto('coupon')">
+              <div class="font-size-18 margin-btn-15">领卷中心</div>
+              <div class="font-size-14 margin-top-15">GO></div>
+            </div>
+          </div>
+          <div class="left flex width100">
+            <div class=" padding-5 grey lighten-5 index-coupon" style="border-right: 1px solid #f4f4f4;" v-for="coupon in coupons.slice(0,5)">
+              <div class="flex margin-top-10">
+                <div class="red-text font-size-10 red-text margin-10">￥
+                  <span class="font-size-22">{{coupon.change_value}}</span>
+                </div>
+                <div class="flex1  margin-tt-5">
+                  <div class="black-text font-size-14 truncate">满{{coupon.reach_money}}使用</div>
+                  <div class="get-Coupon font-size-12" @click="goto('coupon')">点击领取></div>
+                  <!-- <div style="cursor:default" class="black-text font-size-12" @click="getCoupon(coupon)">点击领取</div> -->
+                </div>
+              </div>
+              <div class="black-text font-size-14 center">限商城内满减活动商品使用</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 母婴儿童 -->
+      <div class="louti " v-for="(content,key) in contents" :key="key">
+        <div class="artile-title over  margin-tt-10">
+          <div class="left border-left-origin font-size-18 black-text padding-left-15 bt">
+            <span v-text="content.title"></span>
+            <span class="font-size-14 grey-text"></span>
+            <span class="font-size-14 grey-text padding-lr-5 muynav-border" v-for="(hot_keyword,keyhot_keyword) in content.hot_keywords"
+              :key="keyhot_keyword" v-text="hot_keyword"></span>
+          </div>
+          <div class="right margin-right-10">
+            <a href="" class="black-text font-size-16">更多好货></a>
+          </div>
+        </div>
+        <div class="content over" style="height: 480px">
+          <div class="left" style="width: 216px;">
+            <img :src="content.ad1" class="responsive-img">
+          </div>
+          <div class="left over wids100">
+            <div class="left center muyinwid over white pointer relative" v-for="(tpone,recKey) in content.goods_info" :key="recKey" v-if="recKey < 10"
+              @click="goGoodsDetail(tpone.id)">
+              <img src="/public/static/portal/images/shouxin.png" v-if="tpone.stock == 0" class="shouxin" alt="">
+              <img :src="tpone.thum" class="indexgoods-img">
+              <div class="padding-tt-5 left-align" style="margin:0 28px;">
+                <div class="font-size-14 black-text truncate margin-tt-5">{{tpone.name}}</div>
+                <div class="red-text font-size-14">￥{{tpone.sell_price}}</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="content-footer">
+          <img :src="content.ad2">
+        </div>
+      </div>
+      <!-- 为你推荐 -->
+      <div class="louti white margin-btn-15">
+        <div class="artile-title over  margin-tt-15">
+          <div class="left border-left-yellow font-size-18 black-text padding-left-15 margin-left-15">为你推荐
+            <span class="font-size-14 grey-text">属于你的购物指南</span>
+          </div>
+        </div>
+        <div class="goodslistbox">
+          <div class=" left white margin-10 goodslist  pointer" v-for="(good,key) in goodslist" @click="goGoodsDetail(good.id)">
+            <div class="goods-img relative">
+              <img src="/public/static/portal/images/shouxin.png" v-if="good.stock == 0 " class="shouxin" alt="">
+              <img :src="good.thum" class="responsive-img">
+            </div>
+            <div class="font-size-14 black-text margin-10 truncate">
+              <div class="margin-btn-10">{{good.name}}</div>
+              <div class="over">
+                <div class="left">
+                  <span class="red-text font-size-16">{{good.sell_price}}</span>
+                  <span class="font-size-10 grey-text cost_price">￥{{good.market_price}}</span>
+                </div>
+                <div class="right font-size-14 grey-text">月销量：{{good.sell_num}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        articles: [],
+        timestam: [],
+        title: '首页',
+        coupons: [],
+        tuijian: [],
+        discountActivity: {
+          rule_info: []
+        },
+        carts: 0,
+        user: user,
+        contents: [],
+        goodslist: [],
+        banners: [],
+        discountIsselect: true,
+        advertisings: [],
+        discounts:[]
+      },
+      methods: {
+    	 
+        goOuter: function (hr) {
+        	
+          window.open(hr.href)
+        },
+        goArticle: function (id) {
+          goto('article', { articleId: id })
+        },
+        getCoupon: function (coupon) {
+          httpRequest('POST', 'api_users/user_coupons/save', {
+            activity_coupon_id: coupon.id
+          }, function (resp) {
+            layer.msg(resp.msg)
+          })
+        },
+        goGoods: function (goodsId) {
+          goto('goods_detail', { goodsId: goodsId });
+        },
+        goGoodsDetail: function (goodsId, isDiscountGoods) {
+          if (isDiscountGoods == 1) {
+            goto('goods_detail', { goodsId: goodsId, isDiscountGoods: isDiscountGoods });
+          } else {
+            goto('goods_detail', { goodsId: goodsId });
+          }
+        },
+        gohome: function () {
+          goto('home');
+        },
+        gocart: function () {
+          goto('cart_list');
+        },
+        goorder: function () {
+          goto('order_list');
+        },
+      },
+      computed: {
+    	
+      },
+      filters: {
+        timeFilter: function (value) {
+          if (!value) {
+            return '';
+          }
+          value = Math.floor(value / 1000);
+          var day = Math.floor(value / 86400);
+          value %= 86400;
+          var hour = Math.floor(value / 3600);
+          value %= 3600;
+          var minute = Math.floor(value / 60);
+          var second = value %= 60;
+          function times(hour) {
+            var t = (hour + '').length,
+              s = '';
+            for (var i = 0; i < 2 - t; i++) {
+              s += '0';
+            }
+            return s
+          }
+          return times(day) + day + ': ' + times(hour) + hour + ': ' + times(minute) + minute + ': ' + times(second) + second;
+        }
+      },
+      mounted: function () {
+    		
+        var that = this;
+      
+        page = 1;
+        if (user) {
+          httpRequest('POST', 'api_goods/carts/lists', {}, function (resp) {
+            that.carts = resp.data.length;
+          })
+        }
+          
+        httpRequest('POST', 'api_query/configs/pc_index', {}, function (resp) {
+        	
+          if (resp.data) {
+            that.contents = resp.data;
+            fns()
+          }
+          httpRequest('POST', 'api_goods/goods/lists', {
+            goods_cate_id: ''
+          }, function (resp) {
+            that.goodslist = resp.data
+          }, {
+              'page-num': page,
+              'page-limit': 10
+            })
+        })
+        // pc首页广告
+        httpRequest('POST', 'api_articles/advertisements/lists', {
+        	type_id: 4
+        }, function (resp) {
+          that.advertisings = resp.data
+        }, {}, false)
+        // pc首页限时折扣广告
+        httpRequest('POST', 'api_articles/advertisements/lists', {
+        	type_id: 31
+        }, function (resp) {
+          that.discounts = resp.data
+        }, {}, false)
+        
+        //PC端轮播图
+        httpRequest('POST', 'api_articles/banners/lists', {
+        	type_id: "10"
+        }, function (resp) {
+        
+          that.banners = resp.data;
+          setTimeout(getBanners, 200);
+        })
+        // 获取优惠卷
+        httpRequest('POST', 'api_query/market/coupon', {}, function (resp) {
+          that.coupons = resp.data;
+        })
+        
+        // 加载限时折扣
+        httpRequest('POST', 'api_query/market/activity', {}, function (resp) {
+          if (resp.data.discount) {
+            // 计算截至时间
+            resp.data.discount[0].deadline = resp.data.discount[0].end_timestamp * 1000 - Date.now();
+            // 限时折扣+
+            resp.data.discount[0].rule_info.forEach(function (item) {
+              item.href = location.origin + '/portal/index/goods_detail?isDiscountGoods=1&goodsId=' + item.goods_id
+            })
+            that.discountActivity = resp.data.discount[0];
+            // 倒计时
+            setInterval(function () {
+              that.discountActivity.deadline -= 1000;
+              getTime(that.discountActivity.deadline)
+            }, 1000)
+            if (!that.discountActivity.deadline) {
+              discountIsselect = false;
+            }
+          }
+        })
+        // 加载二维码
+
+       
+        
+        new QRCode(document.getElementById('right-qrcode'), "http://wancllshop.wx.wygoo.com/wap/index/index.html");
+        new QRCode(document.getElementById('activity-qrcode'), "http://wancllshop.wx.wygoo.com/wap/index/index.html");
+      }
+    })
+
+    function getTime(value) {
+      if (!value) {
+        return '';
+
+      }
+      value = Math.floor(value / 1000);
+      var day = Math.floor(value / 86400);
+      value %= 86400;
+      var hour = Math.floor(value / 3600);
+      value %= 3600;
+      var minute = Math.floor(value / 60);
+      var second = value %= 60;
+      function times(hour) {
+        var t = (hour + '').length,
+          s = '';
+        for (var i = 0; i < 2 - t; i++) {
+          s += '0';
+        }
+        return s
+      }
+      var timeS = '';
+      app.timestam = [];
+      var timeS = times(day) + day + ':' + times(hour) + hour + ':' + times(minute) + minute + ':' + times(second) + second;
+      for (var index = 0; index < timeS.length; index++) {
+        var ti = timeS.charAt(index);
+        app.timestam.push(ti)
+      }
+
+    }
+
+
+
+    fns = function () {
+      $(function () {
+        //1.楼梯什么时候显示，800px scroll--->scrollTop
+        $(window).on('scroll', function () {
+          var $scroll = $(this).scrollTop();
+          if ($scroll >= 800) {
+            $('#loutinav').show();
+          } else {
+            $('#loutinav').hide();
+          }
+
+          //4.拖动滚轮，对应的楼梯样式进行匹配
+          $('.louti').each(function () {
+            var $loutitop = $('.louti').eq($(this).index()).offset().top + 400;
+            if ($loutitop > $scroll) {
+              $('#loutinav div').removeClass('actives');
+              $('#loutinav div').eq($(this).index()).addClass('actives');
+              return false;//中断循环 
+            };
+          });
+        });
+        //2.获取每个楼梯的offset().top,点击楼梯让对应的内容模块移动到对应的位置  offset().left
+
+        var $loutili = $('#loutinav div').not('.lasts');
+        $loutili.on('click', function () {
+          $(this).addClass('active').siblings('div').removeClass('active');
+          var $loutitop = $('.louti').eq($(this).index()).offset().top;
+          //获取每个楼梯的offsetTop值
+          $('html,body').animate({
+            scrollTop: $loutitop
+          })
+        });
+        //3.回到顶部
+        $('#last').on('click', function () {
+          // window.scrollTo(0,0)
+          $('html,body').animate({
+            scrollTop: 0
+          })
+        });
+        $('#gotoicon').on('mouseover', function () {
+          $('#last').stop().animate({ right: "58" })
+          return;
+        })
+        $('#gotoicon').on('mouseout', function () {
+          $('#last').stop().animate({ right: "-22" })
+          return;
+        })
+        $('#last').on('mouseover', function () {
+          $('#last').stop().animate({ right: "58" })
+          return;
+        })
+        $('#last').on('mouseout', function () {
+          $('#last').stop().animate({ right: "-22" })
+          return;
+        })
+      })
+    }
+  </script>
+  <script>
+    function loadScript(url, callback) {
+    	  
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      if (typeof (callback) != "undefined") {
+        if (script.readyState) {
+          script.onreadystatechange = function () {
+            if (script.readyState == "loaded" || script.readyState == "complete") {
+              script.onreadystatechange = null;
+              callback();
+            }
+          };
+        } else {
+          script.onload = function () {
+            callback();
+          };
+        }
+      }
+      script.src = url;
+      document.body.appendChild(script);
+    }
+
+    getBanners = function () {
+      loadScript("/public/static/portal/js/materialize.min.js", function () { //加载,并执行回调函数
+        $('.carousel.carousel-slider').carousel({
+          time_constant: 100,
+          full_width: true,
+          indicators: true,
+          no_wrap: false
+        });
+        $('.next-btn').on('click', function () {
+          $('.carousel').carousel('next');
+        })
+        $('.last-btn').on('click', function () {
+          $('.carousel').carousel('prev');
+        })
+        var settime = setInterval(function () {
+          $('.carousel').carousel('prev');
+        }, 3000)
+        $('.banner').on('mousemove', function () {
+          clearInterval(settime);
+        })
+      });
+    }
+    // 加载文章标题
+    loadArticles = function () {
+    
+      app.articles = [];
+      httpRequest('POST', 'api_articles/articles/lists', {}, function (resp) {
+        if (resp.data.length > 0) {
+          app.articles = resp.data
+        }
+        setTimeout(function () {
+          scrollTitle(3000, 50);
+        }, 500)
+      }, {
+          'page-num': page,
+          'page-limit': 10
+        })
+
+    }
+    loadArticles()
+    // 滚动的文章标题
+    function scrollTitle(changeSpeed, scrollSpeed) {
+      var con = document.getElementById("list_con");
+      var list = document.getElementById("news_list");
+      list.innerHTML += list.innerHTML;
+      var items = list.getElementsByTagName("li");
+      var timer_1 = setInterval(_scrollTitle, changeSpeed);
+      var heightAll = 0;
+      for (var i = 0; i < items.length; i++) {
+        heightAll += items[i].offsetHeight;
+      }
+      var heightHalf = parseInt(heightAll / 2);
+      con.onmouseover = function () {
+        if (timer_1) {
+          clearInterval(timer_1);
+          timer_1 = null;
+        }
+      }
+      con.onmouseout = function () {
+        if (timer_1) {
+          clearInterval(timer_1);
+          timer_1 = null;
+        }
+        timer_1 = setInterval(_scrollTitle, changeSpeed);
+      }
+      function _scrollTitle() {
+        var timer;
+        var num = 30;
+        timer = setInterval(scrollTop, scrollSpeed);
+        function scrollTop() {
+          if (con.scrollTop < heightHalf) {
+            con.scrollTop += 3;
+            num -= 3;
+          } else {
+            con.scrollTop = 0;
+          }
+          if (num <= 0) {
+            clearInterval(timer);
+          }
+        }
+      }
+    }
+  </script>  {include file="index/footer" /}
+</body>
+
+</html>

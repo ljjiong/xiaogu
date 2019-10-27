@@ -1,0 +1,238 @@
+{include file="header" /}
+<style>
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
+</style>
+
+<body>
+
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>上下级关系</legend>
+            </fieldset>
+            <el-row>
+              <el-col :span="16">
+                <el-card>
+                  <div slot="header">
+                    <span>上下级关系</span>
+                    <!-- <el-button type="primary" style="float: right;" size="mini" icon="el-icon-plus" @click="goAdd()">新增分类</el-button> -->
+                  </div>
+                  <el-row :gutter="20">
+                    <el-col :span="18">
+                      <el-input placeholder="请输入查询手机号" v-model="filterText" style="margin-bottom: 20px;" clearable></el-input>
+                    </el-col>
+                    <el-col :span="6">
+                      <el-button icon="el-icon-search" @click="searchMobile"></el-button>
+                    </el-col>
+                  </el-row>
+                  <el-tree lazy :load="loadNode" :props="defaultProps" :expand-on-click-node="false" ref="tree">
+                    <span slot-scope="{ node, data }" class="custom-tree-node">
+                      <span style="flex:1;">{{ node.label }} ({{data.nick_name || '匿名用户'}})</span>
+                      <span style="flex:1;">订单金额:
+                        <span style="font-weight: bold;color: #df0303">￥{{data.user_info.order_money}}</span>
+                      </span>
+                      <span style="flex:1;text-align: right;">
+                        <el-button type="text" size="mini" @click="adjustParent(data)" v-if="data.is_update_position">调整上级</el-button>
+                      </span>
+                    </span>
+                  </el-tree>
+                </el-card>
+              </el-col>
+            </el-row>
+            <el-dialog title="会员选择" :visible.sync="dialogTableVisible">
+              <el-row :gutter="20">
+                <el-col :span="8">
+                  <el-input placeholder="请输入手机号码" v-model="searchData.mobile">
+                    <template slot="prepend">手机号码</template>
+                  </el-input>
+                </el-col>
+                <el-col :span="8">
+                  <el-input placeholder="请输入用户昵称" v-model="searchData.nick_name">
+                    <template slot="prepend">用户昵称</template>
+                  </el-input>
+                </el-col>
+                <el-col :span="6">
+                  <el-button icon="el-icon-search" @click="search();"></el-button>
+                  <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                </el-col>
+              </el-row>
+              <el-table :data="tableData" @row-click="rowClick">
+                <el-table-column property="id" label="用户ID"></el-table-column>
+                <el-table-column property="mobile" label="用户手机号码"></el-table-column>
+                <el-table-column property="nick_name" label="用户昵称"></el-table-column>
+              </el-table>
+              <div style="margin-top: 20px;">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                  :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                </el-pagination>
+              </div>
+            </el-dialog>
+            <!-- dialog2 -->
+            <el-dialog title="会员关系" :visible.sync="dialogTableVisible2">
+              <el-tree :data="treeData2" :props="defaultProps" :expand-on-click-node="false" default-expand-all ref="tree2">
+                <span slot-scope="{ node, data }" class="custom-tree-node">
+                  <span style="flex:1;">
+                    <span v-if="node.label == filterText">{{ node.label }} ({{data.nick_name || '匿名用户'}})</span>
+                    <el-button type="text" size="mini" v-else @click="loadSearchMobileTree(node.label)">{{ node.label }} ({{data.nick_name || '匿名用户'}})</el-button>
+                  </span>
+                  <span style="flex:1;">订单金额:
+                    <span style="font-weight: bold;color: #df0303">￥{{data.user_info.order_money}}</span>
+                  </span>
+                  <span style="flex:1;text-align: right;">
+                    <el-button type="text" size="mini" @click="adjustParent(data)" v-if="data.is_update_position">调整上级</el-button>
+                  </span>
+                </span>
+              </el-tree>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          filterText: '',
+          treeData: [],
+          defaultProps: {
+            children: '_child',
+            label: 'mobile',
+            isLeaf: 'is_update_position',
+          },
+          // dialog
+          dialogTableVisible: false,
+          tableData: [],
+          currentPage: 1, //当前页
+          currentPageSize: 10,  //当前页容量
+          pageSize: [10, 20], //分页大小
+          total: 0, //总页数
+          searchData: {
+            mobile: '',
+            nick_name: ''
+          },
+          // 选择的会员
+          selectUser: {},
+          // dialog 2
+          dialogTableVisible2: false,
+          treeData2: [],
+        }
+      },
+      methods: {
+        searchMobile() {
+          this.filterText = this.filterText.trim();
+          this.loadSearchMobileTree(this.filterText);
+        },
+        loadSearchMobileTree(mobile) {
+          this.filterText = mobile;
+          httpRequest('POST', 'api_query/users/parent_tree_by_mobile', {
+            mobile: mobile
+          }).then(resp => {
+            this.dialogTableVisible2 = true;
+            let item = resp.data.parent_line[0]
+            while (item._child) {
+              item = item._child[0]
+            }
+            item._child = resp.data.lists;
+            this.treeData2 = resp.data.parent_line;
+          })
+        },
+        goAdd() {
+          location = location.origin + '/admin/article_types/edit';
+        },
+        // 调整上下级
+        adjustParent(data) {
+          this.selectUser = data;
+          this.dialogTableVisible = true;
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 某一行被点击
+        rowClick(row) {
+          this.dialogTableVisible = false;
+          this.$confirm(`确认调整会员 ${row.mobile}(${row.nick_name || '匿名用户'}) 为会员 ${this.selectUser.mobile}(${this.selectUser.nick_name || '匿名用户'}) 的上级吗?`, '提示', {
+            type: 'warning'
+          }).then(_ => {
+            httpRequest('POST', 'api_users/users/binding_parent', {
+              parent_mobile: row.mobile,
+              user_id: this.selectUser.id
+            }).then(resp => {
+              this.$message.info(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          }).catch(e => {
+            this.$message.info('操作已取消');
+          })
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        loadTableData() {
+          httpRequest('POST', 'api_users/users/parent_lists', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // 查询会员
+        loadNode(node, resolve) {
+          if (node.level === 0) {
+            this.loadUserByParentMobile('', resolve);
+          } else {
+            this.loadUserByParentMobile(node.data.mobile, resolve);
+          }
+        },
+        loadUserByParentMobile(mobile, resolve) {
+          httpRequest('POST', 'api_query/users/parent_tree_by_mobile', {
+            mobile: mobile
+          }).then(resp => {
+            resolve(resp.data.lists);
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    })
+
+  </script>
+</body>
+
+</html>

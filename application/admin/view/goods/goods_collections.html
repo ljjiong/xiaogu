@@ -1,0 +1,193 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>商品收藏</legend>
+            </fieldset>
+
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入收藏商品名称" v-model="searchData.name">
+                        <template slot="prepend">收藏商品名称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入用户手机号" v-model="searchData.mobile">
+                        <template slot="prepend">手机号</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>收藏商品列表</span>
+                  </div>
+                  <!-- 批量操作 -->
+                 <!--  <div style="margin-bottom: 10px">
+                    <el-button type="danger" size="small" plain icon="el-icon-delete" @click="multiOperate('delete')" :disabled="multipleSelection.length == 0">批量删除</el-button>
+                  </div> -->
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                      <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
+                      <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
+                      <el-table-column prop="goods_info.name" label="商品名称"></el-table-column>
+                      <el-table-column prop="" label="商品缩略图">
+                        <template slot-scope="scope">
+                          <img v-if="scope.row.goods_info" :src="scope.row.goods_info.thum" style="max-width: 40%;">
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="user_info.mobile" label="会员手机号" sortable></el-table-column>
+                      <el-table-column prop="user_info.nick_name" label="会员昵称" sortable></el-table-column>
+                     <!--  <el-table-column label="操作" width="150" fixed="right">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                        </template>
+                      </el-table-column> -->
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          tableData: [],  //表格数据
+          currentPage: parseInt(querystring.currentPage) || 1, //当前页
+          currentPageSize: 20,  //当前页容量
+          pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          total: 0, //总页数
+          multipleSelection: [],  //多选项
+          // 查询条件
+          searchData: {
+            name: '',
+            mobile: '',
+          },
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?',{ type : 'warning' }).then(_ => {
+              httpRequest('POST', 'api_goods/goods_collections/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                this.tableData.splice(this.tableData.indexOf(data), 1);
+              })
+            }).catch(err => {
+              this.$message.info('操作已取消');
+            })
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.type_ids = [];
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type :  'warning' }).then(_ => {
+            httpRequest('POST', 'api_goods/goods_collections/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          }).catch(err => {
+            this.$message.info('操作取消');
+          });
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_goods/goods_collections/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      watch: {
+        cate_ids(value) {
+          this.searchData.goods_cate_id = value[value.length - 1];
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+</body>
+
+</html>

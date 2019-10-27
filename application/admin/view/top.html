@@ -1,0 +1,126 @@
+<header class="el-header" id="top">
+  <div class="left">
+    <div>
+        <img style="width: auto;height: 50px;" :src="systemParams.admin_index_logo" class="logo" @click="goIndex">
+    </div>
+    <el-tag type="success" size="mini" style="margin-left: 10px;" v-text="systemParams.version"></el-tag>
+    <span class="system-name" v-text="systemParams.system_title"></span>
+  </div>
+
+  <el-menu :default-active="defaultActive" mode="horizontal" background-color="#FFA500" text-color="#fff" active-text-color="#40ccfd"
+    style="float:right;">
+    <!-- 顶部菜单 -->
+    <template v-for="(nav, navKey) in topNavs" :key="navKey">
+      <!-- 有子菜单 -->
+      <el-submenu v-if="nav._child" :index="nav.id">
+        <template slot="title">
+          <i v-show="nav.icon" class="iconfont" :class="nav.icon" style="color: #fff;padding-right: 5px;"></i>
+          <span>{{nav.name}}</span>
+        </template>
+        <el-menu-item v-for="(childNav, childNavKey) in nav._child" :key="childNavKey" :index="childNav.id" @click="selectTopNavId(childNav)">
+          <template slot="title">
+            <span>{{childNav.name}}</span>
+          </template>
+        </el-menu-item>
+      </el-submenu>
+      <!-- 无子菜单 -->
+      <el-menu-item v-if="!nav._child" @click="selectTopNavId(nav)" :index="nav.id">
+        <template slot="title">
+          <i v-show="nav.icon" class="iconfont" :class="nav.icon" style="color: #fff;padding-right: 5px;"></i>
+          <span>{{nav.name}}</span>
+        </template>
+      </el-menu-item>
+    </template>
+
+    <!-- 个人设置 -->
+    <el-submenu index="home">
+      <template slot="title">
+        <span>{{user.guid}}</span>
+        <img :src="user.avatar" style="max-height: 60px;padding: 15px; box-sizing: border-box;">
+      </template>
+      <el-menu-item @click="modifyUserInfo()" index="modifyUserInfo">
+        <template slot="title">
+          <i class="el-icon-setting"></i>
+          <span>修改个人信息</span>
+        </template>
+      </el-menu-item>
+      <el-menu-item @click="modifyPassword()" index="modifyPassword">
+        <template slot="title">
+          <i class="el-icon-edit"></i>
+          <span>修改密码</span>
+        </template>
+      </el-menu-item>
+      <el-menu-item @click="logout()" index="logout">
+        <template slot="title">
+          <i class="el-icon-info"></i>
+          <span>注销</span>
+        </template>
+      </el-menu-item>
+    </el-submenu>
+  </el-menu>
+
+</header>
+
+<script>
+  let topApp = new Vue({
+    el: '#top',
+    data() {
+      return {
+        topNavs: getStorage('adminNavs').filter(item => item.is_top == 1),
+        defaultActive: Number(getStorage('selectTopNavId')),
+        user: user,
+        systemParams: getStorage('systemParams')
+      }
+    },
+    methods: {
+      handleOpen(key, keyPath) {
+        // console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        // console.log(key, keyPath);
+      },
+      // 设置头部导航选中id
+      selectTopNavId(nav) {
+        rmStorage('selectLeftNavId');
+        setStorage('selectTopNavId', nav.id);
+        location = nav.href;
+      },
+      // 回到主页
+      goIndex() {
+        rmStorage('selectLeftNavId');
+        rmStorage('selectTopNavId');
+        location = location.origin + '/admin/data/index';
+      },
+      // 注销
+      logout() {
+        this.$confirm('确认注销登录?', '提示', { type: 'warning' }).then(_ => {
+          rmStorage(getClientType() + 'User');
+          rmStorage(getClientType() + 'Token');
+          rmStorage('adminNavs');
+          rmStorage('systemParams');
+          location = location.origin + '/admin';
+        }).catch(_ => {
+          this.$message.info('操作取消');
+        })
+      },
+      // 修改个人信息
+      modifyUserInfo() {
+        rmStorage('selectLeftNavId');
+        rmStorage('selectTopNavId');
+        location = location.origin + '/admin/home/index'
+      },
+      modifyPassword() {
+        rmStorage('selectLeftNavId');
+        rmStorage('selectTopNavId');
+        location = location.origin + '/admin/home/modify_password'
+      }
+    },
+    mounted() {
+      if(!this.systemParams){
+        setTimeout(_ => {
+          location.reload();
+        }, 500);
+      }
+    }
+  })
+</script>

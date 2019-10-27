@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<style>
+  .my-address li>div{background:url(/public/static/portal/images/address-img-bk1.png) center no-repeat;padding:18px 22px 18px 22px;background-size:cover;height:100%;}
+  .my-address li:hover{background:url(/public/static/portal/images/address-img-bk.png) center no-repeat;background-size:cover;}
+  .my-address li>div.on{background:url(/public/static/portal/images/address-img-bk.png) center no-repeat;background-size:cover;}
+</style>
+</head>
+
+<body>
+  {include file="/index/header" /}
+
+  <div class="w1000" id="app">
+    <div class="submit-order-cont">
+      <h4 class="submit-order-title font-size-16">选择收货地址</h4>
+      <div class="my-address">
+        <ul class="clearfix">
+          <li class="left border-grey " v-for="(address,key) in addresses" :key="key">
+            <div :class="{on: (address.is_default == 1)}">
+              <div class="top-title clearfix padding-btn-10 border-btn on">
+                <p class="left" v-text="address.consignee_name + ' 收 ' "> </p>
+                <p class="right">
+                  <a @click="goto('address_list',{addressId: address.id})">编辑</a>
+                  <a @click="delAddress(address)">删除</a>
+                </p>
+              </div>
+              <p class="font-size-14" v-text="address.province + address.city + address.area"></p>
+              <p class="font-size-14" v-text="address.address"></p>
+              <p class="font-size-14" v-text="address.mobile"></p>
+              <img src="/public/static/portal/images/address-gou-img.png">
+              <div class="moren transition" @click="setDefaultAddress(address)">设为默认</div>
+            </div>
+          </li>
+
+        </ul>
+        <button class="add-address border-grey" @click="goto('address_list',{type:'order_confirm'})">+新增收货地址</button>
+      </div>
+      <h4 class="order-list-h4 font-size-16">确认订单信息</h4>
+      <div class="commodity-info">
+        <div class="menu">
+          <div class="title">商品信息</div>
+          <div class="price">数量</div>
+          <div class="num">单价（元）</div>
+          <div class="real-pay">订单金额</div>
+        </div>
+        <!-- <div class="order-number">
+							<span class="time">下单时间：2018-03-20   11：21：30</span>
+							<span class="number">订单编号：26521234567845112</span>
+						</div> -->
+        <div class="list">
+          <div class="a-good" v-for="(item,key) in goodsList" :key="key">
+            <div class="img">
+              <img v-if="item.select_spec_group_info.id" :src="item.select_spec_group_info.thum || item.goods_info.thum">
+              <img v-else :src="item.goods_info.thum">
+            </div>
+            <div class="text">
+              <div class="title" v-text="item.goods_info.name"> </div>
+              <div class="specification" v-if="item.select_spec_group_info.id" v-text="'规格: ' + item.select_spec_group_info.spec_option_group">
+              </div>
+            </div>
+            <div class="price" v-text="'x'+item.num"></div>
+            <div class="num" v-if="isDiscountGoods">
+              <div class="num" v-text="discount_price / item.num"></div>
+            </div>
+            <div class="num" v-else>
+              <div class="num" v-if="item.select_spec_group_info.id" v-text="item.select_spec_group_info.sell_price"></div>
+              <div class="num" v-else v-text="item.goods_info.sell_price"></div>
+            </div>
+            <div class="real-pay" v-if="isDiscountGoods">
+              <div class="money">{{discount_price}}</div>
+            </div>
+            <div class="real-pay" v-else>
+              <div class="money" v-if="item.select_spec_group_info.id">{{item.num*item.select_spec_group_info.sell_price}}</div>
+              <div class="money" v-else>{{item.num*item.goods_info.sell_price}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="message clearfix">
+          <p class="title left">给商家留言：</p>
+          <input type="text" class="left right-input" name="" v-model="message" placeholder="选填">
+          <span v-text="message.length + '/200'"></span>
+        </div>
+        <div class="order-info-bottom">
+          <div class="clearfix info-list">
+            <!-- <div class="right info-left"><span v-if="isDiscountGoods"> {{'￥'+discount_price}}</span><span v-else-if="!isDiscountGoods">无</span></div> -->
+            <div class="right info-right">已优惠：{{(totalPriceFilter - discountmoney - freight_money).toFixed(2)}}</div>
+          </div>
+          <div class="clearfix info-list" v-if="!isDiscountGoods">
+            <div class="right info-left">
+              <select style="display: inline-block;height: 1.5rem;padding: 0;" v-model="activities" @change="selectMarketActivity('coupon')">
+                <option value="0"></option>
+                <option v-for="coupon in coupons" :value="coupon" v-if="coupon.coupon_type == 'full'">
+                  {{'满' + coupon.reach_money + '元减' + coupon.change_value + '元' }}
+                  <!-- <span v-else-if="coupon.coupon_type == 'discount'">{{'满' + coupon.reach_money + '元打' + coupon.change_value + '折' }}</span> -->
+                </option>
+                <option v-for="coupon in coupons" :value="coupon" v-if="coupon.coupon_type == 'discount'">{{'满' + coupon.reach_money + '元打' + coupon.change_value + '折' }}
+                </option>
+              </select>
+            </div>
+            <div class="right info-right">选择优惠券：</div>
+          </div>
+          <div class="clearfix info-list" style="margin-bottom:18px;">
+            <div class="right info-left">￥{{freight_money}}</div>
+            <div class="right info-right">订单运费：</div>
+          </div>
+          <div class="order-price">
+            <div class="clearfix info-list">
+              <div class="right info-left"> ￥{{totalPriceFilter.toFixed(2)}}</div>
+              <div class="right info-right">商品应付总计：</div>
+            </div>
+            <p class="address-info" v-text="'寄送至：' + address.province + address.city + address.area + address.address + ' 收货人：' + address.consignee_name +' 手机号：'+ address.mobile ">
+            </p>
+          </div>
+          <button class="submit-button transition" @click="submit()">提交订单</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  {include file="index/footer" /}
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        isDiscountGoods: querystring.isDiscountGoods,
+        title: '确认订单',
+        message: '',
+        address: {
+          consignee_name: '',
+          province: '',
+          city: '',
+          area: '',
+          address: '',
+          mobile: '',
+        },
+        goodsList: getStorage('goodsList', sessionStorage),
+        freight_money: 0,
+        totalPrice: 0,
+        // 可选择优惠券
+        coupons: [],
+        // 可选择限时折扣
+        discounts: [],
+        // 可选择满减
+        fulls: [],
+        // 选择的营销活动
+        selectedMarketActivity: {},
+        // 选择的营销类型
+        selectedMarketType: '',
+        // 折扣价格
+        discount_price: 1,
+        //地址
+        addresses: [],
+        activities: {},
+      },
+      methods: {
+
+        // 改变数量
+        changeNum: function (item, num) {
+          if (num == -1 && item.num < 2) {
+            return;
+          }
+          item.num += num;
+          this.queryFreight_money();
+        },
+        //删除地址
+        delAddress: function (address) {
+          layer.alert('确定删除地址?', { title: '提示' }, function (index) {
+            layer.close(index)
+            httpRequest('POST', 'api_users/addresses/delete', { id: address.id }, function (resp) {
+              location.reload();
+            })
+          })
+        },
+        //设置默认地址
+        setDefaultAddress: function (address) {
+          httpRequest('POST', 'api_users/addresses/set_default', {
+            is_default: 1,
+            id: address.id
+          }, function (resp) {
+            layer.msg(resp.msg);
+            app.addresses.forEach(function (item) {
+              item.id == address.id ? (item.is_default = 1) : (item.is_default = 0)
+              app.address.province = resp.data.province;
+              app.address.city = resp.data.city;
+              app.address.area = resp.data.area;
+              app.address.address = resp.data.address;
+              app.address.consignee_name = resp.data.consignee_name;
+              app.address.mobile = resp.data.mobile;
+            })
+          })
+        },
+        // 提交订单
+        submit: function () {
+          // 组装订单数据
+          var orderData = [];
+          this.goodsList.forEach(function (item) {
+            var data = {
+              goods_id: item.goods_info.id,
+              num: item.num,
+              spec_group_id: 0,
+            }
+            if (item.select_spec_group_info.id) {
+              data.spec_group_id = item.select_spec_group_info.id;
+            }
+            orderData.push(data);
+          });
+          console.log(this.address);
+          if (!this.address.id) {
+            layer.msg('请先选择默认收货地址');
+            return;
+          }
+          httpRequest('POST', 'api_orders/orders/save', {
+            address_id: this.address.id,
+            goods_info: JSON.stringify(orderData),
+            market_activity_type: this.selectedMarketType || 0,
+            market_activity_id: this.selectedMarketActivity.id || 0,
+            memo: this.message
+          }, function (resp) {
+            layer.msg(resp.msg);
+
+            setTimeout(function () {
+              if (querystring.isDiscountGoods) {
+                goto('pay_select', { order_no: resp.data.order_no, total_money: resp.data.total_money, order_id: resp.data.id, isDiscountGoods: querystring.isDiscountGoods });
+                return;
+              }
+              goto('pay_select', { order_no: resp.data.order_no, total_money: resp.data.total_money, order_id: resp.data.id });
+            }, 500)
+          })
+        },
+        // 选择优惠券
+        selectMarketActivity: function (type) {
+          this.selectedMarketType = type;
+          this.selectedMarketActivity = {};
+          this.selectedMarketActivity = this.activities;
+          if (this.activities == 0) {
+            this.selectedMarketType = 0;
+          }
+          // var innerHeight = window.innerHeight
+          //   || document.documentElement.clientHeight
+          //   || document.body.clientHeight;
+          // layer.open({
+          //   type: 2,
+          //   title: '请选择优惠券',
+          //   content: location.origin + '/wap/index/select_market_activity.html',
+          //   offset: 'b',
+          //   area: [document.body.offsetWidth + 'px', innerHeight * 0.6 + 'px'],
+          //   anim: 2,
+          //   fixed: true,
+          //   resize: false,
+          // })
+          // this.queryFreight_money();
+        },
+        // 查询运费及可参与活动
+        queryFreight_money: function () {
+          // 重置选择的优惠
+          this.selectedMarketType = '';
+          this.selectedMarketActivity = {};
+          // 定义查询数据
+          var orderData = [];
+          app.goodsList.forEach(function (item) {
+            var data = {
+              goods_id: item.goods_info.id,
+              num: item.num,
+              spec_group_id: 0
+            }
+            if (item.select_spec_group_info.id) {
+              data.spec_group_id = item.select_spec_group_info.id;
+            }
+            orderData.push(data);
+          });
+          // 订单预览
+          httpRequest('POST', 'api_orders/orders/view', {
+            address_id: this.address.id,
+            goods_info: JSON.stringify(orderData)
+          }, function (resp) {
+            app.freight_money = resp.data.freight_money;
+            app.totalPrice = resp.data.total_money;
+
+            var goodsIds = [];
+            app.goodsList.forEach(function (item) {
+              goodsIds.push(item.goods_info.id)
+            })
+
+            // 查询可参与的优惠活动
+            return httpRequest('POST', 'api_query/market/user', {
+              money: resp.data.total_money,
+              goods_ids: goodsIds
+            }, function (resp) {
+              // 去掉后缀0
+              (resp.data.coupon || []).forEach(function (item) {
+                item.change_value = Number(item.change_value).toPrecision();
+                item.reach_money = Number(item.reach_money).toPrecision();
+              });
+              // 去掉后缀0
+              (resp.data.full || []).forEach(function (item) {
+                item.reduce_money = Number(item.reduce_money).toPrecision();
+                item.full_money = Number(item.full_money).toPrecision();
+              })
+              app.coupons = resp.data.coupon || [];
+              app.fulls = resp.data.full || [];
+              app.discounts = resp.data.discount || [];
+              // 如果是限时折扣商品，则计算总价格
+              if (querystring.isDiscountGoods) {
+                app.discount_price = app.discounts[0].discount_price * app.goodsList[0].num;
+                app.selectedMarketType = 'discount';
+                app.selectedMarketActivity = app.discounts[0];
+              }
+            })
+          })
+        }
+      },
+      watch: {
+        // 地址发生改变
+        address: function (address) {
+          this.queryFreight_money();
+        },
+      },
+      computed: {
+        // 计算总价格
+        totalPriceFilter: function () {
+          if (querystring.isDiscountGoods) {
+            return this.discount_price + this.freight_money || 0
+          } else if (this.selectedMarketType == 'full' && this.selectedMarketActivity.id) {
+            return (this.totalPrice > this.selectedMarketActivity.full_money) ? this.totalPrice - this.selectedMarketActivity.reduce_money : this.totalPrice;
+          } else if (this.selectedMarketType == 'coupon' && this.selectedMarketActivity.id) {
+            if (this.selectedMarketActivity.coupon_type == 'full') {
+              return (this.totalPrice > this.selectedMarketActivity.reach_money) ? this.totalPrice - this.selectedMarketActivity.change_value : this.totalPrice;
+            } else if (this.selectedMarketActivity.coupon_type == 'discount') {
+              return (this.totalPrice > this.selectedMarketActivity.reach_money) ? this.totalPrice * this.selectedMarketActivity.change_value * 0.1 : this.totalPrice;
+            }
+          } else {
+            return this.totalPrice;
+          }
+        },
+        discountmoney: function () {
+          var moneys = 0; money = 0;
+          this.goodsList.forEach(function (item) {
+            if (item.select_spec_group_info.id) {
+              money = item.select_spec_group_info.sell_price * item.num
+              moneys = moneys + money
+            } else {
+                money = item.goods_info.sell_price * item.num
+                moneys = moneys + money
+          }
+          })
+          return moneys
+        }
+      },
+        mounted: function () {
+          var that = this;
+          httpRequest('POST', 'api_query/users/default_address', {}, function (resp) {
+            if (isEmptyObject(resp.data)) {
+              var innerHeight = window.innerHeight
+                || document.documentElement.clientHeight
+                || document.body.clientHeight;
+            } else {
+              that.address = resp.data;
+            }
+          });
+        }
+      })
+    loadData = function () {
+      httpRequest('POST', 'api_users/addresses/lists', {}, function (resp) {
+        if (resp.data.length > 0) {
+          resp.data.forEach(function (item) {
+            app.haveNoData = false;
+            app.addresses.push(item);
+          })
+        } else {
+          app.haveNoData = true;
+          layer.msg("请设置收货地址");
+
+          setTimeout(function () {
+            goto('address_list', { type: 'order_confirm' })
+          }, 500);
+        }
+      }, {
+          'page-num': 1,
+          'page-limit': 100
+        })
+    }
+    loadData();
+  </script>
+</body>
+
+</html>

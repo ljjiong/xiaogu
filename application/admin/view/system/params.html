@@ -1,0 +1,615 @@
+{include file="header" /}
+
+<body>
+
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+
+          <div id="app">
+            <fieldset>
+              <legend>参数配置</legend>
+            </fieldset>
+
+            <el-tabs v-model="activeName" type="border-card">
+              <el-tab-pane label="基础配置" name="basic">
+                <el-col :span="12" offset="5" style="margin-top: 20px;">
+                  <el-form ref="basic" :model="formData.basic" label-width="180px" label-position="left">
+                    <el-form-item label="系统名称">
+                      <el-input v-model="formData.basic.system_name" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="系统版本">
+                      <el-input v-model="formData.basic.version" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="WANCLL版本">
+                      <el-input v-model="formData.basic.wancll_version" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="技术支持">
+                      <el-input v-model="formData.basic.technical_support" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="版权所有">
+                      <el-input v-model="formData.basic.copyright" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系邮箱">
+                      <el-input v-model="formData.basic.email" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="产品序列码">
+                      <el-input v-model="formData.basic.uuid" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button icon="el-icon-edit" type="primary" @click="submitForm('basic')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-tab-pane>
+              <el-tab-pane label="订单配置" name="order">
+                <el-col :span="12" offset="5" style="margin-top: 20px;">
+                  <el-form ref="order" :model="formData.order" label-width="180px" label-position="left">
+                    <el-form-item label="自动取消订单(单位：天)">
+                      <el-input v-model="formData.order.auto_cancel" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="自动删除订单(单位：天)">
+                      <el-input v-model="formData.order.auto_delete" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="自动确认收货(单位：天)">
+                      <el-input v-model="formData.order.auto_receipt" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="提醒发货间隔(单位：天)">
+                      <el-input v-model="formData.order.tip_deliver_time" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button icon="el-icon-edit" type="primary" @click="submitForm('order')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-tab-pane>
+              <el-tab-pane label="支付配置" name="pay">
+                <el-tabs v-model="payActiveName" type="card">
+                  <el-tab-pane label="支付宝配置" name="ali">
+                    <el-col :span="12" offset="5" style="margin-top: 20px;">
+                      <el-form ref="ali_pay" :model="formData.pay.ali" label-width="180px" label-position="left">
+                        <el-form-item label="支付宝支付状态">
+                          <el-radio v-model="formData.pay.ali.is_open_ali" label="0">关闭</el-radio>
+                          <el-radio v-model="formData.pay.ali.is_open_ali" label="1">开启</el-radio>
+                        </el-form-item>
+                        <el-form-item label="支付宝应用ID(APPID)">
+                          <el-input v-model="formData.pay.ali.appid"></el-input>
+                        </el-form-item>
+                        <el-form-item label="支付宝公钥">
+                          <el-input v-model="formData.pay.ali.public_key" type="textarea" :autosize="{ minRows: 6, maxRows: 6}"></el-input>
+                        </el-form-item>
+                        <el-form-item label="应用私钥">
+                          <el-input v-model="formData.pay.ali.private_key" type="textarea" :autosize="{ minRows: 8, maxRows: 8}"></el-input>
+                        </el-form-item>
+                        <el-form-item label="支付宝回调地址">
+                          <el-input v-model="formData.pay.ali.notify_url"></el-input>
+                        </el-form-item>
+                        <el-form-item label="支付宝APP回调地址">
+                          <el-input v-model="formData.pay.ali.app_notify_url"></el-input>
+                        </el-form-item>
+                        <el-form-item label="支付宝wap跳转地址">
+                          <el-input v-model="formData.pay.ali.wap_return_url"></el-input>
+                        </el-form-item>
+                        <el-form-item label="支付宝pc跳转地址">
+                          <el-input v-model="formData.pay.ali.pc_return_url"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button icon="el-icon-edit" type="primary" @click="submitForm('ali_pay')">提交</el-button>
+                        </el-form-item>
+                      </el-form>
+                    </el-col>
+                  </el-tab-pane>
+                  <el-tab-pane label="微信配置" name="wechat">
+                    <el-row :gutter="10">
+
+                      <el-col :span="9">
+                        <el-card>
+                          <div slot="header">
+                            <span>公众平台及回调信息</span>
+                          </div>
+                          <el-form ref="wechat_pay" :model="formData.pay.wechat">
+                            <el-form-item label="微信支付状态">
+                              <el-radio v-model="formData.pay.wechat.is_open_wechat" label="0">关闭</el-radio>
+                              <el-radio v-model="formData.pay.wechat.is_open_wechat" label="1">开启</el-radio>
+                            </el-form-item>
+                            <el-form-item label="微信公众平台应用ID(APPID)">
+                              <el-input v-model="formData.pay.wechat.appid"></el-input>
+                            </el-form-item>
+                            <el-form-item label="微信商户号">
+                              <el-input v-model="formData.pay.wechat.mchid"></el-input>
+                            </el-form-item>
+                            <el-form-item label="微信商户支付密钥">
+                              <el-input v-model="formData.pay.wechat.key"></el-input>
+                            </el-form-item>
+                            <el-form-item label="微信公众平台密钥(appSecret)">
+                              <el-input v-model="formData.pay.wechat.appsecret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="微信小程序应用ID">
+                              <el-input v-model="formData.pay.wechat.applet_appid"></el-input>
+                            </el-form-item>
+                            <el-form-item label="微信小程序应用密钥">
+                              <el-input v-model="formData.pay.wechat.applet_secret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="微信网页支付回调地址">
+                              <el-input v-model="formData.pay.wechat.notify_url"></el-input>
+                            </el-form-item>
+                            <el-form-item label="微信网页支付跳转地址">
+                              <el-input v-model="formData.pay.wechat.return_url"></el-input>
+                            </el-form-item>
+                            <el-form-item label="微信app支付回调地址">
+                              <el-input v-model="formData.pay.wechat.app_return_url"></el-input>
+                            </el-form-item>
+                          </el-form>
+                        </el-card>
+                      </el-col>
+                      <el-col :span="9">
+                        <el-card>
+                          <div slot="header">
+                            <span>app支付配置</span>
+                          </div>
+                          <el-form>
+                            <el-form-item label="微信开放平台应用ID(appId)">
+                              <el-input v-model="formData.pay.wechat.app_appid"></el-input>
+                            </el-form-item>
+                            <el-form-item label="微信开放平台密钥(appSecret)">
+                              <el-input v-model="formData.pay.wechat.app_appsecret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="开放平台绑定商户号">
+                              <el-input v-model="formData.pay.wechat.app_mchid"></el-input>
+                            </el-form-item>
+                            <el-form-item label="开放平台绑定商户支付密钥">
+                              <el-input v-model="formData.pay.wechat.app_key"></el-input>
+                            </el-form-item>
+                            <el-form-item label="APP支付回调地址">
+                              <el-input v-model="formData.pay.wechat.app_notify_url"></el-input>
+                            </el-form-item>
+                          </el-form>
+                        </el-card>
+                        <el-button style="margin-top: 20px;" icon="el-icon-edit" type="primary" @click="submitForm('wechat_pay')">提交</el-button>
+                      </el-col>
+                      <!-- 证书文件上传 -->
+                      <el-col :span="6">
+                        <el-card>
+                          <div slot="header">
+                            <span>网页支付证书文件</span>
+                          </div>
+                          <el-upload class="upload-demo" :action="wechatCertificateUploadPath" :on-preview="handlePreview" :on-remove="mpRemove" :before-remove="beforeRemove"
+                            multiple :limit="limits" :on-exceed="handleExceed" :file-list="mpFileList" :data="mpData" :headers="uploadHeaders">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">请上传微信网页端支付apiclient_cert.p12,apiclient_cert.pem,apiclient_key.pem证书文件</div>
+                          </el-upload>
+                        </el-card>
+                        <el-card style="margin-top: 20px;">
+                          <div slot="header">
+                            <span>app支付证书文件</span>
+                          </div>
+                          <el-upload class="upload-demo" :action="wechatCertificateUploadPath" :on-preview="handlePreview" :on-remove="openRemove"
+                            :before-remove="beforeRemove" multiple :limit="limits" :on-exceed="handleExceed" :file-list="openFileList"
+                            :data="openData" :headers="uploadHeaders">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">请上传微信app端支付apiclient_cert.p12,apiclient_cert.pem,apiclient_key.pem证书文件</div>
+                          </el-upload>
+                        </el-card>
+                        <el-card style="margin-top: 20px;">
+                          <div slot="header">
+                            <span>微信支付根目录下txt文件</span>
+                          </div>
+                          <el-upload class="upload-demo" :action="wechatCertificateUploadPath" :on-preview="handlePreview" :on-remove="txtRemove" :before-remove="beforeRemove"
+                            :limit="1" :on-exceed="handleExceedTxt" :file-list="txtFileList" :data="txtData" :headers="uploadHeaders">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                            <div slot="tip" class="el-upload__tip">请上传网页支付根目录下授权证书</div>
+                          </el-upload>
+                        </el-card>
+                      </el-col>
+                    </el-row>
+                  </el-tab-pane>
+                </el-tabs>
+              </el-tab-pane>
+              <el-tab-pane label="第三方登录配置" name="third_login">
+                <el-tabs v-model="thirdLoginActiveName" type="card">
+                  <el-tab-pane label="qq授权登录" name="qq">
+                    <el-col :span="12" offset="5" style="margin-top: 20px;">
+                      <el-form ref="qq_login" :model="formData.third_login.qq" label-width="180px" label-position="left">
+                        <el-form-item label="qq授权登录appid">
+                          <el-input v-model="formData.third_login.qq.appid"></el-input>
+                        </el-form-item>
+                        <el-form-item label="qq授权登录appsecret">
+                          <el-input v-model="formData.third_login.qq.appsecret"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button icon="el-icon-edit" type="primary" @click="submitForm('qq_login')">提交</el-button>
+                        </el-form-item>
+                      </el-form>
+                    </el-col>
+                  </el-tab-pane>
+                  <el-tab-pane label="微信授权登录" name="wechat">
+                    <el-col :span="12" offset="5">
+                      <el-form ref="wechat_login" :model="formData.third_login.wechat" label-width="250px" label-position="left">
+                        <el-form-item label="PC授权登录appid">
+                          <el-input v-model="formData.third_login.wechat.pc_appid"></el-input>
+                        </el-form-item>
+                        <el-form-item label="PC授权登录appsecret">
+                          <el-input v-model="formData.third_login.wechat.pc_appsecret"></el-input>
+                        </el-form-item>
+                        <el-form-item label="WAP&WX授权登录appid">
+                          <el-input v-model="formData.third_login.wechat.appid"></el-input>
+                        </el-form-item>
+                        <el-form-item label="WAP&WX授权登录appsecret">
+                          <el-input v-model="formData.third_login.wechat.appsecret"></el-input>
+                        </el-form-item>
+                        <el-form-item label="APPLET授权登录appid">
+                          <el-input v-model="formData.third_login.wechat.applet_appid"></el-input>
+                        </el-form-item>
+                        <el-form-item label="APPLET授权登录appsecret">
+                          <el-input v-model="formData.third_login.wechat.applet_appsecret"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button icon="el-icon-edit" type="primary" @click="submitForm('wechat_login')">提交</el-button>
+                        </el-form-item>
+                      </el-form>
+                    </el-col>
+                  </el-tab-pane>
+                </el-tabs>
+              </el-tab-pane>
+              <el-tab-pane label="七牛云存储配置" name="qiniu">
+                <el-col :span="12" offset="5" style="margin-top: 20px;">
+                  <el-form ref="qiniu" :model="formData.qiniu" label-width="180px" label-position="left">
+                    <el-form-item label="签名公钥(accessKey)">
+                      <el-input v-model="formData.qiniu.accessKey" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="签名私钥(secretKey)">
+                      <el-input v-model="formData.qiniu.secretKey" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="存储空间(bucket)">
+                      <el-input v-model="formData.qiniu.bucket" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="存储空间外链默认域名">
+                      <el-input v-model="formData.qiniu.uri" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button icon="el-icon-edit" type="primary" @click="submitForm('qiniu')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-tab-pane>
+              <el-tab-pane label="极光推送配置" name="jiguang">
+                <el-col :span="12" offset="5" style="margin-top: 20px;">
+                  <el-form ref="jiguang" :model="formData.jiguang" label-width="180px" label-position="left">
+                    <el-form-item label="极光推送app_key">
+                      <el-input v-model="formData.jiguang.app_key" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="极光推送master_secret">
+                      <el-input v-model="formData.jiguang.master_secret" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button icon="el-icon-edit" type="primary" @click="submitForm('jiguang')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-tab-pane>
+              <el-tab-pane label="邮件配置" name="email">
+                <el-col :span="12" offset="5" style="margin-top: 20px;">
+                  <el-form ref="email" :model="formData.email" label-width="180px" label-position="left">
+                    <el-form-item label="SMTP服务器">
+                      <el-input v-model="formData.email.host" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="SMTP端口">
+                      <el-input v-model="formData.email.port" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="身份认证用户名">
+                      <el-input v-model="formData.email.username" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="身份认证密码">
+                      <el-input v-model="formData.email.password" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="发件人邮箱">
+                      <el-input v-model="formData.email.from_email" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button icon="el-icon-edit" type="primary" @click="submitForm('email')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-tab-pane>
+              <el-tab-pane label="短信配置" name="sms">
+                <el-tabs v-model="smsActiveName" type="card">
+                  <el-tab-pane label="基础配置" name="basic">
+                    <el-col :span="12" offset="5" style="margin-top: 20px;">
+                      <el-form ref="basic_sms" :model="formData.sms.basic" label-width="180px" label-position="left">
+                        <el-form-item label="是否开启验证">
+                          <el-radio v-model="formData.sms.basic.is_open_check" label="0">关闭</el-radio>
+                          <el-radio v-model="formData.sms.basic.is_open_check" label="1">开启</el-radio>
+                        </el-form-item>
+                        <el-form-item label="开启短信类型">
+                          <el-radio v-model="formData.sms.basic.mobile_code_type" label="bami">八米短信</el-radio>
+                          <el-radio v-model="formData.sms.basic.mobile_code_type" label="meilian">美联短信</el-radio>
+                          <el-radio v-model="formData.sms.basic.mobile_code_type" label="ali">阿里短信</el-radio>
+                        </el-form-item>
+                        <el-button icon="el-icon-edit" type="primary" @click="submitForm('basic_sms')">提交</el-button>
+                        </el-form-item>
+                      </el-form>
+                    </el-col>
+                  </el-tab-pane>
+                  <el-tab-pane label="八米短信配置" name="bami">
+                    <el-col :span="12" offset="5" style="margin-top: 20px;">
+                      <el-form ref="bami_sms" :model="formData.sms.bami" label-width="180px" label-position="left">
+                        <el-form-item label="开启状态">
+                          <el-radio v-model="formData.sms.bami.is_open" label="0">关闭</el-radio>
+                          <el-radio v-model="formData.sms.bami.is_open" label="1">开启</el-radio>
+                        </el-form-item>
+                        <el-form-item label="八米短信账号">
+                          <el-input v-model="formData.sms.bami.account"></el-input>
+                        </el-form-item>
+                        <el-form-item label="八米短信密码">
+                          <el-input v-model="formData.sms.bami.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="八米短信抬头">
+                          <el-input v-model="formData.sms.bami.company"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button icon="el-icon-edit" type="primary" @click="submitForm('bami_sms')">提交</el-button>
+                        </el-form-item>
+                      </el-form>
+                    </el-col>
+                  </el-tab-pane>
+                  <el-tab-pane label="美联短信配置" name="meilian">
+                    <el-col :span="12" offset="5" style="margin-top: 20px;">
+                      <el-form ref="meilian_sms" :model="formData.sms.meilian" label-width="180px" label-position="left">
+                        <el-form-item label="开启状态">
+                          <el-radio v-model="formData.sms.meilian.is_open" label="0">关闭</el-radio>
+                          <el-radio v-model="formData.sms.meilian.is_open" label="1">开启</el-radio>
+                        </el-form-item>
+                        <el-form-item label="美联短信账号">
+                          <el-input v-model="formData.sms.meilian.account"></el-input>
+                        </el-form-item>
+                        <el-form-item label="美联短信密码">
+                          <el-input v-model="formData.sms.meilian.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="美联短信apiKey">
+                          <el-input v-model="formData.sms.meilian.apikey"></el-input>
+                        </el-form-item>
+                        <el-form-item label="美联短信抬头">
+                          <el-input v-model="formData.sms.meilian.company"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button icon="el-icon-edit" type="primary" @click="submitForm('meilian_sms')">提交</el-button>
+                        </el-form-item>
+                      </el-form>
+                    </el-col>
+                  </el-tab-pane>
+                  <el-tab-pane label="阿里短信配置" name="ali">
+                    <el-col :span="12" offset="5" style="margin-top: 20px;">
+                      <el-form ref="ali_sms" :model="formData.sms.ali" label-width="180px" label-position="left">
+                        <el-form-item label="开启状态">
+                          <el-radio v-model="formData.sms.ali.is_open" label="0">关闭</el-radio>
+                          <el-radio v-model="formData.sms.ali.is_open" label="1">开启</el-radio>
+                        </el-form-item>
+                        <el-form-item label="阿里短信账号">
+                          <el-input v-model="formData.sms.ali.account"></el-input>
+                        </el-form-item>
+                        <el-form-item label="阿里短信密码">
+                          <el-input v-model="formData.sms.ali.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="阿里短信模板">
+                          <el-input v-model="formData.sms.ali.template_code"></el-input>
+                        </el-form-item>
+                        <el-form-item label="阿里短信抬头">
+                          <el-input v-model="formData.sms.ali.company"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                          <el-button icon="el-icon-edit" type="primary" @click="submitForm('ali_sms')">提交</el-button>
+                        </el-form-item>
+                      </el-form>
+                    </el-col>
+                  </el-tab-pane>
+                </el-tabs>
+              </el-tab-pane>
+              <el-tab-pane label="分类树层级配置" name="category">
+                <el-col :span="12" offset="5" style="margin-top: 20px;">
+                  <el-form ref="category" :model="formData.category" label-width="180px" label-position="left">
+                    <el-form-item label="树层级">
+                      <el-input v-model="formData.category.max_level" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button icon="el-icon-edit" type="primary" @click="submitForm('category')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-tab-pane>
+              <el-tab-pane label="积分配置" name="score">
+                <el-col :span="12" offset="5" style="margin-top: 20px;">
+                  <el-form ref="score" :model="formData.score" label-width="180px" label-position="left">
+                    <!-- <el-form-item label="资金转积分比率(%)">
+                      <el-input v-model="formData.score.money_to_score_rate" clearable></el-input>
+                    </el-form-item> -->
+                    <el-form-item label="签到送积分数量">
+                      <el-input v-model="formData.score.sign_in" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button icon="el-icon-edit" type="primary" @click="submitForm('score')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-tab-pane>
+              <el-tab-pane label="提现金额配置" name="drawcash">
+                <el-col :span="12" offset="5" style="margin-top: 20px;">
+                  <el-form ref="drawcash" :model="formData.drawcash" label-width="180px" label-position="left">
+                    <el-form-item label="最小提现金额">
+                      <el-input v-model="formData.drawcash.min_money" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="最大提现金额">
+                      <el-input v-model="formData.drawcash.max_money" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button icon="el-icon-edit" type="primary" @click="submitForm('drawcash')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-tab-pane>
+            </el-tabs>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          activeName: 'basic',
+          payActiveName: 'ali',
+          thirdLoginActiveName: 'qq',
+          smsActiveName: 'basic',
+          formData: {
+            // 基本配置
+            basic: {},
+            // 订单配置
+            order: {},
+            // 支付配置
+            pay: {
+              ali: {},
+              wechat: {}
+            },
+            // 第三方登录配置
+            third_login: {
+              qq: {},
+              wechat: {}
+            },
+            // 七牛配置
+            qiniu: {},
+            // 极光配置
+            jiguang: {},
+            // 邮件配置
+            email: {},
+            // 短信配置
+            sms: {
+              basic: {},
+              bami: {},
+              meilian: {},
+              ali: {}
+            },
+            // 树层级
+            category: {}
+          },
+          // 微信证书文件上传路径
+          wechatCertificateUploadPath: location.origin + '/index.php/api_systems/helper/upload_file',
+          // 公众平台证书文件列表
+          mpFileList: [],
+          // 微信公众平台证书文件上传附带参数
+          mpData: {
+            save_path: 'extend/wechat_pay/cert/'
+          },
+          // 开放平台证书列表
+          openFileList: [],
+          // 微信开放平台证书文件上传附带参数
+          openData: {
+            save_path: 'extend/wechat_app_pay/cert/'
+          },
+          // 微信支付根目录验证txt文件
+          txtFileList: [],
+          // 微信支付根目录txt文件上传附带参数
+          txtData: {
+            save_path: '/'
+          },
+          // 证书上传文件限制
+          limits: 3,
+          // 上传时的头部信息
+          uploadHeaders: {
+            'auth': 'Basic_Ivj6eZRxMTx2yiyunZvnG8R65',
+            'client-type': 'pc',
+            'token': token.token
+          }
+        }
+      },
+      methods: {
+        // 提交参数信息
+        submitForm(formName) {
+          this.$confirm('确认修改?', '提示', { type: 'warning' }).then(_ => {
+            let data = {};
+            if (formName == 'basic' || formName == 'order' || formName == 'qiniu' || formName == 'jiguang' || formName == 'email' || formName == 'category' || formName == 'score' || formName == 'drawcash') {
+              data = app['formData'][formName];
+            } else if (formName == 'ali_pay') {
+              data = app.formData.pay.ali;
+            } else if (formName == 'wechat_pay') {
+              data = app.formData.pay.wechat;
+            } else if (formName == 'qq_login') {
+              data = app.formData.third_login.qq;
+            } else if (formName == 'wechat_login') {
+              data = app.formData.third_login.wechat
+            } else if (formName == 'bami_sms') {
+              data = app.formData.sms.bami;
+            } else if (formName == 'ali_sms') {
+              data = app.formData.sms.ali;
+            } else if (formName == 'meilian_sms') {
+              data = app.formData.sms.meilian;
+            } else if (formName == 'basic_sms') {
+              data = app.formData.sms.basic;
+            }
+            data.update_type = formName;
+            httpRequest('post', 'api_systems/params/batch_update', data).then(resp => {
+              this.$message.success(resp.msg);
+              setStorage('basic_info', app.formData.basic);
+            });
+          })
+        },
+        // 文件列表移除文件时的钩子
+        mpRemove(file, fileList) {
+          httpRequest('POST', 'api_systems/helper/del_file', {
+            file_path: './extend/wechat_pay/cert/' + file.name
+          }).then(resp => {
+            this.$message.success(resp.msg);
+          })
+        },
+        openRemove(file, fileList) {
+          httpRequest('POST', 'api_systems/helper/del_file', {
+            file_path: './extend/wechat_app_pay/cert/' + file.name
+          }).then(resp => {
+            this.$message.success(resp.msg);
+          })
+        },
+        txtRemove(file, fileList) {
+          httpRequest('POST', 'api_systems/helper/del_file', {
+            file_path: file.name
+          }).then(resp => {
+            this.$message.success(resp.msg);
+          })
+        },
+        // 点击已上传的文件链接时的钩子, 可以通过 file.response 拿到服务端返回数据
+        handlePreview(file) {
+          console.log(file);
+        },
+        // 文件超出个数限制时的钩子
+        handleExceed(files, fileList) {
+          this.$message.warning(`当前限制选择 ${this.limits} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件,若要更新,请先删除已有文件`);
+        },
+        // 文件超出个数限制时的钩子
+        handleExceedTxt(files, fileList) {
+          this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件,若要更新,请先删除已有文件`);
+        },
+        // 删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止上传。
+        beforeRemove(file, fileList) {
+          return this.$confirm(`确定移除 ${file.name}？`, '提示');
+        }
+      },
+      mounted() {
+        // 获取全部参数
+        httpRequest('post', 'api_systems/params/index', { type: 'all' }).then(resp => {
+          this.formData = resp.data;
+          // 获取已上传的证书文件
+          return httpRequest('POST', 'api_systems/helper/read_wechat_cert')
+        }).then(resp => {
+          this.mpFileList = resp.data.web_cert;
+          this.openFileList = resp.data.app_cert;
+          this.txtFileList = resp.data.root_cert;
+        })
+      }
+    })
+  </script>
+</body>
+
+</html>

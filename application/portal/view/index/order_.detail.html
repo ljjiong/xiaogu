@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.theme.default.min.css">
+<script src="/public/static/OwlCarousel2-2.2.1/owl.carousel.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style type="text/css">
+		.order-state-container{width: 1000px;margin:50px auto 0;background: #fff;padding: 30px 30px 80px 30px;box-sizing:border-box; }
+		.order-state-container .column{padding-bottom:15px;border-bottom: 1px solid #eeeeee;font-size: 14px;color: #282828;padding-left: 10px;font-weight: bolder; }
+		.order-state-container .all-state{padding-top:50px;border-bottom: 5px solid #eeeeee;}
+		.order-state-container .a-state{width: 152px;margin-left: 45px;float: left;text-align: center;padding-bottom: 30px;border-bottom: 5px solid #eeeeee;position: relative;bottom: -5px;}
+		.order-state-container .a-state:first-child{margin-left: 0;}
+		.order-state-container .a-state i{width: 54px;height: 54px;display: inline-block;text-align: center;font-size: 30px;line-height: 54px;background: #f4f4f4;border-radius: 27px;color: #108ee9;}
+		.order-state-container .a-state .title{font-size: 16px;color: #282828;margin-top:10px; }
+		.order-state-container .a-state .point{width: 11px;height: 11px;border-radius: 5.5px;background: #339eeb;position: absolute;bottom:-8px;left:70px;display: none; }
+		.order-state-container .active1{border-bottom: 5px solid #339eeb;}
+		.order-state-container .active1 i{background: #339eeb;color: #fff;}
+		.order-state-container .active1 .point{display: block;}
+		.order-logistics{padding:30px;background: #fff;width: 1000px;margin:5px auto 0;  }
+		.order-logistics .column{padding-bottom:15px;border-bottom: 1px solid #eeeeee;font-size: 14px;color: #282828;padding-left: 10px;font-weight: bolder;}
+		.order-logistics .info{padding-top:25px;}
+		.order-logistics .info .left{margin-right:5px;}
+		.order-logistics .info i{color: #339eeb;font-size: 40px;position: relative;display: inline-block;bottom: -10px;margin-right: 20px;margin-left:40px; }
+		.order-logistics .info img{color: #339eeb;font-size: 40px;position: relative;display: inline-block;margin-right: 20px;margin-left:40px;color: rgb(159, 154, 154);vertical-align:middle;}
+		.order-logistics .info .wuliu-detail li{border-left:1px solid #d2d2d2;padding-bottom:20px;padding-left:20px;line-height:1;height:19px;box-sizing:content-box;position:relative;}
+		.order-logistics .info .wuliu-detail li:last-child{padding-bottom:0px!important;}
+		.order-logistics .info .wuliu-detail li:before{content:"";position:absolute;left:-6.5px;border:4px solid #ffffff;width:5px;height:5px;border-radius:100%;background-color:#d2d2d2; }
+		.order-logistics .info .wuliu-detail li .time{margin-right:50px;}
+		.order-logistics .info .wuliu-detail li.on span{color: rgb(90, 89, 89);}
+		.order-logistics .info .wuliu-detail li.on:before{background-color:#3a9aff;}
+
+
+		.order-logistics .info span{color: rgb(159, 154, 154);vertical-align:middle;display:inline-block;}
+		.commodity-info{width: 1000px;margin:5px auto 130px;background: #fff;padding:30px; }
+		.commodity-info .menu{display: table;padding-bottom: 15px;border-bottom: 1px solid #eeeeee;color: #404040;}
+		.commodity-info .menu .title{display: table-cell;width: 350px;padding-left: 20px;box-sizing:border-box;}
+		.commodity-info .menu .price{display: table-cell;width: 120px;text-align: center;}
+		.commodity-info .menu .num{display: table-cell;width: 170px;text-align: center;}
+		.commodity-info .menu .real-pay{display: table-cell;width: 130px;text-align: center;}
+		.commodity-info .menu .state{display: table-cell;width: 170px;text-align: center;}
+		.commodity-info .list .a-good{display: table;padding-top: 15px;padding-bottom: 15px;color: #242424;border-bottom:1px solid #f2f2f2;}
+		.commodity-info .list .a-good:last-child{border-bottom: 0;}
+		.commodity-info .list .a-good .img{display: table-cell;vertical-align: middle;width: 100px;height: 88px;border:1px solid #d2d2d2;text-align: center;box-sizing:border-box;}
+		.commodity-info .list .a-good .img img{max-height: 100%;max-width: 100%;}
+		.commodity-info .list .a-good .text{display: table-cell;vertical-align: middle;padding-left: 10px;width: 250px;}
+		.commodity-info .list .a-good .text .title{line-height: 22px;height: 44px;overflow: hidden;}
+		.commodity-info .list .a-good .text .specification{margin-top:5px;color: #a8a8a8; }
+		.commodity-info .list .a-good .price{display: table-cell;vertical-align: middle;width: 120px;text-align: center;}
+		.commodity-info .list .a-good .num{display: table-cell;vertical-align: middle;width: 170px;text-align: center;}
+		.commodity-info .list .a-good .real-pay{display: table-cell;vertical-align: middle;width: 130px;text-align: center;}
+		.commodity-info .list .a-good .real-pay .freight{color: #a8a8a8;margin-top:10px; }
+		.commodity-info .list .a-good .state{display: table-cell;vertical-align: middle;width: 170px;text-align: center;color: #1f95ea;}
+		.commodity-info .list .a-good .state.fail{color:#ff5f40;}
+		.commodity-info .list .a-good .state.success{color:#43ca4d;}
+		.commodity-info .message{border-bottom:1px solid #eeeeee;padding-bottom: 5px;padding-top:10px;}
+		.commodity-info .message .title{width:80px;color:#000000;font-size:14px;}
+		.commodity-info .message textarea{width:860px;display:block;line-height:1.6;color:#000000;height:auto;}
+
+		.commodity-info .order-text{line-height:85px;height:85px;border-bottom:1px solid #eeeeee;}
+		.commodity-info .order-text li{width:260px;text-align:left;font-size:14px;color:#8f8f8f;}
+		.commodity-info .order-text li:last-child{width:160px;}
+
+		.commodity-info .order-bottom-submit{padding-top:35px;line-height:47px;}
+		.commodity-info .order-bottom-submit .left .text{font-size:12px;color: rgb(14, 14, 14);margin-right:20px;}
+		.commodity-info .order-bottom-submit .left .money{font-size:22px;color:#ff4242;}
+		.commodity-info .order-bottom-submit .right .button1{width:168px;height:47px;border-radius:47px;background-color:#ffffff;color:#a0a0a0;font-size:16px;border:1px solid #a0a0a0;margin-right:12px;}
+		.commodity-info .order-bottom-submit .right .button1:hover{background-color:#e8e8e8;}
+		.commodity-info .order-bottom-submit .right .button{width:168px;height:47px;border-radius:47px;background-color:#108ee9;color:#ffffff;font-size:16px;margin-right:12px;}
+		.commodity-info .order-bottom-submit .right .button:hover{background-color:#097acb;}
+
+		.commodity-info .order-adress{height:85px;line-height:85px;border-bottom:1px solid #eeeeee;}
+		.commodity-info .order-adress .left{color: rgb(51, 51, 51);}
+		.commodity-info .order-adress .right{color: rgb(51, 51, 51);}
+		.commodity-info .order-adress .right span{margin-right:20px;}
+
+		.commodity-info .order-mun{border-bottom:1px solid #eeeeee;height:65px;line-height:65px;}
+		.commodity-info .order-mun .left{color: rgb(103, 101, 101);}
+		.commodity-info .order-mun .right{padding-right:50px;}
+		.commodity-info .order-mun .right img{vertical-align:middle;}
+
+		.order-state-type.fukuan .fahuo{display:none;}
+		.order-state-type.fukuan .wuliu-list{display:none;}
+
+		.order-state-type.fahuo .wuliu-list{display:none;}
+		.order-state-type.fahuo .fukuan{display:none;}
+
+		.order-state-type.wuliu .fahuo{display:none;}
+		.order-state-type.wuliu .fukuan{display:none;}
+
+	</style>
+
+</head>
+<body>
+	{include file="/index/header" /}
+	<!-- 如果是待付款 fukuan 如果是代发货 fahuo 其他的是wuliu -->
+	<div class="order-state-type wuliu">
+		<div class="order-state-container" >
+			<div class="column" >订单状态</div>
+			<div class="all-state clearfix" >
+				<div class="a-state" >
+					<i class="iconfont icon-daifukuan" ></i>
+					<div class="title" >处理中</div>
+					<span class="point" ></span>
+				</div>
+				<div class="a-state" >
+					<i class="iconfont icon-daifahuo" ></i>
+					<div class="title" >待发货</div>
+					<span class="point" ></span>
+				</div>
+				<div class="a-state" >
+					<i class="iconfont icon-yifahuo" ></i>
+					<div class="title" >待收货</div>
+					<span class="point" ></span>
+				</div>
+				<div class="a-state" >
+					<i class="iconfont icon-liuyan" ></i>
+					<div class="title" >待评价</div>
+					<span class="point" ></span>
+				</div>
+				<div class="a-state active1" >
+					<i class="iconfont icon-roundcheck" ></i>
+					<div class="title" >完成</div>
+					<span class="point" ></span>
+				</div>
+			</div>
+		</div>
+		<div class="order-logistics" >
+			<div class="column" >物流信息</div>
+			<div class="info wuliu-list clearfix" >
+				<div class="left">
+					<img src="/public/static/portal/images/fahuo.png">
+				</div>
+				<div class="left wuliu-detail">
+					<ul>
+						<li class="on"><span class="time">2018-01-15 13：04：39</span><span class="title">【长沙市】已签收，签收人：韩梅梅</span></li>
+						<li><span class="time">2018-01-15 13：04：39</span><span class="title">【长沙市】已签收，签收人：韩梅梅</span></li>
+						<li><span class="time">2018-01-15 13：04：39</span><span class="title">【长沙市】已签收，签收人：韩梅梅</span></li>
+						<li><span class="time">2018-01-15 13：04：39</span><span class="title">【长沙市】已签收，签收人：韩梅梅</span></li>
+					</ul>
+				</div>
+			</div>
+			<div class="info fukuan" ><i class="iconfont icon-qianbao" ></i><span>您的订单已提交，请在71小时59分59秒内支付完成支付，超市订单自动取消</span></div>
+			<div class="info fahuo" ><img src="/public/static/portal/images/baoguo.png"><span>仓库大哥正在紧急备货中，请您耐心等待哦~</span></div>
+		</div>
+		<div class="commodity-info" >
+			<div class="menu" >
+				<div class="title" >商品信息</div>
+				<div class="price" >单价</div>
+				<div class="num" >数量</div>
+				<div class="real-pay" >实付</div>
+				<div class="state" >商品状态</div>
+			</div>
+			<div class="list" >
+				<div class="a-good" >
+					<div class="img" ><img src="/public/static/portal/images/goods2.png" /></div>
+					<div class="text" >
+						<div class="title" >UGG 经典水晶系列纯色迷你靴（2018早春新款）</div>
+						<div class="specification" >规格：银色版</div>
+					</div>
+					<div class="price" >299.00</div>
+					<div class="num" >×1</div>
+					<div class="real-pay" >
+						<div class="money" >299.00</div>
+						<div class="freight" >（含运费10.00）</div>
+					</div>
+					<div class="state" >交易成功</div>
+				</div>
+				<div class="a-good" >
+					<div class="img" ><img src="/public/static/portal/images/goods2.png" /></div>
+					<div class="text" >
+						<div class="title" >UGG 经典水晶系列纯色迷你靴（2018早春新款）</div>
+						<div class="specification" >规格：银色版</div>
+					</div>
+					<div class="price" >299.00</div>
+					<div class="num" >×1</div>
+					<div class="real-pay" >
+						<div class="money" >299.00</div>
+						<div class="freight" >（含运费10.00）</div>
+					</div>
+					<div class="state" >交易成功</div>
+				</div>
+				<div class="a-good" >
+					<div class="img" ><img src="/public/static/portal/images/goods2.png" /></div>
+					<div class="text" >
+						<div class="title" >UGG 经典水晶系列纯色迷你靴（2018早春新款）</div>
+						<div class="specification" >规格：银色版</div>
+					</div>
+					<div class="price" >299.00</div>
+					<div class="num" >×1</div>
+					<div class="real-pay" >
+						<div class="money" >299.00</div>
+						<div class="freight" >（含运费10.00）</div>
+					</div>
+					<div class="state fail" >退款失败</div>
+				</div>
+				<div class="a-good" >
+					<div class="img" ><img src="/public/static/portal/images/goods2.png" /></div>
+					<div class="text" >
+						<div class="title" >UGG 经典水晶系列纯色迷你靴（2018早春新款）</div>
+						<div class="specification" >规格：银色版</div>
+					</div>
+					<div class="price" >299.00</div>
+					<div class="num" >×1</div>
+					<div class="real-pay" >
+						<div class="money" >299.00</div>
+						<div class="freight" >（含运费10.00）</div>
+					</div>
+					<div class="state success" >退款成功</div>
+				</div>
+			</div>
+			<div class="message clearfix">
+				<div class="title left">买家留言：</div>
+				<textarea rows="3" class="left"></textarea>
+			</div>
+			<div class="order-adress clearfix">
+				<div class="left">湖南省长沙市经济开发区 开元路17号 开源鑫贸大楼906室</div>
+				<div class="right">
+					<span>韩梅梅</span><span>18684820297</span>
+				</div>
+			</div>
+			<div class="order-text">
+				<ul class="clearfix">
+					<li class="left">优惠活动：减10元</li>
+					<li class="left">商品合计：608.00</li>
+					<li class="left">选择优惠券：减5元</li>
+					<li class="left">订单运费：10.00</li>
+				</ul>
+			</div>
+			<div class="order-mun clearfix">
+				<div class="left">订单编号：201987283949555955</div>
+				<div class="right"><img src="/public/static/portal/images/xiala11.png"></div>
+			</div>
+			<div class="order-bottom-submit clearfix">
+				<div class="left">
+					<span class="text">应付总额：</span><span class="money">￥299.00</span>
+				</div>
+				<div class="right">
+					<button class="button1 transition">退款</button>
+					<button class="button transition">查看物流</button>
+					<button class="button transition">确认发货</button>
+				</div>
+			</div>
+		</div>
+	</div>	
+
+
+	{include file="index/footer" /}
+	<script>
+	</script>
+</body>
+
+</html>

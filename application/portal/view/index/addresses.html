@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<script src="/public/static/common/js/city.js" type="text/javascript"></script>
+<style>
+	body {
+		transition: top 300ms;
+	}
+
+	.layui-form-checked,
+	.layui-form-checked:hover {
+		border-color: #000;
+	}
+
+	.layui-form-checked i,
+	.layui-form-checked:hover i {
+		color: #000;
+	}
+
+	.layui-form-select dl dd.layui-this {
+		background-color: #fff;
+		color: #000;
+	}
+
+	.layui-form-checkbox[lay-skin=primary]:hover i {
+		border-color: #000;
+		color: #000;
+	}
+
+	.layui-form-checked[lay-skin=primary] i {
+		color: #000;
+		background-color: #fff;
+		border-color: #000;
+	}
+</style>
+</head>
+
+<body>
+	{include file="/index/header" /}
+	<div class="w1200 margin-tt-15 over  black-text">
+			<div class="left">
+                    <!-- 个人信息卡 -->
+                    <div class=" card-title-wrap">
+                        <img  src="/public/static/portal/img/title-back.png" class="responsive-img">
+                        <div class="margin-10 over card-text-wrap">
+                            <div class="ridius-img left margin-15">
+                                <img :src="user.avatar" alt="">
+                            </div>
+                            <div class="left margin-top-15">
+                                <div class="font-size-18 margin-top-15 white-text"  v-text="user.nick_name || user.mobile"></div>
+                                <div class="blue lighten-1 margin-top-5" style="border-radius: 4px;padding: 2px 4px;">
+                                    <img src="/public/static/portal/img/lr.png" alt="">
+                                    <span class="font-size-12 white-text" v-text="level"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rate-line font-size-12 blue-text text-lighten-5">
+                            <div class="rataing-nember  margin-15" v-text=" '成长值  ' + score"></div>
+                            <div class="ratas-nember right"></div>	
+                        </div>
+                    </div>
+                    <div class="white grey-text text-darken-3 margin-top-15" style="border-radius: 5px">
+                        <div class="card-right-nav-box  margin-10 padding-tt-10" style="border: none">
+                            <div class="card-right-nav">
+                                <div class="font-size-18 over margin-tt-10">
+                                    <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                    <span class="left margin-top-5">交易管理</span>
+                                </div>
+                                <ul class="card-right-nav-ul">
+                                    <li class="margin-tt-13" @click="goto('cart_list')">购物车</li>
+                                    <li class="margin-tt-13" @click="goto('order_list')">我的订单</li>
+                                    <li class="margin-tt-13" @click="goto('comment_list')">我的评价</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-right-nav-box  margin-10 padding-tt-10">
+                            <div class="card-right-nav">
+                                <div class="font-size-18 over margin-tt-10">
+                                        <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                    <span class="left margin-top-5">账号管理</span>
+                                </div>
+                                <ul class="card-right-nav-ul">
+                                    <li class="margin-tt-13" @click="goto('setting')">个人信息</li>
+                                    <li class="margin-tt-13" @click="goto('account')">账号安全</li>
+                                    <li class="margin-tt-13" @click="goto('idcard_auth')" >实名认证</li>
+                                    <li class="margin-tt-13" @click="goto('address_list')">地址管理</li>
+                                    <li class="margin-tt-13"  @click="goto('collection_list')">我的收藏</li>
+                                    <li class="margin-tt-13"  @click="goto('level')">成长值<span class="blue-text text-lighten-1" v-text="'('+score+')'"></span></li>
+                                    <li class="margin-tt-13"  @click="goto('bind')">第三方账户</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-right-nav-box margin-10 padding-tt-10">
+                            <div class="card-right-nav">
+                                <div class="font-size-18 over margin-tt-10">
+                                        <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                    <span class="left margin-top-5">资产管理</span>
+                                </div>
+                                <ul class="card-right-nav-ul">
+                                    <li class="margin-tt-13" @click="goto('wallet')">我的钱包</li>
+                                    <li class="margin-tt-13" @click="goto('bankcard_list')">我的银行卡</li>
+                                    <li class="margin-tt-13" @click="goto('my_coupon_list')">我的优惠券<span class="blue-text text-lighten-2"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+		<div class="right right-content">
+			<div class="padding-15 white">
+				<div class="font-size-16 black-text padding-tt-15 border-btn">地址管理</div>
+				<div class="margin-tt-15">
+					已保存收货地址（
+					<span class="grey-text">地址最多10条，还能保存8条</span>）
+				</div>
+				<div class="border-grey center" style="border-bottom: none;">
+					<div class="flex grey lighten-3 grey-text padding-tt-10">
+						<div class="addresses-username">收货人</div>
+						<div class="addresses-text flex1">地址</div>
+						<div class="addresses-mobile">联系方式</div>
+						<div class="addresses-type">操作</div>
+						<div class="addresses-set"></div>
+					</div>
+					<div class="">
+						<div class="grey-text text-darken-2 flex addresses-list border-btn">
+							<div class="addresses-username">罗大爷</div>
+							<div class="addresses-text flex1">湖南省长沙市长沙县开源鑫茂大楼</div>
+							<div class="addresses-mobile">135****5214</div>
+							<div class="addresses-type blue-text">
+								<span class="margin-5">编辑</span>
+								<span class="margin-5">删除</span>
+							</div>
+							<div class="addresses-set ">
+								<div class="addresses-active">默认地址</div>
+							</div>
+						</div>
+						<div class="grey-text text-darken-2 flex addresses-list border-btn">
+							<div class="addresses-username">罗大爷</div>
+							<div class="addresses-text flex1">湖南省长沙市长沙县开源鑫茂大楼</div>
+							<div class="addresses-mobile">135****5214</div>
+							<div class="addresses-type blue-text">
+								<span class="margin-5">编辑</span>
+								<span class="margin-5">删除</span>
+							</div>
+							<div class="addresses-set ">
+								<div class="">设为默认地址</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="blue-text margin-tt-15">添加新地址</div>
+				<div class="addresses-add">
+					<div class="flex margin-tt-15">
+						<div class="addresses-add-text">
+							<img src="/public/static/portal/img/red-xin.png" class="responsive-img"> 所在地区
+						</div>
+						<div class="flex1">
+							<select name="" id="">
+								<option value="">1212</option>
+							</select>
+						</div>
+						<div class="flex1 margin-lr-15">
+							<select name="" id="">
+								<option value="">1212</option>
+							</select>
+						</div>
+						<div class="flex1">
+							<select name="" id="">
+								<option value="">1212</option>
+							</select>
+						</div>
+					</div>
+					<div class="flex margin-tt-15">
+						<div class="addresses-add-text">
+							<img src="/public/static/portal/img/red-xin.png" class="responsive-img"> 所在地区
+						</div>
+						<div class="flex1 border-grey padding-10">
+							<textarea name="" id="" cols="30" rows="10"></textarea>
+						</div>
+					</div>
+					<div class="flex margin-tt-15">
+						<div class="addresses-add-text">
+							<img src="/public/static/portal/img/red-xin.png" class="responsive-img"> 收货人：
+						</div>
+						<div class="border-grey flex1">
+							<input type="text">
+						</div>
+						<div class="addresses-add-text">
+							<img src="/public/static/portal/img/red-xin.png" class="responsive-img"> 手机号码：
+						</div>
+						<div class="border-grey flex1">
+							<input type="text">
+						</div>
+					</div>
+					<div class="flex margin-tt-15">
+						<div class="addresses-add-text">
+							<!-- <img  src="/public/static/portal/img/red-xin.png" class="responsive-img"> -->
+
+						</div>
+						<div class="flex1 over margin-tt-15">
+							<div class="left">
+								<div class="">
+									<span class="addres-moren addres-moren-active margin-right-15"></span>
+									设为默认
+								</div>
+							</div>
+							<div class="right">
+								<span class="address-yes">保存</span>
+								<span class="address-no">取消</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="margin-top-15">
+				<img src="/public/static/portal/img/lien-img.png" alt="" class="responsive-img">
+			</div>
+		</div>
+		<div class="w1200 white over margin-btn-15">
+			<div class="foot-list-title black-text text-lighten-1 margin-15 font-size-18 padding-left-15">猜你喜欢</div>
+			<div class="foot-list margin-15 over">
+				<div class="left foot-list-box">
+					<img src="/public/static/portal/img/goods-1.png" class="responsive-img">
+					<div class="padding-10">
+						<div class="font-size-16 black-text">COCCINELLF DESIGN系列 女士长款钱包 意大利</div>
+						<div class="margin-top-10 over">
+							<div class="left">
+								<span class="red-text font-size-16">￥200</span>
+								<span class="font-size-10 grey-text lighten-1">￥389</span>
+							</div>
+							<div class="right font-size-12 grey-text lighten-1">月销量：2530</div>
+						</div>
+					</div>
+				</div>
+				<div class="left foot-list-box">
+					<img src="/public/static/portal/img/goods-1.png" class="responsive-img">
+					<div class="padding-10">
+						<div class="font-size-16 black-text">COCCINELLF DESIGN系列 女士长款钱包 意大利</div>
+						<div class="margin-top-10 over">
+							<div class="left">
+								<span class="red-text font-size-16">￥200</span>
+								<span class="font-size-10 grey-text lighten-1">￥389</span>
+							</div>
+							<div class="right font-size-12 grey-text lighten-1">月销量：2530</div>
+						</div>
+					</div>
+				</div>
+				<div class="left foot-list-box">
+					<img src="/public/static/portal/img/goods-1.png" class="responsive-img">
+					<div class="padding-10">
+						<div class="font-size-16 black-text">COCCINELLF DESIGN系列 女士长款钱包 意大利</div>
+						<div class="margin-top-10 over">
+							<div class="left">
+								<span class="red-text font-size-16">￥200</span>
+								<span class="font-size-10 grey-text lighten-1">￥389</span>
+							</div>
+							<div class="right font-size-12 grey-text lighten-1">月销量：2530</div>
+						</div>
+					</div>
+				</div>
+				<div class="left foot-list-box">
+					<img src="/public/static/portal/img/goods-1.png" class="responsive-img">
+					<div class="padding-10">
+						<div class="font-size-16 black-text">COCCINELLF DESIGN系列 女士长款钱包 意大利</div>
+						<div class="margin-top-10 over">
+							<div class="left">
+								<span class="red-text font-size-16">￥200</span>
+								<span class="font-size-10 grey-text lighten-1">￥389</span>
+							</div>
+							<div class="right font-size-12 grey-text lighten-1">月销量：2530</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="personal-center-top w1200 clearfix">
+			<div class="left">
+				<div class="img">
+					<img src="/public/static/portal/images/grzx.png" />
+				</div>
+				<div class="name">收货地址</div>
+				<div class="english">address</div>
+			</div>
+			<div class="right">
+				<ul>
+
+					<li class="active">
+						<a>管理收货地址</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="shipping-address-bottom clearfix w1200">
+			<div class="left">
+				<div class="head-portrait">
+					<img id="avatar" src="/public/static/images/avatar.png" />
+				</div>
+				<div class="my-nav">
+					<ul>
+						<li>
+							<a href="{:url('Index/orders')}">我的订单</a>
+						</li>
+						<li>
+							<a href="{:url('Index/comments')}">我的评价</a>
+						</li>
+						<li class="active">
+							<a href="{:url('Index/addresses')}">收货地址</a>
+						</li>
+						<li>
+							<a href="{:url('Index/carts')}">我的购物车</a>
+						</li>
+						<li>
+							<a href="{:url('Index/collections')}">我的收藏</a>
+						</li>
+						<li>
+							<a href="{:url('Index/userinfo')}">账户安全</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="right">
+				<div class="title" id="action-anchor">新增收货地址</div>
+				<div class="form1 layui-form">
+					<div class="row clearfix layui-form-item">
+						<div class="text">所在地区</div>
+						<div class="layui-input-inline" style="border: 2px solid #000000;">
+							<select lay-search id="province" lay-filter="province">
+								<option id="choosePro" value="">请搜索选择您所在省份</option>
+							</select>
+						</div>
+						<div class="layui-input-inline" style="border: 2px solid #000000;">
+							<select lay-search id="city" lay-filter="city">
+								<option id='chooseCity' value="">请搜索选择您所在城市</option>
+							</select>
+						</div>
+						<div class="layui-input-inline" style="border: 2px solid #000000;">
+							<select lay-search id="county" lay-filter="county">
+								<option id='chooseCounty' value="">请搜索选择您所在区/县</option>
+							</select>
+						</div>
+					</div>
+					<input type="hidden" class="name" id="addressId">
+					<div class="row clearfix">
+						<div class="text">详细地址</div>
+						<textarea class="detailed-address" id="consigneeAddress"></textarea>
+					</div>
+					<div class="row clearfix">
+						<div class="text">收货人</div>
+						<input type="text" class="name" id="consigneeName">
+					</div>
+					<div class="row clearfix">
+						<div class="text">联系电话</div>
+						<input type="text" class="phone" id="consigneeTelephone" onkeyup="value=value.replace(/[^\d]/g,'')">
+					</div>
+					<div class="row clearfix">
+						<div class="text"></div>
+						<div class="selected">&nbsp;
+							<input type="checkbox" lay-skin="primary" class="layui-bg-gray" id="isDefault">&nbsp;&nbsp;&nbsp;设置为默认地址
+						</div>
+					</div>
+					<div class="row clearfix">
+						<div class="text"></div>
+						<button class="button" onclick="add();" id="action">保存</button>
+					</div>
+				</div>
+				<div class="title2">我的收货地址</div>
+				<div class="menu clearfix">
+					<div class="name">收货人</div>
+					<div class="address">收货地址</div>
+					<div class="phone">联系方式</div>
+					<div class="operation">操作</div>
+				</div>
+				<div id="app">
+					<div class="address-list">
+						<div class="info clearfix" v-for="address in addresses" v-bind:key="address.id">
+							<div class="name" v-text="address.consignee_name"></div>
+							<div class="address" style="text-overflow:ellipsis; white-space: nowrap; overflow: hidden;" v-text="address.province + address.city + address.county + address.address"></div>
+							<div class="phone" v-text="address.mobile"></div>
+							<div class="edit clearfix">
+								<div class="alter-operation">
+									<a class="alter" @click="modifyAddress(address);" href="javascript:void(0);">修改</a>
+									<a class="operation" @click="delAddress(address);" href="javascript:void(0);">删除</a>
+								</div>
+								<a v-if="address.is_default == 0" class="is-default" @click="setDefaultAddress(address);" href="javascript:void(0);">设置为默认地址</a>
+								<a v-else class="is-default" href="javascript:void(0)">默认地址</a>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer class="aui-bar aui-bar-tab" id="footer">
+  <div class="aui-bar-tab-item" onclick="goto('index')" :class="{'icon-footer-active' : (activeFooterIndex == 1 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 1" src="/public/static/wap/img/icon12.png">
+      <img v-else src="/public/static/wap/img/icon11.png">
+    </div>
+    <div class="aui-bar-tab-label">任务</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('personnel_page')"
+    :class="{'icon-footer-active' : (activeFooterIndex == 2 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 2" src="/public/static/wap/img/icon22.png">
+      <img v-else src="/public/static/wap/img/icon21.png">
+    </div>
+    <div class="aui-bar-tab-label">行政</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('home')" :class="{'icon-footer-active' : (activeFooterIndex == 3 )}">
+    <!-- <div class="aui-badge">99</div> -->
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 3" src="/public/static/wap/img/icon32.png">
+      <img v-else src="/public/static/wap/img/icon31.png">
+    </div>
+    <div class="aui-bar-tab-label">我的</div>
+  </div>
+</footer>
+</body>
+
+<script type="text/javascript">
+	if (!user) {
+		location = "{:url('Index/login')}"
+	}
+	//获取头像
+	document.getElementById('avatar').setAttribute('src', user.avatar)
+	var page = 1;
+	var province = '', city = '', county = '';
+	var form, layer, flow;
+	var app = new Vue({
+		el: '#app',
+		data: {
+			user:user,
+			addresses: [],
+			page: 1,
+		},
+		methods: {
+			//设置默认地址
+			setDefaultAddress: function (address) {
+				httpRequest('PUT', 'addresses/' + address.id, {
+					'is_default': 1
+				}, function (resp) {
+					layer.msg(resp.msg);
+					app.addresses.forEach(function (item) {
+						item.id == address.id ? (item.is_default = 1) : (item.is_default = 0)
+					})
+				})
+			},
+			//修改地址
+			modifyAddress: function (address) {
+				$('html,body').animate({ scrollTop: $('#action-anchor').offset().top }, 500);
+				document.getElementById('action-anchor').textContent = '修改收货地址';
+				document.getElementById('action').setAttribute('onclick', 'save();');
+
+				document.getElementById('consigneeAddress').value = address.address;
+				document.getElementById('consigneeName').value = address.consignee_name;
+				document.getElementById('consigneeTelephone').value = address.mobile;
+				document.getElementById('addressId').value = address.id;
+				if (address.is_default == 1) {
+					document.getElementById('isDefault').setAttribute('checked', '');
+				} else {
+					document.getElementById('isDefault').removeAttribute('checked');
+				}
+				var proVal = $("#province").find('option[data-name="' + address.province + '"]').val();
+				$('#province').val(proVal);
+				province = address.province;
+				provinceCode = address.province_code;
+				doProvAndCityRelation();
+
+				var cityVal = $("#city").find('option[data-name="' + address.city + '"]').val();
+				$('#city').val(cityVal);
+				city = address.city;
+				cityCode = address.cityCode;
+				doCityAndCountyRelation()
+
+				var countyVal = $("#county").find('option[data-name="' + address.county + '"]').val();
+				$('#county').val(countyVal);
+				county = address.county;
+				countyCode = address.county_code;
+				setTimeout(function () {
+					form.render();
+				}, 100)
+			},
+			//删除地址
+			delAddress: function (address) {
+				var confirmIndex = layer.confirm('确定删除?', {
+					btn: ['确定', '取消']
+				}, function () {
+					layer.close(confirmIndex)
+					httpRequest('DELETE', 'addresses/' + address.id, {}, function (resp) {
+						app.addresses.splice(app.addresses.indexOf(address), 1);
+					}, {
+							token: user.token.token
+						})
+
+				}, function () {
+					layer.close(confirmIndex)
+				})
+			}
+		}
+	})
+	layui.use(['form', 'layer', 'flow'], function () {
+		form = layui.form;
+		layer = layui.layer;
+		flow = layui.flow;
+		//渲染更新
+		form.on('select(province)', function (data) {
+			doProvAndCityRelation();
+			form.render();
+			var val = data.value;
+			for (var i = 0; i < cityJson.length; i++) {
+				if (val == cityJson[i].item_code) {
+					province = cityJson[i].item_name;
+					break;
+				}
+			}
+			provinceCode = data.value
+		})
+		form.on('select(city)', function (data) {
+			doCityAndCountyRelation();
+			form.render();
+			var val = data.value;
+			for (var i = 0; i < cityJson.length; i++) {
+				if (val == cityJson[i].item_code) {
+					city = cityJson[i].item_name;
+					break;
+				}
+			}
+			cityCode = data.value
+		})
+		form.on('select(county)', function (data) {
+			var val = data.value;
+			for (var i = 0; i < cityJson.length; i++) {
+				if (val == cityJson[i].item_code) {
+					county = cityJson[i].item_name;
+					break;
+				}
+			}
+			countyCode = data.value
+		})
+
+		//渲染地址
+		flow.load({
+			elem: '#app',
+			end: ' ',
+			mb: 500,
+			done: function (page, next) {
+				httpRequest('GET', 'addresses', {}, function (resp) {
+					if (resp.data.length > 0) {
+						if (resp.data.length < 10) {
+							next('', false)
+						} else {
+							next('', true)
+						}
+						page++;
+						resp.data.forEach(function (item) {
+							app.addresses.push(item)
+						})
+					} else {
+						next('', false)
+					}
+				}, {
+						'page-num': page,
+						'page-limit': 10
+					}
+				)
+			}
+		})
+		initFooter();
+	})
+
+	//增加地址
+	add = function () {
+		consigneeAddress = document.getElementById('consigneeAddress').value;
+		consigneeName = document.getElementById('consigneeName').value;
+		consigneeTelephone = document.getElementById('consigneeTelephone').value;
+
+		if (!province || !city || !county || !consigneeAddress || !consigneeName || !consigneeTelephone) {
+			layer.msg('请填写完整的地址信息')
+			return;
+		}
+		if (!variTelephone(consigneeTelephone)) {
+			layer.tips('请填写正确的手机号', '#consigneeTelephone', {
+				tips: 2
+			})
+			return;
+		}
+		var data = {
+			province: province,
+			city: city,
+			county: county,
+			address: consigneeAddress,
+			consignee_name: consigneeName,
+			mobile: consigneeTelephone,
+			is_default: (document.getElementById('isDefault').checked ? 1 : 0),
+			province_code: provinceCode,
+			city_code: cityCode,
+			county_code: countyCode
+		}
+
+		httpRequest('POST', 'addresses', data, function (resp) {
+			layer.msg(resp.msg)
+			location.reload();
+		})
+	}
+
+	//保存地址
+	save = function () {
+		consigneeAddress = document.getElementById('consigneeAddress').value;
+		consigneeName = document.getElementById('consigneeName').value;
+		consigneeTelephone = document.getElementById('consigneeTelephone').value;
+		addressId = document.getElementById('addressId').value;
+
+		if (!province || !city || !county || !consigneeAddress || !consigneeName || !consigneeTelephone) {
+			layer.msg('请填写完整的地址信息')
+			return;
+		}
+		if (!variTelephone(consigneeTelephone)) {
+			layer.tips('请填写正确的手机号', '#consigneeTelephone', {
+				tips: 2
+			})
+			return;
+		}
+		var data = {
+			province: province,
+			city: city,
+			county: county,
+			address: consigneeAddress,
+			consignee_name: consigneeName,
+			mobile: consigneeTelephone,
+			is_default: (document.getElementById('isDefault').checked ? 1 : 0),
+			province_code: provinceCode,
+			city_code: cityCode,
+			county_code: countyCode
+		}
+
+		httpRequest('PUT', 'addresses/' + addressId, data, function (resp) {
+			layer.msg(resp.msg);
+			location.reload();
+		})
+	}
+
+
+</script>
+
+</html>

@@ -1,0 +1,147 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>邮件系统</legend>
+            </fieldset>
+            <el-row :gutter="20">
+              <el-col :span="14">
+                <el-card>
+                  <div slot="header">
+                    <span>发件信息</span>
+                  </div>
+                  <el-form :model="formData" ref="sendForm" :rules="rules" label-position="left" label-width="120px">
+                    <el-form-item label="发件人邮箱" prop="from_email">
+                      <el-input v-model="formData.from_email" readonly></el-input>
+                    </el-form-item>
+                    <el-form-item label="发件人昵称" prop="from_nickname">
+                      <el-input v-model="formData.from_nickname"></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮件标题" prop="info_subject">
+                      <el-input v-model="formData.info_subject"></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮件内容" prop="info_body">
+                      <el-input v-model="formData.info_body" type="textarea" :autosize="{ minRows: 5, maxRows: 5}"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="submitForm()" icon="el-icon-check">确认发送</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+              <el-col :span="10">
+                <el-card>
+                  <div slot="header">
+                    <span>收件人列表</span>
+                  </div>
+                  <!-- 动态验证表格 -->
+                  <el-form :model="dynamicValidateForm" ref="receiveForm" label-position="left" label-width="120px">
+                    <el-form-item v-for="(email, index) in dynamicValidateForm.emails" :label="'收件人邮箱' + index" :key="email.key" :prop="'emails.' + index + '.value'"
+                      :rules="[
+                          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+                          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
+                        ]">
+                      <el-input v-model="email.value" style="width: 240px; margin-right: 10px;"></el-input>
+                      <el-button @click.prevent="removeemail(email)" v-show="index != 0">移除</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button @click="addemail()">新增收件人</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data: {
+        formData: {
+          from_email: '',
+          from_nickname: '',
+          info_subject: '',
+          info_body: ''
+        },
+        rules: {
+          from_email: [
+            { required: true, message: '请输入发件人邮箱', trigger: 'blur' },
+          ],
+          from_nickname: [
+            { required: true, message: '请输入发件人昵称', trigger: 'blur' },
+          ],
+          info_subject: [
+            { required: true, message: '请输入邮件标题', trigger: 'blur' },
+          ],
+          info_body: [
+            { required: true, message: '请输入邮件内容', trigger: 'blur' },
+          ],
+        },
+        dynamicValidateForm: {
+          emails: [{
+            value: '',
+            key: Date.now()
+          }],
+        }
+      },
+      methods: {
+        // 提交表单
+        submitForm() {
+          this.$refs['sendForm'].validate(valid => {
+            if (valid) {
+              // 通过校验
+              this.$refs['receiveForm'].validate(valid => {
+                if (valid) {
+                  let data = deepCopy(app.formData);
+                  data.to_emails = [];
+                  this.dynamicValidateForm.emails.forEach((item) => {
+                    data.to_emails.push(item.value)
+                  })
+                  httpRequest('post', 'api_systems/email/send', data).then(resp => {
+                    this.$message.success(resp.msg)
+                  });
+                } else {
+                  return false;
+                }
+              });
+            } else {
+              return false;
+            }
+          });
+        },
+        removeemail(item) {
+          let index = this.dynamicValidateForm.emails.indexOf(item)
+          if (index !== -1) {
+            this.dynamicValidateForm.emails.splice(index, 1)
+          }
+        },
+        addemail() {
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+          this.dynamicValidateForm.emails.push({
+            value: '',
+            key: Date.now()
+          });
+        }
+      },
+      mounted() {
+        // 获取发信人邮件地址
+        httpRequest('post', 'api_systems/email/get_from_email').then(resp => {
+          this.formData.from_email = resp.data;
+        });
+      }
+    })
+  </script>
+</body>
+
+</html>

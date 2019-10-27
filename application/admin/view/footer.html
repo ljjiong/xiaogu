@@ -1,0 +1,23 @@
+<footer class="el-footer" id="footer"></footer>
+<script>
+  // 底部信息
+  let footerDom = document.getElementById('footer');
+  // let fHtml = '©' + getStorage('basic_info').copyright +
+  //   '<span class="el-tag el-tag--success el-tag--mini" style="margin-left: 10px;">' + getStorage("basic_info").version + '</span>';
+  // footerDom.innerHTML = fHtml;
+
+
+  // 计算主窗体高度
+  function countMainHeight() {
+    let mainHeight = document.documentElement.clientHeight - document.getElementById('top').offsetHeight - footerDom.offsetHeight + 'px';
+    document.getElementById('main').style.height = mainHeight;
+    document.getElementById('left').style.height = document.documentElement.clientHeight - document.getElementById('top').offsetHeight + 'px';
+  }
+  countMainHeight();
+  // 改变窗口大小，重新计算
+  window.onresize = _ => {
+    countMainHeight();
+  }
+
+  !user && (location = locaiton.origin + '/admin');
+</script>

@@ -1,0 +1,240 @@
+{include file="header" /}
+<style>
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+  }
+</style>
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>商品分类</legend>
+            </fieldset>
+            <el-row>
+              <el-col :span="12">
+                <el-card>
+                  <div slot="header">
+                    <span>分类信息</span>
+                    <el-button type="primary" style="float: right;" size="mini" icon="el-icon-plus" @click="goAdd()">新增商品分类</el-button>
+                  </div>
+                  <el-input placeholder="输入关键字进行过滤" v-model="filterText" style="margin-bottom: 20px;" clearable>
+                  </el-input>
+                  <el-tree :data="treeData" :props="defaultProps" :expand-on-click-node="false" default-expand-all :filter-node-method="filterNode"
+                    ref="tree">
+                    <span class="custom-tree-node" slot-scope="{ node, data }"> 
+                      <span>{{ node.label }}</span>
+                      <span>
+                        <el-button type="text" size="mini" @click="editCate(data)">
+                          <i class="el-icon-edit-outline"></i>
+                        </el-button>
+                        <el-button type="text" size="mini" @click="deleteCate(data)">
+                          <i class="el-icon-delete"></i>
+                        </el-button>
+                      </span>
+                    </span>
+                  </el-tree>
+                </el-card>
+              </el-col>
+            </el-row>
+            <el-dialog title="编辑分类" :visible.sync="dialogVisible">
+              <el-row :gutter="20">
+                <el-col :span="16" :offset="4">
+                  <el-form :model="selectData" ref="ruleForm" :rules="rules" label-position="left" label-width="120px">
+                    <el-form-item label="分类名称" prop="name">
+                      <el-input v-model="selectData.name" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="问题1" prop="question1">
+                      <el-input v-model="selectData.question1" clearable></el-input>
+                    </el-form-item>   
+                    <el-form-item label="问题2" prop="question2">
+                      <el-input v-model="selectData.question2" clearable></el-input>
+                    </el-form-item>   
+                    <el-form-item label="问题3" prop="question3">
+                      <el-input v-model="selectData.question3" clearable></el-input>
+                    </el-form-item>   
+                    <el-form-item label="问题4" prop="question4">
+                      <el-input v-model="selectData.question4" clearable></el-input>
+                    </el-form-item>   
+                    <el-form-item label="问题5" prop="question5">
+                      <el-input v-model="selectData.question5" clearable></el-input>
+                    </el-form-item>   
+                    <el-form-item label="问题6" prop="question6">
+                      <el-input v-model="selectData.question6" clearable></el-input>
+                    </el-form-item>   
+                    <el-form-item label="问题7" prop="question7">
+                      <el-input v-model="selectData.question7" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="选择父分类" prop="pid">
+                      <el-cascader change-on-select v-model="type_ids" :options="types"></el-cascader>
+                    </el-form-item>
+                    <el-form-item label="类目状态" prop="status">
+                      <el-radio v-model="selectData.status" :label="1">显示</el-radio>
+                      <el-radio v-model="selectData.status" :label="2">隐藏</el-radio>
+                    </el-form-item>
+                    <el-form-item label="类目排序" prop="sort">
+                      <el-input v-model="selectData.sort" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="缩略图" prop="sort">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="selectData.thum">
+                          <img :src="selectData.thum" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" @click="fileClick" v-else>
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button @click="dialogVisible = false;" plain>取消</el-button>
+                      <el-button type="primary" @click="submit">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+            </el-dialog>
+            <input @change="fileChange($event)" type="file" id="imgAdd" style="display: none">
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          filterText: '',
+          treeData: [],
+          defaultProps: {
+            children: '_child',
+            label: 'name'
+          },
+          // dialog
+          types: [],
+          type_ids: [],
+          dialogVisible: false,
+          selectData: {},
+          rules: {
+            name: [
+              { required: true, message: '请输入类目名称', trigger: 'blur' },
+            ],
+            pid: [
+              { required: true, message: '请选择父分类', trigger: 'blur' },
+            ]
+          },
+        }
+      },
+      methods: {
+        filterNode(value, data) {
+          if (!value) return true;
+          return data.name.indexOf(value) !== -1;
+        },
+        goAdd() {
+          this.selectData = {
+            name: '',
+            pid: '',
+            question1:'',
+            question2:'',
+            question3:'',
+            question4:'',
+            question5:'',
+            question6:'',
+            question7:'',
+            sort: 0,
+            thum: '',
+            status: 1,
+          };
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        deleteCate(data) {
+          this.$confirm('确认删除?',{ type : 'warning' }).then(_ => {
+            httpRequest('POST', '/api_goods/goods_cates/delete', { id: data.id }).then(resp => {
+              this.$message.success(resp.msg)
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          }).catch(err => {
+            this.$message.info('操作取消');
+          })
+        },
+        editCate(data) {
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+          this.selectData = deepCopy(data);
+          this.type_ids = packageCascaderSelecteData(this.types, this.selectData.pid);
+          this.dialogVisible = true;
+        },
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              // 通过校验
+              let router = this.selectData.id ? 'api_goods/goods_cates/update' : 'api_goods/goods_cates/save';
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500)
+              });
+            } else {
+              return false;
+            }
+          });
+        },
+        fileClick() {
+          document.getElementById('imgAdd').click();
+        },
+        fileChange(el) {
+          Array.from(el.target.files).forEach(item => {
+            let formData = new FormData();
+            formData.append('file', item);
+            formData.append('save_path', goodsImagesPath);
+            formData.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData).then(resp => {
+              this.selectData.thum = resp.data.host_file_path;
+            })
+          })
+        },
+      },
+      watch: {
+        filterText(val) {
+          this.$refs.tree.filter(val);
+        },
+        type_ids(value) {
+          this.selectData.pid = this.type_ids[this.type_ids.length - 1];
+        }
+      },
+      mounted() {
+        httpRequest('POST', '/api_goods/goods_cates/index_tree').then(resp => {
+          this.types = packageCascaderData(resp.data);
+          this.types.unshift({
+            label: '顶级商品类目分类',
+            value: 0
+          });
+          this.treeData = resp.data
+        })
+      }
+    })
+
+  </script>
+</body>
+
+</html>

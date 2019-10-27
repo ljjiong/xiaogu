@@ -1,0 +1,146 @@
+{include file="header" /}
+
+<body>
+
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>编辑个人信息</legend>
+            </fieldset>
+            <el-row :gutter="20">
+              <!-- 会员基本信息 -->
+              <el-col :span="12">
+                <el-card>
+                  <div slot="header">
+                    <span>基本信息</span>
+                  </div>
+                  <el-form :model="formData" ref="ruleForm" :rules="rules" label-position="left" label-width="120px">
+                    <el-form-item label="帐户名" prop="guid">
+                      <el-input v-model="formData.guid"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机号码" prop="mobile">
+                      <el-input v-model.number="formData.mobile"></el-input>
+                    </el-form-item>
+                    <el-form-item label="昵称" prop="nick_name">
+                      <el-input v-model="formData.nick_name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系电话" prop="telephone">
+                      <el-input v-model="formData.telephone"></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮箱" prop="email" :rules="{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }">
+                      <el-input v-model="formData.email"></el-input>
+                    </el-form-item>
+                    <el-form-item label="备注" prop="memo">
+                      <el-input v-model="formData.memo" type="textarea"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" icon="el-icon-check" @click="submitForm('ruleForm')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+              <!-- 头像 -->
+              <el-col :span="6">
+                <el-card body-style="text-align: center;">
+                  <div slot="header">
+                    <span>头像</span>
+                  </div>
+                  <ul class="el-upload-list el-upload-list--picture-card">
+                    <li class="el-upload-list__item is-ready" v-if="formData.avatar">
+                      <img :src="formData.avatar" class="el-upload-list__item-thumbnail">
+                      <span class="el-upload-list__item-actions">
+                        <span class="el-upload-list__item-edit" @click="fileClick">
+                          <i class="el-icon-edit"></i>
+                        </span>
+                      </span>
+                    </li>
+                    <div class="el-upload el-upload--picture-card" v-else @click="fileClick">
+                      <i class="el-icon-plus"></i>
+                    </div>
+                  </ul>
+                  <input @change="fileChange($event)" type="file" id="imgAdd" style="display: none">
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          formData: {
+            mobile: '',
+            user_name: '',
+            nick_name: '',
+            telephone: '',
+            email: '',
+            address: '',
+            memo: '',
+            avatar: '',
+          },
+          roles: [],
+          rules: {
+            guid: [
+              { required: true, message: '请输入帐户名', trigger: 'blur' },
+            ],
+            mobile: [
+              { required: true, message: '请输入手机号码', trigger: 'blur' },
+            ],
+          }
+        }
+      },
+      methods: {
+        // 提交表单
+        submitForm(formName) {
+          this.$refs[formName].validate(valid => {
+            if (valid) {
+              this.$confirm('确认提交修改?', '提示', { type: 'warning' }).then(_ => {
+                httpRequest('POST', 'api_admins/admins/update_self', this.formData).then(resp => {
+                  this.$message.success(resp.msg)
+                  setStorage(getClientType() + 'User', resp.data);
+                  setTimeout(_ => {
+                    location.reload();
+                  }, 500);
+                })
+              })
+            } else {
+              return false;
+            }
+          })
+        },
+        fileClick() {
+          document.getElementById('imgAdd').click();
+        },
+        fileChange(el) {
+          Array.from(el.target.files).forEach(item => {
+            let formData2 = new FormData();
+            formData2.append('file', item);
+            formData2.append('save_path', userImagePath);
+            formData2.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData2).then(resp => {
+              this.formData.avatar = resp.data.host_file_path;
+            })
+          })
+        },
+      },
+      mounted() {
+        // 获取管理员信息
+        httpRequest('POST', 'api_admins/admins/read', { id: user.id }).then(resp => {
+          this.formData = resp.data;
+        })
+      }
+    });
+  </script>
+</body>
+
+</html>

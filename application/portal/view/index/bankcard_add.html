@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.theme.default.min.css">
+<script src="/public/static/OwlCarousel2-2.2.1/owl.carousel.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+	{include file="/index/header" /}<div id="app">
+	<div class="w1200 margin-tt-15 over  black-text">
+            <div class="left">
+                    <!-- 个人信息卡 -->
+                    <div class="card-title-wrap">
+                        <img  src="/public/static/portal/img/title-back.png" class="responsive-img">
+                        <div class="margin-10 over card-text-wrap">
+                            <div class="ridius-img left margin-15">
+                                <img :src="user.avatar" alt="">
+                            </div>
+                            <div class="left margin-top-15">
+                                <div class="font-size-18 margin-top-15 white-text"  v-text="user.nick_name || user.mobile"></div>
+                                <div class="blue lighten-1 margin-top-5" style="border-radius: 4px;padding: 2px 4px;">
+                                    <img src="/public/static/portal/img/lr.png" alt="">
+                                    <span class="font-size-12 white-text" v-text="level"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rate-line font-size-12 blue-text text-lighten-5">
+                            <div class="rataing-nember  margin-15" v-text=" '成长值  ' + score"></div>
+                            <div class="ratas-nember right"></div>	
+                        </div>
+                    </div>
+                    <div class="white grey-text text-darken-3 margin-top-15" style="border-radius: 5px">
+                        <div class="card-right-nav-box  margin-10 padding-tt-10" style="border: none">
+                            <div class="card-right-nav">
+                                <div class="font-size-18 over margin-tt-10">
+                                    <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                    <span class="left margin-top-5">交易管理</span>
+                                </div>
+                                <ul class="card-right-nav-ul">
+                                    <li class="margin-tt-13" @click="goto('cart_list')">购物车</li>
+                                    <li class="margin-tt-13" @click="goto('order_list')">我的订单</li>
+                                    <li class="margin-tt-13" @click="goto('comment_list')">我的评价</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-right-nav-box  margin-10 padding-tt-10">
+                            <div class="card-right-nav">
+                                <div class="font-size-18 over margin-tt-10">
+                                        <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                    <span class="left margin-top-5">账号管理</span>
+                                </div>
+                                <ul class="card-right-nav-ul">
+                                    <li class="margin-tt-13" @click="goto('setting')">个人信息</li>
+                                    <li class="margin-tt-13" @click="goto('account')">账号安全</li>
+                                    <li class="margin-tt-13" @click="goto('idcard_auth')" >实名认证</li>
+                                    <li class="margin-tt-13" @click="goto('address_list')">地址管理</li>
+                                    <li class="margin-tt-13"  @click="goto('collection_list')">我的收藏</li>
+                                    <li class="margin-tt-13"  @click="goto('level')">成长值<span class="blue-text text-lighten-1" v-text="'('+score+')'"></span></li>
+                                    <li class="margin-tt-13"  @click="goto('bind')">第三方账户</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-right-nav-box margin-10 padding-tt-10">
+                            <div class="card-right-nav">
+                                <div class="font-size-18 over margin-tt-10">
+                                        <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                    <span class="left margin-top-5">资产管理</span>
+                                </div>
+                                <ul class="card-right-nav-ul">
+                                    <li class="margin-tt-13" @click="goto('wallet')">我的钱包</li>
+                                    <li class="margin-tt-13" @click="goto('bankcard_list')">我的银行卡</li>
+                                    <li class="margin-tt-13" @click="goto('my_coupon_list')">我的优惠券<span class="blue-text text-lighten-2"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> 	  
+		<div class="right right-content">
+			<div class="padding-15 white right-content-h">
+				<div class="margin-btn-15 font-size-18 black-text padding-tt-15 bank_title_border  bank_title_border over">
+					<div class="left">增加银行卡</div>
+					<div class="right">返回上一页</div>
+				</div>
+				<div class="">
+						<!-- <div class="margin-tt-15 padding-top-15 grey-text text-darken-2">上传照片识别银行卡号</div>
+						<div class="bank_add_img margin-top-15 margin-btn-15">
+							<div class="add-card-box grey-text grey lighten-4 center padding-top-15" @click="fileClick()">
+								<input type="file" v-model='files' id="upload_file" style="display: none">
+								<input type="hidden" v-model='base64' ref="input" id="base64">
+									<img src="/public/static/portal/img/jia.png" class="margin-tt-15" alt="" id="img_area">
+									<div class="center margin-tt-15">添加银行卡</div>
+							</div>
+						</div> -->
+						<div class="flex bank-input-wid margin-top-15 padding-top-15">
+							<div class="bank-type-wid grey-text">所属银行</div>
+							<div class="flex1">
+                <select style="display: inline-block;height:35px;" v-model="bank_name">
+                  <option value="中国农业银行">中国农业银行</option>
+                  <option value="中国建设银行">中国建设银行</option>
+                  <option value="中国工商银行">中国工商银行</option>
+                  <option value="中国银行">中国银行</option>
+                  <option value="招商银行">招商银行</option>
+                  <option value="光大银行">光大银行</option>
+                  <option value="中国邮政储蓄银行">中国邮政储蓄银行</option>
+                  <option value="兴业银行">兴业银行</option>
+                  <option value="中信银行">中信银行</option>
+                  <option value="浦发银行">浦发银行</option>
+                  <option value="广发银行">广发银行</option>
+                  <option value="平安银行">平安银行</option>
+                  <option value="交通银行">交通银行</option>
+                  <option value="华夏银行">华夏银行</option>
+                  <option value="民生银行">民生银行</option>
+                </select>
+							</div>
+						</div>
+						<div class="flex bank-input-wid margin-top-15 padding-top-15">
+							<div class="bank-type-wid grey-text">银行卡号</div>
+							<div class="flex1 border-grey padding-5">
+								<input type="text" class="bank_add_input grey-text" v-model="card_number">
+							</div>
+						</div>
+						<div class="flex bank-input-wid margin-top-15">
+							<div class="bank-type-wid grey-text">持卡人姓名</div>
+							<div class="flex1 border-grey padding-5">
+								<input type="text" class="bank_add_input grey-text" v-model="card_holder">
+							</div>
+						</div>
+						<div class="margin-top-15 padding-top-15"><a class="waves-effect waves-light blue white-text btn" @click="submit()">确认添加</a></div>
+					</div>
+			</div>
+			<div class="margin-top-15">
+					<img src="/public/static/portal/img/lien-img.png" alt="" class="responsive-img">
+			</div>
+		</div>
+	</div>
+	<div class="w1200 white over margin-btn-15">
+		<div class="foot-list-title black-text text-lighten-1 margin-15 font-size-18 padding-left-15">猜你喜欢</div>
+		<div class="foot-list margin-15 over">
+          <div class="left foot-list-box" v-for="guessGood in guessGoods"  @click="goto('goods_detail',{goodsId:guessGood.id})">
+              <img :src="guessGood.thum" class="responsive-img">
+              <div class="padding-10">
+                  <div class="font-size-16 black-text" v-text="guessGood.name"></div>
+                  <div class="margin-top-10 over">
+                      <div class="left">
+                          <span class="red-text font-size-16" v-text="'￥' + guessGood.sell_price"></span>
+                          <span class="font-size-10 grey-text lighten-1" v-text="'￥' + guessGood.sell_price"></span>
+                      </div>
+                      <div class="right font-size-12 grey-text lighten-1" v-text="'月销量：'+guessGood.sell_num"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+	</div>
+	</div>
+	{include file="index/footer" /}
+	<script>
+	var app = new Vue({
+      el: '#app',
+      data: {
+        title: '添加银行卡',
+        user: user,
+        level : '',
+        score : '',
+        files:'',
+        base64:'',
+        bank_name:'',
+        card_number:'',
+        card_holder:'',
+        guessGoods:[],
+      },
+      methods: {
+      	authentication: function () {
+                    httpRequest('POST', 'api_query/users/auth',{},function (resp) {
+                        var status = resp.data.status;
+                        if (status == 0 || status == 2) {
+                            goto('idcard_auth', {status: status, id: resp.data.id});
+                        } else if (status == 1 || status == 3) {
+                            goto('idcard_info');
+                        }
+                    })
+                },
+        submit: function () {
+          if (this.bank_name == '') {
+            layer.msg('请选择所属银行');
+            return
+          }
+          if (this.card_number == '') {
+            layer.msg('请填写银行卡号');
+            return;
+          }
+          if (this.card_holder == '') {
+            layer.msg('请填写持卡人');
+            return;
+          }
+ 
+          var data = {
+          	user_id:app.user.id,
+          	bank_name:this.bank_name,
+          	card_number:this.card_number,
+          	card_holder:this.card_holder,
+          };
+            httpRequest('POST','api_users/bank_cards/save', data,function (resp) {
+              layer.msg(resp.msg);
+              setTimeout(function (resp) {
+                goto('bankcard_list')
+              }, 500)
+          })
+        },
+        fileClick: function () {
+          document.getElementById('upload_file').click()
+        }
+      },
+      watch:{
+            base64: function() {  
+                // httpRequest("POST",'api_systems/helper/read_bank_card',{base64_str:this.base64}).then(function (resp){
+
+                // })
+                layer.msg("识别银行卡错误，请手动输入银行卡信息");
+            }
+      },
+        mounted: function () {
+            httpRequest('POST', 'api_query/users/asset',{},function (resp) {
+                app.level = resp.data.level;
+                app.score = resp.data.score;
+                })
+                httpRequest('POST','api_goods/goods/lists',{is_top:1},function(resp){
+                    app.guessGoods = resp.data;
+                },{'page-num':1,'page-limit':4})
+        }
+    })
+	window.onload = function(){ 
+	    var input = document.getElementById("upload_file"); 
+	    var img_area = document.getElementById("img_area"); 
+	    var base64 = document.getElementById("base64"); 
+	    if ( typeof(FileReader) === 'undefined' ){
+	      result.innerHTML = "抱歉，你的浏览器不支持 FileReader，请使用现代浏览器操作！"; 
+	      input.setAttribute('disabled','disabled'); 
+	    }else{
+	      input.addEventListener('change',readFile,false);
+	    } 
+	  }
+  function readFile(){
+    var file = this.files[0]; 
+    console.log(file);
+    //这里我们判断下类型如果不是图片就返回 去掉就可以上传任意文件  
+    if(!/image\/\w+/.test(file.type)){
+      alert("请确保文件为图像类型"); 
+      return false; 
+    }   
+    var reader = new FileReader(); 
+    reader.readAsDataURL(file); 
+    reader.onload = function(e){ 
+       	app.base64 = this.result; 
+       	img_area.src = this.result; 
+       	base64.value = this.result; 
+    }
+  } 
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<style>
+    .user-imgs{height: 90px;width: 90px;position: relative;overflow: hidden;border-radius: 50%;}
+    .user-imgs img{position: absolute;width:90px;height: 90px; left: 50%;top: 50%;z-index:1;transform: translate(-50%,-50%)}
+   .user-imgs-back{position: absolute;width: 90px;text-align: center;background: #333;opacity: 0.7;color: #fff;z-index: 99;bottom: 0;font-size: 12px;padding: 2px 0;}
+.choice{margin: 0 5px;transform: translateY(3px); border: 1px solid #3a3a3a;height: 12px;width: 12px;border-radius: 50%;display: inline-block;position: relative;}
+.choice-active::before{content: "";height: 5px; width: 5px;background: #3a3a3a;border-radius: 50%;display: inline-block;position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%)}
+.setting-usertype{width: 70px;text-align: right;margin: auto 15px}
+</style>
+</head>
+<body>
+	{include file="/index/header" /}
+    <div id="app">
+	<div class="w1200 margin-tt-15 over  black-text">
+			<div class="left">
+                    <!-- 个人信息卡 -->
+                    <div class="card-title-wrap">
+                        <img  src="/public/static/portal/img/title-back.png" class="responsive-img">
+                        <div class="margin-10 over card-text-wrap">
+                            <div class="ridius-img left margin-15">
+                                <img :src="user.avatar" alt="">
+                            </div>
+                            <div class="left margin-top-15">
+                                <div class="font-size-18 margin-top-15 white-text" v-text="user.mobile"></div>
+                                <div class="blue lighten-1 margin-top-5" style="border-radius: 4px;padding: 2px 4px;">
+                                    <img src="/public/static/portal/img/lr.png" alt="">
+                                    <span class="font-size-12 white-text" v-text="level"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rate-line font-size-12 blue-text text-lighten-5">
+                            <div class="rataing-nember  margin-15" v-text=" '成长值  ' + score"></div>
+                            <div class="ratas-nember right"></div>	
+                        </div>
+                    </div>
+                    <div class="white grey-text text-darken-3 margin-top-15" style="border-radius: 5px">
+                        <div class="card-right-nav-box  margin-10 padding-tt-10" style="border: none">
+                            <div class="card-right-nav">
+                                <div class="font-size-18 over margin-tt-10">
+                                    <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                    <span class="left margin-top-5">交易管理</span>
+                                </div>
+                                <ul class="card-right-nav-ul">
+                                    <li class="margin-tt-13" @click="goto('cart_list')">购物车</li>
+                                    <li class="margin-tt-13" @click="goto('order_list')">我的订单</li>
+                                    <li class="margin-tt-13" @click="goto('comment_list')">我的评价</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-right-nav-box  margin-10 padding-tt-10">
+                            <div class="card-right-nav">
+                                <div class="font-size-18 over margin-tt-10">
+                                        <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                    <span class="left margin-top-5">账号管理</span>
+                                </div>
+                                <ul class="card-right-nav-ul">
+                                    <li class="margin-tt-13" @click="goto('setting')">个人信息</li>
+                                    <li class="margin-tt-13" @click="goto('account')">账号安全</li>
+                                    <li class="margin-tt-13" @click="goto('idcard_auth')" >实名认证</li>
+                                    <li class="margin-tt-13" @click="goto('address_list')">地址管理</li>
+                                    <li class="margin-tt-13"  @click="goto('collection_list')">我的收藏</li>
+                                    <li class="margin-tt-13"  @click="goto('level')">成长值<span class="blue-text text-lighten-1" v-text="'('+score+')'"></span></li>
+                                    <li class="margin-tt-13"  @click="goto('bind')">第三方账户</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-right-nav-box margin-10 padding-tt-10">
+                            <div class="card-right-nav">
+                                <div class="font-size-18 over margin-tt-10">
+                                        <i class="iconfont icon-icon_order left text-lighten-1" style="font-size:24px; margin-right: 5px;height: 30px;line-height: 30px;"></i>
+                                    <span class="left margin-top-5">资产管理</span>
+                                </div>
+                                <ul class="card-right-nav-ul">
+                                    <li class="margin-tt-13" @click="goto('wallet')">我的钱包</li>
+                                    <li class="margin-tt-13" @click="goto('bankcard_list')">我的银行卡</li>
+                                    <li class="margin-tt-13" @click="goto('my_coupon_list')">我的优惠券<span class="blue-text text-lighten-2"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> 	   	
+		<div class="right right-content">
+			<div class="padding-15 white">
+                <div class="font-size-16 black-text padding-tt-15 border-btn margin-btn-15">个人信息</div>
+                <div class="setting-userinfo-boxs">
+                    <div class="over  margin-tt-15">
+                        <div class="left right-align margin-lr-15">当前图像：</div>
+                        <div class="user-imgs">
+                            <img :src="user.avatar" alt="">
+                            <input type="file" name="" style="display: none;" @change="fileChange($event)" id="upload_file">
+                            <div class="user-imgs-back pointer" @click="fileClick()">
+                                可编辑
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex margin-tt-15">
+                            <div class="setting-usertype">用户昵称：</div>
+                            <div class="border-grey" style="width: 400px;">
+                                <input type="text" class="" v-model='nick_name' :value="nick_name">
+                            </div>
+                        </div>
+                        <div class="flex margin-tt-15">
+                            <div class="setting-usertype">电话号码：</div>
+                            <div class="border-grey "style="width: 400px;">
+                                    <input type="text" class="" disabled="disabled" :value="mobile" style="border: none;">
+                            </div>
+                        <div class="blue-text pointer" style="line-height: 40px;margin-left: 10px; " @click="goto('reset_model')">修改</div>
+                          </div>
+                        <div class="flex margin-tt-15">
+                                <div class="setting-usertype">性别：</div>
+                                <div class="margin-lr-10">
+                                    <span class="choice pointer" :class="{'choice-active':user.gender == 0}" @click="changeSex(0)"></span>
+                                    保密
+                                </div>
+                                <div class="margin-lr-10">
+                                    <span class="choice pointer" :class="{'choice-active':user.gender == 1}" @click="changeSex(1)"></span>
+                                    男
+                                </div>
+                                <div class="margin-lr-10">
+                                        <span class="choice pointer" :class="{'choice-active':user.gender == 2}" @click="changeSex(2)"></span>
+                                        女
+                                </div>
+                        </div>
+                        <div class="flex margin-tt-15">
+                                <div class="setting-usertype"></div>
+                                <div class="pointer margin-lr-10 padding-10 white-text blue radius5 center" style="width: 80px;" @click="submit()">
+                                保存
+                        </div>
+                        </div>
+                </div>
+			</div>
+			<div class="margin-top-15">
+					<img src="/public/static/portal/img/lien-img.png" alt="" class="responsive-img">
+			</div>
+		</div>
+	</div>
+	<div class="w1200 white over margin-btn-15">
+		<div class="foot-list-title black-text text-lighten-1 margin-15 font-size-18 padding-left-15">猜你喜欢</div>
+		<div class="foot-list margin-15 over">
+          <div class="left foot-list-box" v-for="guessGood in guessGoods" @click="goto('goods_detail',{goodsId:guessGood.id})">
+              <img :src="guessGood.thum" class="responsive-img">
+              <div class="padding-10">
+                  <div class="font-size-16 black-text" v-text="guessGood.name"></div>
+                  <div class="margin-top-10 over">
+                      <div class="left">
+                          <span class="red-text font-size-16" v-text="'￥' + guessGood.sell_price"></span>
+                          <span class="font-size-10 grey-text lighten-1" v-text="'￥' + guessGood.sell_price"></span>
+                      </div>
+                      <div class="right font-size-12 grey-text lighten-1" v-text="'月销量：'+guessGood.sell_num"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+	</div>
+</div>
+	{include file="index/footer" /}
+	<script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        page:1,
+        activeFooterIndex: 4,
+        title: '成长值',
+        user: user,
+        level: '',
+        score: '',
+        logs:[],
+        haveNoData:false,
+        pages: [],
+        page_count:'',
+        page_size:'',
+        nick_name:user.nick_name || '匿名用户',
+        mobile:user.mobile,
+        guessGoods:[],
+      },
+      methods: {
+        authentication: function () {
+          httpRequest('POST', 'api_query/users/auth',{},function (resp) {
+            var status = resp.data.status;
+            if (status == 0 || status == 2) {
+              goto('idcard_auth', { status: status, id: resp.data.id });
+            } else if (status == 1 || status == 3) {
+              goto('idcard_info');
+            }
+          })
+        },
+        submit:function(){
+            var data = {
+                gender:app.user.gender,
+                nick_name:this.nick_name
+             }
+            this.updateAjax(data);
+        },  
+        changeSex:function(sex){
+            app.user.gender = sex;
+        },
+        updateAjax: function (data) {
+          httpRequest('POST', 'api_users/users/update', data,function (resp) {
+              resp.data.avatar = resp.data.avatar || '/public/static/images/avatar.png';
+              app.user = resp.data;
+              setStorage(getClientType() + 'User', resp.data)
+              layer.msg(resp.msg);
+              setTimeout(function () {
+                location.reload();
+              }, 500)
+            })
+        },
+        fileClick: function () {
+          document.getElementById('upload_file').click()
+        },
+        //文件发生该变
+        fileChange: function (el) {
+          if (!el.target.files[0].size) return;
+          this.fileList(el.target);
+          el.target.value = ''
+        },
+        //文件列表
+        fileList: function (fileList) {
+          var files = fileList.files;
+          for (var i = 0; i < files.length; i++) {
+            //判断是否为文件夹
+            if (files[i].type != '') {
+              this.fileAdd(files[i]);
+            } else {
+              //文件夹处理
+              this.folders(fileList.items[i]);
+            }
+          }
+        },
+        //文件夹处理
+        folders: function (files) {
+          var _this = this;
+          //判断是否为原生file
+          if (files.kind) {
+            files = files.webkitGetAsEntry();
+          }
+          files.createReader().readEntries(function (file) {
+            for (var i = 0; i < file.length; i++) {
+              if (file[i].isFile) {
+                _this.foldersAdd(file[i]);
+              } else {
+                _this.folders(file[i]);
+              }
+            }
+          })
+        },
+        foldersAdd: function (entry) {
+          var _this = this;
+          entry.file(function (file) {
+            _this.fileAdd(file)
+          })
+        },
+        fileAdd: function (file) {
+          //判断是否为图片文件
+          if (file.type.indexOf('image') == -1) {
+            layer.msg('请选择图片类型的文件')
+          } else {
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+              file.src = this.result;
+              app.updateAjax({
+                avatar: file.src
+              })
+            }
+          }
+        }
+    }
+    })
+    laduser = function(){
+        console.log(app.user);
+            httpRequest('POST', 'api_query/users/asset',{},function (resp) {
+                app.level = resp.data.level;
+                app.score = resp.data.score;
+                })
+                httpRequest('POST','api_goods/goods/lists',{is_top:1},function(resp){
+                    app.guessGoods = resp.data;
+                },{'page-num':1,'page-limit':4})
+    }
+    laduser();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<?php
+namespace app\admin\controller;
+
+use think\Controller;
+
+class Content extends Controller
+{
+    public function articles()
+    {
+        return view();
+    }
+
+    public function advertisements()
+    {
+        return view();
+    }
+
+    public function annoncements()
+    {
+        return view();
+    }
+
+    public function banners()
+    {
+        return view();
+    }
+
+    public function friendly_links()
+    {
+        return view();
+    }
+
+    public function rules()
+    {
+        return view();
+    }
+
+    public function guides()
+    {
+        return view();
+    }
+
+    public function feedback()
+    {
+        return view();
+    }
+}

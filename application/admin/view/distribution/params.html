@@ -1,0 +1,278 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>分销配置</legend>
+            </fieldset>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-card>
+                  <div slot="header">
+                    <span>基本参数设置</span>
+                  </div>
+                  <el-form :model="formData" ref="ruleForm" label-width="150px" label-position="left">
+                    <el-form-item label="分销系统状态">
+                      <el-switch v-model="formData.is_open"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="分销层级">
+                      <el-radio v-model="formData.level" :label="1">一级</el-radio>
+                      <el-radio v-model="formData.level" :label="2">二级</el-radio>
+                      <el-radio v-model="formData.level" :label="3">三级</el-radio>
+                    </el-form-item>
+                    <el-form-item label="是否开启内购">
+                      <el-switch v-model="formData.is_open_self"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="最小提现金额">
+                      <el-input v-model="formData.min_drawcash_money"></el-input>
+                    </el-form-item>
+                    <el-form-item label="分销商等级升级条件">
+                      <el-select v-model="formData.up_level_condition">
+                        <el-option value="commission_money" label="佣金满多少升级"></el-option>
+                        <el-option value="order_money" label="自购订单金额满多少升级"></el-option>
+                        <el-option value="team_user_num" label="团队人数满多少升级"></el-option>
+                        <el-option value="order_num" label="自购订单数量满多少升级"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="submitForm('ruleForm')" icon="el-icon-check">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+              <el-col :span="12">
+                <el-card>
+                  <div slot="header">
+                    <span>成为分销商条件配置</span>
+                  </div>
+                  <el-form :model="formDataCondition" ref="formDataCondition" label-width="200px" label-position="left">
+                    <el-form-item label="成为分销商条件">
+                      <el-select v-model="formDataCondition.become_distributor_condition">
+                        <el-option value="no" label="无"></el-option>
+                        <el-option value="apply" label="个人申请"></el-option>
+                        <el-option value="order_num" label="订单达到一定数量"></el-option>
+                        <el-option value="order_money" label="订单达到一定金额"></el-option>
+                        <el-option value="goods" label="购买特定商品"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <transition name="el-fade-in-linear">
+                      <el-form-item :label="become_distributor_condition_label" v-show="formDataCondition.become_distributor_condition == 'order_num' || formDataCondition.become_distributor_condition == 'order_money'">
+                        <el-input v-model="formDataCondition.become_distributor_value" clearable></el-input>
+                      </el-form-item>
+                    </transition>
+                    <transition name="el-fade-in-linear">
+                      <div v-show="formDataCondition.become_distributor_condition == 'goods'">
+                        <el-form-item :label="become_distributor_condition_label">
+                          <el-tag style="margin-right: 10px;" size="medium" closable @close="closeTag(index)" v-for="(tag, index) in dynamicTags" closable
+                            :disable-transitions="false">{{tag.name}}</el-tag>
+                          <div>
+                            <el-button @click="dialogTableVisible = true" size="medium">增加商品</el-button>
+                          </div>
+                        </el-form-item>
+                      </div>
+                    </transition>
+                    <el-form-item label="是否需要完善个人信息 ">
+                      <el-switch v-model="formDataCondition.is_need_complete_user_info "></el-switch>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="changeConditionSubmit('formDataCondition')" icon="el-icon-check ">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+            </el-row>
+            <el-dialog title="商品列表" :visible.sync="dialogTableVisible">
+              <el-row :gutter="20">
+                <el-col :span="10">
+                  <el-input placeholder="请输入商品名称" v-model="searchData.name">
+                    <template slot="prepend">商品名称</template>
+                  </el-input>
+                </el-col>
+                <el-col :span="4">
+                  <el-button icon="el-icon-search" @click="search();"></el-button>
+                  <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                </el-col>
+              </el-row>
+              <el-table :data="tableData" @row-click="rowClick">
+                <el-table-column property="id" label="商品ID"></el-table-column>
+                <el-table-column property="name" label="商品名称"></el-table-column>
+                <el-table-column property="sell_price" label="商品价格"></el-table-column>
+              </el-table>
+              <div style="margin-top: 20px;">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                  :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                </el-pagination>
+              </div>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script>
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          formData: {
+            is_open: true,
+            level: '',
+            // 是否开启内购
+            is_open_self: true,
+            // 最小提现金额
+            min_drawcash_money: 0
+          },
+          formDataCondition: {
+            // 成为分销商的条件
+            become_distributor_condition: '',
+            // 成为分销商达到条件所需的值
+            become_distributor_value: '',
+            // 是否需要完善个人信息
+            is_need_complete_user_info: true,
+          },
+          // 所需值对应的label
+          become_distributor_condition_label: '',
+          // 动态标签
+          dynamicTags: [],
+          // -------------------- dialog -----------------
+          dialogTableVisible: false,
+          tableData: [],
+          currentPage: 1, //当前页
+          currentPageSize: 10,  //当前页容量
+          pageSize: [10, 20], //分页大小
+          total: 0, //总页数
+          searchData: {
+            name: ''
+          }
+        }
+      },
+      methods: {
+        // 更改基础设置
+        submitForm(formName) {
+          this.$confirm('确认修改?', '提示', { type: 'warning' }).then(_ => {
+            let data = this.formData;
+            httpRequest('post', 'api_drp/rules/update', data).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            });
+          })
+        },
+        // 更改条件
+        changeConditionSubmit(formName) {
+          let data = this.formDataCondition;
+          if (data.become_distributor_condition == 'goods') {
+            if (!this.dynamicTags.length) {
+              this.$message.warning('请选择成为分销商需要购买的商品');
+              return;
+            }
+            data.become_distributor_value = this.dynamicTags.map(item => item.id);
+          } else if (data.become_distributor_condition == 'order_num' || data.become_distributor_condition == 'order_money') {
+            let msg = {
+              'order_num': '请填写成为分销商需达到的订单数',
+              'order_money': '请填写成为分销商需达到的订单金额'
+            }
+            if (!this.formDataCondition.become_distributor_value) {
+              this.$message.warning(msg[data.become_distributor_condition]);
+              return
+            }
+          }
+          this.$confirm('确认修改?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('post', 'api_drp/rules/update_become_distributor_info', data).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            });
+          })
+        },
+        // 关闭标签
+        closeTag(index) {
+          this.dynamicTags.splice(index, 1);
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 某一行被点击
+        rowClick(row) {
+          if (!this.dynamicTags.filter(item => item.id == row.id).length) {
+            this.dynamicTags.push(row);
+          }
+          this.dialogTableVisible = false;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        loadTableData() {
+          this.searchData.status = 1;
+          httpRequest('POST', 'api_goods/goods/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      watch: {
+        // 条件变化
+        'formDataCondition.become_distributor_condition'(value) {
+          if (value == 'no') {
+            this.formDataCondition.become_distributor_value = '';
+          } else if (value == 'apply') {
+            this.formDataCondition.become_distributor_value = '';
+          } else if (value == 'order_num') {
+            this.become_distributor_condition_label = '成为分销商需达到订单数';
+          } else if (value == 'order_money') {
+            this.become_distributor_condition_label = '成为分销商需达到订单金额';
+          } else if (value == 'goods') {
+            this.become_distributor_condition_label = '成为分销商需购买的商品';
+          }
+        }
+      },
+      mounted() {
+        // 获取总参数
+        httpRequest('post', 'api_drp/rules/index').then(resp => {
+          this.formData = resp.data;
+        });
+        // 成为分销商的条件
+        httpRequest('POST', 'api_drp/rules/become_distributor_info').then(resp => {
+          this.formDataCondition = resp.data;
+          if (this.formDataCondition.become_distributor_condition == 'goods') {
+            this.dynamicTags = this.formDataCondition.goods_info;
+          }
+        })
+        // 获取商品
+        this.loadTableData();
+      }
+    })
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,272 @@
+{include file="header" /}
+<link href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+    <body>
+        <section class="el-container is-vertical">
+            {include file="top" /}
+            <section class="el-container">
+                {include file="left" /}
+                <section class="el-container is-vertical">
+                    <main class="el-main" id="main">
+                        <div id="app">
+                            <fieldset>
+                                <legend>
+                                    申请公共资源列表
+                                </legend>
+                            </fieldset>
+                            <!-- 筛选 -->
+                            <el-row style="margin-bottom: 10px;">
+                                <el-col>
+                                    <el-card>
+                                        <div slot="header">
+                                            <span>
+                                                查询
+                                            </span>
+                                        </div>
+                                        <!-- 筛选条件 -->
+                                        <!-- <el-row :gutter="20">
+                                            <el-col :span="5">
+                                                <el-input placeholder="请输入手机号码" v-model="searchData.mobile">
+                                                    <template slot="prepend">
+                                                        手机号码
+                                                    </template>
+                                                </el-input>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-input placeholder="请输入用户昵称" v-model="searchData.nick_name">
+                                                    <template slot="prepend">
+                                                        用户昵称
+                                                    </template>
+                                                </el-input>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-button @click="search();" icon="el-icon-search">
+                                                </el-button>
+                                                <el-button @click="refresh();" icon="el-icon-refresh">
+                                                </el-button>
+                                            </el-col>
+                                        </el-row> -->
+                                    </el-card>
+                                </el-col>
+                            </el-row>
+                            <!-- 列表 -->
+                            <el-row>
+                                <el-col>
+                                    <el-card>
+                                        <div slot="header">
+                                            <span>
+                                                申请公共资源列表
+                                            </span>
+                                        </div>
+                                        <div style="margin-bottom: 10px;">
+                                        </div>
+                                        <!-- 表格 -->
+                                        <template>
+                                            <el-table :data="tableData" @selection-change="handleSelectionChange" stripe="" style="width: 100%">
+                                                <el-table-column fixed="" label="类型" prop="type">
+                                                </el-table-column>
+                                                <el-table-column fixed="" label="名称" prop="com_name">
+                                                </el-table-column>
+                                                <el-table-column fixed="right" label="操作" width="390">
+                                                    <template slot-scope="scope">
+                                                        <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                            申请使用
+                                                        </el-button>
+                                                    </template>
+                                                </el-table-column>
+                                            </el-table>
+                                        </template>
+                                        <!-- 分页 -->
+                                        <template>
+                                            <div class="block" style="margin-top: 20px;">
+                                                <el-pagination :current-page="currentPage" :page-size="currentPageSize" :page-sizes="pageSize" :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="total, sizes, prev, pager, next, jumper">
+                                                </el-pagination>
+                                            </div>
+                                        </template>
+                                    </el-card>
+                                </el-col>
+                            </el-row>
+                            <!-- dialog -->
+                            <el-dialog :visible.sync="dialogVisible" title="编辑会员">
+                                <el-row :gutter="20">
+                                    <el-col :offset="4" :span="16">
+                                        <el-form :model="selectData" :rules="rules" label-position="left" label-width="80px" ref="ruleForm">
+                                            <el-form-item label="类型" prop="type">
+                                                <el-input disabled="" v-model="selectData.type">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="名称" prop="com_name">
+                                                <el-input disabled="" v-model="selectData.com_name">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="申请简介" prop="intro">
+                                                <el-input type="textarea" v-model="selectData.intro">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="选择时间" prop="start_time">
+                                                <el-date-picker align="right" end-placeholder="结束日期" start-placeholder="开始日期" type="datetimerange" v-model="selectData.expiry_time" value-format="yyyy-MM-dd HH:mm:ss">
+                                                </el-date-picker>
+                                            </el-form-item>
+                                            <el-form-item>
+                                                <el-button @click="dialogVisible = false;" plain="">
+                                                    取消
+                                                </el-button>
+                                                <el-button @click="submit" type="primary">
+                                                    提交
+                                                </el-button>
+                                            </el-form-item>
+                                        </el-form>
+                                    </el-col>
+                                </el-row>
+                            </el-dialog>
+                            <input @change="fileChange($event)" id="imgAdd" style="display: none" type="file">
+                            </input>
+                        </div>
+                    </main>
+                    {include file="footer" /}
+                </section>
+            </section>
+        </section>
+        <script type="text/javascript">
+            var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        // 查询条件
+        searchData: {
+          mobile: '',
+          nick_name: '',
+        },statesFilters: [{
+          text: '已启用',
+          value: 1
+        }, {
+          text: '未启用',
+          value: 0
+        }],
+        // dialog
+        dialogVisible: false,
+        selectData: {},
+        rules: {
+          mobile: [
+            { required: true, message: '请输入手机号码', trigger: 'blur' },
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' },
+          ]
+        }, 
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_remuneration/welfare/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          }else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.dialogVisible = true;
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        is_pushFilterHandler(value, row, column) {
+          return row['is_push'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_file/commonality_apply/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 新增
+        goAdd(map) {
+          this.selectData = {
+            comid:'',
+            uid:'',
+            intro:'',
+            expiry_time:'',
+            states:1,
+          };
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_file/commonality_apply/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => { 
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              // 通过校验
+              let router = 'api_file/commonality_apply/save';
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500)
+              });
+            } else {
+              return false;
+            }
+          });
+        },
+        fileClick() {
+          document.getElementById('imgAdd').click();
+        },
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+        </script>
+    </body>
+</link>

@@ -1,0 +1,86 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <el-row>
+              <el-col :span="12" offset="6">
+                <el-card style="margin-top: 40px;">
+                  <div slot="header">
+                    <span>系统信息</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="isEdit=false" v-show="isEdit">修改</el-button>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="isEdit=true" v-show="!isEdit">取消</el-button>
+                  </div>
+                  <el-form ref="basic" :model="basic" label-width="120px" label-position="left">
+                    <el-form-item label="系统名称">
+                      <el-input v-model="basic.system_name" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="系统版本">
+                      <el-input v-model="basic.version" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="WANCLL版本">
+                      <el-input v-model="basic.wancll_version" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="技术支持">
+                      <el-input v-model="basic.technical_support" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="版权所有">
+                      <el-input v-model="basic.copyright" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系邮箱">
+                      <el-input v-model="basic.email" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="产品序列码">
+                      <el-input v-model="basic.uuid" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <transition name="el-fade-in-linear">
+                        <el-button v-show="!isEdit" type="primary" @click="modify" icon="el-icon-check">提交</el-button>
+                      </transition>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer"/}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        basic: {},
+        isEdit: true
+      },
+      methods: {
+        modify() {
+          this.basic.update_type = 'basic';
+          httpRequest('post', 'api_systems/params/batch_update', this.basic).then(resp => {
+            this.$message.success(resp.msg)
+            setStorage('basic_info', this.basic);
+            setTimeout(_ => {
+              location.reload();
+            }, 500)
+          })
+        }
+      },
+      mounted() {
+        httpRequest('post', 'api_systems/params/index', {
+          type: 'basic'
+        }).then(resp => {
+          this.basic = resp.data;
+        });
+      }
+    })
+  </script>
+</body>
+
+</html>

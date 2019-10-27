@@ -1,0 +1,170 @@
+x<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+  <title></title>
+  <script>
+
+    (function () {
+      if (/ie/i.test(navigator.userAgent)) {
+        location = location.protocol + '//' + location.hostname + ':' + location.port + '/index.php/admin/accounts/ie/'
+      }
+    })()
+
+  </script>
+  <!-- admincss样式 -->
+  <link rel="stylesheet" href="/public/static/admin/css/admin.css" type="text/css">
+  <!-- 阿里图标库 -->
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_589115_ih58fc1w5fm9529.css" type="text/css">
+  <!-- loading样式 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+  <!-- jq -->
+  <script src="/public/static/jquery-3.2.1.min.js"></script>
+  <!-- vue -->
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+  <!-- layer -->
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <!-- layui -->
+  <link rel="stylesheet" href="/public/static/layui/css/layui.css" type="text/css">
+  <script src="/public/static/layui/layui.js" type="text/javascript"></script>
+  <!-- 公共js -->
+  <script src="/public/static/common/script/common.js"></script>
+  <script src="/public/static/common/script/config.js"></script>
+  <!-- ajax 请求 -->
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <!-- element -->
+  <!-- <script type="text/javascript">
+    // 登录页重新获取配置信息
+    var basic_info = '';
+    httpRequest('post', 'api_systems/params/getParams', {
+      type: 'basic'
+    }, {}, false).then(resp => {
+      setStorage('basic_info', resp.data);
+      basic_info = resp.data;
+
+      document.title = basic_info.system_title;
+      document.getElementById("icon-img").href = basic_info.web_icon;
+      document.getElementById("admin-login-logo").src = basic_info.admin_login_logo;
+      document.getElementById("system_name").innerText = basic_info.system_title;
+    });
+  </script> -->
+  <!-- 星空登陆页 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/login/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" href="/public/static/login/css/demo.css" />
+  <!--必要样式-->
+  <link rel="stylesheet" type="text/css" href="/public/static/login/css/component.css" />
+</head>
+
+<body style="background-color: #23262E;position:relative;">
+
+  <div class="container demo-1">
+    <div class="content">
+      <div id="large-header" class="large-header">
+        <canvas id="demo-canvas"></canvas>
+        <div class="logo_box layui-form">
+          <h3>欢迎你</h3>
+            <div class="input_outer layui-form-item">
+              <span class="u_user"></span>
+              <input type="text" name="guid" id="guid" lay-verify="required" class="text" style="color: #FFFFFF !important" type="text" placeholder="请输入账户" autocomplete="off" class="layui-input">
+            </div>
+            <div class="input_outer layui-form-item">
+              <span class="us_uer"></span>
+              <input type="password" name="password" id="password" lay-verify="required" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;" placeholder="请输入账号密码" autocomplete="off" class="layui-input">
+            </div>
+            <div class="mb2"><a class="act-but submit" id="enter-login" lay-submit lay-filter="*" style="color: #FFFFFF">登录</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/public/static/login/js/TweenLite.min.js"></script>
+  <script src="/public/static/login/js/EasePack.min.js"></script>
+  <script src="/public/static/login/js/rAF.js"></script>
+  <script src="/public/static/login/js/demo-1.js"></script>
+  <script>
+    if (user) {
+      rmStorage('selectLeftNavId');
+      rmStorage('selectTopNavId');
+      location = location.origin + '/admin/users/index'
+    }
+    function goNew() {
+      location = location.origin + '/admin/accounts/login_new'
+    }
+    function combinNavIconClass(navs) {
+      navs.map((i) => {
+        if (i.icon) {
+          let iconClass = {};
+          iconClass[i.icon] = true;
+          i.icon = iconClass;
+        }
+        if (i._child) {
+          combinNavIconClass(i._child);
+        }
+      })
+    }
+    var guid = getStorage('guid');
+    var password = getStorage('password');
+    if (guid != null && password != null) {
+      $("#guid").val(guid);
+      $("#password").val(password);
+      $("#rember-password").attr('checked', true);
+    }
+
+    var form;
+    layui.use(['form'], function () {
+      form = layui.form;
+
+      //提交表单
+      form.on('submit(*)', function (data) {
+
+        var params = data.field;
+
+        httpRequest('POST', 'api_admins/admin_accounts/login', params).then(resp => {
+          rmStorage('selectLeftNavId');
+          rmStorage('selectTopNavId');
+          // resp.data.navs = JSON.parse(JSON.stringify(resp.data.navs).replace(/http:\/\/v4\.wx\.wygoo\.com/g, location.origin))
+          // resp.data.navs = JSON.parse(JSON.stringify(resp.data.navs).replace(/http:\/\/192\.168\.31\.183/g, location.origin))
+          resp.data.user.avatar = resp.data.user.avatar || '/public/static/images/avatar.png';
+          // 组合菜单类名
+          combinNavIconClass(resp.data.navs)
+          setStorage('adminNavs', resp.data.navs);
+          setStorage(getClientType() + 'User', resp.data.user);
+          setStorage(getClientType() + 'Token', resp.data.token);
+
+          layer.msg(resp.msg);
+
+          // 判断是否记住密码
+          if ($("#rember-password").is(':checked')) {
+            setStorage('guid', params.guid)
+            setStorage('password', params.password)
+          } else {
+            rmStorage('guid')
+            rmStorage('password')
+          }
+
+          setTimeout(_ => {
+            location = location.origin + '/admin/users/index'
+          }, 1000);
+        }).catch(_ => {
+
+        })
+      });
+    });
+
+    // 回车提交表单
+    document.onkeydown = function (e) { 
+        // 兼容FF和IE和Opera
+        var theEvent = window.event || e;
+        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        if (code == 13) {
+            document.getElementById("enter-login").click();
+        }
+    }
+  </script>
+</body>
+
+</html>

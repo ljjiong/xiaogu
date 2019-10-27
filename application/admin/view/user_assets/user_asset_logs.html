@@ -1,0 +1,157 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>会员资产记录</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <!-- 筛选条件 -->
+                  <el-row :gutter="20">
+                    <el-col :span="5">
+                      <el-input placeholder="请输入手机号" v-model="searchData.mobile">
+                        <template slot="prepend">手机号</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入昵称" v-model="searchData.nick_name">
+                        <template slot="prepend">昵称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-card>
+              <div slot="header">
+                <span>资产记录列表</span>
+              </div>
+              <!-- 表格 -->
+              <template>
+                <el-table :data="tableData" stripe style="width: 100%">
+                  <el-table-column type="expand" width="55">
+                    <template slot-scope="scope">
+                      <el-form label-position="left">
+                        <el-form-item label="详细说明:">
+                          {{scope.row.desc}}
+                        </el-form-item>
+                        <el-form-item label="资产类型:">
+                          <span v-if="scope.row.asset_type == 'money'">余额</span>
+                          <span v-else-if="scope.row.asset_type == 'score'">积分</span>
+                        </el-form-item>
+                        <el-form-item label="变动类型:">
+                          {{scope.row.change_type}}
+                        </el-form-item>
+                      </el-form>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="id" label="ID" sortable width="80"></el-table-column>
+                  <el-table-column prop="user_info.mobile" label="手机号"></el-table-column>
+                  <el-table-column prop="user_info.nick_name" label="昵称"></el-table-column>
+                  <el-table-column label="变动资金" sortable>
+                    <template slot-scope="scope">
+                      <span style="font-weight: bold;color: #df0303">{{scope.row.symbol}}{{scope.row.change_money}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="intro" label="简述"></el-table-column>
+                  <el-table-column prop="create_time" label="创建时间" sortable>
+                    <template slot-scope="scope">
+                      <i class="el-icon-time"></i>
+                      <span>{{ scope.row.create_time }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </template>
+              <!-- 分页 -->
+              <template>
+                <div class="block" style="margin-top: 20px;">
+                  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                    :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                  </el-pagination>
+                </div>
+              </template>
+            </el-card>
+
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        // 查询条件
+        searchData: {
+          mobile: '',
+          nick_name: ''
+        }
+      },
+      methods: {
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_users/user_asset_logs/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+
+  </script>
+</body>
+
+</html>

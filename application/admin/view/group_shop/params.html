@@ -1,0 +1,72 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>团购配置</legend>
+            </fieldset>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-card>
+                  <div slot="header">
+                    <span>基本参数设置</span>
+                  </div>
+                  <el-form :model="formData" ref="ruleForm" label-width="150px" label-position="left">
+                    <el-form-item label="团购状态">
+                      <el-switch v-model="formData.is_open"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="团购模式">
+                      <!-- <el-radio v-model="formData.type" :label="1">系统自动拼团</el-radio> -->
+                      <el-radio v-model="formData.type" :label="2">会员相互拼团</el-radio>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="primary" @click="submitForm('ruleForm')" icon="el-icon-check">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script>
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          formData: {
+            is_open: true,
+            type: '',  //1 积分模式 2 积分 + 金额 模式
+          },
+        }
+      },
+      methods: {
+        // 更改基础设置
+        submitForm(formName) {
+          this.$confirm('确认修改?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('post', 'api_group_buy/rules/update', this.formData).then(resp => {
+              this.$message.success(resp.msg);
+            });
+          })
+        },
+      },
+      mounted() {
+        httpRequest('POST', 'api_group_buy/rules/index').then(resp => {
+          this.formData = resp.data;
+        })
+      }
+    })
+  </script>
+
+</body>
+
+</html>

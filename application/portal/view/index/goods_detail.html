@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.theme.default.min.css">
+<script src="/public/static/OwlCarousel2-2.2.1/owl.carousel.min.js"></script> 
+
+
+	<!-- <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script> -->
+	<script   src="/public/static/portal/js/modernizr-custom-v2.7.1.min.js"></script>
+
+	<link rel="stylesheet" href="/public/static/portal/css/shouye.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style type="text/css">
+		body{background-color:#ffffff;}
+		.Xcontent{margin-top:50px;margin-bottom:40px;}
+		.Xcontent .input {
+		    height: 30px;
+		    width: 60px;
+		    margin-top:34px!important;
+		    background-color:#ffffff;
+		    box-sizing:content-box;
+		    border: 1px solid #dddddd;
+		    line-height: 30px;
+		    text-align: center;
+		    float: left；
+		}
+		.Xcontent{height:auto;}
+		.Xcontent01{height:auto;overflow:visible;}
+		.Xcontent .cont-left{width:420px;}
+		.Xcontent .cont-left .Xcontent06{margin-top:0px;margin-left:0px;width:420px;height:420px;box-sizing:border-box;}
+		.Xcontent .cont-left .Xcontent06 img{max-width:100%;display:block;}
+		.Xcontent .cont-left .Xcontent08{width:420px;margin-left:0px;margin-top:20px;height:66px;}
+		.Xcontent .cont-left .Xcontent08>div{float:left;margin-top:0px;width:68px;height:68px;box-sizing:border-box;margin-right:20px;}
+		.Xcontent .cont-left .Xcontent08>div:last-child{margin-right:0px;}
+		.Xcontent .cont-right{width:752px;}
+		.Xcontent .cont-right .Xcontent13{width:752px;height:auto;}
+		.Xcontent .cont-right .right-title{color: rgb(40, 40, 40);font-weight:700;letter-spacing:1.2px;}
+		.Xcontent .cont-right .right-ftitle{color: rgb(40, 40, 40);}
+		.Xcontent .cont-right .info{background-color:#f1f8fe;padding:15px 10px;}
+		.Xcontent .cont-right .info-list1{margin-bottom:24px;}
+
+		.Xcontent .cont-right .title{width:60px;color:rgb(0, 0, 0);letter-spacing:1.2px;line-height:28px;}
+		.Xcontent .cont-right .info-list1 .price{line-height:22px;}
+		.Xcontent .cont-right .info-list1 .money{color:#dd0909;font-weight:bold;}
+		.Xcontent .cont-right .info-list1 .money em{font-style:normal;color:#dd0909;}
+		.Xcontent .cont-right .info-list1 .delet{text-decoration:line-through;color:#474747;}
+		.Xcontent .cont-right .text{line-height:28px;color:#474747;}
+		.Xcontent .cont-right .info-list2 .text span{color:#474747;margin-right:15px;}
+
+		.Xcontent .cont-right .type-list{margin-top:20px;}
+		.Xcontent .cont-right .type-list .type-title{line-height:48px;width:60px;color: rgb(40, 40, 40);} 
+		.Xcontent .cont-right .type-list .Xcontent28{cursor:pointer;margin-left:0px;margin-top:0px;margin-right:10px;width:48px;height:48px;}
+		.Xcontent .cont-right .type-list .Xcontent28:hover{border-color:#dd0909;}
+		.Xcontent .cont-right .type-list .Xcontent28.on{border-color:#dd0909;background:url(/public/static/portal/images/chose-on.png) right bottom;background-repeat:no-repeat;}
+		.Xcontent28>img{position:relative;z-index:-1;}
+		.Xcontent .cont-right .type-list2{margin-top:20px;}
+		.Xcontent .cont-right .type-list2 .type-title{line-height:26px;width:60px;color:rgb(40, 40 ,40 );display:inline-block;}
+		.Xcontent .cont-right .type-list2 .type-right{width:670px;display:inline-block;}
+		.Xcontent .cont-right .type-list2 .cm-type{cursor:pointer;border:1px solid #e5e5e5;width:auto;height:26px;margin-top:0px;margin-left:0px;margin-right:10px;text-align:center;padding:0 15px;white-space:nowrap;margin-bottom:10px;font-size:13px;color: #3C3C3C;line-height:24px;}
+		.Xcontent .cont-right .type-list2 .cm-type:hover{border-color:#dd0909;}
+		.Xcontent .cont-right .type-list2 .cm-type.on{border-color:#dd0909;background:url(/public/static/portal/images/chose-on.png) right bottom;background-repeat:no-repeat;}
+		.mun-input-list{padding-left:10px;width:auto;height:auto;}
+		.mun-input-list .mun-title{line-height:32px;margin-left:0px;color:rgb(40, 40, 40);width:60px;}
+		.mun-input-list .Xcontent32{margin-top:0px;margin-left:0px;}
+		.mun-input-list .Xcontent33 img{margin-top:0px;}
+		.Xcontent .input{margin-top:0px!important;border-width:1px!important;}
+		.mun-input-list .zong-mun{color:#108ee9;line-height:32px;}
+
+		.detail-button{margin-top:30px;}
+		.detail-button>a{width:160px;border:1px solid #108ee9;text-align:center;line-height:46px;height:48px;border-radius:4px;margin-right:25px;-webkit-transition: all .2s; -o-transition: all .2s; -moz-transition: all .2s; transition: all .2s;}
+		.detail-button .button2 i{color:#ffffff;font-size:22px;display:inline-block;vertical-align:top;}
+		.detail-button .button1 span{color:#108ee9;}
+		.detail-button .button3 span{color:#c5c5c5;}
+		.detail-button .button3{border: 1px solid #c5c5c5;}
+		.detail-button .button2{background-color:#108ee9;}
+		.detail-button .button2 span{color:#ffffff;}
+		.detail-button .button1:hover{background-color: rgba(16, 142, 233, 0.1);}
+		.detail-button .button2:hover{background-color:#097acb;}
+		.detail-button .collect{margin-left:35px;}
+		.detail-button .collect i{font-size:25px;margin-right:10px;color:#de1313;display:inline-block;display:none;vertical-align:middle;}
+		.detail-button .collect i.on{display:inline-block;}
+		.detail-button .collect{color:#282828;font-size:16px;}
+		.padding-left-70{padding-left:70px;}
+		
+		.detail-assess>div{display:inline-block;margin-right:16px;line-height:21px;color:#282828;}
+		.detail-assess .assess-star{color:#dd0909;}
+		.detail-assess .assess-star .star-css{width:110px;position:relative;overflow:hidden;height:19px;line-height:19px;display:inline-block;vertical-align:top;}
+		.detail-assess .assess-star i{font-size:18px;margin:0px;}
+		.detail-assess .assess-star .star-css-top{height:19px;overflow:hidden;position:absolute;top:0px;left:0px;z-index:1;}
+		.detail-assess .assess-star .star-css-top i{color:#dd0909;}
+		.detail-assess .assess-star .star-css-bot{width:110px;overflow:hidden;height:19px;}
+		.detail-assess .assess-star .star-css-bot i{color:#999999;}
+
+
+		.search-none-content{background-color:#ffffff;margin-bottom:40px;border-radius: 4px;}
+		.search-none-content .search-none-cont2  .cont2-title{margin-top:0px;border-left:3px solid #108ee9;color:#444444;line-height:1.25;margin-bottom:18px;}
+		.search-none-content .search-none-cont2 li{width:220px;margin-right:25px;float:left;border:1px solid #efeeee;box-sizing:border-box;}
+		.search-none-content .search-none-cont2 li:nth-child(5n){margin-right:0px;}
+		.search-none-content .search-none-cont2 li .img-top{border-bottom:1px solid #efeeee;display:block;}
+		.search-none-content .search-none-cont2 li .img-top img{width:100%;}
+		.search-none-content .search-none-cont2 li .cont2-bottom{width:218px;height:107px;box-sizing:border-box;padding:14px 9px 0px 9px;}
+		.search-none-content .search-none-cont2 li .cont2-bottom .title{color: rgb(40, 40, 40);line-height: 1.3;}
+		.search-none-content .search-none-cont2 li .cont2-bottom .price{float:left;color: rgb(221, 9, 9);font-size:21px;margin-bottom:0px;margin-top:0px;}
+		.search-none-content .search-none-cont2 li .cont2-bottom .price span{text-decoration: line-through;color: rgb(85, 85, 85);line-height:27px;display:inline-block;vertical-align:top;}
+		.search-none-content .search-none-cont2 li .cont2-bottom .mun{float:right;color: rgb(85, 85, 85);line-height:27px;}
+
+		.detail-content-bottom>.left{width:224px;}
+		.detail-content-bottom>.left li{margin-bottom:20px;}
+		.detail-content-bottom>.left a{display:block;}
+		.detail-content-bottom>.right{width:958px;}		
+		.detail-content-bottom .detail-right-top .left li{width:164px;height:47px;line-height:41px;float:left;text-align:center;color:#000000;box-sizing:border-box;background-color:#f5f5f5;cursor:pointer;font-size:14px;}
+		.detail-content-bottom .detail-right-top .left li.active{border-top:2px solid #dd0909;background-color:#ffffff!important;color:#000000!important;}
+		.detail-content-bottom .detail-right-top .left li span{color:#dd0909;}
+		.detail-content-bottom .detail-right-top .right{height:47px;line-height:41px;padding-right:5px;cursor:pointer;position:relative;padding-left:40px;overflow:hidden;-webkit-transition: all .3s; -o-transition: all .3s; -moz-transition: all .3s; transition: all .3s;}
+		.detail-content-bottom .detail-right-top .right span{color:#000000;margin-right:15px;display:inline-block;vertical-align:middle;}
+		.detail-content-bottom .detail-right-top .right img{vertical-align:middle;margin-right:15px;-webkit-transition: all .3s; -o-transition: all .3s; -moz-transition: all .3s; transition: all .3s;}
+		.detail-content-bottom .detail-right-top .right:hover{background-color:#e5e5e5;overflow:visible;}
+		.detail-content-bottom .detail-right-top .right:hover .jt{transform:rotate(180deg);-ms-transform:rotate(180deg);-moz-transform:rotate(180deg);-webkit-transform:rotate(180deg);-o-transform:rotate(180deg);}
+		.detail-content-bottom .detail-right-top .right .ewm-img{position:absolute;background-color:#ffffff;left:0px;right:0px;top:100%;border:1px solid #e5e5e5;}
+		.detail-content-bottom .detail-right-center li{width:278px;margin-right:20px;color: rgb(40, 40, 40);}
+		.detail-content-bottom .detail-right-center1{padding:20px 15px;}
+		.detail-content-bottom .detail-right-center1 .title{width:44px;height:44px;text-align:center;line-height:44px;background-color:#108ee9;border-radius:44px;color:#ffffff;margin-right:20px;}
+		.detail-content-bottom .detail-right-center1 .text{width:850px;}
+		.detail-content-bottom .detail-right-center1 .text h4{margin-top:0px;color:#000000;}
+		.detail-content-bottom .detail-right-top .right .ewm-img img{width: 100%;}
+
+
+		.detail-tui-list{margin-top:40px;}
+		.detail-tui-list .cont2-title{margin-top:0px;border-left:3px solid #108ee9;color:#444444;line-height:1.25;margin-bottom:18px;}
+		.detail-tui-list .cont2-title span{color:#c5c5c5;}
+		.detail-tui-list li{width:175px;margin-right:20px;margin-bottom:20px;}
+		.detail-tui-list li:nth-child(5n){margin-right:0px;}
+		.detail-tui-list li h4{margin-top:0px;color:#000000;line-height:1.4;font-size:13px;}
+		.detail-tui-list li p{color:#ff2b2b;font-size:16px;}
+		.detail-tui-list li p span{color:#555555;font-size:12px;text-decoration:line-through;}
+
+		.assess-contetn>.assess-star{padding:30px 50px 25px 50px;margin-bottom:30px;}
+		.assess-contetn>.assess-star{line-height:21px;color:#282828;}
+		.assess-contetn>.assess-star{color:#dd0909;}
+		.assess-contetn>.assess-star .star-css{width:150px;position:relative;overflow:hidden;height:19px;line-height:19px;display:inline-block;vertical-align:top;}
+		.assess-contetn>.assess-star i{font-size:24px;margin:1px;}
+		.assess-contetn>.assess-star .star-css-top{height:19px;overflow:hidden;position:absolute;top:0px;left:0px;z-index:1;}
+		.assess-contetn>.assess-star .star-css-top i{color:#dd0909;}
+		.assess-contetn>.assess-star .star-css-bot{width:150px;overflow:hidden;height:19px;}
+		.assess-contetn>.assess-star .star-css-bot i{color:#999999;}
+
+		.assess-contetn>.assess-chose{border-top:1px solid #e5e5e5;background-color:#f5f5f5;padding-left:50px;padding-right:50px;}
+		.assess-contetn>.assess-chose li{margin-right:55px;}
+		.assess-contetn>.assess-chose .red-dian{width:18px;height:18px;border-radius:100%;border:1px solid #dcdcdc;vertical-align:middle;cursor:pointer;position:relative;}
+		.assess-contetn>.assess-chose .red-dian.on:after{content:"";position:absolute;width:10px;height:10px;top:3px;left:3px;border-radius:100%;background-color:#dd0909;}
+		.assess-contetn>.assess-chose span{color:#000000;display:inline-block;vertical-align:middle;}
+
+		.assess-bottom-list li{}
+		.assess-bottom-list .list-left{width:45px;height:45px;margin-right:20px;border-radius:50%;overflow: hidden;position: relative;}
+		.assess-bottom-list .list-left img{position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%)}
+		.assess-bottom-list .list-right{width:845px;}
+		.assess-bottom-list .list-right .left h4{margin-top:0px;color:#000000;}
+		.assess-bottom-list .list-right .left p{color: #B0B0B0;}
+
+
+		.detail-right-bottom img{max-width: 100%;display: block;}
+		.detail-assess>div{display:inline-block;margin-right:16px;line-height:21px;color:#282828;}
+		.assess-bottom-list li:last-child{border-bottom:0px;}
+		.assess-bottom-list .list-right .right .assess-star{color: #B0B0B0;}
+		.assess-bottom-list .list-right .right .assess-star .star-css{width:110px;position:relative;overflow:hidden;height:19px;line-height:19px;display:inline-block;vertical-align:top;}
+		.assess-bottom-list .list-right .right .assess-star i{font-size:18px;margin:0px;}
+		.assess-bottom-list .list-right .right .assess-star .star-css-top{height:19px;overflow:hidden;position:absolute;top:0px;left:0px;z-index:1;}
+		.assess-bottom-list .list-right .right .assess-star .star-css-top i{color:#dd0909;}
+		.assess-bottom-list .list-right .right .assess-star .star-css-bot{width:110px;overflow:hidden;height:19px;}
+		.assess-bottom-list .list-right .right .assess-star .star-css-bot i{color:#999999;}
+		.assess-bottom-list .list-right .content{line-height:1.68;color:#000000;}
+		.assess-bottom-list .list-right .content img{margin-top:10px;margin-bottom:10px;max-width:220px;}
+		.zhekou{background: url(/public/static/portal/images/zhekoubeijin.png);height: 40px;line-height: 40px}
+		.discounttime{background: #fff;color: #108ee9;padding: 2px;margin: 0 5px;}
+	</style>
+</head>
+<body>
+	{include file="/index/header" /}
+
+
+		<!--------------------------------商品详情页-------------------------------->
+	<div id="app">
+		<div class="Xcontent">
+			<ul class="Xcontent01 clearfix">
+				<div class="left cont-left">
+					<div class="Xcontent06"><img :src="goods.imgs[0]"></div>
+					<ol class="Xcontent08">
+						<div class="Xcontent07"  v-for="(img,key) in goods.imgs" :key="key"><img :src="img" title="蓝色"></div> 
+					</ol>
+				</div>
+				<div class="right cont-right">
+					<ol class="Xcontent13"> 
+						<div class="right-title font-size-18 margin-btn-5"  v-text="goods.name">  </div>
+						<div class="right-ftitle margin-btn-15 font-size-14"  v-text="goods.intro"> </div>
+						<div class="over margin-btn-15 font-size-14 zhekou padding-10" v-if="isDiscountGoods">
+							<div class="left margin-lr-10">
+							  <img src="/public/static/portal/images/naozhong.png" alt="">
+							</div>
+							 <div class="left margin-left-10" style="line-height: 20px;">
+						    <span class="font-size-16 white-text">限时购</span>
+							</div>
+							<div class="left margin-left-15" style="line-height: 20px;color: #fff;"> 距离商品结束还剩 :
+									            <span class="discounttime">
+							                     <span v-for="(timesta,key) in timestam[0]" v-text="timesta"></span>
+								                   <span v-for="(timesta,key) in timestam[1]" v-text="timesta"></span>
+							                </span>:
+							                <span class="discounttime">
+						                      <span v-for="(timesta,key) in timestam[3]" v-text="timesta"></span>
+							                <span v-for="(timesta,key) in timestam[4]" v-text="timesta"></span>
+															</span>:
+							                <span class="discounttime">
+						                      <span v-for="(timesta,key) in timestam[6]" v-text="timesta"></span>
+						                      <span v-for="(timesta,key) in timestam[7]" v-text="timesta"></span>
+				                      </span>
+						                      :
+						                      <span class="discounttime">
+						                      <span v-for="(timesta,key) in timestam[9]" v-text="timesta"></span>
+						                      <span v-for="(timesta,key) in timestam[10]" v-text="timesta"></span>
+							                    </span>
+												</div>                    
+											</div>
+						<div class="info">
+							<div class="info-list1 clearfix">
+								<span class="left title font-size-14">售价</span>
+								<div class="left price" v-if="!discountActivity.id" ><span class="money font-size-24 margin-right-10"><em class="font-size-16">￥</em>{{goods.sell_price}}</span><span class="delet font-size-14">￥{{goods.market_price}}</span></div>
+								<div class="left price" v-else v-for="(rule, key) in discountActivity.rule_info" :key="key" v-if="rule.goods_id == goods.id">
+									<span class="money font-size-24 margin-right-10">
+										<em class="font-size-16">￥</em><span v-text="rule.discount_price"></span>
+									</span>
+									<span class="delet font-size-14"><span v-text="goods.sell_price"></span>
+									</span>
+								</div>
+							</div>
+							<div class="info-list2 clearfix" style="margin-bottom:0px;">
+								<span class="left title font-size-14">服务</span>
+								<div class=" left text font-size-14"><span>·&nbsp;&nbsp;30天无忧退货</span> <span>·&nbsp;&nbsp;免费配送到家</span><span>·&nbsp;&nbsp;48小时快速退款</span><span>·&nbsp;&nbsp;  国内部分地区无法配送</span></div>
+							</div>
+						</div> 
+						<div class=" clearfix type-list2 padding-left-10" v-for="(name, nameKey) in spec_template.names" :key="nameKey">
+							<p class="left type-title font-size-14"  v-text="name.name" ></p>
+							<div class="type-right clearfix">
+								<div class="left cm-type  transition" v-for="(option, optionKey) in goods.goods_spec_info[name.id]"
+         						 :key="optionKey" v-text="option.option" @click="selectSpec(option, name)" :class="[{'on': option.isSelected},{'on': option.isSelected}]" > </div> 
+							</div>
+						</div>
+						<div class="Xcontent30 clearfix mun-input-list margin-top-10">
+							<p class="Xcontent31 mun-title">数量</p>
+							<div class="Xcontent32" @click="num_sum('-')"><img src="/public/static/portal/pluging/images/shangpinxiangqing/X15.png"></div>
+							<form>
+	            		<input class="input" type="text" style="border:1px solid #dddddd!important;" v-model="num">
+	            </form>
+							<div class="Xcontent33" @click="num_sum('+')"><img src="/public/static/portal/pluging/images/shangpinxiangqing/16.png"></div>
+							<span class="zong-mun margin-left-10 font-size-14" v-text="'库存' + goods.stock"> </span>
+						</div>
+						<div class="detail-button padding-left-70 bt" v-if="goods.stock == 0">
+								<a class="button3"><span class="font-size-16">已售罄</span></a>
+						</div>
+						<div class="detail-button padding-left-70 bt" v-else>
+							<a class="button1" ><span class="font-size-16" @click="buy()" >立即购买</span></a>
+							<a class="button2" v-if="isDiscountGoods == ''"><i class="iconfont icon-gouwuche margin-right-5"></i><span class="font-size-16" @click="addCart()">加入购物车</span></a>
+							<span class="collect" @click="addCollection()">
+								<i class="iconfont icon-xihuan-xianxing on " v-if="!isCollected"  ></i><!--未选中状态-->
+								<i class="iconfont icon-xihuan on" v-if="isCollected"></i>收藏</span><!--选中状态-->
+						</div>
+						<div class="padding-left-70 detail-assess margin-top-15">
+							<div class="assess-star">
+								<div class="star-css font-size-12 margin-right-10">
+									<div class="star-css-top" style="width:{{score}} ">
+										<i class="iconfont icon-shoucang"></i>
+										<i class="iconfont icon-shoucang"></i>
+										<i class="iconfont icon-shoucang"></i>
+										<i class="iconfont icon-shoucang"></i>
+										<i class="iconfont icon-shoucang"></i>
+									</div>
+									<div class="star-css-bot">
+										<i class="iconfont icon-shoucang"></i>
+										<i class="iconfont icon-shoucang"></i>
+										<i class="iconfont icon-shoucang"></i>
+										<i class="iconfont icon-shoucang"></i>
+										<i class="iconfont icon-shoucang"></i>
+									</div>  
+								</div>
+							</div>
+							<div class="assess-text font-size-12" v-text="comments.length + '人评价'"></div>
+						</div>
+					</ol>
+				</div>
+			</ul>
+		</div>
+
+		<!----------------------------为你推荐------------------------------>
+		<div class="w1200">
+			<div class="search-none-content white"> 
+					<div class=" white over margin-btn-15">
+							<div class="foot-list-title black-text text-lighten-1 margin-tt-15 font-size-18 padding-left-15">为你推荐</div>
+							<div class="foot-list margin-tt-15 over">
+										<div class="left foot-list-box " style="margin-left: 0;"  v-for="guessGood in guessGoods.slice(0,4)" @click="goto('goods_detail',{goodsId:guessGood.id})">
+												<img :src="guessGood.thum" class="responsive-img">
+												<div class="padding-10">
+														<div class="font-size-16 black-text" v-text="guessGood.name"></div>
+														<div class="margin-top-10 over">
+																<div class="left">
+																		<span class="red-text font-size-16" v-text="'￥' + guessGood.sell_price"></span>
+																		<span class="font-size-10 grey-text lighten-1" v-text="'￥' + guessGood.sell_price"></span>
+																</div>
+																<div class="right font-size-12 grey-text lighten-1" v-text="'月销量：'+guessGood.sell_num"></div>
+														</div>
+												</div>
+										</div>
+								</div>
+						</div>
+			</div>
+		</div>
+
+		<!--------------------------------商品详情---------------------------------->
+		<div class="w1200">
+			<div class="clearfix detail-content-bottom">
+				<div class="left detail-left">
+					<ul>
+						<li>
+							<a href=""><img class="class-img" src="/public/static/portal/images/detail-img2.jpg"></a>
+						</li>
+						<li>
+							<a href=""><img class="class-img" src="/public/static/portal/images/detail-img2.jpg"></a>
+						</li>
+						<li>
+							<a href=""><img class="class-img" src="/public/static/portal/images/detail-img3.jpg"></a>
+						</li>
+						<li>
+							<a href=""><img class="class-img" src="/public/static/portal/images/detail-img4.jpg"></a>
+						</li>
+					</ul>
+				</div>
+				<div class="right detail-right">
+					<div style="border:1px solid #efefef;">
+						<div class="detail-right-top clearfix">
+							<div class="left">
+								<ul class="clearfix">
+									<li id="1" class="active">商品详情</li>
+									<li id="2">累计评价<span v-text="comments.length"></span></li>
+								</ul>
+							</div>
+							<div class="right">
+								<span class="font-size-14">手机购买</span><img src="/public/static/portal/images/small-ewm.png"><img class="jt" src="/public/static/portal/images/ewm-xiala.png">
+								<div class="padding-15 ewm-img" id="goods-derail-jq">
+									<!-- <img class="class-img" src="/public/static/portal/images/rwm.png"> -->
+								</div>
+							</div>
+						</div>
+						<div>
+							<!---------------------------商品详情---------------------------->
+							<div class="" id="cont_1">
+								<div class="detail-right-center padding-30 border-btn">
+									<ul class="clearfix" >
+										<li class="left font-size-12 truncate margin-btn-5" v-for="(name, key) in attr_template.names" >{{name.name}}： <span v-for="(option, oKey) in name.options" :key="oKey" v-if="goods.goods_attr_info[name.id] == option.id">{{option.option}}</span></li> 
+									</ul>
+								</div>
+								<!-- <div class="detail-right-center1 clearfix border-btn">
+									<div class="left title font-size-18">真</div>
+									<div class="left text">
+										
+										<h4 class="margin-btn-5 font-size-16 ">假一赔十</h4>
+										<p class="font-size-12">网开创每一件商品都通过严苛的品质把关，保障正品，保障品质。特推出 “假一赔十” 的正品保障政策，杜绝一切假货，<br>让您无忧购物。</p>
+									</div>
+								</div> -->
+								<div class="detail-right-bottom padding-30" v-html="goods.desc">
+									<!-- <img class="class-img1" src="/public/static/portal/images/12365.jpg"> -->
+								</div>
+							</div>
+
+							<!---------------------------累计评价---------------------------->
+							<div class="" id="cont_2" style="display:none;">
+								<div class="assess-contetn">
+									<div class="assess-star border-btn font-size-16">
+										<div class="star-css font-size-12 margin-right-10">
+											<div class="star-css-top" style="width:{{ score }} ">
+												<i class="iconfont icon-shoucang"></i>
+												<i class="iconfont icon-shoucang"></i>
+												<i class="iconfont icon-shoucang"></i>
+												<i class="iconfont icon-shoucang"></i>
+												<i class="iconfont icon-shoucang"></i>
+											</div>
+											<div class="star-css-bot">
+												<i class="iconfont icon-shoucang"></i>
+												<i class="iconfont icon-shoucang"></i>
+												<i class="iconfont icon-shoucang"></i>
+												<i class="iconfont icon-shoucang"></i>
+												<i class="iconfont icon-shoucang"></i>
+											</div>
+										</div>
+									</div>
+									<div class="assess-chose border-btn padding-top-15 padding-btn-15">
+										<ul>
+											<li class="left have">
+												<div class="red-dian on inline-black margin-right-5" id="3"></div>
+												<span class="font-size-14">全部</span>
+											</li>
+											<li class="left none">
+												<div class="red-dian inline-black margin-right-5" id="4"></div>
+												<span class="font-size-14">有图</span>
+											</li>
+										</ul>
+									</div>
+									<div class="assess-bottom-list">
+										<div id="cont_3" class="">
+											<ul>
+												<li class="clearfix padding-20 border-btn" v-for="(comment,commentKey) in comments" :key="commentKey" >
+													<div class="left list-left ">
+														<img class="class-img"  :src="comment.user_info.avatar">
+													</div>
+													<div class="left list-right">
+														<div class="clearfix margin-btn-15">
+															<div class="left">
+																<h4 class="margin-btn-10 font-size-14"   v-text="comment.user_info.nick_name || comment.user_info.mobile"></h4>
+																<p class="font-size-12"></p> 
+															</div>
+															<div class="right">
+																<div class="assess-star font-size-12" >
+																	<div class="" v-text="comment.create_time"></div>
+																	<div class="star-css font-size-12 margin-right-5">
+																		<div class="star-css-top" v-show="comment.score == 1">
+																			<i class="iconfont icon-shoucang"></i>
+																		</div>
+																		<div class="star-css-top" v-show="comment.score == 2">
+																				<i class="iconfont icon-shoucang"></i>
+																				<i class="iconfont icon-shoucang"></i>
+																				
+																			</div>
+																			<div class="star-css-top" v-show="comment.score == 3">
+																					<i class="iconfont icon-shoucang"></i>
+																					<i class="iconfont icon-shoucang"></i>
+																					<i class="iconfont icon-shoucang"></i>
+																				</div>
+																				<div class="star-css-top" v-show="comment.score == 4">
+																						<i class="iconfont icon-shoucang"></i>
+																						<i class="iconfont icon-shoucang"></i>
+																						<i class="iconfont icon-shoucang"></i>
+																						<i class="iconfont icon-shoucang"></i>
+																					</div>
+																					<div class="star-css-top" v-show="comment.score == 5">
+																							<i class="iconfont icon-shoucang"></i>
+																							<i class="iconfont icon-shoucang"></i>
+																							<i class="iconfont icon-shoucang"></i>
+																							<i class="iconfont icon-shoucang"></i>
+																							<i class="iconfont icon-shoucang"></i>
+																						</div>
+																		<div class="star-css-bot">
+																			<i class="iconfont icon-shoucang"></i>
+																			<i class="iconfont icon-shoucang"></i>
+																			<i class="iconfont icon-shoucang"></i>
+																			<i class="iconfont icon-shoucang"></i>
+																			<i class="iconfont icon-shoucang"></i>
+																		</div>
+																	</div> 
+																</div>
+															</div>
+														</div>
+														<div class="content font-size-14"  v-text="comment.content"></div>
+														<div class="content font-size-14"  v-for="(img,keyimg) in comment.imgs" :key="keyimg">
+																<img :src="img">
+													 </div>
+													</div>
+												</li> 
+											</ul>
+										</div>
+										<div id="cont_4" style="display:none;">
+											<ul>
+													<li class="clearfix padding-20 border-btn" v-for="(comment,commentKey) in commentsimg" :key="commentKey"  v-if="comment.imgs">
+															<div class="left list-left ">
+																<img class="class-img"  :src="comment.user_info.avatar">
+															</div>
+															<div class="left list-right">
+																<div class="clearfix margin-btn-15">
+																	<div class="left">
+																		<h4 class="margin-btn-10 font-size-14"   v-text="comment.user_info.nick_name || comment.user_info.mobile"></h4>
+																		<p class="font-size-12"></p> 
+																	</div>
+																	<div class="right">
+																		<div class="assess-star font-size-12" >
+																			<div class="" v-text="comment.create_time"></div>
+																			<div class="star-css font-size-12 margin-right-5">
+																				<div class="star-css-top" v-show="comment.score == 1">
+																					<i class="iconfont icon-shoucang"></i>
+																				</div>
+																				<div class="star-css-top" v-show="comment.score == 2">
+																						<i class="iconfont icon-shoucang"></i>
+																						<i class="iconfont icon-shoucang"></i>
+																						
+																					</div>
+																					<div class="star-css-top" v-show="comment.score == 3">
+																							<i class="iconfont icon-shoucang"></i>
+																							<i class="iconfont icon-shoucang"></i>
+																							<i class="iconfont icon-shoucang"></i>
+																						</div>
+																						<div class="star-css-top" v-show="comment.score == 4">
+																								<i class="iconfont icon-shoucang"></i>
+																								<i class="iconfont icon-shoucang"></i>
+																								<i class="iconfont icon-shoucang"></i>
+																								<i class="iconfont icon-shoucang"></i>
+																							</div>
+																							<div class="star-css-top" v-show="comment.score == 5">
+																									<i class="iconfont icon-shoucang"></i>
+																									<i class="iconfont icon-shoucang"></i>
+																									<i class="iconfont icon-shoucang"></i>
+																									<i class="iconfont icon-shoucang"></i>
+																									<i class="iconfont icon-shoucang"></i>
+																								</div>
+																				<div class="star-css-bot">
+																					<i class="iconfont icon-shoucang"></i>
+																					<i class="iconfont icon-shoucang"></i>
+																					<i class="iconfont icon-shoucang"></i>
+																					<i class="iconfont icon-shoucang"></i>
+																					<i class="iconfont icon-shoucang"></i>
+																				</div>
+																			</div> 
+																		</div>
+																	</div>
+																</div>
+																<div class="content font-size-14"  v-text="comment.content"></div>
+																<div class="content font-size-14"  v-for="(img,keyimg) in comment.imgs" :key="keyimg">
+																		<img :src="img">
+															 </div>
+														</li> 
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="detail-tui-list">
+						<h4 class="cont2-title font-size-16 margin-btn-20 padding-left-10">猜你喜欢<span class="font-size-14 margin-left-10">根据你的浏览记录推荐的商品</span></h4>
+						<ul class="clearfix">
+							<li class="left border-grey" v-for="guessGood in guessGoods" @click="goto('goods_detail',{goodsId:guessGood.id})">
+								<a>
+									<div class="images-top"><img class="class-img" :src="guessGood.thum"></div>
+									<div class="padding-10 text-bottom">
+										<h4 class="title margin-btn-5 truncate" v-text="guessGood.name"></h4>
+										<p class="">{{'￥' + guessGood.sell_price}}<span class="margin-left-5" v-text="'￥' + guessGood.sell_price"></span></p>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	{include file="index/footer" /}
+	<script type="text/javascript">
+		$(function(){
+   			$(".detail-right-top .left ul li").click(function(){
+		        //改变自身属性
+		        $(this).removeClass().addClass("active");
+		        //改变除自身之外的属性
+		        $(this).siblings().removeClass().addClass("");
+		        //改变自身样式 
+		        $("#cont_"+$(this).attr("id")).css("display","block");
+		        //改变除自身之外的样式
+		        $("#cont_"+$(this).attr("id")).siblings().css("display","none");	        
+	    	});
+	    	$(".assess-chose li .red-dian").click(function(){
+		        //改变自身属性
+		        $(this).addClass("on");
+		        //改变除自身之外的属性
+		        $(this).parent().siblings().find(".red-dian").removeClass("on");
+		        //改变自身样式 
+		        $("#cont_"+$(this).attr("id")).css("display","block");
+		        //改变除自身之外的样式
+		        $("#cont_"+$(this).attr("id")).siblings().css("display","none");	        
+	    	});
+   		});
+
+
+
+
+
+ //    var goodsId = location.search.substring(location.search.lastIndexOf('=') + 1);
+	// if (!goodsId) {
+	// 	location = "/portal"
+	// }
+
+
+	var app = new Vue({
+      el: '#app',
+      data: {
+        title: '商品详情',
+        goods: {
+          goods_attr_info: {},  //选中的属性值集合
+          goods_spec_info: {}, //增加的规格选项
+          imgs: [],
+          tags: [],
+          stock: 0,
+          sell_num: 0,
+          goods_spec_group_info: [],  //动态规格组合表 
+        },
+        // 选择的规格组合项
+        select_spec_group_info: {},
+        num:1,
+        // 属性模板
+        attr_template: {
+          id: '',
+          names: []
+        },
+        //星级
+        score:0,
+        // 有图评论
+				commentsimg:[],
+        // 规格模板
+        spec_template: {
+          id: '',
+          names: []
+        },
+        // 选项卡
+        firstTabActive: true,
+        // 商品评论
+        comments: [],
+        haveNoData: false,
+        page: 1,
+        //是否收藏
+        isCollected: false,
+        activeColor: '#ccc',
+        collectionText: '收藏',
+        // 选择规格之后的操作
+        selectSpecAfter: '',
+        // 限时折扣信息
+        discountActivity: {
+          rule_info: []
+        },
+        isDiscountGoods:querystring.isDiscountGoods || '',
+        guessGoods:[],
+				timestam: []
+
+      },
+      methods: {
+				godoodsdetail:function(){
+					goto()
+				},
+				//数量变更
+				
+      	num_sum:function(symbol){
+      		var sy = symbol;
+      		if(sy == '+'){
+      			app.num++;
+      		}
+      		if(sy == '-' && app.num > 1){
+      			app.num--;
+      		}
+      	},
+        //收藏操作
+        addCollection: function () {
+          if (!user) {
+            layer.msg('请先登录');
+            setTimeout(function () {
+              goto('login')
+            }, 500);
+            return;
+          }
+          if (this.isCollected) {
+            httpRequest('POST', 'api_goods/goods_collections/cancel', {
+              goods_id: querystring.goodsId
+            },function (resp) {
+              layer.msg(resp.msg, {
+			    icon: 1,
+			    shade: [0.8, '#393D49'] // 透明度  颜色
+			});
+              app.isCollected = false;
+              app.activeColor = '#ccc';
+              app.collectionText = '收藏';
+            })
+          } else {
+            httpRequest('POST', 'api_goods/goods_collections/save', {
+              goods_id: querystring.goodsId
+            },function (resp) {
+              layer.msg(resp.msg, {
+			    icon: 1,
+			    shade: [0.8, '#393D49'] // 透明度  颜色
+			});
+              app.isCollected = true;
+              app.activeColor = '#ffc640';
+              app.collectionText = '已收藏';
+            })
+          }
+        },
+        //切换tab
+        changeTab: function (flag) {
+          this.firstTabActive = flag;
+        },
+        //点击购买
+        buy: function () {
+          if (!user) {
+            layer.msg('请先登录');
+            setTimeout(function () {
+              goto('login')
+            }, 500);
+            return;
+          } 
+          // //是否选择规格
+          if (this.spec_template.id && !this.select_spec_group_info.id) {
+            this.selectSpec();
+            this.selectSpecAfter = 'buy'; 
+          } else {
+            setStorage('goodsList', [{ goods_info: this.goods, select_spec_group_info: this.select_spec_group_info, num: this.num }], sessionStorage);
+            if (querystring.isDiscountGoods) { 
+              goto('order_confirm', { isDiscountGoods: querystring.isDiscountGoods })
+            } else { 
+              goto('order_confirm')
+            }
+          }
+        },
+        //增加购物车
+        addCart: function () {
+          if (!user) {
+            layer.msg('请先登录');
+            setTimeout(function () {
+              goto('login')
+            }, 500);
+            return;
+          }
+          //是否选择规格
+          if (!this.spec_template.id) { 
+            httpRequest('POST', 'api_goods/carts/save', {
+              goods_id: querystring.goodsId,
+              spec_group_id: 0,
+              num: 1,
+              status: 1
+            },function (resp) {
+							localdata();
+              layer.msg(resp.msg)
+            })
+          } else if (!this.select_spec_group_info.id) {
+            this.selectSpec();
+            this.selectSpecAfter = 'addCart';
+          } else { 
+            httpRequest('POST', 'api_goods/carts/save', {
+              goods_id: querystring.goodsId,
+              spec_group_id: this.select_spec_group_info.id,
+              num: 1,
+              status: 1
+            },function (resp) {
+							localdata();
+              layer.msg(resp.msg)
+            })
+          }
+        },
+        //预览图片
+        previewImg: function (img) {
+          var json = {
+            "title": "预览", //相册标题
+            "start": 0, //初始显示的图片序号，默认0
+            "data": [   //相册包含的图片，数组格式
+              {
+                "src": img, //原图地址
+                "thumb": img //缩略图地址
+              },
+            ]
+          }
+          layer.photos({
+            photos: json,
+            anim: 5
+          });
+        }, 
+                // 选择规格
+        selectSpec: function (option, name) {
+					if (name) {
+						this.goods.goods_spec_info[name.id].forEach(function (item) {
+            Vue.set(item, 'isSelected', '');
+          })
+          Vue.set(option, 'isSelected', 'on');
+					} else {
+						layer.msg("请选择商品规格")
+						return
+					} 
+          // 组合已经选择的规格项，进行自然序排序，与对应的规格组进行对比
+          var ids = [];
+          for (var key in this.goods.goods_spec_info) {
+            this.goods.goods_spec_info[key].forEach(function (item) {
+              if (item.isSelected) {
+                ids.push(item.id)
+              }
+            })
+          }
+          ids = ids.sort().toString();
+					console.log(ids);
+					
+          this.goods.goods_spec_group_info.forEach(function (item) {
+            if (ids == item.spec_option_ids) {
+              app.select_spec_group_info = item;
+							app.goods.sell_price = item.sell_price
+							app.goods.stock = item.stock
+            }
+          }) 
+          app.select_spec_group_info = JSON.parse(JSON.stringify(this.select_spec_group_info));
+          app.goods = JSON.parse(JSON.stringify(this.goods)); 
+        }, 
+        // 查看属性
+        viewAttr: function () {
+          var innerHeight = window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
+          layer.open({
+            type: 2,
+            title: '商品属性',
+            content: location.origin + '/wap/index/attr_view.html',
+            offset: 'b',
+            area: [document.body.offsetWidth + 'px', innerHeight * 0.4 + 'px'],
+            anim: 2,
+            fixed: true,
+            resize: false,
+          })
+        }, 
+      },
+      computed: {
+
+      },
+      filters: {
+        timeFilter: function (value) {
+          value = Math.floor(value / 1000);
+          var day = Math.floor(value / 86400);
+          value %= 86400;
+          var hour = Math.floor(value / 3600);
+          value %= 3600;
+          var minute = Math.floor(value / 60);
+          var second = value %= 60;
+          return day + '天 ' + hour + ': ' + minute + ': ' + second;
+        }
+      },
+      mounted: function () {
+				new QRCode(document.getElementById('goods-derail-jq'), host + '/wap/index/goods_detail.html?goodsId=' + querystring.goodsId );
+        var that = this;
+        //加载商品 
+        httpRequest('POST', 'api_goods/goods/read', {
+          id: querystring.goodsId,
+        },function (resp) {
+          if (resp.data.goods_spec_group_info && resp.data.goods_spec_group_info.length > 0) {
+              resp.data.goods_spec_group_info.forEach(function (item) {
+              // 讲规格项组合ids进行自然序排序
+              item.spec_option_ids = item.spec_option_ids.split('_').sort().toString();
+              // 规格组名称转化为';'
+              item.spec_option_group = item.spec_option_group.replace(/_/g, ';');
+            })
+					}
+									  // 加载分类规格和属性
+				httpRequest('post', 'api_query/goods_cates/template', { 'goods_cate_id': resp.data.goods_cate_id },function(resp){
+          that.attr_template = resp.data.attr_template;
+          that.spec_template = resp.data.spec_template;
+				},{}, false);
+
+          that.goods = resp.data;
+          that.score = resp.data.score / 5 * 100 + '%', 
+          setTimeout(function () {
+            carouselInit('#owl-carousel1', 1);
+          }, 100);
+				})
+				// 猜你喜欢
+				httpRequest('POST','api_goods/goods/lists',{is_top:1},function(resp){
+            app.guessGoods = resp.data;
+				},{'page-num':1,'page-limit':5})
+
+
+        //加载评论
+        httpRequest('POST', 'api_query/goods/comments', {
+          goods_id: querystring.goodsId,
+        },function (resp) { 
+					resp.data.forEach(function(item){
+						if (!item.user_info.avatar) {
+                        item.user_info.avatar = '/public/static/images/avatar.png'
+                    }
+										if (item.imgs.length > 0) {
+											that.commentsimg.push(item)								
+										}
+					})
+        	that.comments = resp.data;
+					that.comments.forEach(function(item){
+						item = parseInt(item.score)
+					});
+				})
+				
+
+
+        //查询商品是否收藏
+        if (user) {
+          httpRequest('POST', 'api_query/goods/is_collect', {
+            goods_id: querystring.goodsId
+          },function (resp) {
+            that.isCollected = resp.data.is_collect
+            if (resp.data.is_collect) {
+              that.activeColor = '#ffc640';
+              that.collectionText = '已收藏';
+            }
+          }, {}, false)
+				}
+				
+
+        // 如果是折扣商品
+        if (querystring.isDiscountGoods) {
+          // 加载限时折扣
+					httpRequest('POST', 'api_query/market/activity', {}, function (resp) {
+          if (resp.data.discount) {
+            // 计算截至时间
+            resp.data.discount[0].deadline = resp.data.discount[0].end_timestamp * 1000 - Date.now();
+            // 限时折扣+
+            resp.data.discount[0].rule_info.forEach(function (item) {
+              item.href = location.origin + '/portal/index/goods_detail?isDiscountGoods=1&goodsId=' + item.goods_id
+            })
+            that.discountActivity = resp.data.discount[0];
+            // 倒计时
+            setInterval(function () {
+              that.discountActivity.deadline -= 1000;
+              getTime(that.discountActivity.deadline)
+            }, 1000)
+            if (!that.discountActivity.deadline) {
+              discountIsselect = false;
+            }
+          }
+        })
+				}
+				
+
+        //加载商品评论
+				// this.loadComments();
+				if (querystring.isDiscountGoods) {
+          // 加载限时折扣
+          httpRequest('POST', 'api_query/market/activity', {}, function (resp) {
+						console.log(resp);
+            if (resp.data.discount) {
+              // 计算截至时间
+              resp.data.discount[0].deadline = resp.data.discount[0].end_timestamp * 1000 - Date.now();
+              // 限时折扣跳转
+              resp.data.discount[0].rule_info.forEach(function (item) {
+                item.href = location.origin + '/wap/index/goods_detail?isDiscountGoods=1&goodsId=' + item.goods_id
+              })
+              that.discountActivity = resp.data.discount[0];
+              // 倒计时
+              setInterval(function () {
+                that.discountActivity.deadline -= 1000;
+              }, 1000)
+            }
+					})
+					// .catch(function (e) {
+          //   console.log(e)
+          // })
+				}
+				
+
+
+			}
+    });
+		function getTime(value) {
+      if (!value) {
+        return '';
+
+      }
+      value = Math.floor(value / 1000);
+      var day = Math.floor(value / 86400);
+      value %= 86400;
+      var hour = Math.floor(value / 3600);
+      value %= 3600;
+      var minute = Math.floor(value / 60);
+      var second = value %= 60;
+      function times(hour) {
+        var t = (hour + '').length,
+          s = '';
+        for (var i = 0; i < 2 - t; i++) {
+          s += '0';
+        }
+        return s
+      }
+      var timeS = '';
+      app.timestam = [];
+      var timeS = times(day) + day + ':' + times(hour) + hour + ':' + times(minute) + minute + ':' + times(second) + second;
+      for (var index = 0; index < timeS.length; index++) {
+        var ti = timeS.charAt(index);
+        app.timestam.push(ti)
+      }
+    }
+	</script>
+	<script>
+		setTimeout(function(){
+			$(document).ready(function(){
+			var $miaobian=$('.Xcontent08>div'); 
+			var $huantu=$('.Xcontent06>img');
+			var $miaobian1=$('.Xcontent26>div');  
+			$miaobian.mousemove(function(){miaobian(this);});
+			$miaobian1.click(function(){miaobian1(this);});
+			function miaobian(thisMb){
+			
+				for(var i=0; i<$miaobian.length; i++){
+					$miaobian[i].style.borderColor = '#dedede';
+					$miaobian[i].style.borderWidth = '1px';
+				}
+				thisMb.style.borderColor = '#cd2426';
+				thisMb.style.borderWidth = '2px';
+
+				$huantu[0].src = thisMb.children[0].src;
+			}
+			function miaobian1(thisMb1){
+				for(var i=0; i<$miaobian1.length; i++){
+					$miaobian1[i].style.borderColor = '#dedede';
+				}
+		//		thisMb.style.borderColor = '#cd2426';
+				$miaobian.css('border-color','#dedede');
+				thisMb1.style.borderColor = '#cd2426';
+				$huantu[0].src = thisMb1.children[0].src;
+
+			}
+			// $(".Xcontent33").click(function(){
+			// 	var value=parseInt($('.input').val())+1;
+	  //      		$('.input').val(value);
+			// })
+
+			// $(".Xcontent32").click(function(){	
+			// 	var num = $(".input").val()
+			// 	if(num>0){
+			// 		$(".input").val(num-1);
+			// 	}			
+				
+			// }) 
+			chose("#chose div") 
+			function chose(org){
+				$(org).click = function(){
+					alert("1");
+				}
+			}
+
+			// $("#chose div").click(function(){
+			// 	if($(this).hasClass("on")){
+			// 		$()
+			// 	}else{ 
+			// 	}
+			// });
+		})
+	},1000)
+		
+
+	</script>
+</body>
+
+</html>

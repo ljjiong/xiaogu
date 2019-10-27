@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<script src="/public/static/common/js/qrcode.min.js"></script>
+</head>
+
+<body class="body-bg">
+
+	{include file="/index/header" /}
+	<div class="wechat-boundary"></div>
+	<div class="wechat-payment-remind w1200 clearfix">
+		<div class="left">
+			<div class="order-number" id="number"></div>
+		</div>
+		<div class="right" id="price"></div>
+	</div>
+
+	<div class="scan-qr-code clearfix">
+		<div class="left">
+			<div class="img" id="qrcode">
+
+			</div>
+			<p>请使用微信扫一扫扫描二维码支付</p>
+		</div>
+		<div class="right">
+			<img src="/public/static/portal/images/phone-img.png" />
+		</div>
+	</div>
+	<footer class="aui-bar aui-bar-tab" id="footer">
+  <div class="aui-bar-tab-item" onclick="goto('index')" :class="{'icon-footer-active' : (activeFooterIndex == 1 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 1" src="/public/static/wap/img/icon12.png">
+      <img v-else src="/public/static/wap/img/icon11.png">
+    </div>
+    <div class="aui-bar-tab-label">任务</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('personnel_page')"
+    :class="{'icon-footer-active' : (activeFooterIndex == 2 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 2" src="/public/static/wap/img/icon22.png">
+      <img v-else src="/public/static/wap/img/icon21.png">
+    </div>
+    <div class="aui-bar-tab-label">行政</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('home')" :class="{'icon-footer-active' : (activeFooterIndex == 3 )}">
+    <!-- <div class="aui-badge">99</div> -->
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 3" src="/public/static/wap/img/icon32.png">
+      <img v-else src="/public/static/wap/img/icon31.png">
+    </div>
+    <div class="aui-bar-tab-label">我的</div>
+  </div>
+</footer>
+</body>
+<script>
+	var layer;
+	var order = JSON.parse(sessionStorage.getItem('orderInfo'));
+	layui.use(['layer'], function () {
+		layer = layui.layer;
+		if (!order) {
+			layer.msg('参数错误');
+			setTimeout(function () { location = "/portal" }, 300)
+		}
+		document.getElementById('number').textContent = '订单编号:' + order.order_no;
+		document.getElementById('price').textContent = '￥' + order.total_money;
+		//获取支付二维码链接
+		httpRequest('POST', 'pay/wechat_pay_qrcode', {
+			order_no: order.order_no
+		}, function (resp) {
+			new QRCode(document.getElementById("qrcode"), resp.data);
+
+			//查询订单装填
+			var intervalInt = setInterval(function () {
+				httpRequest('POST', 'query/order_is_pay', {
+					order_no: order.order_no
+				}, function (resp) {
+					if (resp.data.is_pay == 1) {
+						layer.msg('支付成功');
+						setTimeout(function () {
+							location = "{:url('Index/orders')}"
+						}, 500)
+					}
+				})
+			}, 3000)
+		})
+		initFooter();
+	})
+</script>
+
+</html>

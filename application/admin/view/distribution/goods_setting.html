@@ -1,0 +1,489 @@
+{include file="header" /}
+
+<body>
+
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>分销商品</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入分销商品名称" v-model="searchData.goods_name">
+                        <template slot="prepend">分销商品名称</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>分销商品列表</span>
+                    <el-button type="primary" style="float: right;" size="mini" icon="el-icon-plus" @click="goAdd()">新增分销商品</el-button>
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%">
+                      <el-table-column type="selection" width="55"> </el-table-column>
+                      <el-table-column prop="goods_id" label="商品ID"></el-table-column>
+                      <el-table-column prop="goods_info.name" label="商品名称"></el-table-column>
+                      <el-table-column prop="goods_info.thum" label="商品缩略图">
+                        <template slot-scope="scope">
+                          <img :src="scope.row.goods_info.thum" style="max-width: 45%;">
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="is_open_commission" label="是否参与分销">
+                        <template slot-scope="scope">
+                          <el-tag size="mini" type="success" v-show="scope.row.is_open_commission">是</el-tag>
+                          <el-tag size="mini" type="info" v-show="!scope.row.is_open_commission">否</el-tag>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="commission_type" label="独立分佣">
+                        <template slot-scope="scope">
+                          <el-tag size="mini" type="success" v-show="scope.row.commission_type == 0">不开启独立分佣</el-tag>
+                          <el-tag size="mini" type="info" v-show="scope.row.commission_type == 1">启用独立分佣比例</el-tag>
+                          <el-tag size="mini" type="warning" v-show="scope.row.commission_type == 2">启用分销商等级分佣</el-tag>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="distributor_level_id" label="直接升级某个分销商等级">
+                        <template slot-scope="scope">
+                          <el-tag type="danger" size="mini" v-show="scope.row.distributor_level_id == 0">否</el-tag>
+                          <el-tag type="primary" size="mini" v-show="scope.row.distributor_level_id != 0">{{scope.row.distributor_level_id | levelIdFilter}}</el-tag>
+                        </template>
+                      </el-table-column>
+
+                      <el-table-column prop="update_time" label="更新时间" sortable>
+                        <template slot-scope="scope">
+                          <i class="el-icon-time"></i>
+                          <span>{{ scope.row.update_time }}</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="操作" width="150" fixed="right">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                          <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- dialog -->
+            <el-dialog title="编辑活动" :visible.sync="dialogVisible" width="70%">
+              <el-row :gutter="30">
+                <el-col :span="14" :offset="4">
+                  <el-form :model="selectData" ref="ruleForm" :rules="rules" label-position="left" label-width="200px">
+                    <el-form-item label="商品ID" prop="goods_id">
+                      <el-input v-model="selectData.goods_id" disabled placeholder="请选择商品" style="width: 240px;"></el-input>
+                      <el-button type="primary" plain @click="innerDialogVisible = true">选择商品</el-button>
+                    </el-form-item>
+                    <el-form-item label="商品名称" prop="goods_info.name">
+                      <el-input v-model="selectData.goods_info.name" disabled style="width: 240px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="是否开启分销" prop="is_open_commission">
+                      <el-switch v-model="selectData.is_open_commission"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="直接成为某个分销商等级" prop="distributor_level_id">
+                      <el-radio v-model="selectData.distributor_level_id" :label="0">否</el-radio>
+                      <el-radio v-model="selectData.distributor_level_id" v-for="(level, key) in distributor_levels" :key="key" :label="level.id">{{level.level_name}}</el-radio>
+                    </el-form-item>
+                    <el-form-item label="独立分佣选项" prop="commission_type">
+                      <el-radio v-model="selectData.commission_type" :label="0">不开启独立分佣</el-radio>
+                      <el-radio v-model="selectData.commission_type" :label="1">启用独立分佣比例</el-radio>
+                      <el-radio v-model="selectData.commission_type" :label="2">启用分销商等级分佣</el-radio>
+                    </el-form-item>
+                    <!-- 启用独立分佣比例 -->
+                    <transition name="el-fade-in-linear">
+                      <div v-show="selectData.commission_type == '1'">
+                        <el-form-item label="一级分佣选项">
+                          <el-radio v-model="selectData.commission_1_use_type" label="rate">比例</el-radio>
+                          <el-radio v-model="selectData.commission_1_use_type" label="money">金额</el-radio>
+                        </el-form-item>
+                        <el-form-item label="一级分佣比例(%)" v-if="selectData.commission_1_use_type == 'rate'">
+                          <el-input v-model="selectData.commission_1_value" clearable placeholder="请输入一级分佣值"></el-input>
+                        </el-form-item>
+                        <el-form-item label="一级分佣金额" v-else>
+                          <el-input v-model="selectData.commission_1_value" clearable placeholder="请输入一级分佣值"></el-input>
+                        </el-form-item>
+                        <el-form-item label="二级分佣选项">
+                          <el-radio v-model="selectData.commission_2_use_type" label="rate">比例</el-radio>
+                          <el-radio v-model="selectData.commission_2_use_type" label="money">金额</el-radio>
+                        </el-form-item>
+                        <el-form-item label="二级分佣比例(%)" v-if="selectData.commission_2_use_type == 'rate'">
+                          <el-input v-model="selectData.commission_2_value" clearable placeholder="请输入二级分佣值"></el-input>
+                        </el-form-item>
+                        <el-form-item label="二级分佣金额" v-else>
+                          <el-input v-model="selectData.commission_2_value" clearable placeholder="请输入二级分佣值"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="三级分佣选项">
+                          <el-radio v-model="selectData.commission_3_use_type" label="rate">比例</el-radio>
+                          <el-radio v-model="selectData.commission_3_use_type" label="money">金额</el-radio>
+                        </el-form-item>
+                        <el-form-item label="三级分佣比例(%)" v-if="selectData.commission_3_use_type == 'rate'">
+                          <el-input v-model="selectData.commission_3_value" clearable placeholder="请输入三级分佣值"></el-input>
+                        </el-form-item>
+                        <el-form-item label="三级分佣金额" v-else>
+                          <el-input v-model="selectData.commission_3_value" clearable placeholder="请输入三级分佣值"></el-input>
+                        </el-form-item>
+                      </div>
+                    </transition>
+                    <!-- 启用分销商等级分佣 -->
+                    <transition name="el-fade-in-linear">
+                      <div v-show="selectData.commission_type == '2'" class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition"
+                        style="width: 100%;">
+                        <div class="el-table__body-wrapper is-scrolling-none">
+                          <table cellspacing="0" cellpadding="0" border="0" class="el-table__body">
+                            <thead class="has-gutter">
+                              <tr class="">
+                                <th colspan="2" rowspan="1" class="is-leaf">
+                                  <div class="cell">分销商等级</div>
+                                </th>
+                                <th colspan="1" rowspan="1" class="is-leaf">
+                                  <div class="cell">一级分佣比例(%)</div>
+                                </th>
+                                <th colspan="1" rowspan="1" class="is-leaf" v-if="distribution_params.level >=2 ">
+                                  <div class="cell">二级分佣比例(%)</div>
+                                </th>
+                                <th colspan="1" rowspan="1" class="is-leaf" v-if="distribution_params.level == 3 ">
+                                  <div class="cell">三级分佣比例(%)</div>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="el-table__row" v-for="(rate, rateKey) in distributionLevelRate" :key="rateKey">
+                                <td class="" style="width: 9.5%" colspan="2">
+                                  <div class="cell" style="width:100%">{{rate.distributor_level_id | levelIdFilter}}</div>
+                                </td>
+                                <td class="" style="width: 9.5%">
+                                  <div class="cell">
+                                    <el-radio v-model="rate.commission_1_use_type" label="rate">比例</el-radio>
+                                    <el-radio v-model="rate.commission_1_use_type" label="money">金额</el-radio>
+                                    <el-input size="mini" v-model="rate.commission_1_value" style="width:100%"></el-input>
+                                  </div>
+                                </td>
+                                <td class="" style="width: 9.5%" v-if="distribution_params.level >=2 ">
+                                  <div class="cell">
+                                    <el-radio v-model="rate.commission_2_use_type" label="rate">比例</el-radio>
+                                    <el-radio v-model="rate.commission_2_use_type" label="money">金额</el-radio>
+                                    <el-input size="mini" v-model="rate.commission_2_value" style="width:100%"></el-input>
+                                  </div>
+                                </td>
+                                <td class="" style="width: 9.5%" v-if="distribution_params.level ==3 ">
+                                  <div class="cell">
+                                    <el-radio v-model="rate.commission_3_use_type" label="rate">比例</el-radio>
+                                    <el-radio v-model="rate.commission_3_use_type" label="money">金额</el-radio>
+                                    <el-input size="mini" v-model="rate.commission_3_value" style="width:100%"></el-input>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </transition>
+                    <el-form-item style="margin-top: 20px;">
+                      <el-button @click="dialogVisible = false;" plain>取消</el-button>
+                      <el-button type="primary" @click="submit">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+              <!-- 商品列表 -->
+              <el-dialog title="商品列表" :visible.sync="innerDialogVisible" append-to-body>
+                <el-row :gutter="20">
+                  <el-col :span="10">
+                    <el-input placeholder="请输入商品名称" v-model="innerDialogSearchData.name">
+                      <template slot="prepend">商品名称</template>
+                    </el-input>
+                  </el-col>
+                  <el-col :span="4">
+                    <el-button icon="el-icon-search" @click="innerDialogSearch();"></el-button>
+                    <el-button icon="el-icon-refresh" @click="innerDialogRefresh();"></el-button>
+                  </el-col>
+                </el-row>
+                <el-table :data="innerDialogTableData" @row-click="innerDialogRowClick">
+                  <el-table-column property="id" label="商品ID"></el-table-column>
+                  <el-table-column property="name" label="商品名称"></el-table-column>
+                  <el-table-column property="sell_price" label="商品价格"></el-table-column>
+                </el-table>
+                <div style="margin-top: 20px;">
+                  <el-pagination @size-change="innerDialogHandleSizeChange" @current-change="innerDialogHandleCurrentChange" :current-page="innerDialogCurrentPage"
+                    :page-sizes="innerDialogPageSize" :page-size="innerDialogCurrentPageSize" layout="total, sizes, prev, pager, next, jumper"
+                    :total="innerDialogTotal">
+                  </el-pagination>
+                </div>
+              </el-dialog>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        // 状态过滤
+        statusFilters: [{
+          text: '上线',
+          value: 1
+        }, {
+          text: '下线',
+          value: 2
+        }],
+        // 查询条件
+        searchData: {
+          level_name: '',
+        },
+        // 分销商等级
+        distributor_levels: [],
+        // --------------- dialog -------------------
+        dialogVisible: false,
+        selectData: {
+          goods_info: {}
+        },
+        rules: {
+          goods_id: [
+            { required: true, message: '请选择商品', trigger: 'blur' },
+          ],
+        },
+        // 分销商等级分销比例数据
+        distributionLevelRate: [],
+        // 分销参数
+        distribution_params: {},
+        // 会员等级集合
+        levels: [],
+        // --------------- innerDialog -------------------
+        innerDialogVisible: false,
+        innerDialogTableData: [],
+        innerDialogCurrentPage: 1,
+        innerDialogCurrentPageSize: 10,
+        innerDialogPageSize: [10, 20],
+        innerDialogTotal: 0,
+        innerDialogSelectData: {},
+        innerDialogSearchData: {
+          name: ''
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_drp/goods_commission/delete', { goods_id: data.goods_id }).then(resp => {
+                this.$message.success(resp.msg)
+                this.tableData.splice(this.tableData.indexOf(data), 1);
+              })
+            })
+          } else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            if (this.selectData.commission_type == 2) {
+              this.distributionLevelRate = this.selectData.commission_info;
+            }
+            this.dialogVisible = true;
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.type_ids = [];
+          this.loadTableData();
+        },
+        // 新增
+        goAdd() {
+          this.selectData = {
+            goods_id: '',
+            commission_type: 0,
+            is_open_commission: true,
+            distributor_level_id: 0,
+            commission_1_use_type: 'rate',
+            commission_2_use_type: 'rate',
+            commission_3_use_type: 'rate',
+            commission_1_value: '',
+            commission_2_value: '',
+            commission_3_value: '',
+            goods_info: {},
+          }
+          this.distributionLevelRate = this.distributor_levels.map(item => ({
+            'distributor_level_id': item.id,
+            'commission_1_use_type': 'rate',
+            'commission_2_use_type': 'rate',
+            'commission_3_use_type': 'rate',
+            'commission_1_value': '',
+            'commission_2_value': '',
+            'commission_3_value': '',
+          }))
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_drp/goods_commission/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data.map(item => {
+              item.goods_info = item.goods_info || {};
+              return item;
+            });
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // --------------- dialog -------------------
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              if (this.selectData.commission_type == 2) {
+                this.distributionLevelRate.forEach(item => {
+                  item.goods_id = this.selectData.goods_id
+                })
+                this.selectData.commission_info = this.distributionLevelRate;
+              }
+              httpRequest('post', 'api_drp/goods_commission/update', this.selectData).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500)
+              });
+            } else {
+              return false;
+            }
+          });
+        },
+        // --------------- innerDialog -------------------
+        // 跳页
+        innerDialogHandleCurrentChange(val) {
+          this.innerDialogCurrentPage = val;
+          this.innerDialogLoadTableData();
+        },
+        // 改变页容量
+        innerDialogHandleSizeChange(val) {
+          this.innerDialogCurrentPageSize = val;
+          this.innerDialogLoadTableData();
+        },
+        // 某一行被点击
+        innerDialogRowClick(row) {
+          this.selectData.goods_id = row.id;
+          this.selectData.goods_info = row;
+          this.innerDialogVisible = false;
+        },
+        // 搜索
+        innerDialogSearch() {
+          this.innerDialogCurrentPage = 1;
+          this.innerDialogLoadTableData();
+        },
+        // 重置
+        innerDialogRefresh() {
+          this.innerDialogCurrentPage = 1;
+          for (let key in this.innerDialogSearchData) {
+            this.innerDialogSearchData[key] = ''
+          }
+          this.innerDialogLoadTableData();
+        },
+        innerDialogLoadTableData() {
+          this.innerDialogSearchData.status = 1;
+          httpRequest('POST', 'api_goods/goods/index', this.innerDialogSearchData, {
+            'page-num': this.innerDialogCurrentPage,
+            'page-limit': this.innerDialogCurrentPageSize
+          }).then(resp => {
+            this.innerDialogTableData = resp.data;
+            this.innerDialogTotal = resp.page.data_count || 0;
+          })
+        }
+      },
+      filters: {
+        levelIdFilter(value) {
+          let level_name = '';
+          app.distributor_levels.forEach((item) => {
+            if (item.id == value) {
+              level_name = item.level_name
+            }
+          });
+          return level_name;
+        }
+      },
+      mounted() {
+        httpRequest('POST', 'api_drp/distributor_levels/index').then(resp => {
+          this.distributor_levels = resp.data;
+          this.distributionLevelRate = this.distributor_levels.map(item => ({
+            'distributor_level_id': item.id,
+            'commission_1_use_type': '',
+            'commission_2_use_type': '',
+            'commission_3_use_type': '',
+            'commission_1_value': '',
+            'commission_2_value': '',
+            'commission_3_value': '',
+          }))
+          this.loadTableData();
+        });
+        // 获取分销参数
+        httpRequest('post', 'api_drp/rules/index').then(resp => {
+          this.distribution_params = resp.data;
+        })
+        this.innerDialogLoadTableData();
+      },
+    });
+  </script>
+
+</body>
+
+</html>

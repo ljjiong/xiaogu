@@ -1,0 +1,513 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>设备检修试验管理</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <!-- <span>查询</span> -->
+                  </div>
+                  <el-row :gutter="20">
+                    
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>设备检修试验管理</span>
+                    <el-button icon="el-icon-download" @click="export_data();">导出设备检修试验管理数据</el-button>
+                    <el-button type="primary" icon="el-icon-plus" style="float:right;" @click="goAdd()" size="mini">新增设备检修试验管理数据</el-button>
+                  </div>
+                  <div style="margin-bottom: 10px">
+                    <el-button type="danger" size="small" v-if="is_role != -1" plain icon="el-icon-delete" @click="multiOperate('delete')" :disabled="multipleSelection.length == 0">批量删除</el-button>
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                      <el-table-column type="selection" width="55"> </el-table-column>
+                      <el-table-column prop="id" label="ID" width="80" fixed sortable></el-table-column>
+                      <el-table-column prop="name_unit" label="单位名称" fixed></el-table-column>
+                      <el-table-column prop="testing_instrument" label="测试仪器" fixed></el-table-column> 
+                      <el-table-column prop="manufacture" label="设备生产日期"></el-table-column>
+                      <el-table-column prop="test_items" label="测试项目"></el-table-column>
+                      <el-table-column prop="test_content" label="测试内容"></el-table-column>
+                      <el-table-column prop="place" label="测试地点"></el-table-column>
+                      <el-table-column prop="measured_data" label="测试数据"></el-table-column>
+                      <el-table-column prop="permissible_value" label="允许值"></el-table-column>
+                      <el-table-column prop="test_result" label="测试结果"></el-table-column> 
+                      <el-table-column prop="weather" label="测试当日天气"></el-table-column>
+                      <el-table-column prop="tester" label="测试人员"></el-table-column>
+                      <el-table-column prop="monitor" label="监测人"></el-table-column>
+                      <el-table-column prop="create_time" label="测试日期"></el-table-column>
+                      <el-table-column label="操作" width="450" fixed="right">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                          <!-- <el-button @click="handleClick(scope.row, 'key')" size="small">设备台帐属性</el-button> -->
+                          <!-- <el-button @click="handleClick(scope.row, 'reply')" size="small">批复</el-button>
+                          <el-button @click="handleClick(scope.row, 'check_case')" size="small">查看完成情况</el-button> -->
+                          <!-- <el-button @click="handleClick(scope.row, 'value')" size="small">设备台帐数据</el-button> -->
+                         
+                          <!-- <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button> -->
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- dialog -->
+            <el-dialog title="添加设备检修试验管理数据" :visible.sync="dialogVisible">
+              <el-row :gutter="20">
+                <el-col :span="16" :offset="4">
+                  <el-form :model="selectData" ref="ruleForm" label-position="left" label-width="150px" :rules="rules"> 
+                    <el-form-item label="单位名称" prop="name_unit">
+                      <el-input v-model="selectData.name_unit" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="设备生产日期" prop="manufacture"> 
+                        <el-date-picker placeholder="请输入设备生产日期" type="datetime" v-model="selectData.manufacture" value-format="yyyy-MM-dd">
+                      </el-date-picker>
+                      </el-form-item>
+                    <el-form-item label="测试仪器" prop="testing_instrument">
+                      <el-input v-model="selectData.testing_instrument" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="测试项目" prop="test_items">
+                      <el-input v-model="selectData.test_items" clearable></el-input> <!--:disabled="selectData.id"-->
+                    </el-form-item>
+                    <el-form-item label="测试内容" prop="test_content">
+                      <el-input v-model="selectData.test_content" clearable  ></el-input>
+                    </el-form-item>
+                    <el-form-item label="测试地点" prop="place">
+                      <el-input v-model="selectData.place" clearable  ></el-input>
+                    </el-form-item>
+                    <el-form-item label="测试数据" prop="measured_data">
+                      <el-input v-model="selectData.measured_data" clearable ></el-input> 
+                    </el-form-item>
+                    <el-form-item label="允许值" prop="permissible_value">
+                      <el-input v-model="selectData.permissible_value" clearable  ></el-input>  
+                    </el-form-item>
+
+                    <el-form-item label="测试结果" prop="test_result">
+                        <el-input v-model="selectData.test_result" clearable  ></el-input>
+                      </el-form-item>
+                      <el-form-item label="测试当日天气" prop="weather">
+                        <el-input v-model="selectData.weather" clearable ></el-input> 
+                      </el-form-item>
+                      <el-form-item label="测试人员" prop="tester">
+                        <el-input v-model="selectData.tester" clearable  ></el-input>  
+                      </el-form-item>
+
+                      <el-form-item label="监测人" prop="monitor">
+                        <el-input v-model="selectData.monitor" clearable ></el-input> 
+                      </el-form-item>
+                      <el-form-item label="测试日期" prop="create_time">
+                        <el-date-picker placeholder="请输入测试日期" type="datetime" v-model="selectData.create_time" value-format="yyyy-MM-dd ">
+                        </el-date-picker> 
+                      </el-form-item>
+ 
+                      <el-form-item>
+                        <el-button @click="dialogVisible = false;" plain>取消</el-button>
+                        <el-button type="primary" @click="submit">提交</el-button>
+                      </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+            </el-dialog>
+            <!-- attrDialog -->
+            <el-dialog title="设备台帐属性" :visible.sync="attrDialogVisible" width="75%">
+              <el-card>
+                <div style="margin-bottom: 20px;">
+                  <el-button size="small" plain type="primary" @click="addAttr">增加属性</el-button>
+                </div>
+                <el-table :data="attrTableData" stripe>
+                  <el-table-column prop="attr" label="属性名"></el-table-column>
+                  <el-table-column prop="abbr" label="字段名"></el-table-column>
+                  <el-table-column prop="type" label="字段类型">
+                    <template slot-scope="scope">
+                      <el-tag v-if="scope.row.type == 1" type="success" size="mini">文本</el-tag>
+                      <el-tag v-else-if="scope.row.type == 2" type="primary" size="mini">图片</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" width="150" fixed="right">
+                    <template slot-scope="scope">
+                      <el-button @click="attrHandleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                      <el-button @click="attrHandleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-card>
+              <!-- attrInnerDialog -->
+              <el-dialog title="编辑设备台帐属性" :visible.sync="attrInnerDialogVisible" append-to-body>
+                <el-row :gutter="20">
+                  <el-col :span="16" :offset="4">
+                    <el-form :model="selectAttrData" ref="attrForm" label-position="left" label-width="150px" :rules="attrRules">
+                      <el-form-item label="属性名" prop="attr">
+                        <el-input v-model="selectAttrData.attr" clearable></el-input>
+                      </el-form-item>
+                      <el-form-item label="字段名" prop="abbr">
+                        <el-input v-model="selectAttrData.abbr" :disabled="isEdit"></el-input>
+                      </el-form-item>
+                      <el-form-item label="类型" prop="type">
+                        <el-select v-model="selectAttrData.type" placeholder="请选择">
+                          <el-option v-for="item in attrOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-form-item>
+                          <el-button @click="attrInnerDialogVisible = false;" plain>取消</el-button>
+                          <el-button type="primary" @click="attrSubmit">提交</el-button>
+                        </el-form-item>
+                    </el-form>
+                  </el-col>
+                </el-row>
+              </el-dialog>
+            </el-dialog>
+            <!-- valueDialog -->
+             
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          is_role:$.inArray(3,user.role_ids), 
+          tableData: [],  //表格数据
+          currentPage: parseInt(querystring.currentPage) || 1, //当前页
+          currentPageSize: 20,  //当前页容量
+          pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          total: 0, //总页数
+          multipleSelection: [],  //多选项
+          // 查询条件
+          searchData: {
+            // name: '',
+            // table_name: ''
+          },
+          // -------------- dialog ---------------
+          dialogVisible: false,
+          selectData: {},
+          rules: {
+            name: [
+              { required: true, message: '请输入事故名称', trigger: 'blur' },
+            ],
+            table_name: [
+              { required: true, message: '请输入设备台帐数据表名', trigger: 'blur' },
+            ],
+          },
+          // -------------- attrDialog -----------------
+          attrDialogVisible: false,
+          attrTableData: [],  //表格数据
+          // -------------- attrInnerDialog --------------
+          attrInnerDialogVisible: false,
+          selectAttrData: {},
+          attrOptions: [
+            {
+              label: '文本',
+              value: 1
+            }, {
+              label: '图片',
+              value: 2
+            }
+          ],
+          attrRules: {
+            attr: [
+              { required: true, message: '请输入属性名称', trigger: 'blur' },
+            ],
+            abbr: [
+              { required: true, message: '请输入字段名', trigger: 'blur' },
+            ],
+            type: [
+              { required: true, message: '请选择属性类型', trigger: 'blur' },
+            ],
+          },
+          isEdit: false,
+          // -------------- valueDialog -----------------
+          valueDialogVisible: false,
+          valueTableData: [],
+          valueCurrentPage: 1, //当前页
+          valueCurrentPageSize: 20,  //当前页容量
+          valuePageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          valueTotal: 0, //总页数
+          keys: [],
+          // -------------- valueInnerDialog ----------------
+          valueInnerDialogVisible: false,
+          selectValueData: {},
+          currentAbbr: ''
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_systems/dds/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                this.tableData.splice(this.tableData.indexOf(data), 1);
+              })
+            })
+          } else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.dialogVisible = true;
+          } else if (type === 'reply') {
+            this.$message.success('回复成功')
+
+          }else if (type === 'check_case') {
+            this.$message.success('正在检修')
+            
+          }else if (type === 'key') {
+            this.selectData = deepCopy(data);
+            this.attrLoadTableData();
+          } else if (type === 'value') {
+            this.selectData = deepCopy(data);
+            httpRequest('POST', 'api_systems/dds/table_info', {
+              table_name: data.table_name
+            }).then(resp => {
+              this.keys = resp.data;
+              this.valueLoadTableData();
+              this.valueDialogVisible = true;
+            })
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 导出数据
+        export_data() {
+          this.$confirm('确认导出?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_systems/facility_maintenance/export', this.searchData).then(resp => {
+                this.$message.success(resp.msg);
+                window.open(resp.data);
+              })
+          })
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', `api_systems/facility_maintenance/batch_${type}`, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 新增
+        goAdd() {
+          this.selectData = {
+            hazard_level:0,
+          }
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_systems/facility_maintenance/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // --------------- dialog ---------------
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              let router = this.selectData.id ? 'api_systems/facility_maintenance/update' : 'api_systems/facility_maintenance/save';
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            } else {
+              return false;
+            }
+          });
+        },
+        attrLoadTableData() {
+          httpRequest('POST', 'api_systems/dds/table_info', {
+            table_name: this.selectData.table_name
+          }).then(resp => {
+            this.attrTableData = resp.data;
+            this.attrDialogVisible = true;
+          })
+        },
+        // -------------- attrDialog ----------------
+        attrHandleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_systems/dds/del_table_field', {
+                table_name: this.selectData.table_name,
+                abbr: data.abbr
+              }).then(resp => {
+                this.$message.success(resp.msg);
+                this.attrTableData.splice(this.attrTableData.indexOf(data), 1);
+              })
+            })
+          } else if (type == 'edit') {
+            this.selectAttrData = deepCopy(data);
+            this.isEdit = true;
+            this.attrInnerDialogVisible = true;
+          }
+        },
+        addAttr() {
+          this.selectAttrData = {
+            attr: '',
+            abbr: '',
+            type: '',
+          };
+          this.isEdit = false;
+          this.attrInnerDialogVisible = true;
+        },
+        // -------------- attrInnerDialog --------------
+        attrSubmit() {
+          this.$refs.attrForm.validate(valid => {
+            if (valid) {
+              this.selectAttrData.table_name = this.selectData.table_name;
+              let router = this.isEdit ? 'api_systems/dds/mod_table_field' : 'api_systems/dds/add_table_field';
+              httpRequest('POST', router, this.selectAttrData).then(resp => {
+                this.$message.success(resp.msg);
+                this.attrLoadTableData();
+                this.attrInnerDialogVisible = false;
+              })
+            } else {
+              return false;
+            }
+          })
+        },
+        // -------------- valueDialog ----------------
+        valueLoadTableData() {
+          httpRequest('POST', 'api_systems/dds/all_table_data', {
+            table_name: this.selectData.table_name
+          }, {
+              'page-num': this.valueCurrentPage,
+              'page-limit': this.valueCurrentPageSize
+            }).then(resp => {
+              this.valueTableData = resp.data;
+              this.valueTotal = resp.page.data_count || 0;
+            })
+        },
+        // 跳页
+        valueHandleCurrentChange(val) {
+          this.valueCurrentPage = val;
+          this.valueLoadTableData();
+        },
+        // 改变页容量
+        valueHandleSizeChange(val) {
+          this.valueCurrentPageSize = val;
+          this.valueLoadTableData();
+        },
+        valueHandleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_systems/dds/del_table_data', {
+                table_name: this.selectData.table_name,
+                id: data.id
+              }).then(resp => {
+                this.$message.success(resp.msg);
+                this.valueTableData.splice(this.valueTableData.indexOf(data), 1);
+              })
+            })
+          } else if (type == 'edit') {
+            this.selectValueData = deepCopy(data);
+            this.valueInnerDialogVisible = true;
+          }
+        },
+        // 增加设备台帐数据
+        addValue() {
+          this.valueInnerDialogVisible = true;
+        },
+        // -------------- valueInnerDialog ----------------
+        // 设备台帐数据提交
+        valueSubmit() {
+          let router = this.selectValueData.id ? 'api_systems/dds/mod_table_data' : 'api_systems/dds/add_table_data';
+          this.selectValueData.table_name = this.selectData.table_name;
+          httpRequest('POST', router, this.selectValueData).then(resp => {
+            this.$message.success(resp.msg);
+            setTimeout(_ => {
+              location.reload();
+            }, 500);
+          })
+        },
+        fileClick(abbr) {
+          this.currentAbbr = abbr;
+          document.getElementById('imgAdd').click();
+        },
+        fileChange(el) {
+          Array.from(el.target.files).forEach(item => {
+            let formData = new FormData();
+            formData.append('file', item);
+            formData.append('save_path', userImagePath);
+            formData.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData).then(resp => {
+              Vue.set(this.selectValueData, this.currentAbbr, resp.data.host_file_path)
+            })
+          })
+        },
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+</body>
+
+</html>

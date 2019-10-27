@@ -1,0 +1,274 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="this">
+            <fieldset>
+              <legend>月数据统计</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <!-- 筛选条件 -->
+                  <el-row :gutter="20">
+                    <el-col :span="5">
+                      <el-input placeholder="请输入水库名全称" v-model="searchData.name">
+                        <template slot="prepend">水库名称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>统计列表</span>
+                    <el-button icon="el-icon-download" @click="export_data();">导出数据</el-button>
+                    <!-- <el-button type="primary" icon="el-icon-plus" style="float:right;" size="mini" @click="goAdd()">新增月数据</el-button> -->
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%">
+                      <el-table-column prop="name" label="水库名称" fixed></el-table-column>
+                      <el-table-column prop="dateline" label="日期" fixed></el-table-column>
+                      <el-table-column prop="water_yield" label="进库水量" fixed></el-table-column>
+                      <el-table-column prop="electricity" label="出库（发电）水量m3" fixed></el-table-column>
+                      <el-table-column prop="imports" label="进口引水（进库引水情况m3）" fixed></el-table-column>
+                      <el-table-column prop="hanyama" label="半山引水（半山引水情况m3）" fixed></el-table-column>
+                      <el-table-column prop="rainfall" label="降雨（MM）" fixed></el-table-column>
+                      <!-- <el-table-column prop="create_time " label=" 录入时间" fixed></el-table-column> -->
+                      <!-- <el-table-column label="操作" width="300" fixed="right">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                          <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                        </template>
+                      </el-table-column> -->
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- dialog -->
+            <el-dialog :visible.sync="dialogVisible" title="编辑月份数据">
+              <el-row :gutter="20">
+                <el-col :span="16" :offset="4">
+                  <el-form :model="selectData" ref="ruleForm" label-position="left" label-width="280px" :rules="rules">
+                    <el-form-item label="水库名称" prop="name">
+                      <el-input v-model="selectData.name" clearable></el-input>
+                    </el-form-item>
+                    
+                    <el-form-item label="日期" prop="dateline">
+                      <el-input v-model="selectData.dateline" clearable></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="进库水量" prop="water_yield">
+                      <el-input v-model="selectData.water_yield" clearable></el-input>
+                    </el-form-item>
+
+                   <!--  <el-form-item label="出库水量" prop="delivery">
+                      <el-input v-model="selectData.delivery" clearable></el-input>
+                    </el-form-item> -->
+                    
+                    <el-form-item label="出库（发电）水量m3" prop="electricity">
+                      <el-input v-model="selectData.electricity" clearable></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="进口引水（进库引水情况m3）" prop="imports">
+                      <el-input v-model="selectData.imports" clearable></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="半山引水（半山引水情况m3）" prop="hanyama">
+                      <el-input v-model="selectData.hanyama" clearable></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="降雨（MM）" prop="rainfall">
+                      <el-input v-model="selectData.rainfall" clearable></el-input>
+                    </el-form-item>
+                    
+                    <el-form-item label="录入时间" prop="create_time">
+                      <el-date-picker v-model="selectData.create_time" type="datetime" placeholder="请输入开始日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                    </el-form-item>
+                    
+                    <el-form-item>
+                      <el-button @click="dialogVisible = false;" plain>取消</el-button>
+                      <el-button type="primary" @click="submit">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+              </el-row>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#this',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60], //分页大小
+        total: 0, //总页数
+        searchData: { // 查询条件
+        },
+        // --------------- dialog --------------
+        dialogVisible: false,
+        selectData: {},
+        options: [],
+        rules: {
+          name: [
+            { required: true, message: '请输入水库名称', trigger: 'blur' },
+          ],
+          dateline: [
+            { required: true, message: '请输入月份', trigger: 'blur' },
+          ],
+        },
+        // -------------- dialog2 ---------------
+        dialogVisible2: false,
+        isSelectedAll: false,
+        treeData: [],
+        defaultCheckedKeys: [],
+        nav_powers: [],
+        filterText: '',
+        treeIds: [],
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_monthly_statistics/Monthly_statistics/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          } else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.dialogVisible = true;
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 导出数据
+        export_data() {
+          this.$confirm('确认导出?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_monthly_statistics/monthly_statistics/export', this.searchData).then(resp => {
+                this.$message.success(resp.msg);
+                window.open(resp.data);
+              })
+          })
+        },
+        // 新增
+        goAdd() {
+          /* this.selectData = {
+            name: '',
+            type: '',
+            intro: ''
+          }, */
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_monthly_statistics/Monthly_statistics/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // ------------- dialog ----------------
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              let router = this.selectData.id ? 'api_monthly_statistics/Monthly_statistics/update' : 'api_monthly_statistics/Monthly_statistics/save';
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            } else {
+              return false;
+            }
+          });
+        },
+        selectAll() {
+          if (this.isSelectedAll) {
+            this.$refs.treeData.setCheckedKeys([])
+          } else {
+            this.$refs.treeData.setCheckedKeys(this.treeIds)
+          }
+          this.isSelectedAll = !this.isSelectedAll;
+        },
+        filterNode(value, data) {
+          if (!value) return true;
+          return data.label.indexOf(value) !== -1;
+        }
+      },
+      watch: {
+        filterText(val) {
+          this.$refs.treeData.filter(val);
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+</body>
+
+</html>

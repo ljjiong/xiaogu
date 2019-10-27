@@ -1,0 +1,241 @@
+<div id="header">
+	<div class="header-nav">
+		<nav class="w1200">
+			<div class="nav-wraper">
+				<ul class="left hide-no-medand-down">
+					<li class="margin-lr-15" v-text="'Hi,欢迎来到'+title" style="width: 130px;"></li>
+					<li class="margin-lr-15 bt relative wap-qrcodehover">
+						<i class="iconfont icon-shouji blue-text bt"></i><span v-text="telephone"></span>
+						<div id="wap-qrcode">
+						</div>
+					</li>
+				</ul>
+				<ul class="right hide-no-medand-down">
+					<li class="margin-lr-15 bt" @click="gohome()">
+						<i class="iconfont icon-peoplefill blue-text"></i>
+						<span v-if="user" v-text=" user.nick_name ||  user.mobile "></span>
+						<span v-else>免费注册</span>
+					</li>
+					<li v-if="user" class="margin-lr-15 bt" @click="gologin()" style="height: 24px;line-height: 24px;margin-top: 5px;">
+						退出登录</li>
+					<li v-else class="margin-lr-15 bt" @click="goto('login')" style="height: 24px;line-height: 24px;margin-top: 5px;">
+						登录</li>
+					<li class="margin-lr-15 bt" @click="gocart()">
+						<i class="iconfont icon-gouwuchefill blue-text"></i> 我的购物车</li>
+					<li class="margin-lr-15 bt" @click="goorder()">
+						<i class="iconfont icon-jilu blue-text"></i> 我的订单</li>
+					<!-- <li class="margin-lr-15 bt">
+						<i class="iconfont icon-custom-service blue-text"></i> 联系客服</li> -->
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<div class="white over" style="padding-top: 25px;width: 100%;">
+		<div class="row w1200 margin-top-15 grey-text text-darken-2">
+			<div class="col s3 left">
+				<div class=" relative pointer" @click="goto('index')">
+					<img :src="logo" class="margin-top-10">
+					<div style="text-align:center" class="margin-top-10 logo-text" v-text="title"></div>
+					<div class="header-nav-line"></div>
+				</div>
+			</div>
+			<div class="col s6">
+				<div class="bor-inp blue center flex">
+					<input type="" id="inpwords" name="inpwords" placeholder="请输入搜索关键词" style="border: none;flex: 1;" v-model="search_text">
+					<i class="iconfont icon-sousuo dp48" id="clicsearch" @click="goSearch()"></i>
+				</div>
+				<div class="over margin-top-10 margin-left-15" style="margin-left:20px; width: 525px;cursor:default">
+					<div class="left padding-lr-5 biaoqian hoverblue" v-for="(goods_keyword,key) in goods_keywords" :key="key" v-text="goods_keyword.keyword"
+					 @click="goSearch(goods_keyword.keyword)"></div>
+				</div>
+			</div>
+			<div class="col s3">
+				<div class="row tr-icon">
+					<div class="col s4 center margin-top-5">
+						<i>正</i>
+						<p class="margin-top-5" style="color: rgb(38, 38, 38)">正品保障</p>
+					</div>
+					<div class="col s4 center margin-top-5">
+						<i class="iconfont icon-lightningbshandian"></i>
+						<p class="margin-top-5" style="color: rgb(38, 38, 38)">闪电发货</p>
+					</div>
+					<div class="col s4 center margin-top-5">
+						<i class="iconfont icon-shouhouwuyou"></i>
+						<p class="margin-top-5" style="color: rgb(38, 38, 38)">售后无忧</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="minwid1200">
+		<div class="sblue" style="height: 41px;">
+			<div class="flex w1200 header-blue-nav" style="margin-bottom: 0;position: relative;">
+				<div class="nav-shouye center white-text" style="padding:0">
+					<!-- 下拉导航 -->
+					<div class="nav-ul bt">
+						<div class="nav-li  black" id="navigation" style="height: 41px;line-height: 41px;">
+							<i class="iconfont icon-hanbaobao"></i>
+							<span>所有商品</span>
+							<div class="nav-beijin" style="height: 41px;line-height: 41px;"></div>
+						</div>
+						<div class="nav-li " v-for="(cate,key) in cates" :key="key" @click="goSearch(cate.name)">
+							<span v-text="cate.name"></span>
+							<div class="nav-beijin black">
+								<div class="line"></div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<a class="nav-qita center white-text padding-tt-10" href="/">首页</a>
+				<a class="nav-qita center white-text padding-tt-10 bt" @click="godiscount();">今日限时购</a>
+				<a class="nav-qita center white-text padding-tt-10" href="/portal/index/coupon">活动专区</a>
+				<a class="nav-qita center white-text padding-tt-10 bt" v-for="(cate,key) in cates.slice(0,4)" :key="key" @click="goSearch(cate.name)"
+				 v-text="cate.name"></a>
+				<a class="nav-qita center white-text padding-top-10 relative center bt right" style="padding-bottom:7px;background: #43a7ef;position: absolute;right: 0;"
+				 @click="goto('cart_list')">
+					<i class="iconfont icon-gouwuche white-text "></i> 购物车
+					<span class="header_cart_num" v-text="carts"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/public/static/common/script/qrcode.min.js"></script>
+<script>
+	var header = new Vue({
+		el: "#header",
+		data: {
+			carts: 0,
+			user: user,
+			cates: [],
+			goods_keywords: [],
+			discountIsselect: false,
+			search_text: '',
+			logo: '',
+			title:'',
+			telephone:''
+		},
+		methods: {
+			gologin: function () {
+				if (user) {
+					layer.confirm('确认退出登录?', {
+						title: '提示',
+					}, function (index) {
+						layer.close(index);
+						rmStorage(getClientType() + 'User');
+						rmStorage(getClientType() + 'Token');
+						clearStorage(sessionStorage);
+						goto('index')
+					})
+				}
+			},
+			goSearch: function (data) {
+				if (this.search_text) {
+					goto('search_list', { keyword: header.search_text });
+				}
+				goto('search_list', { keyword: data });
+			},
+			gohome: function () {
+				if (user) {
+					goto('home');
+				} else{
+					goto('login')
+				}
+			},
+			gocart: function () {
+				goto('cart_list');
+			},
+			goorder: function () {
+				goto('order_list');
+			},
+			godiscount: function () {
+				if (header.discountIsselect) {
+					goto('discount')
+					return;
+				}
+				layer.msg("活动暂未开启，敬请期待！")
+			}
+		},
+		mounted: function () {
+			var that = this;
+			httpRequest('POST', 'api_query/market/activity', {}, function (resp) {
+				if (resp.data.discount) {
+					// 计算截至时间
+					resp.data.discount[0].deadline = resp.data.discount[0].end_timestamp * 1000 - Date.now();
+					// 限时折扣+
+					resp.data.discount[0].rule_info.forEach(function (item) {
+						item.href = location.origin + '/portal/index/goods_detail?isDiscountGoods=1&goodsId=' + item.goods_id
+					})
+					that.discountActivity = resp.data.discount[0];
+					// 倒计时
+					setInterval(function () {
+						that.discountActivity.deadline -= 1000;
+						//   getTime(that.discountActivity.deadline)
+					}, 1000)
+					if (that.discountActivity.deadline) {
+						header.discountIsselect = true;
+					}
+				}
+			})
+
+
+
+			//首页logo
+		    httpRequest('POST', 'api_systems/params/getParams', {type: 'basic'}, function (resp) {
+		    	 
+		    	if (resp.data)
+	    		{
+		    		console.log(resp.data);
+		    		header.logo = resp.data.home_pc_logo;
+		    		header.title=resp.data.system_title;
+		    		header.telephone=resp.data.customer_telephone;
+	    		}
+            	
+		    	
+		    })
+		
+			
+
+
+	// 商品分类
+	httpRequest('POST', 'api_goods/goods_cates/lists_tree', {}, function (resp) {
+		if (resp.code == 1) {
+			header.cates = resp.data;
+		}
+		httpRequest('POST', 'api_goods/goods_keywords/lists', {}, function (resp) {
+			header.goods_keywords = resp.data
+		})
+	})
+	
+    }
+  })
+
+	new QRCode(document.getElementById("wap-qrcode"), location.origin);
+
+	$('#navigation').click(function () {
+		$('.nav-ul').stop().animate({ height: "460px" }, 500)
+		if ($('.nav-ul').height() == 460) {
+			$('.nav-ul').stop().animate({ height: "41px" }, 500)
+		}
+	});
+	$('#clicsearch').click(function () {
+		var keysear = $("input[name='inpwords']").val();
+		window.location = '/portal/index/search_list?keyword=' + keysear;
+	});
+	$('#inpwords').bind('keyup', function (event) {
+		if (event.keyCode == "13") {
+			var keysear = $("input[name='inpwords']").val();
+			window.location = '/portal/index/search_list?keyword=' + keysear;
+		}
+	});
+	localdata = function () {
+		if (user) {
+			httpRequest('POST', 'api_goods/carts/lists', {}, function (resp) {
+				header.carts = resp.data.length;
+			})
+			return;
+		}
+	}
+	localdata();
+</script>

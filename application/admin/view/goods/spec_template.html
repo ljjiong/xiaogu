@@ -1,0 +1,273 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>商品规格模板</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col :span="24">
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入模板名" v-model="searchData.name">
+                        <template slot="prepend">模板名</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>商品规格模板列表</span>
+                    <el-button type="primary" style="float: right;" size="mini" icon="el-icon-plus" @click="goAdd()">新增商品规格模板</el-button>
+                  </div>
+                  <!-- 批量操作 -->
+                  <div style="margin-bottom: 10px;">
+                    <el-button type="danger" size="small" plain icon="el-icon-delete" @click="multiOperate('delete')" :disabled="multipleSelection.length == 0">批量删除</el-button>
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                      <el-table-column type="selection"> </el-table-column>
+                      <el-table-column prop="id" label="ID" width="80" fixed sortable></el-table-column>
+                      <el-table-column prop="name" label="模板名"></el-table-column>
+                      <el-table-column prop="intro" label="模板简介"></el-table-column>
+                      <!-- 操作栏 两个操作width设置为140 三个200 -->
+                      <el-table-column label="操作" fixed="right" width="150">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
+                          <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 编辑dialog -->
+            <el-dialog title="模板编辑" :visible.sync="dialogVisible" :before-close="handleClose" width="70%" :close-on-click-modal="false">
+              <el-row :gutter="20">
+                <el-col :span="14">
+                  <el-form ref="form" :model="selectTemplate" label-width="100px" inline>
+                    <el-form-item label="模板名称" prop="name">
+                      <el-input v-model="selectTemplate.name" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="模板简介" prop="intro">
+                      <el-input v-model="selectTemplate.intro" clearable></el-input>
+                    </el-form-item>
+                  </el-form>
+                </el-col>
+                <el-col :span="8" v-if="selectTemplate.name">
+                  <el-button type="primary" plain @click="addContent">增加规格</el-button>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="8" v-for="(cont, key) in selectTemplate.content" :key="key" style="margin-bottom: 20px;">
+                  <el-card>
+                    <div slot="header">
+                      <span v-text="cont.name"></span>
+                      <el-button style="float: right; padding: 3px 0" type="text" icon="el-icon-delete" @click="selectTemplate.content.splice(key, 1)"></el-button>
+                    </div>
+                    <el-form label-position="left" label-width="90">
+                      <el-form-item v-for="(option, oKey) in cont.options" :key="oKey" :label="cont.name + '项' + (oKey + 1)">
+                        <el-input clearable v-model="cont.options[oKey]" style="width: 60%;"></el-input>
+                        <el-button style="float:right;" v-if="oKey != 0" @click="cont.options.splice(oKey, 1)">移除</el-button>
+                      </el-form-item>
+                    </el-form>
+                    <el-button type="primary" size="medium" icon="el-icon-plus" circle plain @click="cont.options.push('')"></el-button>
+                  </el-card>
+                </el-col>
+              </el-row>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="updateTemplate">提交</el-button>
+              </span>
+            </el-dialog>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          tableData: [],  //表格数据
+          currentPage: parseInt(querystring.currentPage) || 1, //当前页
+          currentPageSize: 20,  //当前页容量
+          pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          total: 0, //总页数
+          multipleSelection: [],  //多选项
+          // 查询条件
+          searchData: {
+            name: '',
+          },
+          // dialog
+          selectTemplate: {
+            name: '',
+            content: [],
+          },
+          dialogVisible: false,
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?',{ type : 'warning' }).then(_ => {
+              httpRequest('POST', 'api_goods/spec_templates/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            }).catch((e) => {
+              this.$message.info('操作取消');
+            })
+          } else if (type === 'edit') {
+            this.selectTemplate = deepCopy(data);
+            this.dialogVisible = true;
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type :  'warning' }).then(_ => {
+            httpRequest('POST', 'api_goods/spec_templates/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          }).catch(err => {
+            this.$message.info('操作取消');
+          });
+        },
+        // 新增
+        goAdd() {
+          this.selectTemplate = {
+            name: '',
+            content: [],
+          };
+          this.dialogVisible = true;
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_goods/spec_templates/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // dialog 关闭
+        handleClose(done) {
+          this.$confirm('确认离开？')
+            .then(_ => {
+              done();
+            })
+            .catch(err => { });
+        },
+        // 增加规格
+        addContent() {
+          this.$prompt('请输入规格名称', '提示', {
+            inputPattern: /.+/,
+            inputErrorMessage: '请填写规格名称'
+          }).then(({ value }) => {
+            this.selectTemplate.content.push({
+              name: value,
+              options: [''],
+            })
+          })
+        },
+        updateTemplate() {
+          if (!this.selectTemplate.name) {
+            this.$message.error('请填写模板名称');
+            return;
+          }
+          if (!this.selectTemplate.content.length) {
+            this.$message.error('请添加规格');
+            return;
+          }
+          if (this.selectTemplate.content.some(cont => cont.options.some(option => !option))) {
+            this.$message.error('请填写完整的规格项');
+            return;
+          }
+          let router = this.selectTemplate.id ? 'api_goods/spec_templates/update' : 'api_goods/spec_templates/save';
+          httpRequest('POST', router, this.selectTemplate).then(resp => {
+            this.$message.success(resp.msg);
+            setTimeout(_ => {
+              location.reload();
+            }, 500);
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+
+</body>
+
+</html>

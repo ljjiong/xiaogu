@@ -1,0 +1,229 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>会员优惠券</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col :span="24">
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <span style="padding: 0px  10px;">所属活动</span>
+                      <el-select v-model="searchData.market_activity_id" placeholder="请选择">
+                        <el-option v-for="item in market_activities" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入手机号称" v-model="searchData.mobile">
+                        <template slot="prepend">用户手机号</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>用户优惠券列表</span>
+                    <!-- <el-button type="primary" style="float: right;" size="mini" icon="el-icon-plus" @click="goAdd()">新增用户优惠券</el-button> -->
+                  </div>
+                  <!-- 批量操作 -->
+                  <div style="margin-bottom: 10px;">
+                   <!--  <el-button type="danger" size="small" plain icon="el-icon-delete" @click="multiOperate('delete')" :disabled="multipleSelection.length == 0">批量删除</el-button> -->
+                    <!-- <el-button type="danger" size="small" plain icon="el-icon-error" @click="multiOperate('off_line')" :disabled="multipleSelection.length == 0">批量下线</el-button> -->
+                    <!-- <el-button type="success" size="small" plain icon="el-icon-success" @click="multiOperate('on_line')" :disabled="multipleSelection.length == 0">批量上线</el-button> -->
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                      <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
+                      <el-table-column type="expand" width="55">
+                        <template slot-scope="scope">
+                          <el-form label-position="left" label-width="100px">
+                            <el-form-item label="优惠券编号">{{scope.row.coupon_no}}</el-form-item>
+                            <el-form-item label="失效时间">
+                              <i class="el-icon-time"></i> {{scope.row.expiry_time}}</el-form-item>
+                          </el-form>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
+                      <el-table-column prop="user_info.mobile" label="用户手机号"></el-table-column>
+                      <el-table-column prop="user_info.nick_name" label="用户昵称"></el-table-column>
+                      <el-table-column prop="activity_name" label="所属活动"></el-table-column>
+                      <el-table-column prop="coupon_type" label="用户优惠券类型">
+                        <template slot-scope="scope">
+                          <el-tag size="mini" type="success" v-if="scope.row.coupon_type  == 'full'">满减用户优惠券</el-tag>
+                          <el-tag size="mini" type="warning" type="info" v-else-if="scope.row.coupon_type  == 'discount'">折扣用户优惠券</el-tag>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="" label="优惠内容">
+                        <template slot-scope="scope">
+                          <el-tag size="mini" type="success" v-if="scope.row.coupon_type == 'full'">{{'满' + scope.row.reach_money + '减' + scope.row.change_value}}</el-tag>
+                          <el-tag size="mini" type="warning" v-else-if="scope.row.coupon_type == 'discount'">{{'满' + scope.row.reach_money + '打' + Math.floor(scope.row.change_value) + '折'}}</el-tag>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="status" label="状态" :filters="statusFilters" :filter-method="statusFilterHandler">
+                        <template slot-scope="scope">
+                          <el-tag v-if="scope.row.status == 1" type="success" size="mini">未使用</el-tag>
+                          <el-tag v-else-if="scope.row.status == 2" type="info" size="mini">已使用</el-tag>
+                        </template>
+                      </el-table-column>
+                      <!-- 操作栏 两个操作width设置为140 三个200 -->
+                      <!-- <el-table-column label="操作" width="80" fixed="right">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                        </template>
+                      </el-table-column> -->
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        // 状态过滤
+        statusFilters: [{
+          text: '未使用',
+          value: 1
+        }, {
+          text: '已使用',
+          value: 2
+        }],
+        // 活动列表
+        market_activities: [],
+        // 查询条件
+        searchData: {
+          market_activity_id: '',
+          mobile: ''
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_users/user_coupons/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_users/user_coupons/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_users/user_coupons/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            resp.data.forEach(item => {
+              item.change_value = Number(item.change_value).toPrecision();
+              item.reach_money = Number(item.reach_money).toPrecision();
+            })
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        // 用户优惠券活动列表
+        httpRequest('POST', 'api_market/market_activities/index').then(resp => {
+          this.market_activities = resp.data.filter(item => item.type == 'coupon');
+          this.loadTableData();
+        })
+      }
+    });
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<style type="text/css" media="screen">
+	a {
+		cursor: pointer;
+	}
+</style>
+</head>
+
+<body class="body-bg">
+	{include file="/index/header" /}
+	<div id="app">
+		<div class="personal-center-top w1200 clearfix">
+			<div class="left">
+				<div class="img">
+					<img src="/public/static/portal/images/grzx.png" />
+				</div>
+				<div class="name">我的订单</div>
+				<div class="english">orders</div>
+			</div>
+			<div class="right">
+				<ul id="status">
+					<li v-bind:class="{active:(status == 4)}" onclick="queryOrderList(4);">
+						<a>待评价</a>
+					</li>
+					<li v-bind:class="{active:(status == 3)}" onclick="queryOrderList(3);">
+						<a>待收货</a>
+					</li>
+					<li v-bind:class="{active:(status == 2)}" onclick="queryOrderList(2);">
+						<a>待发货</a>
+					</li>
+					<li v-bind:class="{active:(status == 1)}" onclick="queryOrderList(1);">
+						<a>待付款</a>
+					</li>
+					<li v-bind:class="{active:(status == 0)}" onclick="queryOrderList(0);">
+						<a>所有订单</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="personal-center-bottom clearfix w1200">
+			<div class="left">
+				<div class="head-portrait">
+					<img id="avatar" src="" />
+				</div>
+				<div class="my-nav">
+					<ul>
+						<li class="active">
+							<a href="{:url('Index/orders')}">我的订单</a>
+						</li>
+						<li>
+							<a href="{:url('Index/comments')}">我的评价</a>
+						</li>
+						<li>
+							<a href="{:url('Index/addresses')}">收货地址</a>
+						</li>
+						<li>
+							<a href="{:url('Index/carts')}">我的购物车</a>
+						</li>
+						<li>
+							<a href="{:url('Index/collections')}">我的收藏</a>
+						</li>
+						<li>
+							<a href="{:url('Index/userinfo')}">账户安全</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="right">
+				<div class="personal-center-menu clearfix">
+					<div class="goods">商品</div>
+					<div class="price">售价（元）</div>
+					<div class="num">数量</div>
+					<div class="goods-operation">商品操作</div>
+					<div class="total">总计（元）</div>
+					<div class="state">订单状态</div>
+					<div class="operation">操作</div>
+				</div>
+				<div class="order-state-list">
+					<div class="external-border" v-for="order in orders" v-bind:key="order.id">
+						<div class="order-number clearfix">
+							<div class="number" v-text="'订单编号' + order.order_no"></div>
+							<div class="time" v-text="'下单时间' + order.create_time"></div>
+							<div class="delete" style="cursor: pointer;" @click="deleteOrder(order)" v-if="order.status== 9">
+								<i class="fa fa-trash"></i>
+							</div>
+						</div>
+						<div class="order-info">
+							<div class="goods clearfix" v-for="(goods,key) in order.goods_info" v-bind:key="goods.id">
+								<div class="clearfix border">
+									<div class="img" @click="goGoods(goods)">
+										<img v-bind:src="goods.thum" style="cursor: pointer;">
+									</div>
+									<div class="text clearfix" @click="goGoods(goods)" style="cursor: pointer;">
+										<div class="title" v-text="goods.name"></div>
+										<div class="smalltext" v-text="goods.intro"></div>
+									</div>
+									<div class="price" v-text="'￥' + goods.price"></div>
+									<div class="num" v-text="'x' + goods.num"></div>
+									<a href="javascript:void(0)" @click="commentGoods(goods)" v-if="order.status == 4 && goods.is_comment == 0"
+									 class="cancel-order">评价</a>
+								</div>
+								<div class="total">
+									<div class="total-num" v-if="key == 0" v-text="'￥' + order.total_money" v-text="'￥' + order.total_money"></div>
+									<div class="carriage" v-if="key == 0" v-text="'(含运费￥'+ order.freight_money +')'"></div>
+								</div>
+								<div class="all-state" v-if="order.return_status == 0 || order.return_status == 2">
+									<a class="state" style="cursor: text;" v-if="order.status == 1 && key == 0">待付款</a>
+									<a class="state" style="cursor: text;" v-else-if="order.status == 2 && key == 0">待发货</a>
+									<a class="state" style="cursor: text;" v-else-if="order.status == 3 && key == 0">待收货</a>
+									<a class="state" style="cursor: text;" v-else-if="order.status == 4 && key == 0">待评价</a>
+									<a class="state" style="cursor: text;" v-else-if="order.status == 5 && key == 0">已完成</a>
+									<a class="state" style="cursor: text;" v-else-if="order.status == 9 && key == 0">已取消</a>
+
+									<a class="state" style="cursor: pointer;" v-if="(order.status == 2 || order.status == 3) && (order.return_status == 0 || order.return_status == 2) && key == 0"
+									 @click="goRefund(order)">退款</a>
+									<a class="state" style="cursor: text;" v-if="order.return_status == 2 && key == 0">(退款失败)</a>
+								</div>
+								<div class="all-state" v-if="order.return_status == 1">
+									<a class="state" style="cursor: text;">退款中</a>
+								</div>
+								<div class="all-state" v-if="order.return_status == 3">
+									<a class="state" style="cursor: text;">退款成功</a>
+								</div>
+								<div class="operation" v-if="order.status == 1">
+									<a href="javascript:void(0)" v-if="key == 0" @click="pay(order)">付款</a>
+									<a href="javascript:void(0)" v-if="key == 0" @click="cancel(order)">取消订单</a>
+
+								</div>
+								<div class="operation" v-else-if="order.status == 2">
+									<a href="javascript:void(0)" v-if="key == 0" @click="tipSend();">提醒发货</a>
+									<a href="javascript:void(0)" v-if="key == 0" @click="detail(order);">订单详情</a>
+								</div>
+								<div class="operation" v-else-if="order.status == 3">
+									<a href="javascript:void(0)" v-if="key == 0" @click="confirmSign(order);">确认收货</a>
+									<a href="javascript:void(0)" v-if="key == 0" @click="detail(order);">查看物流</a>
+									<a href="javascript:void(0)" v-if="key == 0" @click="detail(order);">订单详情</a>
+								</div>
+								<div class="operation" v-else>
+									<a href="javascript:void(0)" v-if="key == 0" @click="detail(order);">订单详情</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="aui-bar aui-bar-tab" id="footer">
+  <div class="aui-bar-tab-item" onclick="goto('index')" :class="{'icon-footer-active' : (activeFooterIndex == 1 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 1" src="/public/static/wap/img/icon12.png">
+      <img v-else src="/public/static/wap/img/icon11.png">
+    </div>
+    <div class="aui-bar-tab-label">任务</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('personnel_page')"
+    :class="{'icon-footer-active' : (activeFooterIndex == 2 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 2" src="/public/static/wap/img/icon22.png">
+      <img v-else src="/public/static/wap/img/icon21.png">
+    </div>
+    <div class="aui-bar-tab-label">行政</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="goto('home')" :class="{'icon-footer-active' : (activeFooterIndex == 3 )}">
+    <!-- <div class="aui-badge">99</div> -->
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 3" src="/public/static/wap/img/icon32.png">
+      <img v-else src="/public/static/wap/img/icon31.png">
+    </div>
+    <div class="aui-bar-tab-label">我的</div>
+  </div>
+</footer>
+</body>
+<script>
+	if (!user) {
+		location = "{:url('Index/login')}"
+	}
+	scrollEvent = function () {
+		var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+		if ((document.documentElement.scrollHeight - scrollTop).toFixed(0) - document.documentElement.clientHeight < 20) {
+			loadOrder(app.status);
+		}
+	}
+	var page = 1;
+	//获取头像
+	document.getElementById('avatar').setAttribute('src', user.avatar)
+	var app = new Vue({
+		el: '#app',
+		data: {
+			orders: [],
+			status: 0
+		},
+		methods: {
+			deleteOrder: function (order) {
+				layer.alert('确定删除订单?', { title: '提示' }, function (index) {
+					httpRequest('DELETE', 'orders/' + order.id, {}, function (resp) {
+						layer.msg(resp.msg);
+						setTimeout(function () { location.reload() }, 300)
+					})
+					layer.close(index)
+				})
+			},
+			commentGoods: function (goods) {
+				sessionStorage.setItem('orderGoods', JSON.stringify(goods))
+				location = "{:url('Index/comment_add')}";
+			},
+			pay: function (order) {
+				sessionStorage.setItem('orderInfo', JSON.stringify(order));
+				location = "{:url('Index/pay')}"
+			},
+			cancel: function (order) {
+				layer.alert('确定取消订单?', { title: '提示' }, function (index) {
+					httpRequest('POST', 'orders/cancel', {
+						order_id: order.id
+					}, function (resp) {
+						layer.msg(resp.msg);
+						setTimeout(function () {
+							location.reload();
+						}, 500)
+					})
+				})
+			},
+			tipSend: function () {
+				layer.msg('提醒成功')
+			},
+			detail: function (order) {
+				sessionStorage.setItem('orderId', order.id);
+				location = "{:url('Index/order_detail')}"
+			},
+			goGoods: function (goods) {
+				location = "{:url('Index/goods')}" + '?goodsId=' + goods.goods_id
+			},
+			confirmSign: function (order) {
+				layer.alert('确定确认收货?', { title: '提示' }, function (index) {
+					httpRequest('POST', 'orders/finish', {
+						order_id: order.id
+					}, function (resp) {
+						layer.msg(resp.msg);
+						setTimeout(function () {
+							location.reload();
+						}, 300)
+					})
+				})
+			},
+			goRefund: function (order) {
+				sessionStorage.setItem('order', JSON.stringify(order))
+				location = "{:url('Index/refund')}";
+			}
+		}
+
+	});
+
+	var layer;
+	layui.use(['layer'], function () {
+		layer = layui.layer;
+		queryOrderList(0);
+		initFooter();
+	})
+
+	queryOrderList = function (status) {
+		app.orders = [];
+		page = 1;
+		app.status = status;
+		loadOrder(status);
+	}
+	loadOrder = function (status) {
+		var data = {
+			status: status
+		};
+		if (status == 4) {
+			data.is_comment = 0;
+		}
+		document.body.onscroll = null;
+		httpRequest('POST', 'orders/lists', data, function (resp) {
+			if (resp.data.length > 0) {
+				page++;
+				document.body.onscroll = scrollEvent;
+				resp.data.forEach(function (item) {
+					app.orders.push(item);
+				})
+			} else {
+				document.body.onscroll = null;
+			}
+		}, {
+				'page-num': page,
+				'page-limit': 10
+			})
+	}
+</script>
+
+</html>

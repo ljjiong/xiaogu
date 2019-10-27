@@ -1,0 +1,172 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>会员申请分销商列表</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <!-- 筛选条件 -->
+                  <el-row :gutter="20">
+                    <el-col :span="5">
+                      <el-input placeholder="请输入手机号" v-model="searchData.mobile">
+                        <template slot="prepend">手机号</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入昵称" v-model="searchData.nick_name">
+                        <template slot="prepend">昵称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-card>
+              <div slot="header">
+                <span>会员申请分销商列表</span>
+              </div>
+              <!-- 表格 -->
+              <template>
+                <el-table :data="tableData" stripe style="width: 100%">
+                  <el-table-column prop="id" label="ID" sortable></el-table-column>
+                  <el-table-column prop="user_info" label="会员信息">
+                    <template slot-scope="scope">
+                      {{scope.row.user_info.mobile}} ({{scope.row.user_info.nick_name || '匿名用户'}})
+                    </template>
+                  </el-table-column>
+                  </el-table-column>
+                  <el-table-column prop="is_deal" label="是否处理">
+                    <template slot-scope="scope">
+                      <el-tag type="success" v-if="scope.row.is_deal == 1" size="mini">已处理</el-tag>
+                      <el-tag type="danger" v-else-if="scope.row.is_deal == 0" size="mini">待处理</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="status" label="审核状态">
+                    <template slot-scope="scope">
+                      <el-tag type="primary" v-if="scope.row.status == 1" size="mini">待审核</el-tag>
+                      <el-tag type="danger" v-else-if="scope.row.status ==2" size="mini">未通过审核</el-tag>
+                      <el-tag type="success" v-else-if="scope.row.status == 3" size="mini">通过审核</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="apply_time" label="申请时间"></el-table-column>
+                  <!-- 操作栏 两个操作width设置为140 三个200 -->
+                  <el-table-column label="操作" fixed="right" width="200">
+                    <template slot-scope="scope">
+                      <el-button v-if="scope.row.is_deal == 0" @click="handleClick(scope.row, 'agree')" type="success" size="mini" plain>通过</el-button>
+                      <el-button v-if="scope.row.is_deal == 0" @click="handleClick(scope.row, 'not_agree')" type="danger" size="mini" plain>不通过</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </template>
+              <!-- 分页 -->
+              <template>
+                <div class="block" style="margin-top: 20px;">
+                  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                    :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                  </el-pagination>
+                </div>
+              </template>
+            </el-card>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    let app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        // 查询条件
+        searchData: {
+          mobile: '',
+          nick_name: ''
+        }
+      },
+      methods: {
+        handleClick(data, type) {
+          if (type == 'agree' || type == 'not_agree') {
+            this.$confirm('确认操作?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_drp/user_apply_distributor/' + type, { id: data.id }).then(resp => {
+                this.$message.success(resp.msg);
+                this.loadTableData();
+              })
+            })
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        filterHandler(value, row, column) {
+          return row['update_time'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_drp/user_apply_distributor/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,624 @@
+{include file="header" /}
+<body>
+    <section class="el-container is-vertical">
+        {include file="top" /}
+        <section class="el-container">
+            {include file="left" /}
+            <section class="el-container is-vertical">
+                <main class="el-main" id="main">
+                    <div id="app">
+                        <fieldset>
+                            <legend>
+                                项目管理
+                            </legend>
+                        </fieldset>
+                        <!-- 筛选 -->
+                        <el-row style="margin-bottom: 10px;">
+                            <el-col :span="24">
+                                <el-card>
+                                    <div slot="header">
+                                        <span>
+                                            查询
+                                        </span>
+                                    </div>
+                                    <el-row :gutter="20">
+                                        <!-- 筛选条件 -->
+                                        <el-col :span="5">
+                                            <el-input placeholder="请输入项目名称" v-model="searchData.project_name">
+                                                <template slot="prepend">
+                                                    项目名称
+                                                </template>
+                                            </el-input>
+                                        </el-col>
+                                        <!-- 筛选按钮 -->
+                                        <el-col :span="4">
+                                            <el-button @click="search" icon="el-icon-search">
+                                            </el-button>
+                                            <el-button @click="refresh" icon="el-icon-refresh">
+                                            </el-button>
+                                        </el-col>
+                                    </el-row>
+                                </el-card>
+                            </el-col>
+                        </el-row>
+                        <!-- 列表 -->
+                        <el-row>
+                            <el-col>
+                                <el-card>
+                                    <div slot="header">
+                                        <span>
+                                            项目列表
+                                        </span>
+                                        <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float: right;" type="primary">
+                                            新增项目
+                                        </el-button>
+                                    </div>
+                                    <!-- 批量操作 -->
+                                    <div style="margin-bottom: 10px;">
+                                        <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('delete')" icon="el-icon-delete" plain="" size="small" type="danger">
+                                            批量删除
+                                        </el-button>
+                                    </div>
+                                    <!-- 表格 -->
+                                    <template>
+                                        <el-table :data="tableData" @selection-change="handleSelectionChange" stripe="" style="width: 100%">
+                                            <el-table-column type="selection" width="55">
+                                            </el-table-column>
+                                            <el-table-column fixed="" type="expand" width="55">
+                                                <template slot-scope="scope">
+                                                    <el-form label-position="left">
+                                                        <el-form-item label="图片">
+                                                            <img :src="scope.row.img" alt="">
+                                                            </img>
+                                                        </el-form-item>
+                                                    </el-form>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="项目名" prop="project_name">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="项目经理" prop="users.nick_name">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="项目详情" prop="project_details">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="结束时间" prop="end_time">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="所属部门" prop="department">
+                                            </el-table-column>
+                                            <el-table-column :filter-method="is_urgencyFilterHandler" :filters="is_urgencyFilterHandler" fixed="" label="是否紧急" prop="is_urgency">
+                                                <template slot-scope="scope">
+                                                    <el-tag size="mini" type="danger" v-if="scope.row.is_urgency == 1">
+                                                        紧急
+                                                    </el-tag>
+                                                    <el-tag size="mini" type="info" v-else-if="scope.row.is_urgency == 0">
+                                                        不紧急
+                                                    </el-tag>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column :filter-method="is_achieveFilterHandler" :filters="is_achieveFilterHandler" fixed="" label="是否完成" prop="is_achieve">
+                                                <template slot-scope="scope">
+                                                    <el-tag size="mini" type="success" v-if="scope.row.is_achieve == 1">
+                                                        已完成
+                                                    </el-tag>
+                                                    <el-tag size="mini" type="info" v-else-if="scope.row.is_achieve == 0">
+                                                        未完成
+                                                    </el-tag>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column fixed="right" label="操作" width="290">
+                                                <template slot-scope="scope">
+                                                    <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </template>
+                                    <!-- 分页 -->
+                                    <template>
+                                        <div class="block" style="margin-top: 20px;">
+                                            <el-pagination :current-page="currentPage" :page-size="currentPageSize" :page-sizes="pageSize" :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="total, sizes, prev, pager, next, jumper">
+                                            </el-pagination>
+                                        </div>
+                                    </template>
+                                </el-card>
+                            </el-col>
+                        </el-row>
+                        <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisible" title="编辑项目" width="80%">
+                            <el-row :gutter="20">
+                                <el-col :offset="5" :span="10">
+                                    <el-form :model="selectData" :rules="rules" label-position="left" label-width="120px" ref="ruleForm">
+                                        <el-form-item label="项目名称" prop="project_name">
+                                            <el-input v-model="selectData.project_name">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="项目详情" prop="project_details">
+                                            <el-input type="textarea" v-model="selectData.project_details">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="部门" prop="department">
+                                            <el-select placeholder="请选择" v-model="selectData.department">
+                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label="项目经理" prop="project_manager">
+                                            <el-input disabled="" placeholder="请选择经理" style="width: 240px;" v-model="selectData.project_managers">
+                                            </el-input>
+                                            <el-button @click="innerDialogVisible = true" plain="" type="primary">
+                                                选择经理
+                                            </el-button>
+                                        </el-form-item> 
+                                        <el-form-item label="结束时间" prop="end_time">
+                                            <el-date-picker placeholder="选择日期时间" type="datetime" v-model="selectData.end_time">
+                                            </el-date-picker>
+                                        </el-form-item>
+                                        <el-form-item label="是否紧急" prop="is_urgency">
+                                            <el-radio :label="0" v-model="selectData.is_urgency">
+                                                不紧急
+                                            </el-radio>
+                                            <el-radio :label="1" v-model="selectData.is_urgency">
+                                                紧急
+                                            </el-radio>
+                                        </el-form-item>
+                                        <el-form-item label="是否完成" prop="is_achieve">
+                                            <el-radio :label="0" v-model="selectData.is_achieve">
+                                                未完成
+                                            </el-radio>
+                                            <el-radio :label="1" v-model="selectData.is_achieve">
+                                                已完成
+                                            </el-radio>
+                                        </el-form-item>
+                                        <el-form-item label="图片" prop="img">
+                                            <ul class="el-upload-list el-upload-list--picture-card">
+                                                <li class="el-upload-list__item is-ready" v-if="selectData.img">
+                                                    <img :src="selectData.img" class="el-upload-list__item-thumbnail">
+                                                        <span class="el-upload-list__item-actions">
+                                                            <span @click="fileClick('img')" class="el-upload-list__item-edit">
+                                                                <i class="el-icon-edit">
+                                                                </i>
+                                                            </span>
+                                                            <span @click="viewBigImg(selectData.img)" class="el-upload-list__item-edit">
+                                                                <i class="el-icon-view">
+                                                                </i>
+                                                            </span>
+                                                        </span>
+                                                    </img>
+                                                </li>
+                                                <div @click="fileClick('img')" class="el-upload el-upload--picture-card" v-else="">
+                                                    <i class="el-icon-plus">
+                                                    </i>
+                                                </div>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item label="项目文档" prop="project_documentation">
+                                            <ul class="el-upload-list el-upload-list--picture-card">
+                                                <li class="el-upload-list__item is-ready" v-if="selectData.project_documentation">
+                                                    <img :src="selectData.project_documentation" class="el-upload-list__item-thumbnail">
+                                                        <span class="el-upload-list__item-actions">
+                                                            <span @click="fileClick('project_documentation')" class="el-upload-list__item-edit">
+                                                                <i class="el-icon-edit">
+                                                                </i>
+                                                            </span>
+                                                            <span @click="viewBigImg(selectData.project_documentation)" class="el-upload-list__item-edit">
+                                                                <i class="el-icon-view">
+                                                                </i>
+                                                            </span>
+                                                        </span>
+                                                    </img>
+                                                </li>
+                                                <div @click="fileClick('project_documentation')" class="el-upload el-upload--picture-card" v-else="">
+                                                    <i class="el-icon-plus">
+                                                    </i>
+                                                </div>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item>
+                                            <el-button @click="dialogVisible = false;" plain="">
+                                                取消
+                                            </el-button>
+                                            <el-button @click="submit" type="primary">
+                                                提交
+                                            </el-button>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                            </el-row>
+                            <!-- 会员列表 -->
+                            <el-dialog :visible.sync="innerDialogVisible" append-to-body="" title="用户列表">
+                                <el-row :gutter="20">
+                                    <el-col :span="10">
+                                        <el-input placeholder="成员名称" v-model="innerDialogSearchData.nick_name">
+                                            <template slot="prepend">
+                                                成员名称
+                                            </template>
+                                        </el-input>
+                                        <el-select placeholder="请选择" v-model="innerDialogSearchData.department">
+                                            <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
+                                            </el-option>
+                                        </el-select>
+                                    </el-col>
+                                    <el-col :span="4">
+                                        <el-button @click="innerDialogSearch();" icon="el-icon-search">
+                                        </el-button>
+                                        <el-button @click="innerDialogRefresh();" icon="el-icon-refresh">
+                                        </el-button>
+                                    </el-col>
+                                </el-row>
+                                <el-table :data="innerDialogTableData" @row-click="innerDialogRowClick">
+                                    <el-table-column label="id" property="id">
+                                    </el-table-column>
+                                    <el-table-column label="姓名" property="nick_name">
+                                    </el-table-column>
+                                    <el-table-column label="电话" property="mobile">
+                                    </el-table-column>
+                                    <el-table-column label="所属部门" property="department">
+                                    </el-table-column>
+                                </el-table>
+                                <div style="margin-top: 20px;">
+                                    <el-pagination :current-page="innerDialogCurrentPage" :page-size="innerDialogCurrentPageSize" :page-sizes="innerDialogPageSize" :total="innerDialogTotal" @current-change="innerDialogHandleCurrentChange" @size-change="innerDialogHandleSizeChange" layout="total, sizes, prev, pager, next, jumper">
+                                    </el-pagination>
+                                </div>
+                            </el-dialog>
+                            <!-- 任务列表 -->
+                            <el-dialog :visible.sync="innerDialogVisible1" append-to-body="" title="用户列表">
+                                <el-row :gutter="20">
+                                    <el-col :span="10">
+                                        <el-input placeholder="成员名称" v-model="innerDialogSearchData1.nick_name">
+                                            <template slot="prepend">
+                                                成员名称
+                                            </template>
+                                        </el-input>
+                                        <el-select placeholder="请选择" v-model="innerDialogSearchData1.department">
+                                            <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
+                                            </el-option>
+                                        </el-select>
+                                    </el-col>
+                                    <el-col :span="4">
+                                        <el-button @click="innerDialogSearch1();" icon="el-icon-search">
+                                        </el-button>
+                                        <el-button @click="innerDialogRefresh1();" icon="el-icon-refresh">
+                                        </el-button>
+                                    </el-col>
+                                </el-row>
+                                <div style="margin-bottom: 10px;">
+                                    <el-button :disabled="multipleSelection1.length == 0" @click="Operate('addproject_member')" icon="el-icon-delete" plain="" size="small" type="success">
+                                        确定
+                                    </el-button>
+                                </div>
+                                <el-table :data="innerDialogTableData1" @selection-change="handleSelectionChange1">
+                                    <el-table-column type="selection" width="55">
+                                    </el-table-column>
+                                    <el-table-column label="id" property="id">
+                                    </el-table-column>
+                                    <el-table-column label="姓名" property="nick_name">
+                                    </el-table-column>
+                                    <el-table-column label="电话" property="mobile">
+                                    </el-table-column>
+                                    <el-table-column label="所属部门" property="department">
+                                    </el-table-column>
+                                </el-table>
+                                <div style="margin-top: 20px;">
+                                    <el-pagination :current-page="innerDialogCurrentPage1" :page-size="innerDialogCurrentPageSize1" :page-sizes="innerDialogPageSize1" :total="innerDialogTotal1" @current-change="innerDialogHandleCurrentChange1" @size-change="innerDialogHandleSizeChange1" layout="total, sizes, prev, pager, next, jumper">
+                                    </el-pagination>
+                                </div>
+                            </el-dialog>
+                        </el-dialog>
+                        <input @change="fileChange($event,'img')" id="imgAdd" style="display: none" type="file">
+                            <input @change="fileChange($event,'project_documentation')" id="imgAdd1" style="display: none" type="file">
+                            </input>
+                        </input>
+                    </div>
+                </main>
+                {include file="footer" /}
+            </section>
+        </section>
+    </section>
+    <script type="text/javascript">
+        var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        multipleSelection1: [],  //多选项
+        // 状态过滤
+        statusFilters: [{
+          text: '上架',
+          value: 1
+        }, {
+          text: '下架',
+          value: 2
+        }],
+         options: [],   //数据
+        scoreShopParams: {},
+        // 查询条件
+        searchData: {
+          project_name: '',
+
+        },
+        // ----------------- dialog -----------------
+        dialogVisible: false,
+        selectData: {
+          project_member:[],
+          goods_info: {},
+          spec_group_info: []
+        },
+        rules: {
+          goods_id: [
+            { required: true, message: '请选择商品', trigger: 'blur' },
+          ],
+        },
+        // 快速编辑规格
+        quickSpecData: {
+          score: '',
+          money: ''
+        },
+        // --------------- innerDialog -------------------
+        innerDialogVisible: false,
+        innerDialogTableData: [],
+        innerDialogCurrentPage: 1,
+        innerDialogCurrentPageSize: 10,
+        innerDialogPageSize: [10, 20],
+        innerDialogTotal: 0,
+        innerDialogSelectData: {},
+        innerDialogSearchData: {
+          name: ''
+        },
+        // --------------- innerDialog1 -------------------
+        innerDialogVisible1: false,
+        innerDialogTableData1: [],
+        innerDialogCurrentPage1: 1,
+        innerDialogCurrentPageSize1: 1000,
+        innerDialogPageSize1: [1000, 2000],
+        innerDialogTotal1: 0,
+        innerDialogSelectData1: {},
+        innerDialogSearchData1: {
+          name: ''
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_project/project/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                this.tableData.splice(this.tableData.indexOf(data), 1);
+              })
+            })
+          } else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.dialogVisible = true;
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        is_urgencyFilterHandler(value, row, column) {
+          return row['is_urgency'] === value;
+        },
+        // 过滤
+        is_achieveFilterHandler(value, row, column) {
+          return row['is_achieve'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 多选监听
+        handleSelectionChange1(val) {
+          this.multipleSelection1 = val;
+          // this.selectData.project_member = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', `api_project/project/batch_${type}`, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 批量操作
+        Operate(type) {
+          this.selectData.project_member =this.multipleSelection1.map(item => item.id);
+          this.innerDialogVisible1 = false;
+          console.log(this.selectData.project_member);
+        },
+        // 新增
+        goAdd() {
+          this.selectData = {
+            project_member:{},
+            goods_info: {},
+            score: '',
+            project_documentation:'',
+            project_details:'',
+            spec_group_info: []
+          }
+          this.dialogVisible = true;
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_project/project/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+          httpRequest('POST', 'api_users/users/poindex', this.searchData, {
+           }).then(resp => { 
+            resp.data.position.forEach(function (item) {
+                var cate = {
+                  value: item.position_name,
+                  label: item.position_name
+                } 
+                app.options.push(cate);
+              }) 
+          })
+        },
+
+        // ---------------- dialog -----------------
+        // 快速编辑规格
+        quickSetSpec(type) {
+          this.selectData.spec_group_info.forEach(t => {
+            t[type] = this.quickSpecData[type]
+          })
+        },
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              let router = this.selectData.id ? 'api_project/project/update' : 'api_project/project/save';
+              
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(() => {
+                  location.reload();
+                }, 500);
+              })
+            } else {
+              return false;
+            }
+          })
+        },
+
+        fileClick(map) {
+          if(map == 'img'){ 
+              document.getElementById('imgAdd').click();
+          }    
+          if(map == 'project_documentation'){ 
+              document.getElementById('imgAdd1').click();
+          }
+        },
+        //x修改图片
+        fileChange(el,map) { 
+          Array.from(el.target.files).forEach(item => {
+            let formData2 = new FormData();
+            formData2.append('file', item);
+            formData2.append('save_path', userImagePath);
+            formData2.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData2).then(resp => {
+                if(map == 'img'){ 
+                    this.selectData.img = resp.data.host_file_path;
+                }
+                if(map == 'project_documentation'){ 
+                    this.selectData.project_documentation = resp.data.host_file_path;
+                }
+            })
+          })
+        },
+
+        viewBigImg(img){
+          window.open(img);
+        },
+
+                // --------------- innerDialog -------------------
+        // 跳页
+        innerDialogHandleCurrentChange(val) {
+            this.innerDialogCurrentPage = val;
+            this.innerDialogLoadTableData();
+        },
+        // 改变页容量
+        innerDialogHandleSizeChange(val) {
+            this.innerDialogCurrentPageSize = val;
+            this.innerDialogLoadTableData();
+        },
+        // 某一行被点击
+        innerDialogRowClick(row) {
+          this.selectData.project_manager = row.id;
+          this.selectData.project_managers = row.nick_name;
+          this.selectData.goods_info = row;
+          this.innerDialogVisible = false;
+        },
+        // 搜索
+        innerDialogSearch() {
+          this.innerDialogCurrentPage = 1;
+          this.innerDialogLoadTableData();
+        },
+        // 重置
+        innerDialogRefresh() {
+            this.innerDialogCurrentPage = 1;
+          for (let key in this.innerDialogSearchData) {
+            this.innerDialogSearchData[key] = ''
+          }
+          this.innerDialogLoadTableData();
+        },
+        innerDialogLoadTableData() {
+          httpRequest('POST', 'api_users/users/index', this.innerDialogSearchData, {
+            'page-num': this.innerDialogCurrentPage,
+            'page-limit': this.innerDialogCurrentPageSize
+          }).then(resp => {
+            this.innerDialogTableData = resp.data;
+            this.innerDialogTotal = resp.page.data_count || 0;
+          })
+        },
+        // --------------- innerDialog11 -------------------
+        // 跳页
+        innerDialogHandleCurrentChange1(val) {
+            this.innerDialogCurrentPage1 = val;
+            this.innerDialogLoadTableData1();
+        },
+        // 改变页容量
+        innerDialogHandleSizeChange1(val) {
+            this.innerDialogCurrentPageSize1 = val;
+            this.innerDialogLoadTableData1();
+        },
+        // 搜索
+        innerDialogSearch1() {
+          this.innerDialogCurrentPage = 1;
+          this.innerDialogLoadTableData1();
+        },
+        // 重置
+        innerDialogRefresh1() {
+            this.innerDialogCurrentPage1 = 1;
+          for (let key in this.innerDialogSearchData1) {
+            this.innerDialogSearchData1[key] = ''
+          }
+          this.innerDialogLoadTableData1();
+        },
+        innerDialogLoadTableData1() {
+          httpRequest('POST', 'api_users/users/index', this.innerDialogSearchData1, {
+            'page-num': this.innerDialogCurrentPage1,
+            'page-limit': this.innerDialogCurrentPageSize1
+          }).then(resp => {
+            this.innerDialogTableData1 = resp.data;
+            this.innerDialogTotal1 = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+        this.innerDialogLoadTableData();
+        this.innerDialogLoadTableData1();
+      }
+    });
+    </script>
+</body>

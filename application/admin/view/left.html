@@ -1,0 +1,60 @@
+<aside class="el-aside" id="left">
+  <el-menu :default-active="defaultActive" @open="handleOpen" @close="handleClose" background-color="#393D49"
+    text-color="#fff" active-text-color="#40ccfd" style="height: 100%;">
+    <div v-for="(nav, navKey) in leftNavs" :key="navKey">
+      <!-- 有子菜单 -->
+      <!-- 一级菜单 -->
+      <el-submenu v-if="nav._child" :index="nav.id">
+        <template slot="title">
+          <i v-show="nav.icon" class="iconfont" :class="nav.icon" style="color: #fff;padding-right: 5px;"></i>
+          <span>{{nav.name}}</span>
+        </template>
+        <!-- 二级菜单 -->
+        <template v-for="(childNav, childNavKey) in nav._child" :key="childNavKey" :index="childNav.id">
+          <el-submenu v-if="childNav._child" :index="childNav.id" :key="childNav.path">
+            <template slot="title"><i :class="childNav.icon"></i><span>{{childNav.name}}</span></template>
+            <!-- 三级菜单 -->
+            <el-menu-item v-for="(childNav_c, childNavKey_c) in childNav._child" :key="childNavKey_c"
+              :index="childNav_c.id" @click="selectLeftNavId(childNav_c)">
+              <i :class="childNav_c.icon"></i><span slot="title">{{childNav_c.name}}</span></el-menu-item>
+          </el-submenu>
+
+          <el-menu-item v-else :index="childNav.id" :key="childNav.path" @click="selectLeftNavId(childNav)"><i
+              :class="childNav.icon"></i><span slot="title">{{childNav.name}}</span></el-menu-item>
+        </template>
+        <!-- 二级菜单 -->
+      </el-submenu>
+      <!-- 第一层 -->
+      <!-- 无子菜单 -->
+      <el-menu-item v-if="!nav._child" @click="selectLeftNavId(nav)" :index="nav.id">
+        <template slot="title">{{nav.name}}</template>
+      </el-menu-item>
+
+    </div>
+  </el-menu>
+</aside>
+
+<script>
+  let leftApp = new Vue({
+    el: '#left',
+    data() {
+      return {
+        leftNavs: getStorage('adminNavs').filter(item => item.is_top == 0),
+        defaultActive: Number(getStorage('selectLeftNavId'))
+      }
+    },
+    methods: {
+      handleOpen(key, keyPath) {
+        // console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        // console.log(key, keyPath);
+      },
+      selectLeftNavId(nav) {
+        rmStorage('selectTopNavId');
+        setStorage('selectLeftNavId', nav.id);
+        location = nav.href;
+      }
+    }
+  })
+</script>

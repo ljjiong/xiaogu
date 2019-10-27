@@ -1,0 +1,228 @@
+{include file="header" /}
+
+<body>
+
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>商品评论</legend>
+            </fieldset>
+
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <el-row :gutter="20">
+                    <!-- 筛选条件 -->
+                    <el-col :span="5">
+                      <el-input placeholder="请输入评论商品名称" v-model="searchData.name">
+                        <template slot="prepend">评论商品名称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入用户手机号" v-model="searchData.mobile">
+                        <template slot="prepend">手机号</template>
+                      </el-input>
+                    </el-col>
+                    <!-- 筛选按钮 -->
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-row>
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>评论商品列表</span>
+                  </div>
+                  <!-- 批量操作 -->
+                  <div style="margin-bottom: 10px">
+                    <el-button type="danger" size="small" plain icon="el-icon-delete" @click="multiOperate('delete')" :disabled="multipleSelection.length == 0">批量删除</el-button>
+                    <el-button type="danger" size="small" plain icon="el-icon-delete" @click="multiOperate('no_pass')" :disabled="multipleSelection.length == 0">批量不通过审核</el-button>
+                    <el-button type="success" size="small" plain icon="el-icon-success" @click="multiOperate('pass')" :disabled="multipleSelection.length == 0">批量通过审核</el-button>
+                  </div>
+                  <!-- 表格 -->
+                  <template>
+                    <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                      <el-table-column type="selection" width="55"> </el-table-column>
+                      <el-table-column type="expand" width="55">
+                        <template slot-scope="scope">
+                          <div>评论内容：
+                            <span v-text="scope.row.content"></span>
+                          </div>
+                          <img :src="img" v-for="(img, key) in scope.row.imgs" style="width: 100px;margin-right:  20px;">
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="id" label="ID" width="80" sortable></el-table-column>
+                      <el-table-column prop="order_goods_info.name" label="商品名称"></el-table-column>
+                      <el-table-column prop="user_info.mobile" label="会员手机号"></el-table-column>
+                      <el-table-column prop="user_info.nick_name" label="会员昵称"></el-table-column>
+                      <!-- <el-table-column prop="content" label="评论内容"></el-table-column> -->
+                      <el-table-column label="星级">
+                        <template slot-scope="scope">
+                          <i class="iconfont icon-shoucang" style="color: #ffc640" v-for="k in scope.row.scoreArr"></i>
+                        </template>
+                      </el-table-column>
+                      <el-table-column prop="status" label="状态" :filters="statusFilters" :filter-method="statusFilterHandler">
+                        <template slot-scope="scope">
+                          <el-tag v-if="scope.row.status == 1" type="primary" size="mini">审核中</el-tag>
+                          <el-tag v-else-if="scope.row.status == 2" type="danger" size="mini">审核未通过</el-tag>
+                          <el-tag v-else-if="scope.row.status == 3" type="success" size="mini">审核通过</el-tag>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="操作" width="150" fixed="right">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row, 'del')" type="danger" size="small" icon="el-icon-delete" plain></el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                  <!-- 分页 -->
+                  <template>
+                    <div class="block" style="margin-top: 20px;">
+                      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                        :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                      </el-pagination>
+                    </div>
+                  </template>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        // 查询条件
+        // 状态过滤
+        statusFilters: [{
+          text: '待审核',
+          value: 1
+        }, {
+          text: '审核未通过',
+          value: 2
+        }, {
+          text: '审核通过',
+          value: 3
+        }],
+        searchData: {
+          name: '',
+          mobile: '',
+        },
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_goods/goods_comments/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                this.tableData.splice(this.tableData.indexOf(data), 1);
+              })
+            }).catch(_ => {
+              this.$message.info('操作取消');
+            })
+          } else if (type === 'edit') {
+            location = location.origin + '/admin/goods_comments/edit' + querystringStringify({ articleId: data.id, currentPage: this.currentPage });
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.type_ids = [];
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_goods/goods_comments/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          }).catch(_ => {
+            this.$message.info('操作取消');
+          });
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_goods/goods_comments/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            resp.data.forEach(item => {
+              item.scoreArr = new Array(Number(item.score))
+            })
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      watch: {
+        cate_ids(value) {
+          this.searchData.goods_cate_id = value[value.length - 1];
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+  </script>
+
+</body>
+
+</html>F

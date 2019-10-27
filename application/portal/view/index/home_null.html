@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="/public/static/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="/public/static/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="/public/static/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/public/static/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="/public/static/common/css/ali_icon/iconfont.css" />
+
+  <script src="/public/static/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="/public/static/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="/public/static/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="/public/static/common/script/common.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/config.js" type="text/javascript"></script>
+  <script src="/public/static/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="/public/static/axios/axios.min.js"></script>
+  <script src="/public/static/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/public/static/OwlCarousel2-2.2.1/assets/owl.theme.default.min.css">
+<script src="/public/static/OwlCarousel2-2.2.1/owl.carousel.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+    .stting-order-icon{height: 55px;width: 55px;text-align: center;background: #f4f4f4;margin:0 3px;}
+.setting-order-title{border-bottom: 1px solid #ebebeb}
+.setting-blue-border{border-left: 3px solid #108ee9;}
+.setting-goods-img{height: 80px;width: 95px;margin:7px;border: 1px solid #e0e0e0}
+.setting-goods-num{width: 105px;margin:auto;text-align: center}
+.setting-price{border-left: 1px solid #e0e0e0;border-right: 1px solid #e0e0e0;width: 145px;padding-top: 20px;}
+.setting-goods-info{border-right: 1px solid #e0e0e0;}
+.setting-order-box{border: 1px solid#e0e0e0}
+.setting-order-type{width: 135px;text-align: center;margin: auto}
+.setting-order-btn{width:115px;padding: 0 22px;border-left: 1px solid #e0e0e0}
+.setting-order-btn-active{border-radius: 100px;padding: 2px 0;}
+.setting-comment{width: 607px;height: 365px;}
+.setting-notice{width: 292px;}
+.setting-my-notice{height:113px;}
+.setting-comment-list{width: calc(33% - 9px);}
+.setting-comment-img{height: 180px;text-align: center}
+.setting-notice-list::before{content:"";height: 5px;width: 5px;background: #108ee9;display:inline-block;border-radius: 50%;margin: 4px 8px;}
+.setting-coupon-list{height:80px;background: url(/public/static/portal/img/coupon.png)  center no-repeat}
+.setting-go-btn{padding: 5px 30px;border-radius: 50px;}
+.setting-go-comment{margin-top: 100px;}
+.setting-go-coupon{margin-top: 50px;}
+
+
+
+</style>
+</head>
+<body>
+	{include file="/index/header" /}
+	<div class="w1200 margin-tt-15 over  black-text">
+		<div class="left">
+			<!-- 个人信息卡 -->
+		<div class=" card-title-wrap">
+			<img  src="/public/static/portal/img/title-back.png" class="responsive-img">
+			<div class="margin-10 over card-text-wrap">
+				<div class="ridius-img left margin-15">
+				    <img src="/public/static/portal/img/info-img.png" alt="">
+			    </div>
+				<div class="left margin-top-15">
+					<div class="font-size-18 margin-top-15 white-text">韩梅梅</div>
+					<div class="blue lighten-1 margin-top-5" style="border-radius: 4px;padding: 2px 4px;">
+						<img src="/public/static/portal/img/lr.png" alt="">
+						<span class="font-size-12 white-text">LV:1</span>
+					</div>
+				</div>
+			</div>
+			<div class="rate-line font-size-12 blue-text text-lighten-5">
+				<div class="rataing-nember" style="margin-left: 70%;">299</div>
+					<div class="progress white">
+						<div class="determinate blue lighten-2" style="width: 70%"></div>	
+					</div>
+				<div class="ratas-nember right">420</div>	
+				</div>
+		</div>
+		<div class="white grey-text text-darken-3 margin-top-15" style="border-radius: 5px">
+			<div class="card-right-nav-box  margin-10 padding-tt-10" style="border: none">
+			<div class="card-right-nav">
+				<div class="font-size-18 over margin-tt-10">
+				    <i class="small material-icons left  blue-text text-lighten-1" style="width: 30px;margin-right: 5px;">repeat</i>
+					<span class="left margin-top-5">交易管理</span>
+				</div>
+				<ul class="card-right-nav-ul">
+					<li class="margin-tt-13">购物车</li>
+					<li class="margin-tt-13">我的订单</li>
+					<li class="margin-tt-13">我的评价</li>
+				</ul>
+			</div>
+		</div>
+		<div class="card-right-nav-box  margin-10 padding-tt-10">
+				<div class="card-right-nav">
+					<div class="font-size-18 over margin-tt-10">
+						<i class="small material-icons left blue-text text-lighten-1" style="width: 30px;margin-right: 5px;">repeat</i>
+						<span class="left margin-top-5">账号管理</span>
+					</div>
+					<ul class="card-right-nav-ul">
+						<li class="margin-tt-13">个人信息</li>
+						<li class="margin-tt-13">账号安全</li>
+						<li class="margin-tt-13">使命认证</li>
+						<li class="margin-tt-13">地址管理</li>
+						<li class="margin-tt-13">我的收藏</li>
+						<li class="margin-tt-13">成长值(<span class="blue-text text-lighten-1">(260)</span></li>
+						<li class="margin-tt-13">第三方账户</li>
+					</ul>
+				</div>
+			</div>
+			<div class="card-right-nav-box margin-10 padding-tt-10">
+					<div class="card-right-nav">
+						<div class="font-size-18 over margin-tt-10">
+							<i class="small material-icons left  blue-text text-lighten-1" style="width: 30px;margin-right:5px;">repeat</i>
+							<span class="left margin-top-5">资产管理</span>
+						</div>
+						<ul class="card-right-nav-ul">
+							<li class="margin-tt-13">我的钱包</li>
+							<li class="margin-tt-13">我的银行卡</li>
+							<li class="margin-tt-13">我的优惠券<span class="blue-text text-lighten-2">(2)</span></li>
+						</ul>
+					</div>
+				</div>
+		</div>
+	</div>	
+		<div class="right right-content">
+			<div class="padding-15 white">
+				<div class="margin-15 font-size-18 black-text padding-tt-5 over">
+                    <div class="left over margin-lr-15 padding-right-15">
+                        <div class="left radius50 stting-order-icon">
+                            <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                        </div>
+                        <div class="right center margin-lr-10">
+                            <div class="font-size-16">待付款</div>
+                            <div class="font-size-16">0</div>
+                        </div>
+                    </div>
+                    <div class="left over margin-lr-15 padding-right-15">
+                            <div class="left radius50 stting-order-icon">
+                                <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                            </div>
+                            <div class="right center margin-lr-10">
+                                <div class="font-size-16">待发货</div>
+                                <div class="font-size-16">0</div>
+                            </div>
+                        </div>
+                        <div class="left over margin-lr-15 padding-right-15">
+                                <div class="left radius50 stting-order-icon">
+                                    <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                                </div>
+                                <div class="right center margin-lr-10">
+                                    <div class="font-size-16">待收货</div>
+                                    <div class="font-size-16">0</div>
+                                </div>
+                            </div>
+                            <div class="left over margin-lr-15 padding-right-15">
+                                    <div class="left radius50 stting-order-icon">
+                                        <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                                    </div>
+                                    <div class="right center margin-lr-10">
+                                        <div class="font-size-16">待评价</div>
+                                        <div class="font-size-16">0</div>
+                                    </div>
+                                </div>
+                                <div class="left over margin-lr-15">
+                                        <div class="left radius50 stting-order-icon">
+                                            <i class="blue-text iconfont icon-daifukuan" style="font-size: 28px;height: 55px;line-height: 55px"></i>
+                                        </div>
+                                        <div class="right center margin-lr-10">
+                                            <div class="font-size-16">售后</div>
+                                            <div class="font-size-16">0</div>
+                                        </div>
+                                    </div>
+                </div>
+            </div>
+            <div class="margin-tt-15 padding-15 white" style="height: 371px;">
+                <div class="margin-tt-10 over setting-order-title padding-btn-15 grey-text text-darken-2">
+                    <div class="left setting-blue-border padding-left-5">我的订单</div>
+                    <div class="right ">查看全部订单></div>
+				</div>
+				<div class="center">
+						<img src="/public/static/portal/img/404.png" alt="" class="responsive-img setting-go-coupon"><br>
+						<div class="setting-go-btn white-text blue inline-black margin-15">去逛逛</div>
+				</div>
+            </div>
+            <div class="over">
+                <div class="left white setting-comment radius5 padding-15">
+                    <div class="margin-tt-10 over grey-text text-darken-2">
+                         <div class="left setting-blue-border padding-left-5">近期收藏</div>
+                         <div class="right ">查看全部收藏></div>
+					</div>
+					<div class="center font-size-16 setting-go-comment">
+						<div class="grey-text margin-tt-15">你的收藏夹里什么都没有</div>
+						<div class="setting-go-btn white-text blue inline-black">去逛逛</div>
+					</div>
+                </div>
+                <div class="right setting-notice">
+                    <div class="setting-my-notice white radius5 over padding-10">
+							<div class="margin-tt-10 over  grey-text text-darken-2">
+									<div class="left setting-blue-border padding-left-5">我的公告</div>
+							</div>
+							<div class="margin-tt-15 font-size-16 grey-text center">
+								暂无公告
+							</div>
+					</div>
+                    <div class=" white radius5 margin-top-15 padding-10" style="height: 238px;">
+							<div class="margin-tt-10 over  grey-text text-darken-2">
+									<div class="left setting-blue-border padding-left-5">我的优惠券</div>
+							</div>
+							<div class="center font-size-16 setting-go-coupon">
+									<div class="grey-text margin-tt-15">没有优惠卷</div>
+									<div class="setting-go-btn white-text blue inline-black">去领卷中心逛逛</div>
+								</div>
+					</div>
+                </div>
+			</div>
+			<div class="margin-top-15">
+					<img src="/public/static/portal/img/lien-img.png" alt="" class="responsive-img">
+			</div>
+		</div>
+	</div>
+	<div class="w1200 white over margin-btn-15">
+		<div class="foot-list-title black-text text-lighten-1 margin-15 font-size-18 padding-left-15">猜你喜欢</div>
+		<div class="foot-list margin-15 over">
+			<div class="left foot-list-box">
+				<img src="/public/static/portal/img/goods-1.png" class="responsive-img">
+				<div class="padding-10">
+					<div class="font-size-16 black-text">COCCINELLF DESIGN系列 女士长款钱包 意大利</div>
+					<div class="margin-top-10 over">
+						<div class="left">
+							<span class="red-text font-size-16">￥200</span>
+							<span class="font-size-10 grey-text lighten-1">￥389</span>
+						</div>
+						<div class="right font-size-12 grey-text lighten-1">月销量：2530</div>
+					</div>
+				</div>
+			</div>
+			<div class="left foot-list-box">
+					<img src="/public/static/portal/img/goods-1.png" class="responsive-img">
+					<div class="padding-10">
+						<div class="font-size-16 black-text">COCCINELLF DESIGN系列 女士长款钱包 意大利</div>
+						<div class="margin-top-10 over">
+							<div class="left">
+								<span class="red-text font-size-16">￥200</span>
+								<span class="font-size-10 grey-text lighten-1">￥389</span>
+							</div>
+							<div class="right font-size-12 grey-text lighten-1">月销量：2530</div>
+						</div>
+					</div>
+				</div>
+				<div class="left foot-list-box">
+						<img src="/public/static/portal/img/goods-1.png" class="responsive-img">
+						<div class="padding-10">
+							<div class="font-size-16 black-text">COCCINELLF DESIGN系列 女士长款钱包 意大利</div>
+							<div class="margin-top-10 over">
+								<div class="left">
+									<span class="red-text font-size-16">￥200</span>
+									<span class="font-size-10 grey-text lighten-1">￥389</span>
+								</div>
+								<div class="right font-size-12 grey-text lighten-1">月销量：2530</div>
+							</div>
+						</div>
+					</div>
+					<div class="left foot-list-box">
+							<img src="/public/static/portal/img/goods-1.png" class="responsive-img">
+							<div class="padding-10">
+								<div class="font-size-16 black-text">COCCINELLF DESIGN系列 女士长款钱包 意大利</div>
+								<div class="margin-top-10 over">
+									<div class="left">
+										<span class="red-text font-size-16">￥200</span>
+										<span class="font-size-10 grey-text lighten-1">￥389</span>
+									</div>
+									<div class="right font-size-12 grey-text lighten-1">月销量：2530</div>
+								</div>
+							</div>
+				</div>
+		</div>
+	</div>
+	{include file="index/footer" /}
+	<script>
+	</script>
+</body>
+
+</html>

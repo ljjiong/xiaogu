@@ -1,0 +1,211 @@
+{include file="header" /}
+
+<body>
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>会员提现记录</legend>
+            </fieldset>
+            <!-- 筛选 -->
+            <el-row style="margin-bottom: 10px;">
+              <el-col>
+                <el-card>
+                  <div slot="header">
+                    <span>查询</span>
+                  </div>
+                  <!-- 筛选条件 -->
+                  <el-row :gutter="20">
+                    <el-col :span="5">
+                      <el-input placeholder="请输入手机号" v-model="searchData.mobile">
+                        <template slot="prepend">手机号</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-input placeholder="请输入昵称" v-model="searchData.nick_name">
+                        <template slot="prepend">昵称</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="4">
+                      <el-button icon="el-icon-search" @click="search();"></el-button>
+                      <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-col>
+            </el-row>
+            <!-- 列表 -->
+            <el-card>
+              <div slot="header">
+                <span>提现列表</span>
+              </div>
+              <!-- 批量操纵 -->
+              <!-- <div style="margin-bottom: 10px;">
+                <el-button type="danger" size="small" plain icon="el-icon-error" @click="multiOperate('not_agree')" :disabled="multipleSelection.length == 0">批量不通过审核</el-button>
+                <el-button type="success" size="small" plain icon="el-icon-success" @click="multiOperate('agree')" :disabled="multipleSelection.length == 0">批量通过审核</el-button>
+              </div> -->
+              <!-- 表格 -->
+              <template>
+                <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
+                  <el-table-column type="selection" width="55"> </el-table-column>
+                  <el-table-column type="expand" width="55">
+                    <template slot-scope="scope">
+                      <el-form label-position="left">
+                        <div v-if="scope.row.type == 'withdrawToBankCard'">
+                          <el-form-item label="银行名称:">
+                            {{scope.row.bank_name}}
+                          </el-form-item>
+                          <el-form-item label="持卡人:">
+                            {{scope.row.card_holder}}
+                          </el-form-item>
+                          <el-form-item label="银行卡号:">
+                            {{scope.row.card_number}}
+                          </el-form-item>
+                        </div>
+                        <el-form-item label="提现类型:">
+                          <el-tag size="mini" v-if="scope.row.type == 'withdrawToBankCard'">提现至银行卡</el-tag>
+                        </el-form-item>
+                      </el-form>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="id" label="ID" sortable width="80"></el-table-column>
+                  <el-table-column prop="user_info.mobile" label="手机号"></el-table-column>
+                  <el-table-column prop="user_info.nick_name" label="昵称"></el-table-column>
+                  <el-table-column prop="order_no" label="提现订单号"></el-table-column>
+                  <el-table-column prop="money" label="提现金额" sortable>
+                    <template slot-scope="scope">
+                      <span style="font-weight: bold;color: #df0303">￥{{scope.row.money}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="status" label="状态" sortable>
+                    <template slot-scope="scope">
+                      <el-tag type="primary" v-if="scope.row.status == 1" size="mini">待审核</el-tag>
+                      <el-tag type="danger" v-else-if="scope.row.status ==2" size="mini">未通过审核</el-tag>
+                      <el-tag type="success" v-else-if="scope.row.status == 3" size="mini">通过审核</el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="create_time" label="创建时间" sortable>
+                    <template slot-scope="scope">
+                      <i class="el-icon-time"></i>
+                      <span>{{ scope.row.create_time }}</span>
+                    </template>
+                  </el-table-column>
+                  <!-- 操作栏 两个操作width设置为140 三个200 -->
+                  <el-table-column label="操作" fixed="right" width="180">
+                    <template slot-scope="scope">
+                      <el-button v-if="scope.row.status == 1" @click="handleClick(scope.row, 'agree')" type="success" size="mini" plain>通过</el-button>
+                      <el-button v-if="scope.row.status == 1" @click="handleClick(scope.row, 'not_agree')" type="danger" size="mini" plain>拒绝</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </template>
+              <!-- 分页 -->
+              <template>
+                <div class="block" style="margin-top: 20px;">
+                  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSize"
+                    :page-size="currentPageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                  </el-pagination>
+                </div>
+              </template>
+            </el-card>
+
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        tableData: [],  //表格数据
+        currentPage: parseInt(querystring.currentPage) || 1, //当前页
+        currentPageSize: 20,  //当前页容量
+        pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+        total: 0, //总页数
+        multipleSelection: [],  //多选项
+        // 查询条件
+        searchData: {
+          mobile: '',
+          nick_name: ''
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'agree' || type == 'not_agree') {
+            this.$confirm('确认操作?', '提示').then(_ => {
+              httpRequest('POST', 'api_users/user_drawcashs/' + type, { id: data.id }).then(resp => {
+                this.$message.success(resp.msg);
+                setTimeout(err => {
+                  location.reload();
+                }, 500);
+              })
+            })
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (var key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_users/user_drawcashs/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_users/user_drawcashs/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        }
+      },
+      mounted() {
+        this.loadTableData();
+      }
+    });
+
+  </script>
+</body>
+
+</html>

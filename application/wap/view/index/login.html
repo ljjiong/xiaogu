@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon" />
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+  <script src="__static__/common/css/ali_icon/iconfont.js"></script>
+  <style type="text/css">
+    html {
+      font-family: "微软雅黑";
+    }
+
+    body {
+      background-color: #fff;
+    }
+
+    .login-top {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .login-cont-top {
+      background-color: #fff;
+      width: 76%;
+      top: -1.2rem;
+      border-radius: 2.5rem;
+      overflow: hidden;
+      margin: 0 auto;
+      position: relative;
+      max-width: 500px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0px 0px 66.36px 12.64px rgba(0, 0, 0, 0.19);
+      margin-bottom: -1.2rem !important;
+      background: linear-gradient(90deg, rgba(243, 141, 149, 1), rgba(240, 104, 115, 1));
+    }
+
+    .login-cont-top .button1 {
+      flex: 1;
+      text-align: center;
+      color: #999999;
+      position: relative;
+      height: 2.5em;
+      line-height: 2.25rem;
+      z-index: 1;
+      letter-spacing: 5px;
+    }
+
+    .login-cont-top img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: -1;
+    }
+
+    .login-cont2 .login-input {
+      width: 70%;
+      margin: 0 auto;
+      border-bottom: 1px solid #ededed;
+      position: relative;
+    }
+
+    .login-cont2 .login-input input {
+      display: block;
+      width: 100%;
+    }
+
+    .login-cont2 .login-input img {
+      position: absolute;
+      right: 0;
+      top: 50%;
+    }
+
+    .login-button {
+      margin-top: 50px;
+    }
+
+    .login-button .submit-buuton {
+      margin: 0 auto;
+      width: 70%;
+      height: 2.2rem;
+      background-image: -moz-linear-gradient(-180deg, rgb(232, 85, 85) 0%, rgb(252, 113, 113) 0%, rgb(246, 195, 195) 100%);
+      background-image: -webkit-linear-gradient(-180deg, rgb(232, 85, 85) 0%, rgb(252, 113, 113) 0%, rgb(246, 195, 195) 100%);
+      background-image: -ms-linear-gradient(-180deg, rgb(232, 85, 85) 0%, rgb(252, 113, 113) 0%, rgb(246, 195, 195) 100%);
+      border-radius: 2.2rem;
+      line-height: 2.2rem;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .three-login {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 40%;
+      margin: 50px auto 0;
+    }
+
+    .three-login:before {
+      content: "";
+      display: block;
+      position: absolute;
+      left: -50px;
+      width: 50px;
+      border-top: 1px solid #ededed;
+    }
+
+    .three-login:after {
+      content: "";
+      display: block;
+      position: absolute;
+      right: -50px;
+      width: 50px;
+      border-top: 1px solid #ededed;
+    }
+
+    .three-login .login-icon {
+      flex: 1;
+      text-align: center;
+    }
+
+    .three-login .login-icon img {
+      width: 86%;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <img class="login-top" src="__static__/wap/img/center-bk.jpg">
+    <div class="login-content aui-padded-b-15">
+      <div class="login-cont-top">
+        <div class="actice button1 aui-font-size-18" style="color: #fff;">
+          登陆
+        </div>
+      </div>
+      <div class="login-cont2 aui-margin-t-15 aui-padded-t-15">
+        <div class="login-input aui-padded-b-10" style="margin-bottom: 26px;">
+          <input id="mobile" type="text" class="input aui-font-size-16" v-model="mobile" pattern="[0-9]*"
+            onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="请输入用户名">
+          <img style="width: 20px;margin-top:-10.5px!important;" src="__static__/wap/img/MailIcon.jpg">
+        </div>
+        <div class="login-input aui-padded-b-10">
+          <input type="password" class="input aui-font-size-16" v-model="password" placeholder="请输入密码">
+          <img style="width: 18px;margin-top:-14.5px!important;" src="__static__/wap/img/PasswordIcon.jpg">
+        </div>
+        <div class="">
+          <div style="margin: 10px;margin-top: 1rem;margin-left: 2.8rem;"><input id="checkbox" class="aui-checkbox"
+              type="checkbox" @click="check" :checked="checked"><span
+              style="color: #757575;margin-left: 0.5rem;">记住密码</span>
+          </div>
+        </div>
+      </div>
+      <div class="login-button">
+        <div class="submit-buuton aui-font-size-18" style="color: #fff;letter-spacing: 5px;" @click="doLogin()">登陆</div>
+        <div class="fo-password aui-font-size-14 aui-margin-t-15 aui-text-center" style="color: #bfbfbf;"
+          onclick="gotowap('reset_password', {type: 1})">忘记密码？</div>
+      </div>
+      <div class="three-login aui-padded-b-15">
+        <div class="login-icon" @click="qqLogin();">
+          <img src="__static__/wap/img/zc-icon1.png">
+        </div>
+        <div class="login-icon" @click="wechatLogin();">
+          <img src="__static__/wap/img/zc-icon3.png">
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        checked: true,
+        title: '登录',
+        mobile: '',
+        password: '',
+        atWechatEnvironment: isWeiXin(),
+        login_logo: '',
+      },
+      methods: {
+        doLogin: function () {
+          var that = this;
+          if (!variTelephone(that.mobile)) {
+            layer.msg('请填写正确的手机号码');
+            return;
+          }
+          if (!that.password) {
+            layer.msg('请填写密码');
+            return;
+          }
+          httpRequest('POST', 'api_users/user_accounts/login', {
+            mobile: that.mobile,
+            password: that.password,
+          }).then(function (resp) {
+            if (that.checked == true) {
+              console.log("checked == true");
+              //传入账号名，密码，和保存天数3个参数
+              that.setCookie(that.mobile, that.password, 7);
+            } else {
+              console.log("清空Cookie");
+              //清空Cookie
+              that.clearCookie();
+            }
+            resp.data.user.avatar = resp.data.user.avatar || '__static__/images/avatar.png';
+            user = resp.data.user;
+            token = resp.data.token;
+            setStorage(getClientType() + 'User', resp.data.user);
+            setStorage(getClientType() + 'Token', resp.data.token);
+            layer.msg(resp.msg);
+            setTimeout(function () {
+              gotowap('home');
+            }, 500)
+          })
+        },
+        getParams: function () {
+          var that = this
+          httpRequest('POST', 'api_systems/params/getParams', {
+            type: 'basic'
+          }).then(function (resp) {
+            that.login_logo = resp.data.wap_login_logo
+            document.title = resp.data.system_title
+            setStorage('systemParams', resp.data)
+          })
+        },
+        check() {
+          if ($('#checkbox').is(':checked')) {
+            // do something
+            this.checked = true;
+          } else {
+            this.checked = false;
+          }
+        },
+        //设置cookie
+        setCookie(c_name, c_pwd, exdays) {
+          var exdate = new Date(); //获取时间
+          exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+          //字符串拼接cookie
+          window.document.cookie = "mobile" + "=" + c_name + ";path=/;expires=" + exdate.toGMTString();
+          window.document.cookie = "password" + "=" + c_pwd + ";path=/;expires=" + exdate.toGMTString();
+        },
+        //读取cookie
+        getCookie: function () {
+          if (document.cookie.length > 0) {
+            var arr = document.cookie.split('; '); //这里显示的格式需要切割一下自己可输出看下
+            for (var i = 0; i < arr.length; i++) {
+              var arr2 = arr[i].split('='); //再次切割
+              //判断查找相对应的值
+              if (arr2[0] == 'mobile') {
+                this.mobile = arr2[1]; //保存到保存数据的地方
+              } else if (arr2[0] == 'password') {
+                this.password = arr2[1];
+              }
+            }
+          }
+        },
+        //清除cookie
+        clearCookie: function () {
+          this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
+        }
+      },
+      mounted: function () {
+        var that = this;
+        that.getParams();
+        that.getCookie();
+      }
+    });
+  </script>
+</body>
+
+</html>
