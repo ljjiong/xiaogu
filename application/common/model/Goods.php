@@ -2,12 +2,12 @@
 namespace app\common\model;
 
 /*
- *  【商品模型】
+ *  【产品模型】
  */
 class Goods extends BaseModel
 {
     // 指定数据表
-    protected $table = 'wancll_goods';
+    protected $table = 'work_goods';
 
     //类型转换
     protected $type = [
@@ -201,7 +201,7 @@ class Goods extends BaseModel
         }
     }
 
-    // 查询商品的基本信息
+    // 查询产品的基本信息
     public function getOneBasicInfo($id)
     {
         return $this->where('id', $id)->field('id,name,thum,sell_price')->find();

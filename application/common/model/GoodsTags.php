@@ -7,7 +7,7 @@ namespace app\common\model;
 class GoodsTags extends BaseModel
 {
     // 指定数据表
-    protected $table = 'wancll_goods_tags';
+    protected $table = 'work_goods_tags';
 
     //类型转换
     protected $type = [

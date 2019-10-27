@@ -15,7 +15,7 @@ class Goods extends Rest
     ];
 
     /**
-     * 【admin】查询全部商品列表
+     * 【admin】查询全部产品列表
      */
     public function index(Request $request)
     {
@@ -37,7 +37,7 @@ class Goods extends Rest
 
         foreach ($map as $key => $value) {
             if ($value) {
-                // 商品名称模糊查询
+                // 产品名称模糊查询
                 if ($key == 'name') {
                     $map[$key] = ['like', '%' . $value . '%'];
                 }
@@ -61,7 +61,7 @@ class Goods extends Rest
     }
 
     /**
-     * 【public】查询单个商品详情
+     * 【public】查询单个产品详情
      */
     public function read($id)
     {
@@ -71,7 +71,7 @@ class Goods extends Rest
     }
 
     /**
-     * 【admin】新建商品
+     * 【admin】新建产品
      */
     public function save(Request $request)
     {
@@ -99,7 +99,7 @@ class Goods extends Rest
                 }
 
                 $this->data['test'] = $spec_group_info;
-                $this->data['msg']  = '新增商品成功';
+                $this->data['msg']  = '新增产品成功';
                 $this->data['data'] = $result['data'];
             } else {
                 $this->data['code'] = 0;
@@ -114,7 +114,7 @@ class Goods extends Rest
     }
 
     /**
-     * 【admin】更新商品
+     * 【admin】更新产品
      */
     public function update(Request $request)
     {
@@ -143,7 +143,7 @@ class Goods extends Rest
                     model('goods')->editOne(['id' => $goods_id, 'stock' => $real_stock]);
                 }
 
-                $this->data['msg']  = '更新商品成功';
+                $this->data['msg']  = '更新产品成功';
                 $this->data['data'] = $result['data'];
             } else {
                 $this->data['code'] = 0;
@@ -158,7 +158,7 @@ class Goods extends Rest
     }
 
     /**
-     * 【admin】删除商品
+     * 【admin】删除产品
      */
     public function delete()
     {
@@ -166,7 +166,7 @@ class Goods extends Rest
 
         $result = model('goods')->delOne($id);
         if ($result['code']) {
-            $this->data['msg'] = '删除商品成功';
+            $this->data['msg'] = '删除产品成功';
         } else {
             $this->data['code'] = 0;
             $this->data['msg']  = $result['msg'];
@@ -176,7 +176,7 @@ class Goods extends Rest
     }
 
     /**
-     * 【admin】批量删除商品
+     * 【admin】批量删除产品
      */
     public function batch_delete(Request $request)
     {
@@ -184,7 +184,7 @@ class Goods extends Rest
 
         $result = model('goods')->delAll($ids);
         if ($result['code']) {
-            $this->data['msg'] = '批量删除商品成功';
+            $this->data['msg'] = '批量删除产品成功';
         } else {
             $this->data['code'] = 0;
             $this->data['msg']  = $result['msg'];
@@ -194,7 +194,7 @@ class Goods extends Rest
     }
 
     /**
-     * 【admin】批量上线商品
+     * 【admin】批量上线产品
      */
     public function batch_on_line(Request $request)
     {
@@ -202,7 +202,7 @@ class Goods extends Rest
 
         $result = model('goods')->batchUpdate(['status' => 1], $ids);
         if ($result['code']) {
-            $this->data['msg'] = '批量上线商品成功';
+            $this->data['msg'] = '批量上线产品成功';
         } else {
             $this->data['code'] = 0;
             $this->data['msg']  = $result['msg'];
@@ -212,7 +212,7 @@ class Goods extends Rest
     }
 
     /**
-     * 【admin】批量下线商品
+     * 【admin】批量下线产品
      */
     public function batch_off_line(Request $request)
     {
@@ -220,7 +220,7 @@ class Goods extends Rest
 
         $result = model('goods')->batchUpdate(['status' => 2], $ids);
         if ($result['code']) {
-            $this->data['msg'] = '批量下线商品成功';
+            $this->data['msg'] = '批量下线产品成功';
         } else {
             $this->data['code'] = 0;
             $this->data['msg']  = $result['msg'];
@@ -230,7 +230,7 @@ class Goods extends Rest
     }
 
     /**
-     * 【admin】查询全部商品列表
+     * 【admin】查询全部产品列表
      */
     public function lists(Request $request)
     {
@@ -296,19 +296,19 @@ class Goods extends Rest
 
         foreach ($map as $key => $value) {
             if ($value) {
-                // 商品名称模糊查询
+                // 产品名称模糊查询
                 if ($key == 'keyword') {
                     $map['name'] = ['like', '%' . $value . '%'];
                     unset($map['keyword']);
                 }
 
-                // 商品标签检索
+                // 产品标签检索
                 if ($key == 'tag') {
                     $map['tags'] = ['like', '%' . $value . '%'];
                     unset($map['tag']);
                 }
 
-                // 自定义商品标签检索
+                // 自定义产品标签检索
                 if ($key == 'custom_tag') {
                     $tag_ids        = model('goods_tags')->getColumn(['name' => ['like', '%' . $value . '%']], 'id');
                     $find_goods_ids = [];
@@ -343,7 +343,7 @@ class Goods extends Rest
     }
 
     /**
-     * 获取促销订单的商品信息
+     * 获取促销订单的产品信息
      */
     public function goods_info(Request $request)
     {

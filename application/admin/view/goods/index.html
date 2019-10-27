@@ -9,7 +9,7 @@
         <main class="el-main" id="main">
           <div id="app">
             <fieldset>
-              <legend>商品列表</legend>
+              <legend>产品列表</legend>
             </fieldset>
             <!-- 筛选 -->
             <el-row style="margin-bottom: 10px;">
@@ -20,17 +20,17 @@
                   </div>
                   <el-row :gutter="20">
                     <!-- 筛选条件 -->
-                    <el-col :span="5">
-                      <span style="padding: 0px  10px;">商品分类</span>
+                    <el-col :span="10">
+                      <span style="padding: 0px  10px;">产品分类</span>
                       <el-cascader change-on-select v-model="cate_ids" :options="cates" expand-trigger="hover"></el-cascader>
                     </el-col>
                     <el-col :span="5">
-                      <el-input placeholder="请输入商品名称" v-model="searchData.name">
-                        <template slot="prepend">商品名称</template>
+                      <el-input placeholder="请输入产品名称" v-model="searchData.name">
+                        <template slot="prepend">产品名称</template>
                       </el-input>
                     </el-col>
                     <!-- 筛选按钮 -->
-                    <el-col :span="4">
+                    <el-col :span="5">
                       <el-button icon="el-icon-search" @click="search();"></el-button>
                       <el-button icon="el-icon-refresh" @click="refresh();"></el-button>
                     </el-col>
@@ -43,8 +43,8 @@
               <el-col>
                 <el-card>
                   <div slot="header">
-                    <span>商品列表</span>
-                    <el-button type="primary" style="float: right;" size="mini" icon="el-icon-plus" @click="goAdd()">新增商品</el-button>
+                    <span>产品列表</span>
+                    <el-button type="primary" style="float: right;" size="mini" icon="el-icon-plus" @click="goAdd()">新增产品</el-button>
                   </div>
                   <!-- 批量操作 -->
                   <div style="margin-bottom: 10px">
@@ -57,26 +57,27 @@
                     <el-table :data="tableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
                       <el-table-column type="selection" width="55"> </el-table-column>
                       <el-table-column prop="id" label="ID" width="80" fixed sortable></el-table-column>
+                      <el-table-column prop="thum" label="缩略图" fixed>
+                        <template slot-scope="scope">
+                          <img :src="scope.row.thum" style="max-width: 60%;">
+                        </template>
+                      </el-table-column>
                       <el-table-column prop="name" label="名称" fixed></el-table-column>
-                      <el-table-column prop="goods_cate_name" label="分类" fixed></el-table-column>
+                      <el-table-column prop="goods_cate_name" label="分类" ></el-table-column>
                       <el-table-column prop="status" label="状态" sortable>
                         <template slot-scope="scope">
                           <el-tag v-if="scope.row.status == 1" type="success" size="mini">正常</el-tag>
                           <el-tag v-else-if="scope.row.status == 2" type="info" size="mini">下架</el-tag>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="thum" label="缩略图">
-                        <template slot-scope="scope">
-                          <img :src="scope.row.thum" style="max-width: 60%;">
-                        </template>
-                      </el-table-column>
+                      
                       <el-table-column prop="sell_price" label="价格" sortable>
                         <template slot-scope="scope">
                           <span style="font-weight: bold;color: #df0303">￥{{scope.row.sell_price}}</span>
                         </template>
                       </el-table-column>
-                      <el-table-column prop="stock" label="库存" sortable></el-table-column>
-                      <el-table-column prop="sell_num" label="销量" sortable></el-table-column>
+                      <!-- <el-table-column prop="stock" label="库存" sortable></el-table-column> -->
+                      <el-table-column prop="nums" label="访问量" sortable></el-table-column>
                       <el-table-column label="操作" width="150" fixed="right">
                         <template slot-scope="scope">
                           <el-button @click="handleClick(scope.row, 'edit')" type="primary" size="small" icon="el-icon-edit-outline" plain></el-button>
@@ -97,23 +98,23 @@
               </el-col>
             </el-row>
             <!-- dialog -->
-            <el-dialog title="商品编辑" :visible.sync="dialogVisible" fullscreen :before-close="handleClose">
+            <el-dialog title="产品编辑" :visible.sync="dialogVisible" fullscreen :before-close="handleClose">
               <el-collapse v-model="activeCollapseName" accordion>
                 <el-collapse-item title="基本信息" name="1">
                   <el-row>
                     <el-col :span="18" :offset="3">
                       <el-card>
                         <el-form size="medium" ref="goodsBasicForm" :model="selectGoods" label-width="80px" label-position="left" :rules="goodsRules">
-                          <el-form-item label="商品分类">
+                          <el-form-item label="产品分类">
                             <el-cascader change-on-select v-model="goods_cate_ids" :options="cates"></el-cascader>
                           </el-form-item>
-                          <el-form-item label="商品名称">
+                          <el-form-item label="产品名称">
                             <el-input v-model="selectGoods.name"></el-input>
                           </el-form-item>
-                          <el-form-item label="商品简介">
+                          <el-form-item label="产品简介">
                             <el-input v-model="selectGoods.intro" type="textarea"></el-input>
                           </el-form-item>
-                          <el-form-item label="商品状态" prop="status">
+                          <el-form-item label="产品状态" prop="status">
                             <el-radio v-model="selectGoods.status" :label="1">上线</el-radio>
                             <el-radio v-model="selectGoods.status" :label="2">下线</el-radio>
                           </el-form-item>
@@ -125,6 +126,12 @@
                             </el-col>
 
                             <el-col :span="6">
+                              <el-form-item label="访问量" prop="nums" label-width="80px">
+                                <el-input v-model="selectGoods.nums" clearable></el-input>
+                              </el-form-item>
+                            </el-col>
+
+                            <!-- <el-col :span="6">
                               <el-form-item label="库存" prop="stock" label-width="80px">
                                 <el-input v-model="selectGoods.stock" clearable></el-input>
                               </el-form-item>
@@ -139,7 +146,7 @@
                               <el-form-item label="购买赠送积分" prop="">
                                 <el-input v-model="selectGoods.buy_get_score" clearable></el-input>
                               </el-form-item>
-                            </el-col>
+                            </el-col> -->
 
                             <!-- <el-col :span="6">
                               <el-form-item label="红包价" prop="red_price">
@@ -160,17 +167,17 @@
                           <!-- <el-row :gutter="30"> -->
                             
                             <!-- <el-col :span="6">
-                              <el-form-item label="商品编码" prop="goods_no">
+                              <el-form-item label="产品编码" prop="goods_no">
                                 <el-input v-model="selectGoods.goods_no" clearable></el-input>
                               </el-form-item>
                             </el-col>
                             <el-col :span="6">
-                              <el-form-item label="商品条码" prop="goods_code">
+                              <el-form-item label="产品条码" prop="goods_code">
                                 <el-input v-model="selectGoods.goods_code" clearable></el-input>
                               </el-form-item>
                             </el-col> -->
                           <!-- </el-row> -->
-                          <el-row :gutter="30">
+                          <!-- <el-row :gutter="30">
                             <el-col :span="6">
                               <el-form-item label="销售量" prop="sell_num" label-width="80px">
                                 <el-input v-model="selectGoods.sell_num" clearable></el-input>
@@ -187,7 +194,7 @@
                               </el-form-item>
                             </el-col>
                             <el-col :span="6">
-                              <el-form-item label="商品排序" prop="sort">
+                              <el-form-item label="产品排序" prop="sort">
                                 <el-input v-model="selectGoods.sort" clearable></el-input>
                               </el-form-item>
                             </el-col>
@@ -195,9 +202,9 @@
                           <el-form-item label="是否置顶" prop="is_top">
                             <el-switch v-model="selectGoods.is_top"></el-switch>
                           </el-form-item>
-                          <el-form-item label="是否为虚拟商品" prop="is_virtual">
+                          <el-form-item label="是否为虚拟产品" prop="is_virtual">
                             <el-switch v-model="selectGoods.is_virtual"></el-switch>
-                          </el-form-item>
+                          </el-form-item> -->
                           <!-- <el-form-item label="推荐位" prop="recoList">
                             <el-checkbox-group v-model="selectGoods.tags">
                               <el-checkbox label="精品"></el-checkbox>
@@ -208,18 +215,18 @@
                             </el-checkbox-group>
                           </el-form-item> -->
 
-                          <!-- 自定义商品标签 -->
-                          <el-form-item label="商品标签" prop="tag_ids">
+                          <!-- 自定义产品标签 -->
+                         <!--  <el-form-item label="产品标签" prop="tag_ids">
                             <el-checkbox-group v-model="selectGoods.tag_ids">
                               <el-checkbox :value="tag.id" :label="tag.id" v-for="(tag, tagKey) in goods_tags" :key="tagKey">{{tag.name}}</el-checkbox>
                             </el-checkbox-group>
                           </el-form-item>
-                        </el-form>
+                        </el-form> -->
                       </el-card>
                     </el-col>
                   </el-row>
                 </el-collapse-item>
-                <el-collapse-item title="商品图集" name="2">
+                <el-collapse-item title="产品图集" name="2">
                   <el-row>
                     <el-col :span="12" :offset="6">
                       <el-card>
@@ -268,7 +275,7 @@
                     </el-col>
                   </el-row>
                 </el-collapse-item>
-                <el-collapse-item title="商品属性" name="3">
+                <el-collapse-item title="产品属性" name="3">
                   <el-row>
                     <el-col :span="12" :offset="6">
                       <el-form size="medium" ref="goodsAttrsForm" :model="selectGoods" label-position="left" label-width="80px">
@@ -290,7 +297,8 @@
                     </el-col>
                   </el-row>
                 </el-collapse-item>
-                <el-collapse-item title="商品规格" name="4">
+                
+                <!--<el-collapse-item title="产品规格" name="4">
                   <el-row>
                     <el-col :span="8" :offset="2">
                       <el-form size="medium" ref="goodsSpecsForm" :model="selectGoods" label-position="left" label-width="80px">
@@ -311,14 +319,14 @@
                       </el-form>
                     </el-col>
                   </el-row>
-                  <el-row style="margin-top: 20px;">
+                   <el-row style="margin-top: 20px;">
                     <el-col :span="20" :offset="4">
                       <el-card>
                         <div slot="header">
                           <span>规格组</span>
-                        </div>
-                        <!-- 商品规格组合 -->
-                        <div class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition" style="width: 100%;">
+                        </div> -->
+                        <!-- 产品规格组合 -->
+                        <!-- <div class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition" style="width: 100%;">
                           <div class="el-table__body-wrapper is-scrolling-none">
                             <table cellspacing="0" cellpadding="0" border="0" class="el-table__body">
                               <thead class="has-gutter">
@@ -338,7 +346,7 @@
                                       <el-input size="mini" v-model="quickSpecData.sell_price"></el-input>
                                     </div>
                                   </th>
-                                  <!-- <th colspan="1" rowspan="1" class="is-leaf">
+                                   <th colspan="1" rowspan="1" class="is-leaf">
                                     <div class="cell">市场价格
                                       <i class="el-icon-caret-bottom" style="cursor: pointer;" @click="quickSetSpec('market_price')"></i>
                                       <el-input size="mini" v-model="quickSpecData.market_price"></el-input>
@@ -357,17 +365,17 @@
                                     </div>
                                   </th>
                                   <th colspan="1" rowspan="1" class="is-leaf">
-                                    <div class="cell">商品编码
+                                    <div class="cell">产品编码
                                       <i class="el-icon-caret-bottom" style="cursor: pointer;" @click="quickSetSpec('goods_no')"></i>
                                       <el-input size="mini" v-model="quickSpecData.goods_no"></el-input>
                                     </div>
                                   </th>
                                   <th colspan="1" rowspan="1" class="is-leaf">
-                                    <div class="cell">商品条码
+                                    <div class="cell">产品条码
                                       <i class="el-icon-caret-bottom" style="cursor: pointer;" @click="quickSetSpec('goods_code')"></i>
                                       <el-input size="mini" v-model="quickSpecData.goods_code"></el-input>
                                     </div>
-                                  </th> -->
+                                  </th> 
                                   <th colspan="1" rowspan="1" class="is-leaf">
                                     <div class="cell">重量(g)
                                       <i class="el-icon-caret-bottom" style="cursor: pointer;" @click="quickSetSpec('weight')"></i>
@@ -404,7 +412,7 @@
                                       <el-input size="mini" v-model="dynamicSpec.sell_price" style="width:100%"></el-input>
                                     </div>
                                   </td>
-                                  <!-- <td class="" style="width: 9.5%">
+                                   <td class="" style="width: 9.5%">
                                     <div class="cell">
                                       <el-input size="mini" v-model="dynamicSpec.market_price" style="width:100%"></el-input>
                                     </div>
@@ -428,7 +436,7 @@
                                     <div class="cell">
                                       <el-input size="mini" v-model="dynamicSpec.goods_code" style="width:100%"></el-input>
                                     </div>
-                                  </td> -->
+                                  </td> 
                                   <td class="" style="width: 9.5%">
                                     <div class="cell">
                                       <el-input size="mini" v-model="dynamicSpec.weight" style="width:100%"></el-input>
@@ -450,23 +458,10 @@
                       </el-card>
                     </el-col>
                   </el-row>
-                </el-collapse-item>
-                <el-collapse-item title="商品运费" name="5">
-                  <el-row>
-                    <el-col :span="12" :offset="6">
-                      <el-card>
-                        <el-form size="medium" ref="goodsFreightForm" :model="selectGoods" label-position="left" label-width="80px">
-                          <el-form-item label="运费模板">
-                            <el-select v-model="selectGoods.freight_template_id">
-                              <el-option v-for="(frightTmp, freightKey) in freightTemplates" :key="freightKey" :label="frightTmp.name" :value="frightTmp.id"></el-option>
-                            </el-select>
-                          </el-form-item>
-                        </el-form>
-                      </el-card>
-                    </el-col>
-                  </el-row>
-                </el-collapse-item>
-                <el-collapse-item title="商品详情" name="6">
+                </el-collapse-item> -->
+
+                
+                <el-collapse-item title="产品详情" name="6">
                   <el-row>
                     <el-col :span="12" :offset="6">
                       <script id="container" type="text/plain"></script>
@@ -497,10 +492,10 @@
                     </el-card>
                   </el-col>
                 </el-row>
-                <span slot="footer" class="dialog-footer">
+                <!-- <span slot="footer" class="dialog-footer">
                   <el-button @click="innerDialogVisible = false">取消</el-button>
                   <el-button type="primary" @click="updateTemplateContent">提交</el-button>
-                </span>
+                </span> -->
               </el-dialog>
               <span slot="footer" class="dialog-footer">
                 <el-button size="medium" @click="dialogVisible = false" plain>取消</el-button>
@@ -534,7 +529,7 @@
             name: '',
             cate_id: ''
           },
-          // 商品分类
+          // 产品分类
           cates: [],
           cate_ids: [],
           // 属性模板
@@ -780,11 +775,11 @@
                 this.quickSpecData.thum = resp.data.host_file_path;
               } else if (this.currentUploadType == 'specGroupInfoThum') { // 规格组缩略图
                 this.selectGoods.spec_group_info[this.currentUploadIndex].thum = resp.data.host_file_path;
-              } else if (this.currentUploadType == 'imgAdd') { // 商品缩略图
+              } else if (this.currentUploadType == 'imgAdd') { // 产品缩略图
                 this.selectGoods.thum = resp.data.host_file_path;
-              } else if (this.currentUploadType == 'imgsAdd') { //增加商品图集
+              } else if (this.currentUploadType == 'imgsAdd') { //增加产品图集
                 this.selectGoods.imgs.push(resp.data.host_file_path);
-              } else if (this.currentUploadType == 'imgEdit') {  //编辑商品图集单个图片
+              } else if (this.currentUploadType == 'imgEdit') {  //编辑产品图集单个图片
                 Vue.set(this.selectGoods.imgs, this.currentUploadIndex, resp.data.host_file_path)
               }
               // 清除选项框内容
@@ -850,30 +845,22 @@
         },
         submit() {
           if (!this.selectGoods.name) {
-            this.$message.error('请填写商品名称');
-            return;
-          }
-          if (!this.selectGoods.goods_cate_id) {
-            this.$message.error('请选择商品分类');
-            return;
-          }
-          if (!this.selectGoods.sell_price) {
-            this.$message.error('请填写商品价格');
+            this.$message.error('请填写产品名称');
             return;
           }
           if (!this.selectGoods.thum) {
-            this.$message.error('请上传商品缩略图');
+            this.$message.error('请上传产品缩略图');
             return;
           }
           if (!this.selectGoods.imgs.length) {
-            this.$message.error('请上传商品图集');
+            this.$message.error('请上传产品图集');
             return;
           }
           // 验证属性
-          if (this.selectGoods.attr_info.some(item => !item.value)) {
-            this.$message.error('请选择完整的属性项');
-            return;
-          }
+          // if (this.selectGoods.attr_info.some(item => !item.value)) {
+          //   this.$message.error('请选择完整的属性项');
+          //   return;
+          // }
           this.selectGoods.desc = ue.getContent();
           let router = this.selectGoods.id ? 'api_goods/goods/update' : 'api_goods/goods/save';
           httpRequest('POST', router, this.selectGoods).then(resp => {
@@ -928,10 +915,6 @@
             name: '无规格',
             content: [],
           })
-        })
-        httpRequest('POST', 'api_goods/freight_templates/index').then(resp => {
-          this.freightTemplates = resp.data
-          this.freightTemplates.unshift({ id: 0, name: '免邮费' })
         })
         httpRequest('POST', 'api_goods/goods_tags/index').then(resp => {
           this.goods_tags = resp.data

@@ -7,7 +7,7 @@ namespace app\common\model;
 class GoodsSpecGroups extends BaseModel
 {
     // 指定数据表
-    protected $table = 'wancll_goods_spec_groups';
+    protected $table = 'work_goods_spec_groups';
 
     //类型转换
     protected $type = [
