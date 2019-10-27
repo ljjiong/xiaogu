@@ -1,0 +1,369 @@
+{include file="header" /}
+<body>
+    <section class="el-container is-vertical">
+        {include file="top" /}
+        <section class="el-container">
+            {include file="left" /}
+            <section class="el-container is-vertical">
+                <main class="el-main" id="main">
+                    <div id="app">
+                        <fieldset>
+                            <legend>
+                                合作伙伴管理
+                            </legend>
+                        </fieldset>
+                        <!-- 筛选 -->
+                            <el-row style="margin-bottom: 10px;">
+                                <el-col>
+                                    <el-card>
+                                        <div slot="header">
+                                            <span>
+                                                查询
+                                            </span>
+                                        </div>
+                                        <!-- 筛选条件 -->
+                                        <el-row :gutter="20">
+                                            <el-col :span="5">
+                                                <el-input placeholder="请输入手机号码" v-model="searchData.mobile">
+                                                    <template slot="prepend">
+                                                        手机号码
+                                                    </template>
+                                                </el-input>
+                                            </el-col>
+                                            <el-col :span="5">
+                                                <el-input placeholder="请输入用户昵称" v-model="searchData.nick_name">
+                                                    <template slot="prepend">
+                                                        用户昵称
+                                                    </template>
+                                                </el-input>
+                                            </el-col>
+                                            <el-col :span="4">
+                                                <el-button @click="search();" icon="el-icon-search">
+                                                </el-button>
+                                                <el-button @click="refresh();" icon="el-icon-refresh">
+                                                </el-button>
+                                            </el-col>
+                                        </el-row>
+                                    </el-card>
+                                </el-col>
+                            </el-row>
+                        <!-- 列表 -->
+                        <el-row>
+                            <el-col>
+                                <el-card>
+                                    <div slot="header">
+                                        <span>
+                                            合作伙伴
+                                        </span>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('pull_black')" icon="el-icon-error" plain="" size="small" type="danger" v-if="is_role != -1">
+                                            批量删除
+                                        </el-button>
+                                        <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float: right;" type="primary">
+                                            新增合作伙伴
+                                        </el-button>
+                                    </div>
+                                    <!-- 表格 -->
+                                    <template>
+                                        <el-table :data="tableData" @selection-change="handleSelectionChange" stripe="" style="width: 100%">
+                                            <el-table-column v-if="is_role != -1" type="selection" width="55">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="ID" prop="id" sortable="" width="80">
+                                            </el-table-column>
+                                            <el-table-column prop="picture" label="图片">
+                                              <template slot-scope="scope">
+                                                <img :src="scope.row.picture" style="max-width: 60%;">
+                                              </template>
+                                            </el-table-column> 
+                                            <el-table-column  label="链接" prop="hyperlink" >
+                                            </el-table-column>
+                                            <el-table-column :filter-method="statusFilterHandler" :filters="statusFilters" label="是否显示" prop="status">
+                                                <template slot-scope="scope">
+                                                    <el-tag size="mini" type="success" v-if="scope.row.status == 1">
+                                                        是
+                                                    </el-tag>
+                                                    <el-tag size="mini" type="info" v-else-if="scope.row.status == 2">
+                                                        否
+                                                    </el-tag>
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column fixed="right" label="操作" width="150">
+                                                <template slot-scope="scope">
+                                                    <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </template>
+                                    <!-- 分页 -->
+                                    <template>
+                                        <div class="block" style="margin-top: 20px;">
+                                            <el-pagination :current-page="currentPage" :page-size="currentPageSize" :page-sizes="pageSize" :total="total" @current-change="handleCurrentChange" @size-change="handleSizeChange" layout="total, sizes, prev, pager, next, jumper">
+                                            </el-pagination>
+                                        </div>
+                                    </template>
+                                </el-card>
+                            </el-col>
+                        </el-row>
+                        <!-- dialog -->
+                        <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisible" title="编辑关于我们" top="5vh" width="60%">
+                            <el-row :gutter="40">
+                                <el-col :offset="6" :span="13">
+                                    <el-form :model="selectData" :rules="rules" label-position="left" label-width="120px" ref="ruleForm">
+                                        <el-form-item label="关于我们类别" prop="type_id">
+                                            <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
+                                            </el-cascader>
+                                        </el-form-item>
+                                        <el-form-item label="合作链接" prop="video_url">
+                                           <el-input v-model="selectData.hyperlink">
+                                           </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="合作图片" prop="sort">
+                                            <ul class="el-upload-list el-upload-list--picture-card">
+                                                <li class="el-upload-list__item is-ready" v-if="selectData.picture">
+                                                    <img :src="selectData.picture" class="el-upload-list__item-thumbnail">
+                                                        <span class="el-upload-list__item-actions">
+                                                            <span @click="fileClick" class="el-upload-list__item-edit">
+                                                                <i class="el-icon-edit">
+                                                                </i>
+                                                            </span>
+                                                        </span>
+                                                    </img>
+                                                </li>
+                                                <div @click="fileClick" class="el-upload el-upload--picture-card" v-else="">
+                                                    <i class="el-icon-plus">
+                                                    </i>
+                                                </div>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item label="显示" prop="status">
+                                            <el-radio :label="1" v-model="selectData.status">
+                                                是
+                                            </el-radio>
+                                            <el-radio :label="2" v-model="selectData.status">
+                                                否
+                                            </el-radio>
+                                        </el-form-item>
+                                        <el-form-item>
+                                            <el-button @click="dialogVisible = false;" plain="">
+                                                取消
+                                            </el-button>
+                                            <el-button @click="submit" type="primary">
+                                                提交
+                                            </el-button>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                            </el-row>
+                            <input @change="fileChange($event)" id="imgAdd" style="display: none" type="file">
+                            </input>
+                        </el-dialog>
+                    </div>
+                </main>
+                {include file="footer" /}
+            </section>
+        </section>
+    </section>
+    <script src="/public/static/ueditor/ueditor.config.js" type="text/javascript">
+    </script>
+    <script src="/public/static/ueditor/ueditor.all.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        let ue = {};
+    let app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          is_role:$.inArray(3,user.role_ids), 
+          tableData: [],  //表格数据
+          currentPage: parseInt(querystring.currentPage) || 1, //当前页
+          currentPageSize: 20,  //当前页容量
+          pageSize: [20, 40, 60, 80, 100, 200], //分页大小
+          total: 0, //总页数
+          multipleSelection: [],  //多选项
+          // 状态过滤
+          statusFilters: [{
+            text: '是',
+            value: 1
+          }, {
+            text: '否',
+            value: 2
+          }],
+          // 查询条件
+          searchData: {
+            title: '',
+            type_id: ''
+          },
+          // 关于我们分类
+          types: [],
+          type_ids: [],
+          select_type_ids: [],
+          // dialog
+          dialogVisible: false,
+          selectData: {},
+          rules: {
+            title: [
+              { required: true, message: '请输入标题', trigger: 'blur' },
+            ],
+            type_ids: [
+              { required: true, message: '请选择类别', trigger: 'blur' },
+            ]
+          },
+        }
+      },
+      methods: {
+        // 点击代理
+        handleClick(data, type) {
+          if (type == 'del') {
+            this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
+              httpRequest('POST', 'api_articles/articles/delete', { id: data.id }).then(resp => {
+                this.$message.success(resp.msg)
+                this.tableData.splice(this.tableData.indexOf(data), 1);
+              })
+            })
+          } else if (type === 'edit') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.select_type_ids = packageCascaderSelecteData(this.types, this.selectData.type_id);
+            this.dialogVisible = true;
+            this.initUEditor(this.selectData.content);
+          }
+        },
+        // 跳页
+        handleCurrentChange(val) {
+          this.currentPage = val;
+          this.loadTableData();
+        },
+        // 改变页容量
+        handleSizeChange(val) {
+          this.currentPageSize = val;
+          this.loadTableData();
+        },
+        // 过滤
+        statusFilterHandler(value, row, column) {
+          return row['status'] === value;
+        },
+        // 搜索
+        search() {
+          this.currentPage = 1;
+          this.loadTableData();
+        },
+        // 重置
+        refresh() {
+          this.currentPage = 1;
+          for (let key in this.searchData) {
+            this.searchData[key] = ''
+          }
+          this.type_ids = [];
+          this.loadTableData();
+        },
+        // 多选监听
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+        },
+        // 批量操作
+        multiOperate(type) {
+          let ids = this.multipleSelection.map(item => item.id);
+          this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
+            httpRequest('POST', 'api_articles/articles/batch_' + type, { id: ids }).then(resp => {
+              this.$message.success(resp.msg);
+              setTimeout(_ => {
+                location.reload();
+              }, 500);
+            })
+          })
+        },
+        // 新增
+        goAdd() {
+          this.selectData = {
+            picture: '',
+            hyperlink:'',
+            classify_id:'',
+            status: 1
+          };
+          this.select_type_ids = [];
+          this.dialogVisible = true;
+          this.initUEditor();
+          this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+        },
+        // 加载数据
+        loadTableData() {
+          httpRequest('POST', 'api_articles/partner/index', this.searchData, {
+            'page-num': this.currentPage,
+            'page-limit': this.currentPageSize
+          }).then(resp => {
+            this.tableData = resp.data;
+            this.total = resp.page.data_count || 0;
+          })
+        },
+        // ------------------- dialog ---------------------
+        submit() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              let router = this.selectData.id ? 'api_articles/partner/update' : 'api_articles/partner/save';
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500)
+              });
+            } else {
+              return false;
+            }
+          });
+        },
+        fileClick() {
+          document.getElementById('imgAdd').click();
+        },
+        fileChange(el) {
+          Array.from(el.target.files).forEach(item => {
+            let formData = new FormData();
+            formData.append('file', item);
+            formData.append('save_path', articleImagePath);
+            formData.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData).then(resp => {
+              this.selectData.picture = resp.data.host_file_path;
+            })
+          })
+        },
+        // 初始化 UEeditor
+        initUEditor(content = '') {
+          setTimeout(_ => {
+            if (isEmptyObject(ue)) {
+              ue = UE.getEditor('container', {
+                autoHeightEnabled: false,
+                autoFloatEnabled: false,
+                initialFrameHeight: 600,
+                enableAutoSave: false,
+              });
+              ue.ready(_ => {
+                ue.setContent(content);
+              })
+            } else {
+              setTimeout(_ => {
+                ue.setContent(content)
+              }, 100)
+            }
+          }, 200);
+        },
+      },
+      watch: {
+        type_ids(value) {
+          this.searchData.type_id = value[value.length - 1];
+        },
+        select_type_ids(value) {
+          this.selectData.type_id = value[value.length - 1];
+        }
+      },
+      mounted() {
+        // httpRequest('POST', 'api_systems/categories/read_tree', {
+        //   id: 24
+        // }).then(resp => {
+        //   this.types = packageCascaderData(resp.data._child || [])
+        // });
+        this.loadTableData();
+      }
+    });
+    </script>
+</body>
