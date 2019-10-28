@@ -13,40 +13,40 @@
                             </legend>
                         </fieldset>
                         <!-- 筛选 -->
-                            <el-row style="margin-bottom: 10px;">
-                                <el-col>
-                                    <el-card>
-                                        <div slot="header">
-                                            <span>
-                                                查询
-                                            </span>
-                                        </div>
-                                        <!-- 筛选条件 -->
-                                        <el-row :gutter="20">
-                                            <el-col :span="5">
-                                                <el-input placeholder="请输入手机号码" v-model="searchData.mobile">
-                                                    <template slot="prepend">
-                                                        手机号码
-                                                    </template>
-                                                </el-input>
-                                            </el-col>
-                                            <el-col :span="5">
-                                                <el-input placeholder="请输入用户昵称" v-model="searchData.nick_name">
-                                                    <template slot="prepend">
-                                                        用户昵称
-                                                    </template>
-                                                </el-input>
-                                            </el-col>
-                                            <el-col :span="4">
-                                                <el-button @click="search();" icon="el-icon-search">
-                                                </el-button>
-                                                <el-button @click="refresh();" icon="el-icon-refresh">
-                                                </el-button>
-                                            </el-col>
-                                        </el-row>
-                                    </el-card>
-                                </el-col>
-                            </el-row>
+                        <el-row style="margin-bottom: 10px;">
+                            <el-col>
+                                <el-card>
+                                    <div slot="header">
+                                        <span>
+                                            查询
+                                        </span>
+                                    </div>
+                                    <!-- 筛选条件 -->
+                                    <el-row :gutter="20">
+                                        <el-col :span="5">
+                                            <el-input placeholder="请输入手机号码" v-model="searchData.mobile">
+                                                <template slot="prepend">
+                                                    手机号码
+                                                </template>
+                                            </el-input>
+                                        </el-col>
+                                        <el-col :span="5">
+                                            <el-input placeholder="请输入用户昵称" v-model="searchData.nick_name">
+                                                <template slot="prepend">
+                                                    用户昵称
+                                                </template>
+                                            </el-input>
+                                        </el-col>
+                                        <el-col :span="4">
+                                            <el-button @click="search();" icon="el-icon-search">
+                                            </el-button>
+                                            <el-button @click="refresh();" icon="el-icon-refresh">
+                                            </el-button>
+                                        </el-col>
+                                    </el-row>
+                                </el-card>
+                            </el-col>
+                        </el-row>
                         <!-- 列表 -->
                         <el-row>
                             <el-col>

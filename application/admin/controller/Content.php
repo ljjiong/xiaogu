@@ -9,6 +9,10 @@ class Content extends Controller
     {
         return view();
     }
+    public function articles_single()
+    {
+        return view();
+    }
 
     public function advertisements()
     {

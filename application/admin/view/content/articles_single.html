@@ -9,51 +9,16 @@
                     <div id="app">
                         <fieldset>
                             <legend>
-                                文章管理
+                                关于我们管理
                             </legend>
                         </fieldset>
-                        <!-- 筛选 -->
-                        <el-row style="margin-bottom: 10px;">
-                            <el-col>
-                                <el-card>
-                                    <div slot="header">
-                                        <span>
-                                            查询
-                                        </span>
-                                    </div>
-                                    <!-- 筛选条件 -->
-                                    <el-row :gutter="20">
-                                        <el-col :span="5">
-                                            <el-input placeholder="请输入手机号码" v-model="searchData.mobile">
-                                                <template slot="prepend">
-                                                    手机号码
-                                                </template>
-                                            </el-input>
-                                        </el-col>
-                                        <el-col :span="5">
-                                            <el-input placeholder="请输入用户昵称" v-model="searchData.nick_name">
-                                                <template slot="prepend">
-                                                    用户昵称
-                                                </template>
-                                            </el-input>
-                                        </el-col>
-                                        <el-col :span="4">
-                                            <el-button @click="search();" icon="el-icon-search">
-                                            </el-button>
-                                            <el-button @click="refresh();" icon="el-icon-refresh">
-                                            </el-button>
-                                        </el-col>
-                                    </el-row>
-                                </el-card>
-                            </el-col>
-                        </el-row>
                         <!-- 列表 -->
                         <el-row>
                             <el-col>
                                 <el-card>
                                     <div slot="header">
                                         <span>
-                                            文章列表
+                                            关于我们
                                         </span>
                                     </div>
                                     <div style="margin-bottom: 10px;">
@@ -61,7 +26,7 @@
                                             批量删除
                                         </el-button>
                                         <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float: right;" type="primary">
-                                            新增文章
+                                            新增
                                         </el-button>
                                     </div>
                                     <!-- 表格 -->
@@ -71,9 +36,26 @@
                                             </el-table-column>
                                             <el-table-column fixed="" label="ID" prop="id" sortable="" width="80">
                                             </el-table-column>
-                                            <el-table-column fixed="" label="标题" prop="title">
+                                             <el-table-column label="类别" prop="type_id">
+                                                <template slot-scope="scope">
+                                                    <span   v-if="scope.row.type_id==1">
+                                                        公司简介
+                                                    </span>
+                                                    <span   v-else-if="scope.row.type_id==2">
+                                                        联系我们
+                                                    </span>
+                                                    <span   v-else-if="scope.row.type_id==3">
+                                                        招贤纳士
+                                                    </span>
+                                                    <span   v-else-if="scope.row.type_id==4">
+                                                        隐私政策
+                                                    </span>
+                                                </template>
                                             </el-table-column>
-                                            <el-table-column fixed="" label="类别" prop="type_name" sortable="">
+                                            <el-table-column prop="thum" label="图片">
+                                              <template slot-scope="scope">
+                                                <img :src="scope.row.thum" style="max-width: 60%;">
+                                              </template>
                                             </el-table-column>
                                             <el-table-column :filter-method="statusFilterHandler" :filters="statusFilters" label="状态" prop="status">
                                                 <template slot-scope="scope">
@@ -84,8 +66,6 @@
                                                         下线
                                                     </el-tag>
                                                 </template>
-                                            </el-table-column>
-                                            <el-table-column label="作者" prop="author">
                                             </el-table-column>
                                             <el-table-column fixed="right" label="操作" width="150">
                                                 <template slot-scope="scope">
@@ -110,21 +90,11 @@
                             <el-row :gutter="40">
                                 <el-col :offset="1" :span="8">
                                     <el-form :model="selectData" :rules="rules" label-position="left" label-width="120px" ref="ruleForm">
-                                        <el-form-item label="标题" prop="title">
-                                            <el-input clearable="" v-model="selectData.title">
-                                            </el-input>
-                                        </el-form-item>
                                         <el-form-item label="类别" prop="type_id">
-                                            <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
-                                            </el-cascader>
-                                        </el-form-item>
-                                        <el-form-item label="作者" prop="author">
-                                            <el-input clearable="" v-model="selectData.author">
-                                            </el-input>
-                                        </el-form-item>
-                                        <el-form-item label="简介" prop="intro">
-                                            <el-input clearable="" type="textarea" v-model="selectData.intro">
-                                            </el-input>
+                                            <el-select placeholder="请选择" v-model="selectData.type_id">
+                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
+                                                </el-option>
+                                            </el-select>
                                         </el-form-item>
                                         <el-form-item label="状态" prop="status">
                                             <el-radio :label="1" v-model="selectData.status">
@@ -134,15 +104,7 @@
                                                 下线
                                             </el-radio>
                                         </el-form-item>
-                                        <el-form-item label="音频链接" prop="audio_url">
-                                            <el-input clearable="" type="textarea" v-model="selectData.audio_url">
-                                            </el-input>
-                                        </el-form-item>
-                                        <el-form-item label="短视频链接" prop="video_url">
-                                            <el-input clearable="" type="textarea" v-model="selectData.video_url">
-                                            </el-input>
-                                        </el-form-item>
-                                        <el-form-item label="缩略图" prop="sort">
+                                        <el-form-item label="关于我们缩略图" prop="sort">
                                             <ul class="el-upload-list el-upload-list--picture-card">
                                                 <li class="el-upload-list__item is-ready" v-if="selectData.thum">
                                                     <img :src="selectData.thum" class="el-upload-list__item-thumbnail">
@@ -218,10 +180,25 @@
             title: '',
             type_id: ''
           },
+           options: [
+              {
+                label:'公司简介',
+                value:'1'
+              },{
+                label:'联系我们',
+                value:'2'
+              },{
+                label:'招贤纳士',
+                value:'3'
+              },{
+                label:'隐私政策',
+                value:'4'
+              }
+           ], 
           // 关于我们分类
-          types: [],
-          type_ids: [],
-          select_type_ids: [],
+          // types: [],
+          // type_ids: [],
+          // select_type_ids: [],
           // dialog
           dialogVisible: false,
           selectData: {},
@@ -248,7 +225,6 @@
           } else if (type === 'edit') {
             this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
             this.selectData = deepCopy(data);
-            this.select_type_ids = packageCascaderSelecteData(this.types, this.selectData.type_id);
             this.dialogVisible = true;
             this.initUEditor(this.selectData.content);
           }
@@ -302,12 +278,7 @@
           this.selectData = {
             title: '',
             type_id: '',
-            author: '',
             thum: '',
-            imgs: [],
-            intro: '',
-            audio_url: '',
-            video_url: '',
             status: 1
           };
           this.select_type_ids = [];
@@ -317,7 +288,7 @@
         },
         // 加载数据
         loadTableData() {
-          httpRequest('POST', 'api_articles/articles/index', this.searchData, {
+          httpRequest('POST', 'api_articles/articles_single/index', this.searchData, {
             'page-num': this.currentPage,
             'page-limit': this.currentPageSize
           }).then(resp => {
@@ -329,7 +300,7 @@
         submit() {
           this.$refs.ruleForm.validate(valid => {
             if (valid) {
-              let router = this.selectData.id ? 'api_articles/articles/update' : 'api_articles/articles/save';
+              let router = this.selectData.id ? 'api_articles/articles_single/update' : 'api_articles/articles_single/save';
               this.selectData.content = ue.getContent();
               httpRequest('POST', router, this.selectData).then(resp => {
                 this.$message.success(resp.msg)
@@ -386,11 +357,11 @@
         }
       },
       mounted() {
-        httpRequest('POST', 'api_systems/categories/read_tree', {
-          id: 24
-        }).then(resp => {
-          this.types = packageCascaderData(resp.data._child || [])
-        });
+        // httpRequest('POST', 'api_systems/categories/read_tree', {
+        //   id: 24
+        // }).then(resp => {
+        //   this.types = packageCascaderData(resp.data._child || [])
+        // });
         this.loadTableData();
       }
     });
