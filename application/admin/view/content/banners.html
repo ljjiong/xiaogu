@@ -21,10 +21,10 @@
                   </div>
                   <el-row :gutter="20">
                     <!-- 筛选条件 -->
-                    <el-col :span="6">
+                    <!-- <el-col :span="6">
                       <span style="padding: 0px  10px;">轮播图分类</span>
                       <el-cascader change-on-select v-model="type_ids" :options="types" expand-trigger="hover"></el-cascader>
-                    </el-col>
+                    </el-col> -->
                     <el-col :span="5">
                       <el-input placeholder="请输入轮播图名称" v-model="searchData.name">
                         <template slot="prepend">轮播图名称</template>
@@ -60,11 +60,11 @@
                       <el-table-column type="selection" width="55" v-if="is_role != -1"> </el-table-column>
                       <el-table-column prop="id" label="ID" width="80" fixed sortable></el-table-column>
                       <el-table-column prop="name" label="轮播图名称" fixed></el-table-column>
-                      <el-table-column prop="type_name" label="类别">
+                      <!-- <el-table-column prop="type_name" label="类别">
                         <template slot-scope="scope">
                           <el-tag size="medium">{{scope.row.type_name}}</el-tag>
                         </template>
-                      </el-table-column>
+                      </el-table-column> -->
                       <el-table-column prop="status" label="状态" :filters="statusFilters" :filter-method="statusFilterHandler">
                         <template slot-scope="scope">
                           <el-tag v-if="scope.row.status == 1" type="success" size="mini">上线</el-tag>
@@ -104,9 +104,9 @@
                     <el-form-item label="轮播图名称" prop="name">
                       <el-input v-model="selectData.name" clearable></el-input>
                     </el-form-item>
-                    <el-form-item label="轮播图类别" prop="type_id">
+                    <!-- <el-form-item label="轮播图类别" prop="type_id">
                       <el-cascader change-on-select v-model="select_type_ids" :options="types" expand-trigger="hover"></el-cascader>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="alt属性" prop="alt">
                       <el-input v-model="selectData.alt" clearable></el-input>
                     </el-form-item>
@@ -116,28 +116,28 @@
                     <el-form-item label="轮播图位置" prop="position">
                       <el-input v-model="selectData.position" clearable></el-input>
                     </el-form-item>
-                    <el-form-item label="备注" prop="remark">
+                    <!-- <el-form-item label="备注" prop="remark">
                       <el-input v-model="selectData.remark" clearable type="textarea"></el-input>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="是否上线">
                       <el-radio v-model="selectData.status" :label="1">是</el-radio>
                       <el-radio v-model="selectData.status" :label="2">否</el-radio>
                     </el-form-item>
-                    <el-form-item label="是否开启模型">
+                    <!-- <el-form-item label="是否开启模型">
                       <el-switch v-model="selectData.is_open_model"></el-switch>
-                    </el-form-item>
-                    <transition name="el-fade-in-linear">
-                      <div v-show="selectData.is_open_model">
-                        <el-form-item label="绑定模型" prop="model">
-                          <el-radio v-model="selectData.model" label="article">文章模型</el-radio>
-                          <el-radio v-model="selectData.model" label="goods">商品模型</el-radio>
-                          <el-radio v-model="selectData.model" label="goods_cate">商品分类模型</el-radio>
-                        </el-form-item>
-                        <el-form-item label="模型数据ID" prop="model_id">
-                          <el-input v-model="selectData.model_id" clearable></el-input>
-                        </el-form-item>
-                      </div>
-                    </transition>
+                    </el-form-item> -->
+                      <!-- <transition name="el-fade-in-linear">
+                        <div v-show="selectData.is_open_model">
+                          <el-form-item label="绑定模型" prop="model">
+                            <el-radio v-model="selectData.model" label="article">文章模型</el-radio>
+                            <el-radio v-model="selectData.model" label="goods">商品模型</el-radio>
+                            <el-radio v-model="selectData.model" label="goods_cate">商品分类模型</el-radio>
+                          </el-form-item>
+                          <el-form-item label="模型数据ID" prop="model_id">
+                            <el-input v-model="selectData.model_id" clearable></el-input>
+                          </el-form-item>
+                        </div>
+                      </transition> -->
                     <el-form-item>
                       <el-button @click="dialogVisible = false;" plain>取消</el-button>
                       <el-button type="primary" @click="submit" v-if="is_role != -1">提交</el-button>

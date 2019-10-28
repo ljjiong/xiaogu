@@ -7,7 +7,7 @@ class Banner extends Validate
 {
     protected $rule = [
         ['id', 'require|checkValue:id', '轮播图ID不能为空'],
-        ['type_id', 'require|checkValue:type_id', '轮播图类别不能为空'],
+        // ['type_id', 'require|checkValue:type_id', '轮播图类别不能为空'],
         ['name', 'require|max:255', '轮播图名称不能为空|轮播图名称最大限255字符'],
         ['alt', 'max:255', '轮播图alt属性限255字符'],
         ['position', 'max:50', '轮播图位置限50字符'],

@@ -23,7 +23,7 @@ class Goods extends BaseModel
         'stock'               => 'integer',
         'weight'              => 'float',
         'cost_price'          => 'float',
-        'sell_price'          => 'float',
+        // 'sell_price'          => 'float',
         'market_price'        => 'float',
         'red_price'           => 'float',
         'sell_num'            => 'integer',
