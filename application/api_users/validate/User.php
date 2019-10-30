@@ -7,7 +7,7 @@ class User extends Validate
 {
     protected $rule = [
         ['id', 'require|checkValue:id', 'ID不能为空'],
-        ['mobile', 'mobile|checkValue:mobile', '手机号格式错误'],
+        ['mobile', 'require|min:5|max:15|checkValue:mobile', '账号不能为空|账号最少5位|账号最大15位'],
         ['password', 'min:6|max:15|require', '密码最少6位|密码最大15位|密码不能为空'],
         ['user_name', 'max:50', '会员名最大10位'],
         ['nick_name', 'max:50', '会员昵称最大10位'],
@@ -21,13 +21,13 @@ class User extends Validate
     ];
 
     protected $regex = [
-        'mobile'    => '/^1[0-9]{1}\d{9}$/',
+        // 'mobile'    => '/^1[0-9]{1}\d{9}$/',
         'telephone' => '/^([0-9]{3,4})?[0-9]{7,8}$/',
     ];
 
     protected $scene = [
         'create' => ['mobile', 'user_name', 'nick_name', 'telephone', 'qq', 'wechat', 'email', 'gender', 'status', 'role_ids', 'password'],
-        'update' => ['mobile', 'user_name', 'nick_name', 'telephone', 'qq', 'wechat', 'email', 'gender', 'status', 'role_ids', 'id'],
+        'update' => ['user_name', 'nick_name', 'telephone', 'qq', 'wechat', 'email', 'gender', 'status', 'role_ids', 'id'],
     ];
 
     protected function checkValue($value, $rule)

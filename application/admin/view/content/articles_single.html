@@ -36,21 +36,7 @@
                                             </el-table-column>
                                             <el-table-column fixed="" label="ID" prop="id" sortable="" width="80">
                                             </el-table-column>
-                                             <el-table-column label="类别" prop="type_id">
-                                                <template slot-scope="scope">
-                                                    <span   v-if="scope.row.type_id==1">
-                                                        公司简介
-                                                    </span>
-                                                    <span   v-else-if="scope.row.type_id==2">
-                                                        联系我们
-                                                    </span>
-                                                    <span   v-else-if="scope.row.type_id==3">
-                                                        招贤纳士
-                                                    </span>
-                                                    <span   v-else-if="scope.row.type_id==4">
-                                                        隐私政策
-                                                    </span>
-                                                </template>
+                                             <el-table-column label="类别" prop="type_name">
                                             </el-table-column>
                                             <el-table-column prop="thum" label="图片">
                                               <template slot-scope="scope">
@@ -91,10 +77,8 @@
                                 <el-col :offset="1" :span="8">
                                     <el-form :model="selectData" :rules="rules" label-position="left" label-width="120px" ref="ruleForm">
                                         <el-form-item label="类别" prop="type_id">
-                                            <el-select placeholder="请选择" v-model="selectData.type_id">
-                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
-                                                </el-option>
-                                            </el-select>
+                                             <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
+                                            </el-cascader>
                                         </el-form-item>
                                         <el-form-item label="状态" prop="status">
                                             <el-radio :label="1" v-model="selectData.status">
@@ -180,25 +164,11 @@
             title: '',
             type_id: ''
           },
-           options: [
-              {
-                label:'公司简介',
-                value:'1'
-              },{
-                label:'联系我们',
-                value:'2'
-              },{
-                label:'招贤纳士',
-                value:'3'
-              },{
-                label:'隐私政策',
-                value:'4'
-              }
-           ], 
+           
           // 关于我们分类
-          // types: [],
-          // type_ids: [],
-          // select_type_ids: [],
+          types: [],
+          type_ids: [],
+          select_type_ids: [],
           // dialog
           dialogVisible: false,
           selectData: {},
@@ -225,6 +195,7 @@
           } else if (type === 'edit') {
             this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
             this.selectData = deepCopy(data);
+            this.select_type_ids = packageCascaderSelecteData(this.types, this.selectData.type_id);
             this.dialogVisible = true;
             this.initUEditor(this.selectData.content);
           }
@@ -357,11 +328,11 @@
         }
       },
       mounted() {
-        // httpRequest('POST', 'api_systems/categories/read_tree', {
-        //   id: 24
-        // }).then(resp => {
-        //   this.types = packageCascaderData(resp.data._child || [])
-        // });
+        httpRequest('POST', 'api_systems/categories/read_tree', {
+          id: 43
+        }).then(resp => {
+          this.types = packageCascaderData(resp.data._child || [])
+        });
         this.loadTableData();
       }
     });

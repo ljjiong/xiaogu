@@ -56,19 +56,19 @@
                                             <span>
                                                 会员列表
                                             </span>
-                                            <span>
+                                           <!--  <span>
                                                 <el-button v-if="is_role != -1" @click="excel_import()" icon="el-icon-success" plain="" size="small" style="float: right" type="primary">
                                                     会员批量导入
                                                 </el-button>
-                                            </span>
-                                            >
+                                            </span> -->
+                                            
                                         </div>
                                         <div style="margin-bottom: 10px;">
                                             <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('pull_black')" icon="el-icon-error" plain="" size="small" type="danger" v-if="is_role != -1">
                                                 批量拉黑
                                             </el-button>
                                             <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('recover_normal')" icon="el-icon-success" plain="" size="small" type="success" v-if="is_role != -1">
-                                                批量恢复
+                                                批量激活
                                             </el-button>
                                             <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('delete')" icon="el-icon-error" plain="" size="small" type="danger">
                                                 删除
@@ -82,70 +82,29 @@
                                             <el-table :data="tableData" @selection-change="handleSelectionChange" stripe="" style="width: 100%">
                                                 <el-table-column type="selection" width="55">
                                                 </el-table-column>
-                                                <el-table-column fixed="" type="expand" width="55">
-                                                    <template slot-scope="scope">
-                                                        <el-form label-position="left">
-                                                            <el-form-item label="头像">
-                                                                <img :src="scope.row.avatar" alt="">
-                                                                </img>
-                                                            </el-form-item>
-                                                            <el-form-item label="邮箱">
-                                                                <span>
-                                                                    {{scope.row.email}}
-                                                                </span>
-                                                            </el-form-item>
-                                                        </el-form>
-                                                    </template>
-                                                </el-table-column>
                                                 <el-table-column fixed="" label="ID" prop="id" sortable="" width="80">
                                                 </el-table-column>
-                                                <el-table-column fixed="" label="手机号" prop="mobile">
+                                                <el-table-column fixed="" label="账号" prop="mobile">
                                                 </el-table-column>
                                                 <el-table-column :filter-method="statusFilterHandler" :filters="statusFilters" fixed="" label="状态" prop="status">
                                                     <template slot-scope="scope">
                                                         <el-tag size="mini" type="success" v-if="scope.row.status == 1">
-                                                            正常
+                                                            已激活
                                                         </el-tag>
                                                         <el-tag size="mini" type="info" v-else-if="scope.row.status == 9">
-                                                            黑名单
+                                                            未激活
                                                         </el-tag>
                                                     </template>
-                                                </el-table-column>
-                                                <el-table-column  fixed="" label="是否查看发电量" prop="is_show">
-                                                    <template slot-scope="scope">
-                                                        <el-tag size="mini" type="success" v-if="scope.row.is_show == 1">
-                                                            是
-                                                        </el-tag>
-                                                        <el-tag size="mini" type="info" v-else-if="scope.row.is_show == 0">
-                                                            否
-                                                        </el-tag>
-                                                    </template>
-                                                </el-table-column>
-                                                <el-table-column fixed="" label="部门" prop="department">
                                                 </el-table-column>
                                                 <el-table-column label="昵称" prop="nick_name">
                                                 </el-table-column>
-                                                <!-- <el-table-column label="会员等级" prop="user_level">
-                                                    <template slot-scope="scope">
-                                                        <el-tag size="mini">
-                                                            {{scope.row.user_level}}
-                                                        </el-tag>
-                                                    </template>
-                                                </el-table-column> -->
                                                 <el-table-column fixed="right" label="操作" width="390">
                                                     <template slot-scope="scope">
-                                                        <el-button @click="handleClick(scope.row, 'position')" plain="" size="small" type="success" v-if="scope.row.record.id">
-                                                            查看档案
-                                                        </el-button>
-                                                        <el-button @click="goAdd1(scope.row)" plain="" size="small" type="success" v-else-if="!scope.row.record.id">
-                                                            新增档案
-                                                        </el-button>
                                                         <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
                                                         </el-button>
                                                         <el-button v-if="is_role != -1" @click="handleClick(scope.row, 'editPassword')" plain="" size="small" type="primary">
                                                             重置密码
                                                         </el-button>
-                                                        <el-button @click="handleClick(scope.row, 'editMobile')" type="primary" size="small" plain>修改手机号</el-button>
                                                     </template>
                                                 </el-table-column>
                                             </el-table>
@@ -165,7 +124,7 @@
                                 <el-row :gutter="20">
                                     <el-col :offset="4" :span="16">
                                         <el-form :model="selectData" :rules="rules" label-position="left" label-width="80px" ref="ruleForm">
-                                            <el-form-item label="手机号码" prop="mobile">
+                                            <el-form-item label="账号" prop="mobile">
                                                 <el-input v-if="!selectData.id"  v-model.number="selectData.mobile">
                                                 </el-input>
                                                 <el-input v-if="selectData.id"  :disabled="true" v-model.number="selectData.mobile">
@@ -181,118 +140,21 @@
                                             </el-form-item>
                                             <el-form-item label="状态" prop="status">
                                                 <el-radio :label="1" v-model="selectData.status">
-                                                    正常
+                                                    激活
                                                 </el-radio>
                                                 <el-radio :label="9" v-model="selectData.status">
-                                                    黑名单
+                                                    未激活
                                                 </el-radio>
                                             </el-form-item>
-                                            <el-form-item label="是否查看发电量" prop="is_show">
-                                                <el-radio :label="1" v-model="selectData.is_show">
-                                                    是
-                                                </el-radio>
-                                                <el-radio :label="0" v-model="selectData.is_show">
-                                                    否
-                                                </el-radio>
-                                            </el-form-item>
-                                            <el-form-item label="性别" prop="gender">
-                                                <el-radio :label="0" v-model="selectData.gender">
-                                                    保密
-                                                </el-radio>
-                                                <el-radio :label="1" v-model="selectData.gender">
-                                                    男
-                                                </el-radio>
-                                                <el-radio :label="2" v-model="selectData.gender">
-                                                    女
-                                                </el-radio>
-                                            </el-form-item>
-                                            <el-form-item label="部门" prop="department">
+                                            <el-form-item label="用户组" prop="department">
                                                 <el-select placeholder="请选择" v-model="selectData.department">
-                                                    <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
+                                                    <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in roles">
                                                     </el-option>
                                                 </el-select>
                                             </el-form-item>
-                                            <!-- <el-form-item label="qq号" prop="qq">
-                                                <el-input v-model="selectData.qq">
-                                                </el-input>
-                                            </el-form-item>
-                                            <el-form-item label="微信号" prop="wechat">
-                                                <el-input v-model="selectData.wechat">
-                                                </el-input>
-                                            </el-form-item>
-                                            <el-form-item label="邮箱" prop="email">
-                                                <el-input v-model="selectData.email">
-                                                </el-input>
-                                            </el-form-item> -->
                                             <el-form-item label="备注" prop="memo">
                                                 <el-input type="textarea" v-model="selectData.memo">
                                                 </el-input>
-                                            </el-form-item>
-                                            <el-form-item label="会员头像" prop="sort">
-                                                <ul class="el-upload-list el-upload-list--picture-card">
-                                                    <li class="el-upload-list__item is-ready" v-if="selectData.avatar">
-                                                        <img :src="selectData.avatar" class="el-upload-list__item-thumbnail">
-                                                            <span class="el-upload-list__item-actions">
-                                                                <span @click="fileClick('avatar')" class="el-upload-list__item-edit">
-                                                                    <i class="el-icon-edit">
-                                                                    </i>
-                                                                </span>
-                                                                <span @click="viewBigImg(selectData.avatar)" class="el-upload-list__item-edit">
-                                                                    <i class="el-icon-view">
-                                                                    </i>
-                                                                </span>
-                                                            </span>
-                                                        </img>
-                                                    </li>
-                                                    <div @click="fileClick('avatar')" class="el-upload el-upload--picture-card" v-else="">
-                                                        <i class="el-icon-plus">
-                                                        </i>
-                                                    </div>
-                                                </ul>
-                                            </el-form-item>
-                                            <el-form-item label="合同档案" prop="sort">
-                                                <ul class="el-upload-list el-upload-list--picture-card">
-                                                    <li class="el-upload-list__item is-ready" v-if="selectData.contract">
-                                                        <img :src="selectData.contract" class="el-upload-list__item-thumbnail">
-                                                            <span class="el-upload-list__item-actions">
-                                                                <span @click="fileClick('contract')" class="el-upload-list__item-edit">
-                                                                    <i class="el-icon-edit">
-                                                                    </i>
-                                                                </span>
-                                                                <span @click="viewBigImg(selectData.contract)" class="el-upload-list__item-edit">
-                                                                    <i class="el-icon-view">
-                                                                    </i>
-                                                                </span>
-                                                            </span>
-                                                        </img>
-                                                    </li>
-                                                    <div @click="fileClick('contract')" class="el-upload el-upload--picture-card" v-else="">
-                                                        <i class="el-icon-plus">
-                                                        </i>
-                                                    </div>
-                                                </ul>
-                                            </el-form-item>
-                                            <el-form-item label="社保" prop="welfare">
-                                                <ul class="el-upload-list el-upload-list--picture-card">
-                                                    <li class="el-upload-list__item is-ready" v-if="selectData.welfare">
-                                                        <img :src="selectData.welfare" class="el-upload-list__item-thumbnail">
-                                                            <span class="el-upload-list__item-actions">
-                                                                <span @click="fileClick('welfare')" class="el-upload-list__item-edit">
-                                                                    <i class="el-icon-edit">
-                                                                    </i>
-                                                                </span>
-                                                                <span @click="viewBigImg(selectData.welfare)" class="el-upload-list__item-edit">
-                                                                    <i class="el-icon-view">
-                                                                    </i>
-                                                                </span>
-                                                            </span>
-                                                        </img>
-                                                    </li>
-                                                    <div @click="fileClick('welfare')" class="el-upload el-upload--picture-card" v-else="">
-                                                        <i class="el-icon-plus">
-                                                        </i>
-                                                    </div>
-                                                </ul>
                                             </el-form-item>
                                             <el-form-item>
                                                 <el-button @click="dialogVisible = false;" plain="">
@@ -306,45 +168,6 @@
                                     </el-col>
                                 </el-row>
                             </el-dialog>
-                            <!-- dialog 查看档案-->
-                            <el-dialog :visible.sync="positionVisible" title="档案管理">
-                                <el-row :gutter="20">
-                                    <el-col :offset="4" :span="16">
-                                        <el-form :model="selectData" :rules="rules" label-position="left" label-width="80px" ref="ruleForm1">
-                                            <el-form-item label="学习经历" prop="study_experience">
-                                                <el-input :autosize="{ minRows: 2, maxRows: 4}" type="textarea" v-model="selectData.record.study_experience">
-                                                </el-input>
-                                            </el-form-item>
-                                            <el-form-item label="工作经历" prop="work_experience">
-                                                <el-input :autosize="{ minRows: 2, maxRows: 4}" type="textarea" v-model="selectData.record.work_experience">
-                                                </el-input>
-                                            </el-form-item>
-                                            <el-form-item label="技能" prop="skills">
-                                                <el-input v-model="selectData.record.skills">
-                                                </el-input>
-                                            </el-form-item>
-                                            <el-form-item label="社会关系" prop="social_relations">
-                                                <el-input :autosize="{ minRows: 2, maxRows: 4}" type="textarea" v-model="selectData.record.social_relations">
-                                                </el-input>
-                                            </el-form-item>
-                                            <el-form-item>
-                                                <el-button @click="positionVisible = false;" plain="">
-                                                    取消
-                                                </el-button>
-                                                <el-button @click="submit1" type="primary" v-if="is_role != -1">
-                                                    提交
-                                                </el-button>
-                                            </el-form-item>
-                                        </el-form>
-                                    </el-col>
-                                </el-row>
-                            </el-dialog>
-                            <input @change="fileChange($event,'avatar')" id="imgAdd" style="display: none" type="file">
-                            </input>
-                            <input @change="fileChange($event,'contract')" id="imgAdd1" style="display: none" type="file">
-                            </input>
-                            <input @change="fileChange($event,'welfare')" id="imgAdd2" style="display: none" type="file">
-                            </input>
                             <input @change="fileChange1($event)" id="excelAdd" style="display: none" type="file">
                             </input>
                         </div>
@@ -366,10 +189,10 @@
         multipleSelection: [],  //多选项
         // 状态过滤
         statusFilters: [{
-          text: '正常',
+          text: '已激活',
           value: 1
         }, {
-          text: '黑名单',
+          text: '未激活',
           value: 9
         }],
          options: [],   //数据
@@ -378,6 +201,8 @@
           mobile: '',
           nick_name: '',
         },
+        //角色
+        roles:[],
         // dialog
         dialogVisible: false,
         positionVisible: false,
@@ -526,14 +351,7 @@
           this.selectData = {
             mobile: '',
             nick_name: '',
-            telephone: '',
-            qq: '',
-            wechat: '',
-            email: '',
-            address: '',
             memo: '',
-            avatar: '',
-            record:'',
             department:'',
             status: 1,
           };
@@ -560,17 +378,7 @@
           }).then(resp => { 
             this.tableData = resp.data;
             this.total = resp.page.data_count || 0;
-          }) ;
-          httpRequest('POST', 'api_users/users/poindex', this.searchData, {
-           }).then(resp => { 
-            resp.data.position.forEach(function (item) {
-                var cate = {
-                  value: item.position_name,
-                  label: item.position_name
-                } 
-                app.options.push(cate);
-              }) 
-          })
+          }) 
         },
 
         submit() {
@@ -628,6 +436,9 @@
         }
       },
       mounted() {
+        httpRequest('post', 'api_systems/roles/index', { type: 'user' }).then(resp => {
+          this.roles = resp.data;
+        });
         this.loadTableData();
       }
     });

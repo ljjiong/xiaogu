@@ -48,4 +48,8 @@ class Content extends Controller
     {
         return view();
     }
+    public function down_file()
+    {
+        return view();
+    }
 }

@@ -24,18 +24,18 @@
                                     <!-- 筛选条件 -->
                                     <el-row :gutter="20">
                                         <el-col :span="5">
-                                            <el-input placeholder="请输入手机号码" v-model="searchData.mobile">
+                                            <el-input placeholder="请输入标题" v-model="searchData.mobile">
                                                 <template slot="prepend">
-                                                    手机号码
+                                                    标题
                                                 </template>
                                             </el-input>
                                         </el-col>
                                         <el-col :span="5">
-                                            <el-input placeholder="请输入用户昵称" v-model="searchData.nick_name">
-                                                <template slot="prepend">
-                                                    用户昵称
-                                                </template>
-                                            </el-input>
+                                            <span style="padding: 0px  10px;">
+                                                请选择类别
+                                            </span>
+                                            <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="type_ids">
+                                            </el-cascader>
                                         </el-col>
                                         <el-col :span="4">
                                             <el-button @click="search();" icon="el-icon-search">
@@ -67,13 +67,15 @@
                                     <!-- 表格 -->
                                     <template>
                                         <el-table :data="tableData" @selection-change="handleSelectionChange" stripe="" style="width: 100%">
-                                            <el-table-column v-if="is_role != -1" type="selection" width="55">
+                                            <el-table-column type="selection" v-if="is_role != -1" width="55">
                                             </el-table-column>
                                             <el-table-column fixed="" label="ID" prop="id" sortable="" width="80">
                                             </el-table-column>
                                             <el-table-column fixed="" label="标题" prop="title">
                                             </el-table-column>
                                             <el-table-column fixed="" label="类别" prop="type_name" sortable="">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="点击量" prop="click_num" sortable="">
                                             </el-table-column>
                                             <el-table-column :filter-method="statusFilterHandler" :filters="statusFilters" label="状态" prop="status">
                                                 <template slot-scope="scope">
@@ -106,7 +108,7 @@
                             </el-col>
                         </el-row>
                         <!-- dialog -->
-                        <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisible" title="编辑关于我们" top="5vh" width="90%">
+                        <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisible" title="编辑文章" top="5vh" width="90%">
                             <el-row :gutter="40">
                                 <el-col :offset="1" :span="8">
                                     <el-form :model="selectData" :rules="rules" label-position="left" label-width="120px" ref="ruleForm">
@@ -115,7 +117,7 @@
                                             </el-input>
                                         </el-form-item>
                                         <el-form-item label="类别" prop="type_id">
-                                            <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
+                                           <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
                                             </el-cascader>
                                         </el-form-item>
                                         <el-form-item label="作者" prop="author">
@@ -133,6 +135,10 @@
                                             <el-radio :label="2" v-model="selectData.status">
                                                 下线
                                             </el-radio>
+                                        </el-form-item>
+                                        <el-form-item label="点击量" prop="click_num">
+                                            <el-input clearable="" v-model="selectData.click_num">
+                                            </el-input>
                                         </el-form-item>
                                         <el-form-item label="音频链接" prop="audio_url">
                                             <el-input clearable="" type="textarea" v-model="selectData.audio_url">
@@ -164,7 +170,7 @@
                                             <el-button @click="dialogVisible = false;" plain="">
                                                 取消
                                             </el-button>
-                                            <el-button @click="submit" v-if="is_role != -1" type="primary">
+                                            <el-button @click="submit" type="primary" v-if="is_role != -1">
                                                 提交
                                             </el-button>
                                         </el-form-item>
@@ -218,6 +224,15 @@
             title: '',
             type_id: ''
           },
+          options: [
+            {
+              label: '公司动态',
+              value: '1',
+            },{
+              label: '业界资讯',
+              value: '2',
+            }
+         ], 
           // 关于我们分类
           types: [],
           type_ids: [],
@@ -387,7 +402,7 @@
       },
       mounted() {
         httpRequest('POST', 'api_systems/categories/read_tree', {
-          id: 24
+          id: 40
         }).then(resp => {
           this.types = packageCascaderData(resp.data._child || [])
         });

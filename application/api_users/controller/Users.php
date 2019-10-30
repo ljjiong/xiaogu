@@ -190,6 +190,7 @@ class Users extends Rest
     public function save(Request $request)
     {
         $data     = $request->param();
+        // return $data;
         $validate = Loader::validate('user');
         if ($validate->scene('create')->check($data)) {
 
@@ -200,13 +201,13 @@ class Users extends Rest
             if ($result['code']) {
                 $user = $result['data'];
 
-                // 写入会员资产表信息
-                $result = model('user_assets')->addOne(['user_id' => $user['id']]);
-                if (!$result['code']) {
-                    $this->data['code'] = 0;
-                    $this->data['msg']  = $result['msg'];
-                    return $this->data;
-                }
+                // // 写入会员资产表信息
+                // $result = model('user_assets')->addOne(['user_id' => $user['id']]);
+                // if (!$result['code']) {
+                //     $this->data['code'] = 0;
+                //     $this->data['msg']  = $result['msg'];
+                //     return $this->data;
+                // }
 
                 $account_data = [
                     'guid'     => $data['mobile'],
@@ -280,21 +281,20 @@ class Users extends Rest
         if ($this->account_type == 'user') {
             $data['id'] = $this->unique_id;
         }
-
         unset($data['mobile']);
 
         $validate = Loader::validate('user');
         if ($validate->scene('update')->check($data)) {
-            $users = model('users')->getOne($data['id']);
+            // $users = model('users')->getOne($data['id']);
 
-            if (isset($data['department']) && $users['department'] != $data['department']) {
-                $logs = [
-                    'uid'               => $data['id'],
-                    'position_name'     => $data['department'],
-                    'old_position_name' => $users['department'],
-                ];
-                model('positionlogs')->addOne($logs);
-            }
+            // if (isset($data['department']) && $users['department'] != $data['department']) {
+            //     $logs = [
+            //         'uid'               => $data['id'],
+            //         'position_name'     => $data['department'],
+            //         'old_position_name' => $users['department'],
+            //     ];
+            //     model('positionlogs')->addOne($logs);
+            // }
 
             // return $data;
             $result = model('users')->editOne($data);

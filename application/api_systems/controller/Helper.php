@@ -131,10 +131,9 @@ class Helper extends Rest
         $file      = request()->file('file');
         $save_path = input('save_path');
         $is_rename = input('is_rename/b', false);
-
+        
         // 移动到框架应用根目录下的对应目录
         if ($file) {
-            
             /**
              * ============================================================================================
              * ==========================测试环境开始线=======================================================
@@ -177,6 +176,7 @@ class Helper extends Rest
                 $data = [
                     'ext'            => $info->getExtension(),
                     'file_name'      => $info->getFilename(),
+                    'size'           => $_FILES['file']['size'],
                     'file_path'      => $save_path . $path,
                     'host_file_path' => get_host() . $save_path . $path,
                 ];

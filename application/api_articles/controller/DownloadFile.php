@@ -5,7 +5,7 @@ use app\api_init\controller\Rest;
 use think\Loader;
 use think\Request;
 
-class ArticlesSingle  extends Rest
+class DownloadFile  extends Rest
 {
     protected $beforeActionList = [
         'checkClientType',
@@ -37,8 +37,8 @@ class ArticlesSingle  extends Rest
             }
         }
 
-        $count = model('articles_single')->getAllCount($map);
-        $lists = model('articles_single')->getAll($map, $this->page_num, $this->page_limit);
+        $count = model('download_file')->getAllCount($map);
+        $lists = model('download_file')->getAll($map, $this->page_num, $this->page_limit);
 
         $this->data['page'] = [
             'page_num'   => $this->page_num,
@@ -71,9 +71,9 @@ class ArticlesSingle  extends Rest
         // $validate = Loader::validate('article');
         // if ($validate->scene('create')->check($data)) {
 
-            $result = model('articles_single')->addOne($data);
+            $result = model('download_file')->addOne($data);
             if ($result['code']) {
-                $this->data['msg']  = '新增单文章成功';
+                $this->data['msg']  = '新增文件成功';
                 $this->data['data'] = $result['data'];
             } else {
                 $this->data['code'] = 0;
@@ -93,13 +93,13 @@ class ArticlesSingle  extends Rest
     public function update(Request $request)
     {
         $data = $request->param();
-
+        // return $data;
         // $validate = Loader::validate('article');
         // if ($validate->scene('update')->check($data)) {
 
-            $result = model('articles_single')->editOne($data);
+            $result = model('download_file')->editOne($data);
             if ($result['code']) {
-                $this->data['msg']  = '更新单文章成功';
+                $this->data['msg']  = '更新文件成功';
                 $this->data['data'] = $result['data'];
             } else {
                 $this->data['code'] = 0;

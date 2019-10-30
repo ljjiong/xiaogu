@@ -31,11 +31,8 @@
                                             </el-input>
                                         </el-col>
                                         <el-col :span="5">
-                                            <el-input placeholder="请输入用户昵称" v-model="searchData.nick_name">
-                                                <template slot="prepend">
-                                                    用户昵称
-                                                </template>
-                                            </el-input>
+                                            <el-cascader placeholder="请选择类别" :options="types" change-on-select="" expand-trigger="hover" v-model="type_ids">
+                                            </el-cascader>
                                         </el-col>
                                         <el-col :span="4">
                                             <el-button @click="search();" icon="el-icon-search">
@@ -70,6 +67,8 @@
                                             <el-table-column v-if="is_role != -1" type="selection" width="55">
                                             </el-table-column>
                                             <el-table-column fixed="" label="ID" prop="id" sortable="" width="80">
+                                            </el-table-column>
+                                            <el-table-column fixed="" label="类别" prop="type_name" sortable="">
                                             </el-table-column>
                                             <el-table-column prop="picture" label="图片">
                                               <template slot-scope="scope">
@@ -111,7 +110,7 @@
                             <el-row :gutter="40">
                                 <el-col :offset="6" :span="13">
                                     <el-form :model="selectData" :rules="rules" label-position="left" label-width="120px" ref="ruleForm">
-                                        <el-form-item label="关于我们类别" prop="type_id">
+                                        <el-form-item label="类别" prop="type_id">
                                             <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
                                             </el-cascader>
                                         </el-form-item>
@@ -195,7 +194,7 @@
             title: '',
             type_id: ''
           },
-          // 关于我们分类
+          // 分类
           types: [],
           type_ids: [],
           select_type_ids: [],
@@ -357,11 +356,11 @@
         }
       },
       mounted() {
-        // httpRequest('POST', 'api_systems/categories/read_tree', {
-        //   id: 24
-        // }).then(resp => {
-        //   this.types = packageCascaderData(resp.data._child || [])
-        // });
+        httpRequest('POST', 'api_systems/categories/read_tree', {
+          id: 48
+        }).then(resp => {
+          this.types = packageCascaderData(resp.data._child || [])
+        });
         this.loadTableData();
       }
     });

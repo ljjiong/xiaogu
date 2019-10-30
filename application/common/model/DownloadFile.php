@@ -4,10 +4,10 @@ namespace app\common\model;
 /*
  *  【合作伙伴模型】
  */
-class Partner extends BaseModel
+class DownloadFile extends BaseModel
 {
     // 指定数据表
-    protected $table = 'work_partner';
+    protected $table = 'work_download_file';
 
     //类型转换
     protected $type = [

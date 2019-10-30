@@ -24,7 +24,7 @@ class Article extends Validate
         switch ($rule) {
             case 'type_id':
                 // 文章分类树根ID为24
-                $is_has = is_cate_child(24, $value);
+                $is_has = is_cate_child(40, $value);
                 if (!$is_has) {
                     return '文章分类不存在';
                 }
