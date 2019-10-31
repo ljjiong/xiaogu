@@ -52,4 +52,8 @@ class Content extends Controller
     {
         return view();
     }
+    public function post_sale()
+    {
+        return view();
+    }
 }

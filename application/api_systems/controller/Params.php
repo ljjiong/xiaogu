@@ -232,7 +232,7 @@ class Params extends Rest
     public function updateParams(Request $request)
     {
         $data = $request->param();
-
+        return $data;
         $type = input('update_type');
         if ($type) {
             unset($data['update_type']);
