@@ -93,7 +93,7 @@ class Articles extends Rest
     public function update(Request $request)
     {
         $data = $request->param();
-        unset($data['click_num']);
+        // unset($data['click_num']);
 
         $validate = Loader::validate('article');
         if ($validate->scene('update')->check($data)) {

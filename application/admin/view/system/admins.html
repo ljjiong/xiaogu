@@ -154,12 +154,6 @@
                                             <el-input v-model="selectData.email">
                                             </el-input>
                                         </el-form-item>
-                                        <el-form-item label="部门" prop="department">
-                                            <el-select placeholder="请选择" v-model="selectData.department">
-                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
-                                                </el-option>
-                                            </el-select>
-                                        </el-form-item>
                                         <el-form-item label="选择角色" prop="role_ids">
                                             <el-checkbox-group v-model="selectData.role_ids">
                                                 <el-checkbox :key="roleKey" :label="role.id" :value="role.id" v-for="(role, roleKey) in roles">
@@ -228,7 +222,6 @@
           value: 9
         }],
         
-         options: [],   //数据
         // 查询条件
         searchData: {
           guid: '',
@@ -347,16 +340,7 @@
             this.tableData = resp.data;
             this.total = resp.page.data_count || 0;
           })
-          httpRequest('POST', 'api_users/users/poindex', this.searchData, {
-           }).then(resp => { 
-            resp.data.position.forEach(function (item) {
-                var cate = {
-                  value: item.position_name,
-                  label: item.position_name
-                } 
-                app.options.push(cate);
-              }) 
-          })
+          
         },
         // ----------------- dialog -------------------
         submit() {
