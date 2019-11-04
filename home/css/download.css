@@ -1,0 +1,97 @@
+.download-list .list-group {
+    padding: 30px 0;
+    background: #ffffff;
+}
+.download-list .list-group .list-group-item {
+    padding-top:20px;
+    padding-bottom:20px;
+}
+.download-list .list-group .list-group-item .media-left i {
+    font-size:38px;
+    color: #333
+}
+.download-list .list-group .list-group-item .media-body .media-heading a {
+    color: #333;
+}
+.download-list .list-group .list-group-item .media-body .btn {
+    margin:0 10px;
+    border-color:#333;
+    color:#333;
+}
+.download-list .list-group .list-group-item .media-body .btn:hover {
+    color: #fff;
+    background-color: #666;
+    border-color: #666;
+}
+.download-list .list-group .list-group-item .media-body small span {
+    color:#9D9D9D;
+    margin-right: 10px;
+}
+@media (max-width:991px) {
+    .download-list .list-group .list-group-item {
+        padding-left:20px!important;
+        padding-right:20px!important;
+    }
+}
+@media (max-width:767px) {
+    .download-list .list-group {
+        padding:0;
+    }
+    .download-list .list-group .list-group-item {
+        padding-left:0!important;
+        padding-right:0!important;
+    }
+    .download-list .list-group .list-group-item .media-body .btn {
+        margin-right:0;
+    }
+}
+.download-list .list-group .list-group .media .media-heading a {
+    color:#eee
+}
+.download-list .list-group .list-group .media .media-heading a:hover {
+    color:#eee;
+}
+.service-item {
+    display: block;
+    width: 123px;
+    margin: 30px auto;
+    padding: 15px 0;
+    text-align: center;
+    color: #747474;
+    transition: all .3s ease
+}
+a:hover.service-item {
+    color: #333;
+    background: #E0E0E0;
+    transition: all .3s ease
+}
+.service-item i {
+    font-size: 48px;
+    margin: 0 auto;
+    width: 48px;
+    position: relative;
+}
+.service-item span {
+    display: block;
+}
+.service-list-contents {
+    position: relative;
+    height: 300px;
+}
+.service-list-contents-cl {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding-top: 30px;
+    padding-left: 80px;
+    padding-right: 70px;
+    text-align: center;
+    width: 100%;
+    transition: all .3s ease;
+    opacity: 0;
+    border-top: solid 1px #e5e5e5;
+}
+.service-list-contents-cl .item {
+    text-align: left;
+    margin-bottom: 25px;
+}
