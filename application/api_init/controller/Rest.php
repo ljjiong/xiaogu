@@ -198,4 +198,40 @@ class Rest extends Controller
         throw new HttpResponseException($response);
     }
 
+    /**
+     * GOOGLE翻译 汉英
+     */
+    public function googleTran($text)
+    {
+        if (empty($text)) {
+            return "";
+        }
+
+        sleep(1); //反间碟
+        $wf = file_get_contents('http://translate.google.cn/translate_t?sl=zh-CN&tl=en&text=' . urlencode($text) . '#');echo 1;die();
+        if (false === $wf || empty($wf)) {
+            return false;
+        }
+        //echo $wf;
+
+        //截取相关信息
+        $return = "";
+        $wf     = mb_substr($wf, 14000, 28100, 'utf-8');
+
+        $wf = strip_tags($wf);
+        //print_r ($wf);
+        $star = strpos($wf, "英语中文(简体)日语");
+
+        if (false === $star) {
+            return false;
+        }
+        $end = strpos($wf, "Alpha字典");
+        if (false === $end) {
+            return false;
+        }
+        $return = strip_tags(substr($wf, $star + 18, $end - $star - 18));
+
+        return $return;
+
+    }
 }

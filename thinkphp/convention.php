@@ -238,30 +238,29 @@ return [
     // | 数据库设置
     // +----------------------------------------------------------------------
 
-
     'database'               => [
         // 数据库类型
         'type'            => 'mysql',
-        // // 服务器地址
-        'hostname'        => '132.232.66.126',
-        // 数据库名
-        'database'        => 'wg_worktech',
-        // 会员名
-        'username'        => 'wg_worktech',
-        // 密码
-        'password'        => 'k445e8erMC3FcDSs',
-        // 端口
-        'hostport'        => '3306',
-        // 连接dsn
+        // 数据库连接DSN配置
         'dsn'             => '',
+        // 服务器地址
+        'hostname'        => '127.0.0.1',
+        // 数据库名
+        'database'        => '',
+        // 数据库用户名
+        'username'        => 'root',
+        // 数据库密码
+        'password'        => '',
+        // 数据库连接端口
+        'hostport'        => '',
         // 数据库连接参数
         'params'          => [],
         // 数据库编码默认采用utf8
         'charset'         => 'utf8',
         // 数据库表前缀
-        'prefix'          => 'work_',
+        'prefix'          => '',
         // 数据库调试模式
-        'debug'           => true,
+        'debug'           => false,
         // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)
         'deploy'          => 0,
         // 数据库读写是否分离 主从式有效
