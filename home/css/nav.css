@@ -482,6 +482,7 @@ ul {
         text-align: center;
         display: inline-block;
     }
+
     .container {
         padding-right: 15px;
         padding-left: 15px;
@@ -490,11 +491,16 @@ ul {
         margin-left: auto;
         width: 100%;
     }
+
     .core-list-intro {
         font-size: 14px;
         /* height: 100px; */
         line-height: 26px;
         color: #999;
         text-align: left
+    }
+
+    #hyjj {
+        margin-top: 44px;
     }
 }
