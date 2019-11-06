@@ -20,7 +20,7 @@ class Goods extends Rest
     public function index(Request $request)
     {
         $map = $request->param();
-        echo $this->googleTran('早安');die();
+
         if (isset($map['sort_by'])) {
             $sort_by = $map['sort_by'];
             unset($map['sort_by']);
@@ -59,6 +59,8 @@ class Goods extends Rest
 
         return $this->data;
     }
+
+
 
     /**
      * 【public】查询单个产品详情
