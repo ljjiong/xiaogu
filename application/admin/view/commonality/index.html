@@ -10,7 +10,7 @@
                         <div id="app">
                             <fieldset>
                                 <legend>
-                                    公共资源列表
+                                    解决方案列表
                                 </legend>
                             </fieldset>
                             <!-- 筛选 -->
@@ -32,10 +32,11 @@
                                                 </el-input>
                                             </el-col>
                                             <el-col :span="5">
-                                                <el-input placeholder="请输入名称" v-model="searchData.com_name">
+                                                <el-input placeholder="请输入方案" v-model="searchData.com_name">
                                                     <template slot="com_name">
-                                                        请输入名称
+                                                        请输入方案
                                                     </template>
+
                                                 </el-input>
                                             </el-col>
                                             <el-col :span="4">
@@ -54,7 +55,7 @@
                                     <el-card>
                                         <div slot="header">
                                             <span>
-                                                公共资源列表
+                                                解决方案列表
                                             </span>
                                         </div>
                                         <div style="margin-bottom: 10px;">
@@ -62,7 +63,7 @@
                                                 批量删除
                                             </el-button>
                                             <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float: right;" type="primary">
-                                                新增公共资源
+                                                新增解决方案
                                             </el-button>
                                         </div>
                                         <!-- 表格 -->
@@ -72,10 +73,11 @@
                                                 </el-table-column>
                                                 <el-table-column fixed="" label="类型" prop="type">
                                                 </el-table-column>
-                                                <el-table-column fixed="" label="名称" prop="com_name">
+                                                <el-table-column fixed="" label="方案" prop="com_name">
                                                 </el-table-column>
                                                 <el-table-column :filter-method="is_pushFilterHandler" :filters="statesFilters" fixed="" label="状态" prop="states">
                                                     <template slot-scope="scope">
+
                                                         <el-tag size="mini" type="success" v-if="scope.row.states == 1">
                                                             已启用
                                                         </el-tag>
@@ -103,7 +105,7 @@
                                 </el-col>
                             </el-row>
                             <!-- dialog -->
-                            <el-dialog :visible.sync="dialogVisible" title="编辑公共资源">
+                            <el-dialog :visible.sync="dialogVisible" title="编辑解决方案">
                                 <el-row :gutter="20">
                                     <el-col :offset="4" :span="16">
                                         <el-form :model="selectData" :rules="rules" label-position="left" label-width="80px" ref="ruleForm">
@@ -111,8 +113,12 @@
                                                 <el-input v-model="selectData.type">
                                                 </el-input>
                                             </el-form-item>
-                                            <el-form-item label="名称" prop="com_name">
+                                            <el-form-item label="方案" prop="com_name">
                                                 <el-input v-model="selectData.com_name">
+                                                </el-input>
+                                            </el-form-item>
+                                            <el-form-item label="链接" prop="href">
+                                                <el-input placeholder="www.ljjiong.com" v-model="selectData.href">
                                                 </el-input>
                                             </el-form-item>
                                             <el-form-item label="状态" prop="states">

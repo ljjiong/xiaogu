@@ -1,0 +1,108 @@
+{include file="header" /}
+
+<body>
+
+  <section class="el-container  is-vertical">
+    {include file="top" /}
+    <section class="el-container">
+      {include file="left" /}
+      <section class="el-container  is-vertical">
+        <main class="el-main" id="main">
+          <div id="app">
+            <fieldset>
+              <legend>请求</legend>
+            </fieldset>
+
+            <el-row>
+              <el-col :span="18">
+                <el-form ref="form" :model="form" label-width="80px">
+                  <el-form-item label="路由">
+                    <el-input v-model="form.router" placeholder="模块/控制器/方法"></el-input>
+                  </el-form-item>
+                  <el-form-item label="方法名称">
+                    <el-select v-model="form.method" placeholder="请选择方法名称">
+                      <el-option label="POST" value="POST"></el-option>
+                      <el-option label="GET" value="GET"></el-option>
+                      <el-option label="PUT" value="PUT"></el-option>
+                      <el-option label="DELETE" value="DELETE"></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-row :gutter="20">
+                    <el-col :span="12">
+                      <el-form-item label="响应数据">
+                        <el-input :rows="10" type="textarea" v-model="form.successResp"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="错误响应">
+                        <el-input :rows="10" type="textarea" v-model="form.errorResp"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-form-item>
+                    <el-button type="primary" @click="onSubmit">发送</el-button>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+            </el-row>
+
+          </div>
+        </main>
+        {include file="footer" /}
+      </section>
+    </section>
+  </section>
+
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data() {
+        return {
+          form: {
+            method: 'POST',
+            router: 'api_group_buy/group_buy_user_goods/save',
+            successResp: '',
+            errorResp: '',
+            params: {
+              goods_id: 1,
+              time_length:5,
+              person_num:3,
+              money: 5,
+              stock: 10,
+              person_buy_num: 1,
+              sort:0,
+              status:1,
+              spec_group_info:[
+                {spec_group_id_str:'559d9acd6828cbbea8ba55c4fac29058',person_num:3,money:200,stock:2},
+                {spec_group_id_str:'8e7f9bb7a1818d488140d778e80b9ab4',person_num:3,money:200,stock:2},
+              ],
+            },
+            headers: {
+              auth:'Basic_Ivj6eZRxMTx2yiyunZvnG8R65',
+              client_type:'pc',
+              token:'admin&pc@adb1c23bb84f6e921909998a70a0f958'
+            },
+          }
+        }
+      },
+      methods: {
+        onSubmit() {
+          if (!this.form.router) {
+            return;
+          } else {
+            httpRequest(this.form.method, this.form.router, this.form.params, this.form.headers).then(resp => {
+              this.successResp = resp.data;
+            }).catch(e => {
+              this.errorResp = e;
+            })
+          }
+        }
+      },
+      mounted() {
+      }
+    });
+  </script>
+
+</body>
+
+</html>
