@@ -734,6 +734,7 @@
         goAdd() {
           this.selectGoods = {
             name: '',
+            name_en: '',
             intro: '',
             status: 1,
             goods_cate_id: '',
@@ -750,6 +751,7 @@
             click_num: 0,
             collect_num: 0,
             sort: 0,
+            desc_en:'',
             is_top: false,
             is_virtual: false,
             tags: [],
@@ -764,7 +766,7 @@
           this.goods_cate_ids = [];
           this.activeCollapseName = '1';
           this.initUEditor();
-          this.initUEditors();
+          // this.initUEditors();
           this.dialogVisible = true;
         },
         // 加载数据

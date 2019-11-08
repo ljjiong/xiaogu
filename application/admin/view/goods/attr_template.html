@@ -83,8 +83,14 @@
                     <el-form-item label="模板名称" prop="name">
                       <el-input v-model="selectTemplate.name" clearable></el-input>
                     </el-form-item>
+                    <el-form-item label="Name" prop="name_en">
+                      <el-input v-model="selectTemplate.name_en" clearable></el-input>
+                    </el-form-item>
                     <el-form-item label="模板简介" prop="intro">
                       <el-input v-model="selectTemplate.intro" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="Abstract" prop="intro_en">
+                      <el-input v-model="selectTemplate.intro_en" clearable></el-input>
                     </el-form-item>
                   </el-form>
                 </el-col>
@@ -102,7 +108,9 @@
                     <el-form label-position="left" label-width="90">
                       <el-form-item v-for="(option, oKey) in cont.options" :key="oKey" :label="cont.name + '项' + (oKey + 1)">
                         <el-input clearable v-model="cont.options[oKey]" style="width: 60%;"></el-input>
-                        <el-button style="float:right;" v-if="oKey != 0" @click="cont.options.splice(oKey, 1)">移除</el-button </el-form-item>
+                        <el-button style="float:right;" v-if="oKey != 0" @click="cont.options.splice(oKey, 1)">移除
+                        </el-button>
+                      </el-form-item>
                     </el-form>
                     <el-button type="primary" size="medium" icon="el-icon-plus" circle plain @click="cont.options.push('')"></el-button>
                   </el-card>

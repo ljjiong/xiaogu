@@ -56,6 +56,9 @@
                     <el-form-item label="分类名称" prop="name">
                       <el-input v-model="selectData.name" clearable></el-input>
                     </el-form-item>
+                    <el-form-item label="Name" prop="name_en">
+                      <el-input v-model="selectData.name_en" clearable></el-input>
+                    </el-form-item>
                     <el-form-item label="选择父分类" prop="pid">
                       <el-cascader v-model="type_ids" :options="types" change-on-select></el-cascader>
                     </el-form-item>

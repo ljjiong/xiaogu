@@ -9,7 +9,7 @@
                     <div id="app">
                         <fieldset>
                             <legend>
-                                <成功案例></成功案例>管理
+                                成功案例管理
                             </legend>
                         </fieldset>
                         <!-- 筛选 -->
@@ -53,7 +53,7 @@
                                 <el-card>
                                     <div slot="header">
                                         <span>
-                                            <成功案例></成功案例>列表
+                                            成功案例列表
                                         </span>
                                     </div>
                                     <div style="margin-bottom: 10px;">
@@ -61,7 +61,7 @@
                                             批量删除
                                         </el-button>
                                         <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float: right;" type="primary">
-                                            <新增成功案例></新增成功案例>
+                                            成功案例
                                         </el-button>
                                     </div>
                                     <!-- 表格 -->
@@ -89,9 +89,12 @@
                                             </el-table-column>
 <!--                                            <el-table-column label="作者" prop="author">-->
 <!--                                            </el-table-column>-->
-                                            <el-table-column fixed="right" label="操作" width="150">
+                                            <el-table-column fixed="right" label="操作" width="200">
                                                 <template slot-scope="scope">
                                                     <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                    编辑</el-button>
+                                                    <el-button @click="handleClick(scope.row, 'edit_en')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                        edit
                                                     </el-button>
                                                 </template>
                                             </el-table-column>
@@ -188,6 +191,34 @@
                             <input @change="fileChange($event)" id="imgAdd" style="display: none" type="file">
                             </input>
                         </el-dialog>
+                        <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisible_en" title="编辑成功案例" top="5vh" width="90%">
+                            <el-row :gutter="40">
+                                <el-col :offset="1" :span="8">
+                                    <el-form :model="selectData" :rules="rules" label-position="left" label-width="120px" ref="ruleForm">
+                                        <el-form-item label="Title" prop="title_en">
+                                            <el-input clearable="" v-model="selectData.title_en">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item>
+                                            <el-button @click="dialogVisible_en = false;" plain="">
+                                                取消
+                                            </el-button>
+                                            <el-button @click="submit_en" type="primary" v-if="is_role != -1">
+                                                提交
+                                            </el-button>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                                <el-col :span="14">
+                                    <el-form label-position="left" label-width="80px">
+                                        <el-form-item label="关于我们详情">
+                                            <script id="container_en" type="text/plain">
+                                            </script>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                            </el-row>
+                        </el-dialog>
                     </div>
                 </main>
                 {include file="footer" /}
@@ -200,6 +231,7 @@
     </script>
     <script type="text/javascript">
         let ue = {};
+        let ue_en = {};
     let app = new Vue({
       el: '#app',
       data() {
@@ -239,6 +271,7 @@
           select_type_ids: [],
           // dialog
           dialogVisible: false,
+          dialogVisible_en: false,
           selectData: {},
           rules: {
             title: [
@@ -266,6 +299,12 @@
             this.select_type_ids = packageCascaderSelecteData(this.types, this.selectData.type_id);
             this.dialogVisible = true;
             this.initUEditor(this.selectData.content);
+          }else if (type === 'edit_en') {
+              this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+              this.selectData = deepCopy(data);
+              this.select_type_ids = packageCascaderSelecteData(this.types, this.selectData.type_id);
+              this.dialogVisible_en = true;
+              this.initUEditor_en(this.selectData.content_en);
           }
         },
         // 跳页
@@ -359,6 +398,24 @@
             }
           });
         },
+          // ------------------- dialog ---------------------
+          submit_en() {
+              this.$refs.ruleForm.validate(valid => {
+                  if (valid) {
+                      // this.selectData.type_id = 59;
+                      let router = this.selectData.id ? 'api_articles/cgal/update' : 'api_articles/cgal/save';
+                      this.selectData.content_en = ue_en.getContent();
+                      httpRequest('POST', router, this.selectData).then(resp => {
+                          this.$message.success(resp.msg)
+                          setTimeout(_ => {
+                              location.reload();
+                          }, 500)
+                      });
+                  } else {
+                      return false;
+                  }
+              });
+          },
         fileClick() {
           document.getElementById('imgAdd').click();
         },
@@ -389,6 +446,27 @@
             } else {
               setTimeout(_ => {
                 ue.setContent(content)
+              }, 100)
+            }
+          }, 200);
+        },
+
+
+        initUEditor_en(content = '') {
+          setTimeout(_ => {
+            if (isEmptyObject(ue)) {
+              ue_en = UE.getEditor('container_en', {
+                autoHeightEnabled: false,
+                autoFloatEnabled: false,
+                initialFrameHeight: 600,
+                enableAutoSave: false,
+              });
+              ue_en.ready(_ => {
+                ue_en.setContent(content);
+              })
+            } else {
+              setTimeout(_ => {
+                ue_en.setContent(content)
               }, 100)
             }
           }, 200);

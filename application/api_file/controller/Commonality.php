@@ -16,7 +16,7 @@ class Commonality extends Rest
     ];
 
     /**
-     * 【admin】查询全部公共资源
+     * 【admin】查询全部方案
      */
     public function index(Request $request)
     {
@@ -63,7 +63,7 @@ class Commonality extends Rest
         return $count;
     }
      /**
-     * 【admin】查询全部公共资源
+     * 【admin】查询全部方案
      */
     public function lists(Request $request)
     {
@@ -105,7 +105,7 @@ class Commonality extends Rest
         return $this->data;
     }
     /**
-     * 【admin】新建公共资源
+     * 【admin】新建方案
      */
     public function save(Request $request)
     {
@@ -115,7 +115,7 @@ class Commonality extends Rest
             $result = model('commonality')->addOne($data);
             if ($result['code']) {
 
-                $this->data['msg']  = '新增公共资源成功';
+                $this->data['msg']  = '新增方案成功';
                 $this->data['data'] = $result;
             } else {
                 $this->data['code'] = 0;
@@ -131,7 +131,7 @@ class Commonality extends Rest
     }
 
     /**
-     * 【public】更新公共资源
+     * 【public】更新方案
      */
     public function update(Request $request)
     {
@@ -147,7 +147,7 @@ class Commonality extends Rest
 
             $result = model('commonality')->editOne($data);
             if ($result['code']) {
-                $this->data['msg']  = '更新公共资源成功';
+                $this->data['msg']  = '更新方案成功';
                 $this->data['data'] = $result['data'];
             } else {
                 $this->data['code'] = 0;
@@ -162,14 +162,14 @@ class Commonality extends Rest
     }
 
     /**
-     * 【admin】删除公共资源
+     * 【admin】删除方案
      */
     public function delete()
     {
         $id     = input('id/d', 0);
         $result = model('commonality')->delOne($id);
         if ($result['code']) {
-            $this->data['msg'] = '删除公共资源成功';
+            $this->data['msg'] = '删除方案成功';
         } else {
             $this->data['code'] = 0;
             $this->data['msg']  = $result['msg'];
@@ -179,7 +179,7 @@ class Commonality extends Rest
     }
 
     /**
-     * 【admin】批量删除公共资源
+     * 【admin】批量删除方案
      */
     public function batch_delete(Request $request)
     {
@@ -187,7 +187,7 @@ class Commonality extends Rest
 
         $result = model('commonality')->delAll($ids);
         if ($result['code']) {
-            $this->data['msg'] = '批量删除公共资源成功';
+            $this->data['msg'] = '批量删除方案成功';
         } else {
             $this->data['code'] = 0;
             $this->data['msg']  = $result['msg'];
