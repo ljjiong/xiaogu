@@ -75,7 +75,7 @@
                                                 </el-table-column>
                                                 <el-table-column fixed="" label="上传时间" prop="create_time">
                                                 </el-table-column>
-                                                <el-table-column fixed="right" label="操作" width="390">
+                                                <el-table-column fixed="right" label="操作" width="150">
                                                     <template slot-scope="scope">
                                                         <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
                                                         </el-button>
@@ -107,14 +107,14 @@
                                                 </el-cascader>
                                             </el-form-item>
                                             <el-form-item label="文件地址" prop="sort">
-                                                <el-input v-model="selectData.file_url" width="80%">
+                                                <el-input v-model="selectData.file_url" width="80%" disabled>
                                                 </el-input>
                                                 <el-button @click="fileClick('file_url')" icon="el-icon-plus"  size="mini"  type="primary">
                                                     上传
                                                 </el-button>
                                             </el-form-item>
                                             <el-form-item label="文件大小（KB）" prop="file_size">
-                                                <el-input v-model="selectData.file_size">
+                                                <el-input v-model="selectData.file_size" disabled>
                                                 </el-input>
                                             </el-form-item>
                                             <el-form-item label="上传人" prop="uploader">
@@ -129,14 +129,14 @@
                                                     </el-option>
                                                 </el-select>
                                             </el-form-item>
-                                            <el-form-item label="访问权限" prop="visit_permission">
+                                            <!-- <el-form-item label="访问权限" prop="visit_permission">
                                                 <el-select placeholder="请选择" v-model="selectData.visit_permission">
                                                     <el-option label="无限制" :value="0" :key="0">
                                                     </el-option>
                                                     <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in roles">
                                                     </el-option>
                                                 </el-select>
-                                            </el-form-item>
+                                            </el-form-item> -->
                                             <el-form-item label="状态" prop="status">
                                                 <el-radio :label="1" v-model="selectData.status">
                                                     上线
