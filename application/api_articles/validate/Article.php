@@ -9,14 +9,15 @@ class Article extends Validate
         ['id', 'require|checkValue:id', '文章ID不能为空'],
         ['type_id', 'require|checkValue:type_id', '文章类别不能为空'],
         ['title', 'require|max:255', '文章标题不能为空|文章标题最大限255字符'],
+        ['click_num', 'integer|egt:0', '必须为整数|不能小于0'],
         ['author', 'max:50', '作者限50字符'],
         ['status', 'in:1,2', '文章状态值非法'],
         ['imgs', 'array', '文章图片集数据类型值非法'],
     ];
 
     protected $scene = [
-        'create' => ['type_id', 'title', 'author', 'status', 'imgs'],
-        'update' => ['type_id', 'title', 'author', 'status', 'imgs', 'id'],
+        'create' => ['type_id', 'title', 'author', 'status', 'imgs','click_num'],
+        'update' => ['type_id', 'title', 'author', 'status', 'imgs', 'id','click_num'],
     ];
 
     protected function checkValue($value, $rule, $data)
