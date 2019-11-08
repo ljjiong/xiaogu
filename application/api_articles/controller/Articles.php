@@ -27,6 +27,10 @@ class Articles extends Rest
                     $map[$key] = ['like', '%' . $value . '%'];
                 }
 
+                if ($key == 'type_id') {
+                    $map[$key] = $value;
+                }
+
                 // 文章标题模糊查询
                 if ($key == 'title') {
                     $map[$key] = ['like', '%' . $value . '%'];

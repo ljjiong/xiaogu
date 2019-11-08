@@ -71,9 +71,9 @@
                                             <el-table :data="tableData" @selection-change="handleSelectionChange" stripe="" style="width: 100%">
                                                 <el-table-column type="selection" width="55" v-if="is_role != -1">
                                                 </el-table-column>
-                                                <el-table-column fixed="" label="类型" prop="type">
+                                                <el-table-column fixed="" label="方案类型" prop="type_name">
                                                 </el-table-column>
-                                                <el-table-column fixed="" label="方案" prop="com_name">
+                                                <el-table-column fixed="" label="方案名称" prop="com_name">
                                                 </el-table-column>
                                                 <el-table-column :filter-method="is_pushFilterHandler" :filters="statesFilters" fixed="" label="状态" prop="states">
                                                     <template slot-scope="scope">
@@ -109,11 +109,11 @@
                                 <el-row :gutter="20">
                                     <el-col :offset="4" :span="16">
                                         <el-form :model="selectData" :rules="rules" label-position="left" label-width="80px" ref="ruleForm">
-                                            <el-form-item label="类型" prop="type">
-                                                <el-input v-model="selectData.type">
-                                                </el-input>
+                                            <el-form-item label="类别" prop="type_id">
+                                                <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
+                                                </el-cascader>
                                             </el-form-item>
-                                            <el-form-item label="方案" prop="com_name">
+                                            <el-form-item label="方案名称" prop="com_name">
                                                 <el-input v-model="selectData.com_name">
                                                 </el-input>
                                             </el-form-item>
@@ -172,6 +172,8 @@
           text: '未启用',
           value: 0
         }],
+          types: [],
+          select_type_ids: [],
         // dialog
         dialogVisible: false,
         selectData: {},
@@ -199,6 +201,7 @@
           }else if (type === 'edit') {
             this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
             this.selectData = deepCopy(data);
+          this.select_type_ids = packageCascaderSelecteData(this.types, this.selectData.type_id);
             this.dialogVisible = true;
           }
         },
@@ -286,8 +289,22 @@
           document.getElementById('imgAdd').click();
         },
       },
+                watch: {
+                    type_ids(value) {
+                        this.searchData.type_id = value[value.length - 1];
+                    },
+                    select_type_ids(value) {
+                        this.selectData.type_id = value[value.length - 1];
+                    }
+                },
       mounted() {
         this.loadTableData();
+          httpRequest('POST', 'api_systems/categories/read_tree', {
+              id: 56
+          }).then(resp => {
+              this.types = packageCascaderData(resp.data._child || [])
+          });
+          this.loadTableData();
       }
     });
         </script>

@@ -58,6 +58,10 @@ class Commonality extends Rest
         return $this->data;
     }
 
+    public function group_type(){
+        $count = model('commonality')->get_groups_all([],'type');
+        return $count;
+    }
      /**
      * 【admin】查询全部公共资源
      */
