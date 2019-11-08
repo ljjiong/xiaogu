@@ -255,7 +255,7 @@
         handleClick(data, type) {
           if (type == 'del') {
             this.$confirm('确认删除?', '提示', { type: 'warning' }).then(_ => {
-              httpRequest('POST', 'api_articles/articles/delete', { id: data.id }).then(resp => {
+              httpRequest('POST', 'api_articles/cgal/delete', { id: data.id }).then(resp => {
                 this.$message.success(resp.msg)
                 this.tableData.splice(this.tableData.indexOf(data), 1);
               })
@@ -304,7 +304,7 @@
         multiOperate(type) {
           let ids = this.multipleSelection.map(item => item.id);
           this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
-            httpRequest('POST', 'api_articles/articles/batch_' + type, { id: ids }).then(resp => {
+            httpRequest('POST', 'api_articles/cgal/batch_' + type, { id: ids }).then(resp => {
               this.$message.success(resp.msg);
               setTimeout(_ => {
                 location.reload();
@@ -332,8 +332,8 @@
         },
         // 加载数据
         loadTableData() {
-            this.searchData.type_id = 59;
-            httpRequest('POST', 'api_articles/articles/index', this.searchData, {
+            // this.searchData.type_id = 59;
+            httpRequest('POST', 'api_articles/cgal/index', this.searchData, {
             'page-num': this.currentPage,
             'page-limit': this.currentPageSize
           }).then(resp => {
@@ -345,8 +345,8 @@
         submit() {
           this.$refs.ruleForm.validate(valid => {
             if (valid) {
-              this.selectData.type_id = 59;
-              let router = this.selectData.id ? 'api_articles/articles/update' : 'api_articles/articles/save';
+              // this.selectData.type_id = 59;
+              let router = this.selectData.id ? 'api_articles/cgal/update' : 'api_articles/cgal/save';
               this.selectData.content = ue.getContent();
               httpRequest('POST', router, this.selectData).then(resp => {
                 this.$message.success(resp.msg)
