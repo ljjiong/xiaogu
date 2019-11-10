@@ -98,7 +98,7 @@ class Articles extends Rest
     {
         $data = $request->param();
         // unset($data['click_num']);
-
+        // return $data;
         $validate = Loader::validate('article');
         if ($validate->scene('update')->check($data)) {
 

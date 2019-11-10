@@ -89,9 +89,13 @@
                                             </el-table-column>
                                             <el-table-column label="作者" prop="author">
                                             </el-table-column>
-                                            <el-table-column fixed="right" label="操作" width="150">
+                                            <el-table-column fixed="right" label="操作" width="200">
                                                 <template slot-scope="scope">
                                                     <el-button @click="handleClick(scope.row, 'edit')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                        编辑
+                                                    </el-button>
+                                                    <el-button @click="handleClick(scope.row, 'edit_en')" icon="el-icon-edit-outline" plain="" size="small" type="primary">
+                                                        edit
                                                     </el-button>
                                                 </template>
                                             </el-table-column>
@@ -107,7 +111,7 @@
                                 </el-card>
                             </el-col>
                         </el-row>
-                        <!-- dialog -->
+                        <!-- dialog 中文编辑-->
                         <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisible" title="编辑文章" top="5vh" width="90%">
                             <el-row :gutter="40">
                                 <el-col :offset="1" :span="8">
@@ -178,8 +182,89 @@
                                 </el-col>
                                 <el-col :span="14">
                                     <el-form label-position="left" label-width="80px">
-                                        <el-form-item label="关于我们详情">
+                                        <el-form-item label="文章内容">
                                             <script id="container" type="text/plain">
+                                            </script>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                            </el-row>
+                            <input @change="fileChange($event)" id="imgAdd" style="display: none" type="file">
+                            </input>
+                        </el-dialog>
+                        <!-- dialog 英文编辑-->
+                        <el-dialog :close-on-click-modal="false" :visible.sync="dialogVisible_en" title="编辑文章（英文）" top="5vh" width="90%">
+                            <el-row :gutter="40">
+                                <el-col :offset="1" :span="8">
+                                    <el-form :model="selectData" :rules="rules" label-position="left" label-width="120px" ref="ruleForm">
+                                        <el-form-item label="标题" prop="title_en">
+                                            <el-input clearable="" v-model="selectData.title_en">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="类别" prop="type_id">
+                                           <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
+                                            </el-cascader>
+                                        </el-form-item>
+                                        <el-form-item label="作者" prop="author_en">
+                                            <el-input clearable="" v-model="selectData.author_en">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="简介" prop="intro_en">
+                                            <el-input clearable="" type="textarea" v-model="selectData.intro_en">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="状态" prop="status">
+                                            <el-radio :label="1" v-model="selectData.status">
+                                                上线
+                                            </el-radio>
+                                            <el-radio :label="2" v-model="selectData.status">
+                                                下线
+                                            </el-radio>
+                                        </el-form-item>
+                                        <el-form-item label="点击量" prop="click_num">
+                                            <el-input clearable="" v-model="selectData.click_num">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="音频链接" prop="audio_url">
+                                            <el-input clearable="" type="textarea" v-model="selectData.audio_url">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="短视频链接" prop="video_url">
+                                            <el-input clearable="" type="textarea" v-model="selectData.video_url">
+                                            </el-input>
+                                        </el-form-item>
+                                        <el-form-item label="缩略图" prop="sort">
+                                            <ul class="el-upload-list el-upload-list--picture-card">
+                                                <li class="el-upload-list__item is-ready" v-if="selectData.thum">
+                                                    <img :src="selectData.thum" class="el-upload-list__item-thumbnail">
+                                                        <span class="el-upload-list__item-actions">
+                                                            <span @click="fileClick" class="el-upload-list__item-edit">
+                                                                <i class="el-icon-edit">
+                                                                </i>
+                                                            </span>
+                                                        </span>
+                                                    </img>
+                                                </li>
+                                                <div @click="fileClick" class="el-upload el-upload--picture-card" v-else="">
+                                                    <i class="el-icon-plus">
+                                                    </i>
+                                                </div>
+                                            </ul>
+                                        </el-form-item>
+                                        <el-form-item>
+                                            <el-button @click="dialogVisible_en = false;" plain="">
+                                                取消
+                                            </el-button>
+                                            <el-button @click="submit_en" type="primary" >
+                                                提交
+                                            </el-button>
+                                        </el-form-item>
+                                    </el-form>
+                                </el-col>
+                                <el-col :span="14">
+                                    <el-form label-position="left" label-width="80px">
+                                        <el-form-item label="文章内容">
+                                            <script id="container_en" type="text/plain">
                                             </script>
                                         </el-form-item>
                                     </el-form>
@@ -200,6 +285,7 @@
     </script>
     <script type="text/javascript">
         let ue = {};
+        let ue_en = {};
     let app = new Vue({
       el: '#app',
       data() {
@@ -237,9 +323,13 @@
           types: [],
           type_ids: [],
           select_type_ids: [],
+          //dialog_en
+          dialogVisible_en:false,
+
           // dialog
           dialogVisible: false,
           selectData: {},
+          // selectData_en: {},
           rules: {
             click_num: [
               { required: true, message: '不能为空！', trigger: 'blur' },
@@ -266,6 +356,12 @@
             this.select_type_ids = packageCascaderSelecteData(this.types, this.selectData.type_id);
             this.dialogVisible = true;
             this.initUEditor(this.selectData.content);
+          } else if (type === 'edit_en') {
+            this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
+            this.selectData = deepCopy(data);
+            this.select_type_ids = packageCascaderSelecteData(this.types, this.selectData.type_id);
+            this.dialogVisible_en = true;
+            this.initUEditor1(this.selectData.content_en);
           }
         },
         // 跳页
@@ -328,6 +424,7 @@
           this.select_type_ids = [];
           this.dialogVisible = true;
           this.initUEditor();
+          // this.initUEditor1();
           this.$refs.ruleForm && this.$refs.ruleForm.clearValidate();
         },
         // 加载数据
@@ -346,6 +443,23 @@
             if (valid) {
               let router = this.selectData.id ? 'api_articles/articles/update' : 'api_articles/articles/save';
               this.selectData.content = ue.getContent();
+              httpRequest('POST', router, this.selectData).then(resp => {
+                this.$message.success(resp.msg)
+                setTimeout(_ => {
+                  location.reload();
+                }, 500)
+              });
+            } else {
+              return false;
+            }
+          });
+        },
+        // ------------------- dialog_en ---------------------
+        submit_en() {
+          this.$refs.ruleForm.validate(valid => {
+            if (valid) {
+              let router = this.selectData.id ? 'api_articles/articles/update' : 'api_articles/articles/save';
+              this.selectData.content_en = ue_en.getContent();
               httpRequest('POST', router, this.selectData).then(resp => {
                 this.$message.success(resp.msg)
                 setTimeout(_ => {
@@ -391,7 +505,28 @@
             }
           }, 200);
         },
+        // 初始化 UEeditor——英文
+        initUEditor1(content = '') {
+          setTimeout(_ => {
+            if (isEmptyObject(ue_en)) {
+              ue_en = UE.getEditor('container_en', {
+                autoHeightEnabled: false,
+                autoFloatEnabled: false,
+                initialFrameHeight: 600,
+                enableAutoSave: false,
+              });
+              ue_en.ready(_ => {
+                ue_en.setContent(content);
+              })
+            } else {
+              setTimeout(_ => {
+                ue_en.setContent(content)
+              }, 100)
+            }
+          }, 200);
+        },
       },
+      
       watch: {
         type_ids(value) {
           this.searchData.type_id = value[value.length - 1];
