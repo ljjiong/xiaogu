@@ -13,6 +13,10 @@ class Content extends Controller
     {
         return view();
     }
+    public function articles_hxjs()
+    {
+        return view();
+    }
 
     public function advertisements()
     {

@@ -41,6 +41,10 @@ class Goods extends Rest
                 if ($key == 'name') {
                     $map[$key] = ['like', '%' . $value . '%'];
                 }
+                // 产品上线
+                if ($key == 'status') {
+                    $map[$key] =  $value;
+                }
             } else {
                 unset($map[$key]);
             }
