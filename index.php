@@ -12,10 +12,10 @@
 // [ 应用入口文件 ]
 
 // 测试环境
-defined('WANCLL_ENV') or define('WANCLL_ENV', 'dev');
+// defined('WANCLL_ENV') or define('WANCLL_ENV', 'dev');
 
 // 产品环境
-// defined('WANCLL_ENV') or define('WANCLL_ENV', 'prod');
+defined('WANCLL_ENV') or define('WANCLL_ENV', 'prod');
 
 // API版本号
 defined('API_VERSION') or define('API_VERSION', '1.4.0');
