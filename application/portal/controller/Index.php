@@ -8,6 +8,7 @@ class Index extends Controller
 {
     public function index()
     {
+        // return $view;
         if (Request::instance()->isMobile()) {
             return redirect('Wap/index/index');
         } else {
