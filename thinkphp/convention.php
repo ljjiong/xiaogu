@@ -121,7 +121,7 @@ return [
         // 模板引擎类型 支持 php think 支持扩展
         'type'         => 'Think',
         // 视图基础目录，配置目录为所有模块的视图起始目录
-        'view_base'    => '',
+        'view_base'    => 'wap/index',
         // 当前模板的视图目录 留空为自动获取
         'view_path'    => '',
         // 模板后缀
@@ -152,7 +152,7 @@ return [
     'exception_tmpl'         => THINK_PATH . 'tpl' . DS . 'think_exception.tpl',
 
     // 错误显示信息,非调试模式有效
-    'error_message'          => '页面错误！请稍后再试～',
+    'error_message'          => '此路不通~换条路试试呗~',
     // 显示错误信息
     'show_error_msg'         => false,
     // 异常处理handle类 留空使用 \think\exception\Handle
