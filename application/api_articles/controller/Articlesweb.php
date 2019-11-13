@@ -14,6 +14,18 @@ class Articlesweb extends Rest
         // 'checkAdmin' => ['except' => 'read,lists'],
     ];
 
+/*
+     * 【admin】查询一个分类树（tree）
+     * */
+    public function read_tree($id)
+    {
+        $data = model('categories')->getAllTree();
+        $tree = list_to_tree($data);
+
+        $this->data['data'] = get_one_tree($tree, $id);
+
+        return $this->data;
+    }   
     /**
      * 【web】查询全部售后
      */
@@ -21,7 +33,7 @@ class Articlesweb extends Rest
     {
         $map = $request->param();
         foreach ($map as $key => $value) {
-            if (false) {
+            if ($value) {
                 // 类别模糊查询
                 if ($key == 'type_id') {
                     $map[$key] =  $value ;
@@ -80,6 +92,10 @@ class Articlesweb extends Rest
                 //     } 
                     
                 // }
+                // 类别模糊查询
+                if ($key == 'type_id') {
+                    $map[$key] =  $value ;
+                }
             } else {
                 unset($map[$key]);
             }
@@ -116,7 +132,11 @@ class Articlesweb extends Rest
     {
         $map = $request->param();
         foreach ($map as $key => $value) {
-            if (false) {
+            if ($value) {
+                // 类别模糊查询
+                if ($key == 'type_id') {
+                    $map[$key] =  $value ;
+                }
             } else {
                 unset($map[$key]);
             }
@@ -143,7 +163,11 @@ class Articlesweb extends Rest
     {
         $map = $request->param();
         foreach ($map as $key => $value) {
-            if (false) {
+            if ($value) {
+                 // 类别模糊查询
+                if ($key == 'type_id') {
+                    $map[$key] =  $value ;
+                }
             } else {
                 unset($map[$key]);
             }
@@ -169,7 +193,11 @@ class Articlesweb extends Rest
     {
         $map = $request->param();
         foreach ($map as $key => $value) {
-            if (false) {
+            if ($value) {
+                 // 类别模糊查询
+                if ($key == 'type_id') {
+                    $map[$key] =  $value ;
+                }
             } else {
                 unset($map[$key]);
             }
@@ -177,6 +205,36 @@ class Articlesweb extends Rest
 
         $count = model('articles_single')->getAllCount($map);
         $lists = model('articles_single')->getAll($map);
+
+        $this->data['page'] = [
+            'page_num'   => $this->page_num,
+            'page_limit' => $this->page_limit,
+            'data_count' => $count,
+        ];
+
+        $this->data['data'] = $lists;
+
+        return $this->data;
+    }
+    /**
+     * 【web】查询全部核心技术
+     */
+    public function articles_hxjs_list(Request $request)
+    {
+        $map = $request->param();
+        foreach ($map as $key => $value) {
+            if ($value) {
+                 // 类别模糊查询
+                if ($key == 'type_id') {
+                    $map[$key] =  $value ;
+                }
+            } else {
+                unset($map[$key]);
+            }
+        }
+
+        $count = model('articleshxjs')->getAllCount($map);
+        $lists = model('articleshxjs')->getAll($map);
 
         $this->data['page'] = [
             'page_num'   => $this->page_num,
