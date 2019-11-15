@@ -61,7 +61,7 @@
 .us_uer{
 	width: 25px;
 	height: 25px;
-	background-image: url(../img/login_ico.png);
+	background-image: url(__static__/website/img/login_ico.png);
 	background-position: -125px -34px;
 	position: absolute;
 	margin: 10px 13px;

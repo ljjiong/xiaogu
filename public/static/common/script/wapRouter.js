@@ -111,6 +111,44 @@ var allRouters = {
   "group_join_order_confirm": 1, //团购订单确认
   "group_order_list": 1, //团购订单
   "group_order_detail": 1, //团购订单详情
+
+  // 官网
+  "news": 1, //新闻
+  "download_2": 1, //下载
+  "aboutus_cn_2": 1, //新闻
+  "all_list": 1, //新闻
+  "cn_26": 1, //新闻
+  "cn_27": 1, //新闻
+  "cn_28": 1, //新闻
+  "cn_29": 1, //新闻
+  "cn_30": 1, //新闻
+  "cn_31_2": 1, //新闻
+  "cn_32": 1, //新闻
+  "cn_33": 1, //新闻
+  "cn_34": 1, //新闻
+  "contact_cn_2": 1, //新闻
+  "job": 1, //新闻
+  "list_2d_cn_2": 1, //新闻
+  "list_3d": 1, //新闻
+  "list_3_2_cn": 1, //新闻
+  "list_4_cn": 1, //新闻
+  "list_5_cn": 1, //新闻
+  "list_101_cn": 1, //新闻
+  "list_103_cn": 1, //新闻
+  "list_112_cn": 1, //新闻
+  "list_113_cn": 1, //新闻
+  "list_117_cn": 1, //新闻
+  "list_123_cn": 1, //新闻
+  "list_126_cn": 1, //新闻
+  "news_2": 1, //新闻
+  "partner_2": 1, //新闻
+  "privacy_cn_2": 1, //新闻
+  "product_2": 1, //新闻
+  "product_4": 1, //新闻
+  "product": 1, //新闻
+  "register_include": 1, //新闻
+  "solutions_2": 1, //新闻
+  "alphalook3d_cn": 1, //新闻
 };
 
 var tabRouters = ['index', 'goods_list', 'cart_list', 'home'];

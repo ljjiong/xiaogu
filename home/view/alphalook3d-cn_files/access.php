@@ -1,1 +1,0 @@
-document.write("【<a href='../member/login.php?lang=cn' target='_blank'>登录</a>】【<a href='../member/register_include.php?lang=cn' target='_blank'>注册</a>】")
