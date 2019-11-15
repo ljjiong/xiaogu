@@ -359,7 +359,7 @@ overflow:hidden;
 }
 
 .sweat {
-    background-image: url("http://web.xiaogutech.com/images/sweat.png");
+    background-image: url("../images/sweat.png");
     background-repeat: no-repeat;
     height: 42px;
     left: 220px;
@@ -371,7 +371,7 @@ overflow:hidden;
 }
 
 .work-sign {
-    background-image: url("http://web.xiaogutech.com/images/working-sign.png");
+    background-image: url("../images/working-sign.png");
     height: 339px;
     width: 218px;
     position: absolute;
@@ -380,7 +380,7 @@ overflow:hidden;
    right: 20px;
 }
 .text-sign {
-    background-image: url("http://web.xiaogutech.com/images/texty-sign.png");
+    background-image: url("../images/texty-sign.png");
     height: 225px;
     width: 250px;
     position: absolute;
@@ -394,7 +394,7 @@ overflow:hidden;
      border-radius: 5px;
        padding: 10px;
        margin: auto;
-        background-image:  url(http://web.xiaogutech.com/images/load.gif) ;
+        background-image:  url(../images/load.gif) ;
         background-repeat: no-repeat;
         background-position: center;
     top: 0;
@@ -407,13 +407,13 @@ overflow:hidden;
 }
 
 .sky{
-     background-image:  url(http://web.xiaogutech.com/images/sky-bg.jpg) ;
+     background-image:  url(../images/sky-bg.jpg) ;
 
       background-repeat: repeat-x;
 }
 
 .ground {
-    background-image: url("http://web.xiaogutech.com/images/ground.png");
+    background-image: url("../images/ground.png");
     background-repeat: repeat-x;
     min-height: 200px;
     width: 100%;
@@ -434,7 +434,7 @@ overflow:hidden;
     top: -380px;
 }
 .mountain {
-    background-image: url("http://web.xiaogutech.com/images/mountain.png");
+    background-image: url("../images/mountain.png");
     background-repeat: repeat-x;
     min-height: 172px;
     top: -120px;
@@ -446,7 +446,7 @@ overflow:hidden;
 .tlinks{text-indent:-9999px;height:0;line-height:0;font-size:0;overflow:hidden;}
 
 .rocks {
-    background-image: url("http://web.xiaogutech.com/images/rocks.png");
+    background-image: url("../images/rocks.png");
     height: 455px;
   left: -100px;
     position: absolute;
@@ -456,7 +456,7 @@ overflow:hidden;
 }
 
 .hole {
-    background-image: url("http://web.xiaogutech.com/images/hole.png");
+    background-image: url("../images/hole.png");
     height: 273px;
     position: absolute;
     top: 80px;
@@ -468,7 +468,7 @@ overflow:hidden;
 }
 
 .worker {
-    background-image: url("http://web.xiaogutech.com/images/worker.png");
+    background-image: url("../images/worker.png");
     background-repeat: no-repeat;
     height: 189px;
     width: 242px;
@@ -514,7 +514,7 @@ overflow:hidden;
     width: 100%;
 }
 .ground-bottom {
-    background-image: url("http://web.xiaogutech.com/images/ground-bottom.png");
+    background-image: url("../images/ground-bottom.png");
     background-repeat: no-repeat;
     height: 463px;
     left: -297px;
@@ -531,7 +531,7 @@ overflow:hidden;
     height: 300px;
 
 
-    background: transparent url(http://web.xiaogutech.com/images/clouds.png) repeat-x;
+    background: transparent url(../images/clouds.png) repeat-x;
 
 }
 
