@@ -53,7 +53,7 @@
 .u_user{
 	width: 25px;
 	height: 25px;
-	background: url(../img/login_ico.png);
+	background: url(__static__/website/img/login_ico.png);
 	background-position:  -125px 0;
 	position: absolute;
 	margin: 10px 13px;
