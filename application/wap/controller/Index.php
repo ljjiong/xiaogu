@@ -17,86 +17,93 @@ use think\Controller;
  */
 class Index extends Controller
 {
-
     // 搜索项目
     public function index()
     {
-        return  view();
+        // $host = $_SERVER['HTTP_HOST'];
+        
+        $url  = $_SERVER["REQUEST_URI"];
+        $url  = substr($url, -21);
+        if ($url != "/wap/index/index.html") {
+            echo "<script>location.href='/wap/index/index.html';</script>";
+        }
+
+        return view();
     }
     // 我的项目
     public function my_projects()
     {
-        return  view();
+        return view();
     }
     // 新建项目
     public function new_built()
     {
-        return  view();
+        return view();
     }
     // 项目详情
     public function projects_detail()
     {
-        return  view();
+        return view();
     }
     // 我的任务
     public function my_tasks()
     {
-        return  view();
+        return view();
     }
     // 相关文件
     public function my_file()
     {
-        return  view();
+        return view();
     }
     // 基础信息
     public function basic_data()
     {
-        return  view();
+        return view();
     }
     // 行政页
     public function personnel_page()
     {
-        return  view();
+        return view();
     }
     // 广场页
     public function square()
     {
-        return  view();
+        return view();
     }
     // 文件列表页
     public function filelist()
     {
-        return  view();
+        return view();
     }
     // 发电量页
     public function powergeneration()
     {
-        return  view();
+        return view();
     }
     // 通知详情页
     public function square_details()
     {
-        return  view();
+        return view();
     }
     // 事物申请
     public function transaction()
     {
-        return  view();
+        return view();
     }
     // 通讯录
     public function address_book()
     {
-        return  view();
+        return view();
     }
     // 工资
     public function wages()
     {
-        return  view();
+        return view();
     }
     // 绩效
     public function performance()
     {
-        return  view();
+        return view();
     }
     //劳动合同
     public function contract()
@@ -109,17 +116,10 @@ class Index extends Controller
         return view();
     }
 
-
-
-
-
-
-
-
     // 登录页
     public function login()
     {
-        return  view();
+        return view();
     }
     // 第三方登录过渡页
     public function third_login_transition()
@@ -392,7 +392,7 @@ class Index extends Controller
         return view();
     }
     // 分销申请详情
-    public  function distribution_withdraw_detail()
+    public function distribution_withdraw_detail()
     {
         return view();
     }
