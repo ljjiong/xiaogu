@@ -75,6 +75,8 @@
                                             </el-table-column>
                                             <el-table-column fixed="" label="类别" prop="type_name" sortable="">
                                             </el-table-column>
+                                            <el-table-column fixed="" label="分类" prop="class_name" sortable="">
+                                            </el-table-column>
                                             <el-table-column fixed="" label="内容" prop="content" sortable="">
                                             </el-table-column>
                                             <el-table-column :filter-method="statusFilterHandler" :filters="statusFilters" label="状态" prop="status">
@@ -121,6 +123,12 @@
                                         <el-form-item label="类别" prop="type_id">
                                            <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
                                             </el-cascader>
+                                        </el-form-item>
+                                        <el-form-item label="分类" prop="class_id">
+                                           <el-select placeholder="请选择" v-model="selectData.class_id">
+                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
+                                                </el-option>
+                                            </el-select>
                                         </el-form-item>
                                         <el-form-item label="产品" prop="goods_id">
                                             <el-select placeholder="请选择" v-model="selectData.goods_id">
@@ -181,9 +189,15 @@
                                             <el-input clearable="" v-model="selectData.title_en">
                                             </el-input>
                                         </el-form-item>
-                                        <el-form-item label="类别" prop="type_id">
+                                        <el-form-item label="类别" prop="class_id">
                                            <el-cascader :options="types" change-on-select="" expand-trigger="hover" v-model="select_type_ids">
                                             </el-cascader>
+                                        </el-form-item>
+                                        <el-form-item label="分类" prop="class_id">
+                                            <el-select placeholder="请选择" v-model="selectData.class_id">
+                                                <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in options">
+                                                </el-option>
+                                            </el-select>
                                         </el-form-item>
                                         <el-form-item label="产品" prop="goods_id">
                                            <el-select placeholder="请选择" v-model="selectData.goods_id">
@@ -274,11 +288,14 @@
           },
           options: [
             {
-              label: '公司动态',
-              value: '1',
+              label: '产品功能',
+              value: 1,
             },{
-              label: '业界资讯',
-              value: '2',
+              label: '应用场景',
+              value: 2,
+            },{
+              label: '产品优势',
+              value: 3,
             }
          ], 
           goods:[],
@@ -295,6 +312,9 @@
           // selectData_en: {},
           rules: {
             click_num: [
+              { required: true, message: '不能为空！', trigger: 'blur' },
+            ],
+            class_id: [
               { required: true, message: '不能为空！', trigger: 'blur' },
             ],
             aa: [

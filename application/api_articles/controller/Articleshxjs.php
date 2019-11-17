@@ -43,7 +43,23 @@ class Articleshxjs extends Rest
 
         $count = model('articleshxjs')->getAllCount($map);
         $lists = model('articleshxjs')->getAll($map, $this->page_num, $this->page_limit);
-
+        foreach ($lists as $key => $value) {
+            switch ($value['class_id']) {
+                case 1:
+                    $lists[$key]['class_name'] ='产品功能';
+                    break;
+                case 2:
+                    $lists[$key]['class_name'] ='应用场景';
+                    break;
+                case 3:
+                    $lists[$key]['class_name'] ='产品优势';
+                    break;    
+                
+                default:
+                    $lists[$key]['class_name'] ='';
+                    break;
+            }
+        }
         $this->data['page'] = [
             'page_num'   => $this->page_num,
             'page_limit' => $this->page_limit,
