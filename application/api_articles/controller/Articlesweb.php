@@ -4,6 +4,7 @@ namespace app\api_articles\controller;
 use app\api_init\controller\Rest;
 use think\Loader;
 use think\Request;
+use phpmailer\PHPMailer;
 
 class Articlesweb extends Rest
 {
@@ -243,6 +244,71 @@ class Articlesweb extends Rest
         ];
         $this->data['data'] = $lists;
         return $this->data;
+    }
+
+
+    public function gettq()
+    {
+        $res=$this->https_request('https://free-api.heweather.net/s6/weather/now?location=CN101250101&key=6cd70502b7a748dbacba3e2f3ecae4b7');
+        // echo $res;exit();
+        $data       = json_decode($res, true);
+
+        return  $data;
+    }
+
+    function https_request($url, $data = null)
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        if (!empty($data)) {
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($curl);
+        curl_close($curl);
+        return $output;
+    }
+
+    public function setemail()
+    {
+        $data=$this->gettq();
+        // print_r($data['HeWeather6'][0]['now']);exit();
+        $mail = new PHPMailer();
+        $toemail = $_GET['toemail'];//收件人
+        $mail->isSMTP();// 使用SMTP服务
+        $mail->CharSet = "utf8";// 编码格式为utf8，不设置编码的话，中文会出现乱码
+        $mail->Host = "smtp.163.com";// 发送方的SMTP服务器地址
+        $mail->SMTPAuth = true;// 是否使用身份验证
+        $mail->Username = "z15211057400@163.com";/// 发送方的163邮箱用户名，就是你申请163的SMTP服务使用的163邮箱
+        $mail->Password = "8768540qq";// 发送方的邮箱密码，注意用163邮箱这里填写的是“客户端授权密码”而不是邮箱的登录密码！
+        $mail->SMTPSecure = "ssl";// 使用ssl协议方式
+        $mail->Port = 465;// 163邮箱的ssl协议方式端口号是465/994
+
+        $mail->setFrom("z15211057400@163.com","亲爱的父亲");// 设置发件人信息，如邮件格式说明中的发件人，这里会显示为Mailer(xxxx@163.com），Mailer是当做名字显示
+        $mail->addAddress($toemail,'Wang');// 设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+        $mail->addReplyTo("z15211057400@163.com","Reply");// 设置回复人信息，指的是收件人收到邮件后，如果要回复，回复邮件将发送到的邮箱地址
+        //$mail->addCC("xxx@163.com");// 设置邮件抄送人，可以只写地址，上述的设置也可以只写地址(这个人也能收到邮件)
+        //$mail->addBCC("xxx@163.com");// 设置秘密抄送人(这个人也能收到邮件)
+        //$mail->addAttachment("bug0.jpg");// 添加附件
+
+        $mail->Subject = "儿啊，看下今天的天气";// 邮件标题
+
+        // $num = rand(100000,999999);
+
+        $mail->Body = "儿啊，今天天气：".$data['HeWeather6'][0]['now']['cond_txt'].",温度是".$data['HeWeather6'][0]['now']['tmp']."℃,刮的是".$data['HeWeather6'][0]['now']['wind_dir']."风，风速是".$data['HeWeather6'][0]['now']['wind_spd']."公里/小时,要注意防寒保暖哦！——————爱你的父亲";
+        // 邮件正文
+        //$mail->AltBody = "This is the plain text纯文本";// 这个是设置纯文本方式显示的正文内容，如果不支持Html方式，就会用到这个，基本无用
+
+        if(!$mail->send()){// 发送邮件
+            // echo "Message could not be sent.";
+            // echo "Mailer Error: ".$mail->ErrorInfo;// 输出错误信息
+            echo '失败';
+        }else{
+            echo '成功';  //成功
+        }
     }
 
 }
