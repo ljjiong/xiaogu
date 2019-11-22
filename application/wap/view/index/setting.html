@@ -1,0 +1,214 @@
+<!-- 新建html模板页 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon" />
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+  <script src="__static__/wap/aui/script/aui-actionsheet.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header">
+      <div style="margin-top: 1rem;">
+        <a class="aui-pull-left aui-btn" onclick="gotowap('home')">
+          <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">设置</div>
+      </div>
+    </header>
+    <div class="aui-content aui-margin-b-10">
+      <ul class="aui-list aui-list-in aui-margin-b-10">
+        <li class="aui-list-item" @click="fileClick();">
+          <div class="aui-list-item-media">
+            <img :src="user.avatar" class="aui-img-round aui-list-img-sm" id="avatar">
+            <input @change="fileChange($event)" type="file" id="upload_file" style="display: none">
+          </div>
+          <div class="aui-list-item-inner aui-list-item-arrow">
+            <div class="aui-list-item-title"></div>
+            <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;">修改头像</div>
+          </div>
+        </li>
+        <li class="aui-list-item" @click="modify('nickname')">
+          <div class="aui-list-item-inner aui-list-item-arrow">
+            <div class="aui-list-item-title">昵称</div>
+            <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;" v-text="user.nick_name || '匿名用户'">
+            </div>
+          </div>
+        </li>
+        <li class="aui-list-item" @click="modify('gender')">
+          <div class="aui-list-item-inner aui-list-item-arrow">
+            <div class="aui-list-item-title">性别</div>
+            <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;" v-text="genders[user.gender]"></div>
+          </div>
+        </li>
+        <li class="aui-list-item">
+          <div class="aui-list-item-inner aui-list-item-arrow">
+            <div class="aui-list-item-title">我的手机号码</div>
+            <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;" v-text="user.mobile"></div>
+          </div>
+        </li>
+        <li class="aui-list-item" @click="passwordSetting()">
+          <div class="aui-list-item-inner aui-list-item-arrow">
+            密码设置
+          </div>
+        </li>
+      </ul>
+
+      <ul class="aui-list aui-list-in aui-margin-b-10">
+        <li class="aui-list-item" onclick="gotowap('bind_third_setting')">
+          <div class="aui-list-item-inner aui-list-item-arrow">
+            <div class="aui-list-item-title">第三方账号绑定</div>
+          </div>
+        </li>
+      </ul>
+
+      <ul class="aui-list aui-list-in aui-margin-b-10">
+        <li class="aui-list-item" onclick="gotowap('help_and_option')">
+          <div class="aui-list-item-inner aui-list-item-arrow">
+            <div class="aui-list-item-title">帮助与反馈</div>
+          </div>
+        </li>
+        <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-title">wancllshop</div>
+            <div class="aui-list-item-right" style="font-size:0.8rem;color:#999;">v1.2.0</div>
+          </div>
+        </li>
+      </ul>
+      <div class="area">
+        <div class="submit" @click="logout()">退出登录</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var avatarDom = document.getElementById('avatar');
+    avatarDom.style.cssText += 'height:' + avatarDom.offsetWidth + 'px;';
+    var actionsheet = new auiActionsheet();
+    var app = new Vue({
+      el: '#app',
+      data: {
+        user: {},
+        genders: ['保密', '男', '女']
+      },
+      methods: {
+        logout: function () {
+          layer.confirm('确认退出登录?', {
+            title: '提示',
+          }, function (index) {
+            layer.close(index);
+            rmStorage(getClientType() + 'User');
+            rmStorage(getClientType() + 'Token');
+            clearStorage(sessionStorage);
+            gotowap('index')
+          })
+        },
+        modify: function (type) {
+          if (type == 'nickname') {
+            layer.prompt({
+              title: '请输入新昵称',
+              formType: 0, //输入框类型，支持0（文本）默认1（密码）2（多行文本）
+              value: app.user.nick_name || '' //初始值
+            }, function (value, index, elem) {
+              app.updateAjax({
+                nick_name: value
+              })
+              layer.close(index);
+            });
+          } else if (type == 'gender') {
+            actionsheet.init({
+              frameBounces: true, //当前页面是否弹动，（主要针对安卓端）
+              title: "请选择性别",
+              buttons: this.genders,
+            }, function (ret) {
+              app.updateAjax({
+                gender: ret.buttonIndex - 1
+              })
+            })
+          } else if (type == 'mobile') {
+            gotowap('modify_mobile')
+          }
+        },
+        passwordSetting: function () {
+          actionsheet.init({
+            frameBounces: true, //当前页面是否弹动，（主要针对安卓端）
+            title: "请选择",
+            buttons: ['修改登录密码'],
+          }, function (ret) {
+            gotowap('reset_password', {
+              type: ret.buttonIndex
+            })
+          })
+        },
+        updateAjax: function (data) {
+          httpRequest('POST', 'api_users/users/update', data)
+            .then(function (resp) {
+              resp.data.avatar = resp.data.avatar || '__static__/images/avatar.png';
+              app.user = resp.data;
+              setStorage(getClientType() + 'User', resp.data)
+            })
+        },
+        fileClick: function () {
+          document.getElementById('upload_file').click();
+        },
+        fileChange: function (el) {
+          var that = this;
+          Array.from(el.target.files).forEach(function (item) {
+            let formData = new FormData();
+            formData.append('file', item);
+            formData.append('save_path', userImagePath);
+            formData.append('is_rename', 1);
+            httpRequest('POST', 'api_systems/helper/upload_file', formData).then(function (resp) {
+              that.updateAjax({
+                avatar: resp.data.host_file_path
+              })
+            })
+          })
+        },
+      },
+      mounted: function () {
+        var that = this;
+        httpRequest('POST', 'api_users/users/read').then(function (resp) {
+          resp.data.avatar = resp.data.avatar || '__static__/images/avatar.png';
+          setStorage(getClientType() + 'User', resp.data);
+          that.user = resp.data;
+        })
+      }
+    })
+  </script>
+</body>
+
+</html>

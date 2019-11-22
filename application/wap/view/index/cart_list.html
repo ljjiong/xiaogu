@@ -1,0 +1,481 @@
+<!-- 购物车 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<style>
+  #checkout {
+    height: 2.5rem;
+    border-top: 1px solid #f4f4f4;
+    bottom: 2.5rem;
+    border-bottom: 1px solid #f4f4f4;
+  }
+
+  #checkout .selectall {
+    display: inline-block;
+    width: 25%;
+    position: relative;
+    text-align: left;
+  }
+
+
+  #checkout .price {
+    width: 50%;
+    text-align: right;
+    display: inline-block;
+    line-height: 2.5rem;
+    padding-right: 0.5rem;
+    font-size: 0.7rem
+  }
+
+  #checkout .submit {
+    display: inline-block;
+    width: 25%;
+    background: linear-gradient(to bottom, #41c4da, #34a3e4, #2680ef);
+    color: #fff;
+    text-align: center;
+    line-height: 2.5rem;
+  }
+
+  #checkout .submit:active {
+    background-color: #1273f2
+  }
+
+  .setnum {
+    display: flex;
+    width: 100%;
+    text-align: center;
+  }
+
+  .cart-num {
+    flex: 1;
+    border: 1px solid #dedede;
+    margin: 0 0.1rem
+  }
+
+  .aui-wanch {
+    background: #358cff;
+    color: #fff;
+    font-size: 0.6rem;
+    text-align: center;
+    align-items: center;
+    margin: 0.5rem 0;
+    display: flex;
+    display: -webkit-flex;
+    /* Safari */
+    align-items: center;
+    /*指定垂直居中*/
+    padding: 0 0.5rem;
+  }
+
+  .aui-bar-btn-item {
+    border-color: #dedede
+  }
+
+  .aui-float-right {
+    float: right;
+    margin: 0 0.5rem;
+  }
+</style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 头部 -->
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header" style="background-image:none;">
+      <div class="aui-title">购物车</div>
+      <a class="aui-pull-right aui-text-info" v-show="isEditCart" @click="editCart()">编辑</a>
+      <a class="aui-pull-right aui-text-info" v-show="!isEditCart" @click="editCart()">完成</a>
+    </header>
+    <!-- 购物车列表 -->
+    <div class="aui-content aui-margin-t-5" style="margin-bottom: 5rem;">
+      <div v-if="haveNoData" class="aui-col-xs-12 aui-text-center" style="margin-top:30%;">
+        <img src="__static__/wap/images/no_content.png" style="width:18%;margin:0 auto;">
+        <h5 style="margin-top:1rem;" class="aui-font-size-14">啊哦,这里什么都没有~</h5>
+      </div>
+      <ul v-else class="aui-list aui-media-list" style="background-image:none;">
+        <div class="aui-list-item" v-show="!isEditCart">
+          <div class="aui-list-item-inner aui-text-right">
+            <div class="aui-btn aui-btn-info  aui-btn-outlined aui-font-size-12 aui-margin-r-10" @click="removeCart()">删除</div>
+            <div class="aui-btn aui-btn-info aui-btn-outlined aui-font-size-12" @click="addCollection()">移入收藏夹</div>
+          </div>
+        </div>
+        <div v-for="(cart,key) in carts" :key="key">
+          <li class="aui-list-item">
+            <div class="aui-media-list-item-inner">
+              <div class="aui-list-item-media" style="width: 1.7rem;align-items:center;" @click="changeSelected(cart)">
+                <i class="aui-iconfont iconfont icon-yuanxingweixuanzhong  aui-font-size-18 aui-text-pray" v-show="!cart.isSelected"></i>
+                <i class="aui-iconfont iconfont icon-roundcheckfill aui-text-info  aui-font-size-18" v-show="cart.isSelected"></i>
+              </div>
+              <div class="aui-list-item-media" style="width: 5rem;" @click.stop="goGoodsDetail(cart)">
+                <!-- 规格缩略图 -->
+                <img v-if="cart.spec_group_id_str != 0" :src="cart.spec_group_info.thum || cart.goods_info.thum" class="aui-list-img-sm"
+                  style="border:1px solid #f4f4f4;">
+                <!-- 商品缩略图 -->
+                <img v-else :src="cart.goods_info.thum" class="aui-list-img-sm" style="border:1px solid #f4f4f4;">
+              </div>
+              <!-- 查看购物车详情 -->
+              <div class="aui-list-item-inner" style="align-items:flex-start;" v-show="!cart.isEdit">
+                <div class="aui-list-item-text">
+                  <div class="aui-list-item-title aui-font-size-12" v-text="cart.goods_info.name"></div>
+                </div>
+                <div class="aui-list-item-text">
+                  <div class="aui-list-item-title aui-font-size-12 aui-padded-t-5 aui-text-pray" v-text="cart.goods_info.intro"></div>
+                </div>
+                <div class="aui-list-item-text">
+                  <div class="aui-list-item-title aui-font-size-12 aui-padded-t-5 aui-text-pray" v-if="cart.spec_group_id_str != 0" v-text="'规格: ' + (cart.spec_group_info.spec_option_group  || '规格已修改,请重新选择')"></div>
+                </div>
+                <div class="aui-list-item-text aui-margin-t-10">
+                  <!-- 规格价格 -->
+                  <span class="aui-text-price aui-font-size-14" v-if="cart.spec_group_id_str != 0">
+                    <span class="aui-text-price" style="font-size:0.5rem;">￥</span>
+                    <span v-text="cart.spec_group_info.sell_price || '0'"></span>
+                  </span>
+                  <!-- 商品价格 -->
+                  <span class="aui-text-price aui-font-size-14" v-else>
+                    <span class="aui-text-price" style="font-size:0.5rem;">￥</span>
+                    <span v-text="cart.goods_info.sell_price"></span>
+                  </span>
+                </div>
+              </div>
+              <!-- 设置购物车信息 -->
+              <div class="aui-list-item-inner" style="align-items:flex-start;margin: 0 0.2rem;" v-show="cart.isEdit">
+                <div class="aui-list-item-text aui-margin-t-10">
+                  <div class="aui-list-item-text setnum">
+                    <div class="aui-bar aui-bar-btn" type="count" id="demo">
+                      <div class="aui-bar-btn-item aui-font-size-14" @click.stop="changeNum(cart,-1)">
+                        <i class="aui-iconfont aui-icon-minus"></i>
+                      </div>
+                      <div class="aui-bar-btn-item">
+                        <input type="number" class="aui-input aui-text-center" readonly id="count" v-model="cart.num">
+                      </div>
+                      <div class="aui-bar-btn-item aui-font-size-20" @click.stop="changeNum(cart,1)">
+                        <i class="aui-iconfont aui-icon-plus"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="aui-list-item-text aui-margin-t-10" style="border:1px solid #dedede;  border-radius: 2px;padding-left: 0.5rem"
+                  v-if="cart.spec_group_id_str != 0" @click="selectSpec(cart)">
+                  <div class="aui-list-item-title aui-font-size-12 aui-padded-t-5 aui-padded-b-5 aui-text-pray" v-text="'规格: ' + (cart.spec_group_info.spec_option_group || '规格已修改,请重新选择')"></div>
+                  <i class="aui-iconfont aui-icon-down aui-pull-right aui-font-size-12 aui-padded-r-5"></i>
+                </div>
+              </div>
+              <!-- 设置单个购物车编辑状态按钮 -->
+              <div class="aui-list-item-media" style="width: 1.7rem;" v-show="!cart.isEdit">
+                <a class="aui-pull-right" @click="editCartSingle(cart)">
+                  <span class="aui-iconfont iconfont icon-icon-"></span>
+                </a>
+                <i class="aui-iconfont aui-icon-close aui-font-size-12" style="position: absolute;bottom: 0.5rem;" v-text="cart.num">2</i>
+              </div>
+              <div class=" aui-wanch" style="width: 3rem" v-show="cart.isEdit" @click="editCartSingle(cart)">
+             		   完成
+              </div>
+            </div>
+          </li>
+        </div>
+      </ul>
+    </div>
+    <!-- 尾部1 -->
+    <footer class="aui-bar aui-bar-tab" id="checkout">
+      <div class="selectall aui-padded-l-15" @click="selectAll()">
+        <i class="aui-iconfont iconfont icon-yuanxingweixuanzhong aui-font-size-18 aui-text-pray" v-show="!isSelectedAll"></i>
+        <i class="aui-iconfont iconfont icon-roundcheckfill aui-text-info aui-font-size-18" v-show="isSelectedAll"></i>
+        <span>全选</span>
+      </div>
+      <div class="price">
+        合计:
+        <span class="aui-font-size-14 aui-text-price">￥</span>
+        <span class="aui-text-price aui-font-size-20" v-text="totalPrice"></span>
+      </div>
+      <div class="submit" @click="checkout()">去结算</div>
+    </footer>
+    <!-- 尾部2 -->
+    <footer class="aui-bar aui-bar-tab" id="footer">
+  <div class="aui-bar-tab-item" onclick="gotowap('index')" :class="{'icon-footer-active' : (activeFooterIndex == 1 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 1" src="__static__/wap/img/icon12.png">
+      <img v-else src="__static__/wap/img/icon11.png">
+    </div>
+    <div class="aui-bar-tab-label">任务</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="gotowap('personnel_page')"
+    :class="{'icon-footer-active' : (activeFooterIndex == 2 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 2" src="__static__/wap/img/icon22.png">
+      <img v-else src="__static__/wap/img/icon21.png">
+    </div>
+    <div class="aui-bar-tab-label">行政</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="gotowap('home')" :class="{'icon-footer-active' : (activeFooterIndex == 3 )}">
+    <!-- <div class="aui-badge">99</div> -->
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 3" src="__static__/wap/img/icon32.png">
+      <img v-else src="__static__/wap/img/icon31.png">
+    </div>
+    <div class="aui-bar-tab-label">我的</div>
+  </div>
+</footer>
+  </div>
+  <script>
+    // 滚动到底部的事件
+    function scrollEvent() {
+      var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+      if (document.documentElement.scrollHeight - scrollTop - document.documentElement.clientHeight < 10) {
+        app.loadData();
+      }
+    }
+    var page = 1;
+    var app = new Vue({
+      el: '#app',
+      data: {
+        activeFooterIndex: 3,
+        carts: [],
+        haveNoData: false,
+        isEditCart: true
+      },
+      methods: {
+        // 编辑购物车
+        editCart: function () {
+          this.isEditCart = !this.isEditCart;
+        },
+        // 编辑单个购物车
+        editCartSingle: function (cart) {
+          cart.isEdit = !cart.isEdit;
+        },
+        // 改变购物车选中状态
+        changeSelected: function (cart) {
+          cart.isSelected = !cart.isSelected
+        },
+        // 去商品详情页
+        goGoodsDetail: function (cart) {
+          gotowap('goods_detail', { goodsId: cart.goods_id })
+        },
+        // 改变购物车数量
+        changeNum: function (cart, num) {
+          if (num == -1 && cart.num < 2) {
+            return;
+          }
+          httpRequest('POST', 'api_goods/carts/update', {
+            id: cart.id,
+            goods_id: cart.goods_id,
+            num: cart.num + num,
+            spec_group_id_str: cart.spec_group_id_str,
+          }).then(function (resp) {
+            cart.num += num;
+          })
+        },
+        // 选择规格
+        selectSpec: function (cart) {
+          setStorage('cart', cart, sessionStorage)
+          var innerHeight = window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
+          layer.open({
+            type: 2,
+            title: '请选择规格',
+            content: location.origin + '/wap/index/cart_spec_info_select.html',
+            offset: 'b',
+            area: [document.body.offsetWidth + 'px', innerHeight * 0.85 + 'px'],
+            anim: 2,
+            fixed: true,
+            resize: false,
+          })
+        },
+        // 更新购物车规格
+        updateCartSpec: function (cartId, selectSpecGroupInfo) {
+          app.carts.forEach(function (item) {
+            if (item.id == cartId) {
+              // item为待更新得购物车
+              httpRequest('POST', 'api_goods/carts/update', {
+                id: cartId,
+                goods_id: item.goods_id,
+                num: item.num,
+                spec_group_id_str: selectSpecGroupInfo.id_str,
+              }).then(function (resp) {
+                layer.msg(resp.msg)
+                // 本地更新购物车
+                item.spec_group_id_str = selectSpecGroupInfo.id_str;
+                item.spec_group_info = deepCopy(selectSpecGroupInfo);
+              })
+            }
+          })
+        },
+        // 全选
+        selectAll: function () {
+          var isSelectedAll = this.isSelectedAll;
+          this.carts.forEach(function (item) {
+            item.isSelected = !isSelectedAll;
+          })
+        },
+        // 批量删除购物车
+        removeCart: function () {
+          var ids = [];
+          this.carts.forEach(function (item) {
+            if (item.isSelected) {
+              ids.push(item.id);
+            }
+          })
+          if (ids.length == 0) {
+            layer.msg('请选择需要移除购物车的商品')
+            return;
+          }
+          layer.confirm('确认从购物车移除选中商品?', { title: '提示' }, function (index) {
+            layer.close(index);
+            httpRequest('POST', 'api_goods/carts/batch_delete', {
+              id: ids
+            }).then(function (resp) {
+              layer.msg(resp.msg);
+              setTimeout(function () {
+                location.reload();
+              }, 500)
+            })
+          })
+        },
+        // 批量加入收藏夹
+        addCollection: function () {
+          var ids = [];
+          this.carts.forEach(function (item) {
+            if (item.isSelected) {
+              ids.push(item.goods_info.id);
+            }
+          })
+          if (ids.length == 0) {
+            layer.msg('请选择需要加入收藏夹的商品')
+            return;
+          }
+          httpRequest('POST', 'api_goods/goods_collections/batch_save', {
+            goods_ids: ids
+          }).then(function (resp) {
+            layer.msg(resp.msg)
+          })
+        },
+        // 结算
+        checkout: function () {
+          var goodsItem = this.carts.filter(function (item) {
+            return item.isSelected
+          });
+          var goodsList = [];
+          //判断是存在未点击完成的编辑
+          var is_goodsedit=this.carts.some(function(item){
+        	 return item.isEdit==true;
+          });
+          if(is_goodsedit)
+          {
+        	  layer.msg('请点击完成的商品');
+        	  return;
+          }  
+
+          if (goodsItem.length == 0) {
+            layer.msg('未选中任何商品');
+          } else {
+            var goodsList = goodsItem.map(function (item) {
+              return {
+                goods_info: item.goods_info,
+                select_spec_group_info: item.spec_group_info,
+                num: item.num
+              }
+            })
+            setStorage('goodsList', goodsList, sessionStorage);
+            gotowap('order_confirm');
+          }
+        },
+        loadData: function () {
+          var that = this;
+          document.body.onscroll = null;
+          httpRequest('POST', 'api_goods/carts/lists', {}, {
+            'page-num': page,
+            'page-limit': 10
+          }).then(function (resp) {
+            if (resp.data.length > 0) {
+              that.haveNoData = false;
+              resp.data.forEach(function (item) {
+                item.isSelected = false;
+                item.isEdit = false;
+                // 如果有规格
+                if (item.spec_group_id_str != 0 && item.spec_group_info.spec_option_group) {
+                  item.spec_group_info.spec_option_group = item.spec_group_info.spec_option_group.replace(/_/g, ',');
+                }
+                item.goods_info.spec_group_info = item.goods_info.spec_group_info.map(function (info) {
+                  info.spec_option_group = info.spec_option_group.split('_').sort().toString();
+                  return info;
+                });
+                that.carts.push(item)
+              })
+              if (resp.data.length == 10) {
+                page++;
+                document.body.onscroll = scrollEvent;
+              } else {
+                document.body.onscroll = null;
+              }
+            } else {
+              if (page == 1) {
+                that.haveNoData = true;
+              }
+            }
+          });
+        }
+      },
+      computed: {
+        // 计算总价格
+        totalPrice: function () {
+          return this.carts.reduce(function (a, b) {
+            if (b.spec_group_id_str != 0) {
+              return a + (b.isSelected ? b.spec_group_info.sell_price * b.num : 0)
+            } else {
+              return a + (b.isSelected ? b.goods_info.sell_price * b.num : 0)
+            }
+          }, 0).toFixed(2)
+        },
+        // 是否全选
+        isSelectedAll: function () {
+          if (this.carts.length == 0) {
+            return false;
+          } else {
+            return this.carts.every(function (item) {
+              return item.isSelected
+            })
+          }
+        },
+      },
+      mounted: function () {
+        this.loadData();
+      }
+    })
+  </script>
+</body>
+
+</html>

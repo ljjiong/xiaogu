@@ -1,0 +1,166 @@
+<!-- 分销提现页 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<style>
+  .distribution-buttons {
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    height: 2.2rem;
+    line-height: 2.2rem;
+    border-radius: .2rem;
+    margin-bottom: .5rem;
+  }
+
+  .distribution-buttons.wechat {
+    background-color: #09bb07;
+    margin-top: 1rem;
+  }
+
+  .distribution-buttons.wechat:active {
+    background-color: #4ea948;
+  }
+
+  .distribution-buttons.ali {
+    background-color: #0AE;
+  }
+
+  .distribution-buttons.ali:active {
+    background-color: #2c6abe;
+  }
+
+  .distribution-buttons.wallet {
+    background-color: rgb(235, 102, 27);
+  }
+
+  .distribution-buttons.wallet:active {
+    background-color: rgb(219, 92, 19);
+  }
+</style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 头部 -->
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header" style="background-image:none;">
+      <a class="aui-pull-left aui-btn" onclick="javascript:window.history.back(); return false;">
+        <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title" v-text="title"></div>
+      <a class="aui-pull-right aui-btn" onclick="gotowap('bonus_detail')">
+        <span class="aui-iconfont">明细</span>
+      </a>
+    </header>
+    <!-- 中间页 -->
+    <div class="aui-content">
+      <div class="aui-bg-white aui-margin-15 aui-padded-10" style="border-radius: .3rem;">
+        <div>可提现金额</div>
+        <div style="border-bottom: 1px solid #f4f4f4;" class="aui-padded-b-5 aui-margin-b-15 aui-margin-t-10">
+          <span>￥</span>
+          <span class="aui-padded-l-10" style="font-size: 1.5rem;" v-text="bonus_info.can_drawcash_money"></span>
+          <!-- <input type="number" style="letter-spacing: 1px;width: 90%; display: inline;"> -->
+        </div>
+        <div class="aui-text-pray aui-font-size-12" v-text="'最小提现金额: ￥' + min_drawcash_money"></div>
+      </div>
+
+      <div class="aui-margin-10">
+        <div class="distribution-buttons wallet" @click="submit('money')">到账到钱包</div>
+        <div class="distribution-buttons wechat" @click="submit('wechat')">到账到微信</div>
+        <div class="distribution-buttons ali" @click="submit('ali')">到账到支付宝</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        title: '佣金提现',
+        bonus_info: {
+          can_drawcash_money: ''
+        },
+        min_drawcash_money: 0,
+      },
+      methods: {
+        submit: function (type) {
+
+          httpRequest('POST', 'api_query/users/is_set_pay_password').then(function (resp) {
+            if (resp.data.is_set_pay_password == 0) {
+              layer.msg('请设置支付密码');
+              setTimeout(function () {
+                gotowap('reset_password', { type: 2 })
+              }, 500)
+            } else {
+              layer.prompt({ title: '请输入支付密码', formType: 1 }, function (pass, index) {
+                layer.close(index);
+                var data = {
+                  receipt_type: type,
+                  pay_password: pass
+                }
+                httpRequest('POST', 'api_bonus/bonus_applys/save', data).then(function (resp) {
+                  layer.msg(resp.msg);
+                  setTimeout(function () {
+                    gotowap('bonus_home');
+                  }, 500);
+                })
+              });
+            }
+          })
+        }
+      },
+      computed: {
+
+      },
+      filters: {
+
+      },
+      mounted: function () {
+        var that = this;
+        httpRequest('POST', 'api_query/bonus/bonus_info').then(function (resp) {
+          resp.data.can_drawcash_money = Number(resp.data.can_drawcash_money).toFixed(2);
+          that.bonus_info = resp.data;
+        })
+        httpRequest('POST', 'api_bonus/rules/index').then(function (resp) {
+          that.min_drawcash_money = resp.data.min_drawcash_money;
+        })
+      }
+    })
+
+  </script>
+</body>
+
+</html>

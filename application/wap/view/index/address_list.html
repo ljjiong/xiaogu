@@ -1,0 +1,161 @@
+<!-- 新建html模板页 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+</head>
+
+<body>
+  <div id="app">
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header">
+      <a class="aui-pull-left aui-btn" href="javascript:gotowap('home')">
+        <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">我的地址</div>
+    </header>
+
+    <section class="aui-content" style="margin-bottom:2.5rem;">
+      <div v-if="haveNoData" class="aui-col-xs-12 aui-text-center" style="margin-top:30%;">
+        <img src="__static__/wap/images/no_content.png" style="width:18%;margin:0 auto;">
+        <h5 style="margin-top:1rem;" class="aui-font-size-14">啊哦,这里什么都没有~</h5>
+      </div>
+      <div v-else class="aui-card-list" v-for="(address,key) in addresses" :key="key">
+        <div @click="selectAddress(address)">
+          <div class="aui-card-list-header aui-font-size-14" v-text="' ' + address.consignee_name + ' ' + address.mobile">
+          </div>
+          <div class="aui-card-list-content-padded aui-padded-t-0 text-light" v-text="address.province + address.city + address.area + address.address"></div>
+        </div>
+        <div class="aui-card-list-footer aui-border-t">
+          <div @click="setDefaultAddress(address)" v-show="address.is_default == 1">
+            <i class="aui-iconfont iconfont icon-roundcheckfill aui-margin-r-5 aui-font-size-15 aui-text-info"></i>默认地址
+          </div>
+          <div @click="setDefaultAddress(address)" v-show="address.is_default != 1">
+            <i class="aui-iconfont iconfont icon-roundcheckfill aui-margin-r-5 aui-font-size-15" style="color: #ccc"></i>默认地址
+          </div>
+          <div>
+            <div @click="modifyAddress(address)" style="display:inline;">
+              <i class="aui-iconfont iconfont icon-icon- aui-margin-r-5 aui-font-size-15"></i>编辑</div>
+            <div @click="delAddress(address)" style="display:inline;">
+              <i class="aui-iconfont iconfont icon-shanchu aui-margin-r-5 aui-margin-l-15 aui-font-size-15"></i>删除</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="aui-bar aui-bar-tab">
+      <div class="aui-bar-tab-item aui-padded-l-15 aui-padded-r-15" onclick="gotowap('address_edit')">
+        <div class="aui-btn aui-btn-block aui-btn-sm aui-btn-info">新增地址</div>
+      </div>
+    </footer>
+  </div>
+  <script>
+    // 滚动到底部的事件
+    scrollEvent = function () {
+      var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+      if (document.documentElement.scrollHeight - scrollTop - document.documentElement.clientHeight < 10) {
+        loadData();
+      }
+    }
+    var page = 1;
+    var app = new Vue({
+      el: '#app',
+      data: {
+        addresses: [],
+        haveNoData: false
+      },
+      methods: {
+        //设置默认地址
+        setDefaultAddress: function (address) {
+          httpRequest('POST', 'api_users/addresses/set_default', {
+            is_default: 1,
+            id: address.id
+          }).then(function (resp) {
+            layer.msg(resp.msg);
+            app.addresses.forEach(function (item) {
+              item.id == address.id ? (item.is_default = 1) : (item.is_default = 0)
+            })
+          })
+        },
+        //修改地址
+        modifyAddress: function (address) {
+          gotowap('address_edit', {
+            addressId: address.id
+          })
+        },
+        //删除地址
+        delAddress: function (address) {
+          layer.alert('确定删除地址?', { title: '提示' }, function (index) {
+            layer.close(index)
+            httpRequest('POST', 'api_users/addresses/delete', { id: address.id }).then(function (resp) {
+              location.reload();
+            })
+          })
+        }
+      },
+      mounted: function () {
+
+      }
+    })
+    loadData = function () {
+      document.body.onscroll = null;
+      httpRequest('POST', 'api_users/addresses/lists', {}, {
+        'page-num': page,
+        'page-limit': 10
+      }).
+        then(function (resp) {
+          if (resp.data.length > 0) {
+            app.haveNoData = false;
+            resp.data.forEach(function (item) {
+              app.addresses.push(item);
+            })
+            if (resp.data.length == 10) {
+              page++;
+              document.body.onscroll = scrollEvent;
+            } else {
+              document.body.onscroll = null;
+            }
+          } else {
+            if (page == 1) {
+              app.haveNoData = true;
+            }
+          }
+        });
+    }
+    loadData();
+  </script>
+</body>
+
+</html>

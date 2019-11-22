@@ -35,8 +35,8 @@
 	<link rel="stylesheet" type="text/css" href="__static__/website/css/nav.css" />
 	<link rel="stylesheet" type="text/css" href="__static__/website/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="__static__/website/css/nav.css" />
-	<script href="__static__/website/js/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
-	<script href="__static__/website/js/modernizr.js" type="text/javascript" charset="utf-8"></script>
+	<script src="__static__/website/js/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+	<script src="__static__/website/js/modernizr.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body>
@@ -97,9 +97,8 @@
 											</div>
 											<div class="column-item cell is-fifth">
 												<a data-ga-category="pc_nav" data-ga-action="click"
-													data-ga-label="智能人脸设备"
-													href="list-102-cn.html"
-													target="_self" class="ga-data">
+													data-ga-label="智能人脸设备" href="list-102-cn.html" target="_self"
+													class="ga-data">
 													<p class="title">智能人脸设备</p>
 													<p class="content">人脸识别 防止冒用</p>
 													<div class="product-img"><img
@@ -123,8 +122,8 @@
 						</div>
 					</li>
 					<li data-load-lazyr="false" class="category-item">
-						<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="解决方案"
-							href="solutions_2.html" target="_self" class="ga-data">解决方案</a>
+						<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="解决方案" href="solutions_2.html"
+							target="_self" class="ga-data">解决方案</a>
 						<div class="gco-dropdown-menu full-screen">
 							<div class="dropdown-container">
 								<div class="nav-columns">
@@ -205,9 +204,8 @@
 							</div>
 						</li>-->
 					<li class="category-item relative">
-						<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="核心技术"
-							href="list_3d.html" target="_self"
-							class="ga-data">核心技术</a>
+						<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="核心技术" href="list_3d.html"
+							target="_self" class="ga-data">核心技术</a>
 						<div class="gco-dropdown-menu single">
 							<ul>
 								<li class="nav-item">
@@ -220,8 +218,8 @@
 						</div>
 					</li>
 					<li class="category-item relative">
-						<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="服务支持"
-							href="download_2.html" target="_self" class="ga-data">服务支持</a>
+						<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="服务支持" href="download_2.html"
+							target="_self" class="ga-data">服务支持</a>
 						<div class="gco-dropdown-menu single">
 							<ul>
 								<li class="nav-item">
@@ -319,11 +317,11 @@
 	<div class="moblie_head">
 		<div class="lf">
 			<a href="javascript:;">
-				<img href="__static__/website/img/webimages_gco_logo.png"></a>
+				<img src="__static__/website/img/webimages_gco_logo.png"></a>
 		</div>
 		<div class="rg">
 			<a href="javascript:;" class="a_js">
-				<img href="__static__/website/img/list.png"></a>
+				<img src="__static__/website/img/list.png"></a>
 		</div>
 		<div class="clear"></div>
 
@@ -334,7 +332,7 @@
 		<div class="div1 a_closed"></div>
 		<div class="div2">
 			<a href="javascript:;" class="a_closed">
-				<img href="__static__/website/img/close.png" width="22"></a>
+				<img src="__static__/website/img/close.png" width="22"></a>
 		</div>
 		<div class="div3">
 			<ul>
@@ -434,7 +432,7 @@
 
 
 
-	<div class="show-list">
+	<div class="show-list" id="app">
 		<div class="container">
 
 			<div class="show-list-bg">
@@ -445,7 +443,8 @@
 								class="zm"><span>公司简介</span></a></dt>
 					</dl>
 					<dl class="list-none navnow">
-						<dt id='part2_98'><a href='contact_cn_2.html' title='联系我们' class="zm"><span>联系我们</span></a></dt>
+						<dt id='part2_98'><a href='contact_cn_2.html' title='联系我们' class="zm"><span>联系我们</span></a>
+						</dt>
 					</dl>
 					<dl class="list-none navnow">
 						<dt id='part2_36'><a href='job.html' title='招贤纳士' class="zm"><span>招贤纳士</span></a></dt>
@@ -464,11 +463,10 @@
 						<div>
 							<ul class=" list-paddingleft-2" style="list-style-type: square;">
 								<li>
-									<p><span style="font-size: 18px;">小钴科技是一家以提供AI算法软硬件一体化方案与服务的人工智能公司。</span></p>
+									<p><span style="font-size: 18px;" v-html="column.title"></span></p>
 								</li>
 								<li>
-									<p><span
-											style="font-size: 18px;">小钴科技专注于计算机视觉和嵌入式人工智能研发及应用，致力于提供高性能、低成本、低功耗、小体积的嵌入式人工智能软硬件解决方案，实现视觉感知与计算的一体化。小钴科技面向智慧社区、智慧教育、智慧零售安全交通等应用场景，为多种智能终端设备装上人工智能“大脑”，结合“AI终端+小钴云+手机APP”的系统架构，为用户提供安全、便捷、智能的美好生活体验。</span>
+									<p style="font-size: 18px;" v-html="column.content">
 									</p>
 								</li>
 							</ul>
@@ -477,14 +475,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
-
-
-
-
-
-
-
 	</div>
 	<div class="met_clear"></div>
 	</section>
@@ -507,8 +497,7 @@
 								<a href="list_123_cn.html" target="_self" class="ga-data">智能人脸门禁设备</a>
 							</li>
 							<li class="nav-item">
-								<a href="list-102-cn.html" target="_self"
-									class="ga-data">智能人脸设备</a>
+								<a href="list-102-cn.html" target="_self" class="ga-data">智能人脸设备</a>
 							</li>
 						</ul>
 					</div>
@@ -589,15 +578,43 @@
 			</div>
 		</div>
 	</footer>
-	<script href="__static__/website/js/sea.js" type="text/javascript"></script>
-	<script href="__static__/website/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-	<script href="__static__/website/js/feather.min.js" type="text/javascript" charset="utf-8"></script>
-	<script href="__static__/website/js/www.v3.header.min.js" type="text/javascript" charset="utf-8"></script>
-	<script href="__static__/website/js/v3.homepage.min.js" type="text/javascript" charset="utf-8"></script>
-	<script href="__static__/website/js/main.js" type="text/javascript" charset="utf-8"></script>
-	<script href="__static__/website/js/nav.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="__static__/website/js/sea.js" type="text/javascript"></script>
+	<script src="__static__/website/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="__static__/website/js/feather.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="__static__/website/js/www.v3.header.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="__static__/website/js/v3.homepage.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="__static__/website/js/main.js" type="text/javascript" charset="utf-8"></script>
+	<script src="__static__/website/js/nav.js" type="text/javascript" charset="utf-8"></script>
 	<script>
-		feather.replace()
+		feather.replace();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				column: ''
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						type_id: 45
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/articles_single_list',
+					success: function (res) {
+						console.log(res);
+						app.column = res.data[0];
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+
+			},
+		})
 	</script>
 </body>
 
