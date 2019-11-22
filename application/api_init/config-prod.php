@@ -2,12 +2,12 @@
 return array (
   'basic' => 
   array (
-    'system_name' => 'workshop',
+    'system_name' => '小钴科技有限公司',
     'version' => 'v1.4.0',
     'wancll_version' => 'v1.4.0',
-    'technical_support' => '湖南蜗壳科技有限公司',
-    'copyright' => '湖南蜗壳科技有限公司',
-    'email' => 'wmhm1277@163.com',
+    'technical_support' => 'ljj',
+    'copyright' => 'ljj',
+    'email' => '1121',
     'uuid' => '05957446-0add-c1a7-aedb-026a061180cd',
   ),
   'auth' => 
