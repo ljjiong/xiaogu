@@ -245,7 +245,103 @@ class Articlesweb extends Rest
         $this->data['data'] = $lists;
         return $this->data;
     }
+    //解决方案
+    public function commonality_list(Request $request)
+    {
+        $map = $request->param();
+        foreach ($map as $key => $value) {
+            if ($value) {
+                // 类型
+                if ($key == 'type_id') {
+                    $map[$key] =  $value;
+                }
 
+                
+            } else {
+                unset($map[$key]);
+            }
+        }
+
+        $count = model('commonality')->getAllCount($map);
+        $lists = model('commonality')->getAll($map, $this->page_num, $this->page_limit);
+
+        $this->data['page'] = [
+            'page_num'   => $this->page_num,
+            'page_limit' => $this->page_limit,
+            'data_count' => $count,
+        ];
+
+        $this->data['data'] = $lists;
+
+        return $this->data;
+    }
+    //产品列表
+    public function goods_list(Request $request)
+    {
+        $map = $request->param();
+
+        if (isset($map['sort_by'])) {
+            $sort_by = $map['sort_by'];
+            unset($map['sort_by']);
+        } else {
+            $sort_by = 'new_goods';
+        }
+
+        if (isset($map['sort_type'])) {
+            $sort_type = $map['sort_type'];
+            unset($map['sort_type']);
+        } else {
+            $sort_type = 'desc';
+        }
+
+        foreach ($map as $key => $value) {
+            if ($value) {
+                // 产品名称模糊查询
+                if ($key == 'name') {
+                    $map[$key] = ['like', '%' . $value . '%'];
+                }
+                // 产品上线
+                if ($key == 'status') {
+                    $map[$key] =  $value;
+                }
+            } else {
+                unset($map[$key]);
+            }
+        }
+
+        $count = model('goods')->getAllCount($map);
+        $lists = model('goods')->getAll($map, $this->page_num, $this->page_limit, $sort_by, $sort_type);
+
+        $this->data['page'] = [
+            'page_num'   => $this->page_num,
+            'page_limit' => $this->page_limit,
+            'data_count' => $count,
+        ];
+
+        $this->data['data'] = $lists;
+
+        return $this->data;
+    }
+
+    //首页
+    public function home_page()
+    {
+        $goods=model('goods')->getAll([],1,5);
+        $articles_hxjs_3d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>65]);
+        $articles_hxjs_2d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>66]);
+        $articles_hxjs=[
+            '3d'=>$articles_hxjs_3d,
+            '2d'=>$articles_hxjs_2d
+        ];
+        $commonality=model('commonality')->getAll(['type_id'=>57]);
+        $lists=[
+            'goods'=>$goods,
+            'articles_hxjs'=>$articles_hxjs,
+            'commonality'=>$commonality
+        ];
+        $this->data['data'] = $lists;
+        return $this->data;
+    }
 
     public function gettq()
     {
