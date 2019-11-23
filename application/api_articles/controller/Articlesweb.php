@@ -14,7 +14,108 @@ class Articlesweb extends Rest
         // 'checkToken' => ['except' => 'read,lists'],
         // 'checkAdmin' => ['except' => 'read,lists'],
     ];
+    //登录
+    public function login(Request $request)
+    {
+        $data     = $request->param();
+        $validate = Loader::validate('login');
+        if ($validate->check($data)) {
 
+            $guid = $data['mobile'];
+
+            // ==============下发授权token-BEGIN======================
+            // $result = model('user_tokens')->addOneByGuid($guid, $this->client_type);
+            // if ($result['code']) {
+            //     $token = $result['data'];
+            // } else {
+            //     $this->data['code'] = 0;
+            //     $this->data['msg']  = $result['msg'];
+            //     return $this->data;
+            // }
+            // ==============下发授权token-END========================
+
+            // ==============登录日志-BEGIN======================
+            $result = model('user_visit_logs')->addOneByGuid($guid, $this->client_type, Request::instance()->ip());
+            if (!$result['code']) {
+                $this->data['code'] = 0;
+                $this->data['msg']  = $result['msg'];
+                return $this->data;
+            }
+            // ==============登录日志-END========================
+
+            $user                        = model('users')->getOneByGuid($guid);
+            $user['guid']                = $guid;
+            $this->data['msg']           = '登录成功';
+            // $this->data['data']['token'] = $token;
+            $this->data['data']  = $user;
+        } else {
+            $this->data['code'] = 0;
+            $this->data['msg']  = $validate->getError();
+        }
+
+        return $this->data;
+    }
+    //注册
+    public function register(Request $request)
+    {
+        $data     = $request->param();
+        $validate = Loader::validate('register');
+        if ($validate->check($data)) {
+            // 注册会员
+            $user_data = [
+                'mobile'    => $data['mobile'],
+                'role_ids'  => isset($data['role_ids']) ? array_unique($data['role_ids']) : [1],
+                'avatar'    => isset($data['avatar']) ? $data['avatar'] : '',
+                'nick_name' => isset($data['nick_name']) ? $data['nick_name'] : '',
+            ];
+
+            $result = model('users')->addOne($user_data);
+            if ($result['code']) {
+                $user = $result['data'];
+
+                // if (isset($data['real_openid'])) {
+                //     if ($data['real_openid']) {
+                //         $find_map = [
+                //             'client_type' => $this->client_type,
+                //             'user_type'   => 'user',
+                //             'user_id'     => $user['id'],
+                //             'type'        => 'wechat',
+                //             'name'        => 'openid',
+                //         ];
+                //         $user_third_account = model('user_third_accounts')->findOne($find_map);
+                //         if (!$user_third_account) {
+                //             $find_map['account'] = $data['real_openid'];
+                //             model('user_third_accounts')->addOne($find_map);
+                //         }
+                //     }
+                // }
+
+                $account_data = [
+                    'guid'          => $data['mobile'],
+                    'password'      => wancll_md5($data['password']),
+                    'user_id'       => $user['id'],
+                    'qq_openid'     => isset($data['qq_openid']) ? $data['qq_openid'] : '',
+                    'wechat_openid' => isset($data['wechat_openid']) ? $data['wechat_openid'] : '',
+                ];
+                $result = model('user_accounts')->addOne($account_data);
+                if ($result['code']) {
+                    // $this->login_info($result['data']['guid']);
+                    $this->data['msg'] = '注册会员成功';
+                } else {
+                    $this->data['code'] = 0;
+                    $this->data['msg']  = $result['msg'];
+                }
+            } else {
+                $this->data['code'] = 0;
+                $this->data['msg']  = $result['msg'];
+            }
+        } else {
+            $this->data['code'] = 0;
+            $this->data['msg']  = $validate->getError();
+        }
+
+        return $this->data;
+    }
     /*
      * 【admin】查询一个分类树（tree）
      * */
