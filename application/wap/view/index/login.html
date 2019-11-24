@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="__static__/website/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="__static__/website/css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="__static__/website/css/login.css" />
+	<script src="__static__/website/js/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body>
@@ -37,27 +38,23 @@
 
 	</div>
 
-	<div class="login_index met-member">
+	<div class="login_index met-member" id="app">
 		<div class="container">
-			<form method="post" action="http://www.xiaogutech.com/member/login.php?lang=cn&a=dologin">
+			<form>
 				<input type="hidden" name="gourl" value="" />
 				<div class="form-group">
 					<input type="text" name="username" required class="form-control" placeholder="用户名/邮箱/手机"
-						data-bv-notempty="true" data-bv-notempty-message="此项不能为空">
+						v-model="mobile" data-bv-notempty="true" data-bv-notempty-message="此项不能为空">
 				</div>
 				<div class="form-group">
 					<input type="password" name="password" required class="form-control" placeholder="密码"
-						data-bv-notempty="true" data-bv-notempty-message="此项不能为空">
+						v-model="password" data-bv-notempty="true" data-bv-notempty-message="此项不能为空">
 				</div>
 
-				<div class="login_link"><a href="http://www.xiaogutech.com/member/getpassword.php?lang=cn">忘记密码？</a>
-				</div>
-				<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
-
-
-				<a class="btn btn-lg btn-info btn-block"
-					href="http://www.xiaogutech.com/member/register_include.php?lang=cn">没有账号？现在去注册</a>
-
+				<!-- <div class="login_link"><a href="http://www.xiaogutech.com/member/getpassword.php?lang=cn">忘记密码？</a> -->
+				<!-- </div> -->
+				<a class="btn btn-lg btn-primary btn-block" @click="login">登录</a>
+				<a class="btn btn-lg btn-info btn-block" href="register_include.html?lang=cn">没有账号？现在去注册</a>
 			</form>
 		</div>
 	</div>
@@ -69,21 +66,49 @@
 		</p>
 
 	</footer>
-	<script src="__static__/website/js/seajs.js"></script>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="__static__/website/seajs.js"></script>
 	<script>
-		var pub = 'http://www.xiaogutech.com/app/system/include/public/',
-			tem = 'http://www.xiaogutech.com/app/system/web/user/templates/met/',
-			page_type = 'login';
-		seajs.config({
-			paths: {
-				'pub': pub.substring(0, pub.length - 1),
-				'tem': tem.substring(0, tem.length - 1)
+		var app = new Vue({
+			el: '#app',
+			data: {
+				mobile: '',
+				password: ''
 			},
-			alias: {
-				"jquery": "jquery/1.11.1/jquery_seajs.js"
+			mounted: function () {
+
+			},
+			methods: {
+				login() {
+					if (this.mobile == '') {
+						alert("请填写用户名")
+					} else if (this.password == '') {
+						alert("请填写密码")
+					} else {
+						$.ajax({
+							async: true,
+							type: 'POST',
+							dataType: 'json',
+							data: {
+								mobile: this.mobile,
+								password: this.password
+							},
+							url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/login',
+							success: function (res) {
+								console.log(res);
+								// app.column = res.data[0];
+							},
+							error: function (res) {
+								console.log(res);
+							},
+							catch: function () {
+								alert("网络出错了！")
+							}
+						});
+					}
+				},
 			}
-		});
-		seajs.use("tem/js/own"); //载入入口模块
+		})
 	</script>
 </body>
 
