@@ -112,10 +112,20 @@
                           <el-form-item label="产品名称">
                             <el-input v-model="selectGoods.name"></el-input>
                           </el-form-item>
+                          <el-form-item label="产品品牌">
+                            <el-input v-model="selectGoods.bank"></el-input>
+                          </el-form-item>
+                          <el-form-item label="产品型号">
+                            <el-input v-model="selectGoods.xh"></el-input>
+                          </el-form-item>
+                          <el-form-item label="产品短标题">
+                            <el-input v-model="selectGoods.short_name"></el-input>
+                          </el-form-item>
 
                           <el-form-item label="描述文字">
                             <el-input v-model="selectGoods.descriptive" type="textarea"></el-input>
                           </el-form-item>
+
 
 
 
@@ -283,7 +293,7 @@
                     </el-col>
                   </el-row>
                 </el-collapse-item>
-                <el-collapse-item title="产品属性" name="3">
+                <!-- <el-collapse-item title="产品属性" name="3">
                   <el-row>
                     <el-col :span="12" :offset="6">
                       <el-form size="medium" ref="goodsAttrsForm" :model="selectGoods" label-position="left" label-width="80px">
@@ -304,7 +314,7 @@
                       </el-form>
                     </el-col>
                   </el-row>
-                </el-collapse-item>
+                </el-collapse-item> -->
                 
                 <!--<el-collapse-item title="产品规格" name="4">
                   <el-row>
@@ -512,21 +522,33 @@
               <input @change="fileChange($event)" type="file" id="imgAdd" style="display: none">
               <input @change="fileChange($event)" type="file" id="imgsAdd" style="display: none" multiple>
             </el-dialog>
-            <el-dialog title="Production editor" :visible.sync="dialogVisible_en" fullscreen :before-close="handleClose">
+            <el-dialog title="基本信息" :visible.sync="dialogVisible_en" fullscreen :before-close="handleClose">
               <el-collapse v-model="activeCollapseName" accordion>
                 <el-collapse-item title="Basic Information" name="1">
                   <el-row>
                     <el-col :span="18" :offset="3">
                       <el-card>
                         <el-form size="medium" ref="goodsBasicForm" :model="selectGoods" label-width="80px" label-position="left" :rules="goodsRules">
-                          <el-form-item label="Product Classification">
+                          <el-form-item label="产品分类">
                             <el-cascader change-on-select v-model="goods_cate_ids" :options="cates"></el-cascader>
                           </el-form-item>
-                          <el-form-item label="Name">
+                          
+
+                          <el-form-item label="产品名称">
                             <el-input v-model="selectGoods.name_en"></el-input>
                           </el-form-item>
 
-                          <el-form-item label="Descriptio ">
+                          <el-form-item label="产品品牌">
+                            <el-input v-model="selectGoods.bank_en"></el-input>
+                          </el-form-item>
+                          <el-form-item label="产品型号">
+                            <el-input v-model="selectGoods.xh_en"></el-input>
+                          </el-form-item>
+                          <el-form-item label="产品短标题">
+                            <el-input v-model="selectGoods.short_name_en"></el-input>
+                          </el-form-item>
+
+                          <el-form-item label="描述文字">
                             <el-input v-model="selectGoods.descriptive_en" type="textarea"></el-input>
                           </el-form-item>
 
@@ -535,19 +557,19 @@
                           <!-- <el-form-item label="产品简介">
                             <el-input v-model="selectGoods.intro" type="textarea"></el-input>
                           </el-form-item> -->
-                          <el-form-item label="Status" prop="status">
+                          <el-form-item label="产品状态" prop="status">
                             <el-radio v-model="selectGoods.status" :label="1">up</el-radio>
                             <el-radio v-model="selectGoods.status" :label="2">down</el-radio>
                           </el-form-item>
                           <el-row :gutter="30">
                             <el-col :span="6">
-                              <el-form-item label="Price" prop="sell_price_en" label-width="80px">
+                              <el-form-item label="销售价格" prop="sell_price_en" label-width="80px">
                                 <el-input v-model="selectGoods.sell_price_en" clearable></el-input>
                               </el-form-item>
                             </el-col>
 
                             <el-col :span="6">
-                              <el-form-item label="Traffic " prop="nums" label-width="80px">
+                              <el-form-item label="访问量 " prop="nums" label-width="80px">
                                 <el-input v-model="selectGoods.nums" clearable></el-input>
                               </el-form-item>
                             </el-col>
@@ -556,7 +578,7 @@
                     </el-col>
                   </el-row>
                 </el-collapse-item>
-                <el-collapse-item title="Product Details" name="6">
+                <el-collapse-item title="产品详情" name="6">
                   <el-row>
                     <el-col :span="12" :offset="6">
                       <script id="container_en" type="text/plain"></script>
@@ -1050,25 +1072,25 @@
           this.cates = packageCascaderData(resp.data);
           this.loadTableData();
         })
-        httpRequest('POST', 'api_goods/attr_templates/index').then(resp => {
-          this.attrTemplates = resp.data;
-          this.attrTemplates.unshift({
-            id: -1,
-            name: '无属性',
-            content: [],
-          })
-        })
-        httpRequest('POST', 'api_goods/spec_templates/index').then(resp => {
-          this.specTemplates = resp.data;
-          this.specTemplates.unshift({
-            id: -1,
-            name: '无规格',
-            content: [],
-          })
-        })
-        httpRequest('POST', 'api_goods/goods_tags/index').then(resp => {
-          this.goods_tags = resp.data
-        })
+      //   httpRequest('POST', 'api_goods/attr_templates/index').then(resp => {
+      //     this.attrTemplates = resp.data;
+      //     this.attrTemplates.unshift({
+      //       id: -1,
+      //       name: '无属性',
+      //       content: [],
+      //     })
+      //   })
+      //   httpRequest('POST', 'api_goods/spec_templates/index').then(resp => {
+      //     this.specTemplates = resp.data;
+      //     this.specTemplates.unshift({
+      //       id: -1,
+      //       name: '无规格',
+      //       content: [],
+      //     })
+      //   })
+      //   httpRequest('POST', 'api_goods/goods_tags/index').then(resp => {
+      //     this.goods_tags = resp.data
+      //   })
       }
     });
   </script>
