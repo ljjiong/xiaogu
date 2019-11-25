@@ -144,7 +144,7 @@ class Articlesweb extends Rest
                 unset($map[$key]);
             }
         }
-
+        $map['status']=1;
         $count = model('post_sale')->getAllCount($map);
         $lists = model('post_sale')->getAll($map);
         foreach ($lists as $key => $value) {
@@ -241,7 +241,7 @@ class Articlesweb extends Rest
                 unset($map[$key]);
             }
         }
-
+        $map['status']=1;
         $count = model('partner')->getAllCount($map);
         $lists = model('partner')->getAll($map);
 
@@ -272,7 +272,7 @@ class Articlesweb extends Rest
                 unset($map[$key]);
             }
         }
-
+        $map['status']=1;
         $count = model('articles')->getAllCount($map);
         $lists = model('articles')->getAll($map);
 
@@ -302,7 +302,7 @@ class Articlesweb extends Rest
                 unset($map[$key]);
             }
         }
-
+        $map['status']=1;
         $count = model('articles_single')->getAllCount($map);
         $lists = model('articles_single')->getAll($map);
 
@@ -336,6 +336,7 @@ class Articlesweb extends Rest
                 unset($map[$key]);
             }
         }
+        $map['status']=1;
         $count = model('articleshxjs')->getAllCount($map);
         $lists = model('articleshxjs')->getAll($map);
         $this->data['page'] = [
@@ -362,7 +363,7 @@ class Articlesweb extends Rest
                 unset($map[$key]);
             }
         }
-
+        $map['status']=1;
         $count = model('commonality')->getAllCount($map);
         $lists = model('commonality')->getAll($map, $this->page_num, $this->page_limit);
 
@@ -409,7 +410,7 @@ class Articlesweb extends Rest
                 unset($map[$key]);
             }
         }
-
+        $map['status']=1;
         $count = model('goods')->getAllCount($map);
         $lists = model('goods')->getAll($map, $this->page_num, $this->page_limit, $sort_by, $sort_type);
 
@@ -427,14 +428,14 @@ class Articlesweb extends Rest
     //首页
     public function home_page()
     {
-        $goods=model('goods')->getAll([],1,5);
-        $articles_hxjs_3d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>65]);
-        $articles_hxjs_2d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>66]);
+        $goods=model('goods')->getAll(['status'=>1],1,5);
+        $articles_hxjs_3d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>65,'status'=>1]);
+        $articles_hxjs_2d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>66,'status'=>1]);
         $articles_hxjs=[
             '3d'=>$articles_hxjs_3d,
             '2d'=>$articles_hxjs_2d
         ];
-        $commonality=model('commonality')->getAll(['type_id'=>57]);
+        $commonality=model('commonality')->getAll(['type_id'=>57,'status'=>1]);
         $lists=[
             'goods'=>$goods,
             'articles_hxjs'=>$articles_hxjs,
@@ -444,6 +445,25 @@ class Articlesweb extends Rest
         return $this->data;
     }
 
+    //新闻资讯详情
+    public function articles_read(Request $request)
+    {
+        $map = $request->param();
+        $this->data['data'] = model('articles')->getOne($map['id']);
+        return $this->data;
+    }
+    //产品详情
+    public function goods_read(Request $request)
+    {
+        $map = $request->param();
+        $this->data['data'] = model('goods')->getOne($map['id']);
+        return $this->data;
+    }
+
+
+
+
+    //=============================================================================
     public function gettq()
     {
         $res=$this->https_request('https://free-api.heweather.net/s6/weather/now?location=CN101250101&key=6cd70502b7a748dbacba3e2f3ecae4b7');
