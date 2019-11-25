@@ -416,27 +416,19 @@
 
 			</div>
 		</nav>
-
-
-
 		<div class="met_clear"></div>
-
-
-
-
-
 		<div class="container">
 			<div class="met_module2_list">
 				<ul>
 					<li class="list_1" v-for="(col,index) in column">
-						<h2><a href="news.html" title="{{col.title}}" target='_self'><i
+						<h2><a :href="'news.html?id='+col.id" title="{{col.title}}" target='_self'><i
 									class="fa fa-caret-right"></i>{{col.title}}</a></h2>
 						<span class='time'>{{col.create_time}}</span>
 					</li>
 				</ul>
 
 				<div class='met_pager'>
-					<span class='PreSpan'>上一页</span><a href=../news/ class='Ahover'>1</a><span
+					<span class='PreSpan'>上一页</span><a href="news_2.html" class='Ahover'>1</a><span
 						class='NextSpan'>下一页</span>
 					<span class='PageText'>转至第</span>
 					<input type='text' id='metPageT' data-pageurl='list-2-|-cn.html|1' value='1' />

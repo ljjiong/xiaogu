@@ -199,8 +199,8 @@
 							</div>
 						</li>-->
 					<li class="category-item relative">
-						<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="核心技术"
-							href="list_3d.html" target="_self" class="ga-data">核心技术</a>
+						<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="核心技术" href="list_3d.html"
+							target="_self" class="ga-data">核心技术</a>
 						<div class="gco-dropdown-menu single">
 							<ul>
 								<li class="nav-item">
@@ -423,34 +423,33 @@
 
 	<div class="products-list-page">
 		<div class="container">
-			<div class="row">
+			<div class="row" id="app">
 
 				<ul class="products-list list_1" style="margin: 0px 10px;">
-
-					<li class="product-item shown col-lg-3 col-md-4 col-sm-6">
+					<li class="product-item shown col-lg-3 col-md-4 col-sm-6" v-for="(item,index) in column">
 						<div class="widget">
 							<figure class="widget-header cover">
-								<a href="alphalook3d_cn.html" title="AlphaLook 3D Module" target='_self'>
-									<img src="__static__/website/img/1556609807.png" />
+								<a :href="'alphalook3d_cn.html?id='+item.id" title="AlphaLook 3D Module"
+									target='_self'>
+									<img src="{{item.imgs[0]}}" />
 								</a>
 							</figure>
 							<h4 class="widget-title">
-								<a href="alphalook3d_cn.html" title="AlphaLook 3D Module" target='_self'>
-									AlphaLook 3D Module
+								<a :href="'alphalook3d_cn.html?id='+item.id" title="AlphaLook 3D Module" target='_self'>
+									{{item.name}}
 								</a>
 								<p></p>
 								<span class="btn-detail">
-									<a href="alphalook3d_cn.html" title="AlphaLook 3D Module" target='_self'>
+									<a :href="'alphalook3d_cn.html?id='+item.id" title="AlphaLook 3D Module" target='_self'>
 										查看详情
 									</a>
 								</span>
-								<p class="product-short">AlphaLook3D</p>
+								<p class="product-short">{{item.descriptive}}</p>
 							</h4>
-
 						</div>
 					</li>
 
-					<li class="product-item shown col-lg-3 col-md-4 col-sm-6">
+					<!-- <li class="product-item shown col-lg-3 col-md-4 col-sm-6">
 						<div class="widget">
 							<figure class="widget-header cover">
 								<a href="cn_32.html" title="3D人脸识别智能锁模块" target='_self'>
@@ -609,14 +608,15 @@
 							</h4>
 
 						</div>
-					</li>
+					</li> -->
 
 				</ul>
 
 
 				<div class='met_pager'>
-					<span class='PreSpan'>上一页</span><a href=../product/ class='Ahover'>1</a><a
-						href=list_3_2_cn.html>2</a><a href=list_3_2_cn.html class='NextA'>下一页</a>
+					<span class='PreSpan'>上一页</span><a href=../product/ class='Ahover'>1</a>
+					<!-- <a href=list_3_2_cn.html>2</a> -->
+					<a class='PreSpan'>下一页</a>
 					<span class='PageText'>转至第</span>
 					<input type='text' id='metPageT' data-pageurl='list-3-|-cn.html|2' value='1' />
 					<input type='button' id='metPageB' value='页' />
@@ -730,6 +730,7 @@
 		</div>
 	</footer>
 
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
 	<script src="__static__/website/js/sea.js" type="text/javascript"></script>
 	<script src="__static__/website/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="__static__/website/js/feather.min.js" type="text/javascript" charset="utf-8"></script>
@@ -738,7 +739,33 @@
 	<script src="__static__/website/js/main.js" type="text/javascript" charset="utf-8"></script>
 	<script src="__static__/website/js/nav.js" type="text/javascript" charset="utf-8"></script>
 	<script>
-		feather.replace()
+		feather.replace();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				column: ''
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/goods_list',
+					success: function (res) {
+						console.log(res);
+						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+
+			},
+		})
 	</script>
 </body>
 
