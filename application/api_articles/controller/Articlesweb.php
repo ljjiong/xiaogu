@@ -428,16 +428,16 @@ class Articlesweb extends Rest
     //首页
     public function home_page()
     {
-        $goods=model('goods')->getAll(['status'=>1],1,5);
+        $banners = model('banners')->getAll(['status'=>1], 1, 7);
         $articles_hxjs_3d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>65,'status'=>1]);
         $articles_hxjs_2d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>66,'status'=>1]);
         $articles_hxjs=[
             '3d'=>$articles_hxjs_3d,
             '2d'=>$articles_hxjs_2d
         ];
-        $commonality=model('commonality')->getAll(['type_id'=>57,'status'=>1]);
+        $commonality=model('commonality')->getAll(['type_id'=>57]);
         $lists=[
-            'goods'=>$goods,
+            'banners'=>$banners,
             'articles_hxjs'=>$articles_hxjs,
             'commonality'=>$commonality
         ];
