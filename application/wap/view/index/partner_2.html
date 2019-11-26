@@ -37,7 +37,7 @@
 </head>
 
 <body style="background-color: #fff;">
-	<div>
+	<div id='app'>
 		<nav id="site-header" class="gco-navbar site-header collapsed" data-waypointsok="0">
 			<div class="navbar-container">
 				<div class="navbar-header">
@@ -411,16 +411,16 @@
 				<h3 class="section-title">核心合作单位</h3>
 				<div class="row">
 					<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for="(col,index) in core">
-						<a href="{{core.hyperlink}}" title="Intel Movidius" target="_blank">
-							<img src="{{core.picture}}">
+						<a :href="col.hyperlink" title="Intel Movidius" target="_blank">
+							<img :src="col.picture">
 						</a>
 					</div>
 				</div>
 				<h3 class="section-title">战略合作单位</h3>
 				<div class="row">
 					<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for="(col,index) in strategy">
-						<a href="{{core.hyperlink}}" title="" target="_blank">
-							<img src="{{core.picture}}">
+						<a :href="col.hyperlink" title="" target="_blank">
+							<img :src="col.picture">
 						</a>
 					</div>
 				</div>
@@ -435,27 +435,27 @@
 					<div class="tab-content">
 						<div class="tab-pane fade active in" id="3d">
 							<div class="row">
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
-									<a href="http://www.dessmann.com.cn/" title="德施曼" target="_blank">
-										<img src="__static__/website/img/dessmann.png">
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for='(col,index) in algorithm' v-if="col.type_id==60">
+									<a :href="col.hyperlink" title="德施曼" target="_blank">
+										<img :src="col.picture">
 									</a>
 								</div>
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
+								
+								<!-- <div class="list-item col-xs-12 col-sm-6 col-md-4">
 									<a href="http://www.gdctwl.com/" title="常通" target="_blank">
 										<img src="__static__/website/img/changt.png">
 									</a>
-								</div>
+								</div> -->
 							</div>
 						</div>
-
 						<div class="tab-pane fade" id="eyes">
 							<div class="row">
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
-									<a href="http://www.pbc.gov.cn" title="中国人民银行" target="_blank">
-										<img src="__static__/website/img/pboc.png">
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for='(col,index) in algorithm' v-if="col.type_id==61">
+									<a :href="col.hyperlink" title="中国人民银行" target="_blank">
+										<img :src="col.picture">
 									</a>
 								</div>
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
+								<!-- <div class="list-item col-xs-12 col-sm-6 col-md-4">
 									<a href="http://www.3qvideo.com/" title="深圳市三全视讯科技有限公司" target="_blank">
 										<img src="__static__/website/img/3qvideo.png">
 									</a>
@@ -469,17 +469,17 @@
 									<a href="http://massky.cn/" title="江苏众天力信息科技有限公司" target="_blank">
 										<img src="__static__/website/img/massky.png">
 									</a>
-								</div>
+								</div> -->
 							</div>
 						</div>
 						<div class="tab-pane fade" id="light">
 							<div class="row">
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
-									<a href="http://www.chinacitek.com/" title="上海城智科技有限公司" target="_blank">
-										<img src="__static__/website/img/citek.png">
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for='(col,index) in algorithm' v-if="col.type_id==62">
+									<a :href="col.hyperlink" title="上海城智科技有限公司" target="_blank">
+										<img :src="col.picture">
 									</a>
 								</div>
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
+								<!-- <div class="list-item col-xs-12 col-sm-6 col-md-4">
 									<a href="http://www.seaskylight.com/" title="深圳海云天科技股份有限公司" target="_blank">
 										<img src="__static__/website/img/hyt.png">
 									</a>
@@ -488,32 +488,16 @@
 									<a href="http://www.szjxj.com/" title="深圳佳信捷技术股份有限公司" target="_blank">
 										<img src="__static__/website/img/jxj.png">
 									</a>
-								</div>
+								</div> -->
 							</div>
 						</div>
 						<div class="tab-pane fade" id="person">
 							<div class="row">
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
-									<a href="#" title="南宁市骏腾建设投资有限公司" target="_blank">
-										<img src="__static__/website/img/jtjstz.png">
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for='(col,index) in algorithm' v-if="col.type_id==63">
+									<a :href="col.hyperlink" title="南宁市骏腾建设投资有限公司" target="_blank">
+										<img :src="col.picture">
 									</a>
 								</div>
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
-									<a href="#" title="深圳市中宇商显科技有限公司" target="_blank">
-										<img src="__static__/website/img/zysx.png">
-									</a>
-								</div>
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
-									<a href="#" title="广西科联安建网络设备有限公司" target="_blank">
-										<img src="__static__/website/img/klaj.png">
-									</a>
-								</div>
-								<div class="list-item col-xs-12 col-sm-6 col-md-4">
-									<a href="#" title="上海亦源科技有限公司" target="_blank">
-										<img src="__static__/website/img/yiyuan.png">
-									</a>
-								</div>
-
 							</div>
 						</div>
 					</div>
@@ -644,7 +628,7 @@
 					type: 'POST',
 					dataType: 'json',
 					data: {
-						type_id: 49
+						type_id: '49'
 					},
 					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/partner_list',
 					success: function (res) {
@@ -662,7 +646,7 @@
 					type: 'POST',
 					dataType: 'json',
 					data: {
-						type_id: 50
+						type_id: '50'
 					},
 					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/partner_list',
 					success: function (res) {
@@ -675,17 +659,17 @@
 						alert("网络错误，请联系管理员！")
 					}
 				});
-				this.GetAlgorithmData(60);
+				this.GetAlgorithmData();
 
 			},
 			methods: {
-				GetAlgorithmData: function (e) {
+				GetAlgorithmData: function () {
 					$.ajax({
 						async: true,
 						type: 'POST',
 						dataType: 'json',
 						data: {
-							type_id: e
+							type_id: '60,61,62,63'
 						},
 						url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/partner_list',
 						success: function (res) {

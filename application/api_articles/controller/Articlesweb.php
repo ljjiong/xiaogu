@@ -235,7 +235,7 @@ class Articlesweb extends Rest
             if ($value) {
                 // 类别模糊查询
                 if ($key == 'type_id') {
-                    $map[$key] =  $value ;
+                    $map[$key] = ['in',explode(',', $value)];
                 }
             } else {
                 unset($map[$key]);
