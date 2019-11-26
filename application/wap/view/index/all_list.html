@@ -38,6 +38,7 @@
 </head>
 
 <body>
+    <div id="app">
     <nav id="site-header" class="gco-navbar site-header collapsed" data-waypointsok="0">
         <div class="navbar-container">
             <div class="navbar-header">
@@ -427,12 +428,12 @@
                 <figcaption>
                     <h2><span>3D</span>视觉算法 </h2>
                     <div>
-                        <p>3D数据采集及数据处理</p>
-                        <p>3D人脸识别算法</p>
+                        <p v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 65">{{col.title}}</p>
+                       <!--  <p>3D人脸识别算法</p>
                         <p>3D防伪算法</p>
                         <p>3D人脸属性算法</p>
                         <p>3D手势识别算法</p>
-                        <p>3D动作检测算法</p>
+                        <p>3D动作检测算法</p> -->
 
                     </div>
                     <a href="list_3d.html">了解更多</a>
@@ -443,13 +444,13 @@
                 <figcaption>
                     <h2><span>2D</span>视觉算法 </h2>
                     <div>
-                        <p>人脸识别算法</p>
-                        <p>人脸防伪算法</p>
+                        <p v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 66">{{col.title}}</p>
+                        <!-- <p>人脸防伪算法</p>
                         <p>人脸属性算法</p>
                         <p>行人分析算法</p>
                         <p>动作识别算法</p>
                         <p>车辆分析算法
-                        </p>
+                        </p> -->
                     </div>
                     <a href="list_2d_cn_2.html">了解更多</a>
                 </figcaption>
@@ -474,6 +475,7 @@ EOT;
     </div>
 
     </div>
+
     <div class="met_clear"></div>
 
 
@@ -596,12 +598,12 @@ EOT;
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        type_id: 65
+                        type_id: 0
                     },
                     url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/articles_hxjs_list',
                     success: function (res) {
                         console.log(res);
-                        app.column = res.data[0];
+                        app.column = res.data;
                     },
                     error: function (res) {
                         console.log(res);

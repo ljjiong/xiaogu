@@ -39,6 +39,7 @@
 </head>
 
 <body>
+	<div id="app">
 	<nav id="site-header" class="gco-navbar site-header collapsed" data-waypointsok="0">
 		<div class="navbar-container">
 			<div class="navbar-header">
@@ -417,7 +418,6 @@
 	</nav>
 
 
-
 	<div class="met_clear"></div>
 
 	<div class="tech-section core-banner" style="background: url(__static__/website/img/banner2D.jpg) no-repeat 50%;">
@@ -438,26 +438,21 @@
 		<div class="container">
 			<h3 class="section-title">产品功能</h3>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-4" v-for="(col,index) in column" v-if="col.class_id == 1">
 					<div class="core-list-container">
 						<div class="core-list-item-img">
-							<div class="core-list-poster" style="background-image: url(__static__/website/img/core-list-7.jpg);"></div>
+							<div class="core-list-poster" :style="'background-image: url('+col.thum+');'"></div>
 							<div class="core-list-sign"></div>
 						</div>
 						<div class="core-list-info">
-							<div class="core-list-name">人脸识别算法</div>
+							<div class="core-list-name">{{col.title}}</div>
 							<div class="core-list-intro">
-								小钴人脸识别算法准确率达到99.83%，
-								误识率低于万分之一，处于国内领先
-								水平。算法突破小尺寸、高动态和模
-								糊图片检测的极限，达到前端设备和
-								云端同样的精度水平。
-
+								{{col.content}}
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<!-- <div class="col-md-4">
 					<div class="core-list-container">
 						<div class="core-list-item-img">
 							<div class="core-list-poster" style="background-image: url(__static__/website/img/core-list-8.jpg);"></div>
@@ -534,7 +529,7 @@
 							<div class="core-list-intro">
 								小钴车辆识别算法对于视频图像中的车辆，可进行多车道车辆检测、车头车尾检测识别功能，能够提取识别车辆号牌信息 </div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>
@@ -542,14 +537,14 @@
 			<div class="container">
 				<h3 class="section-title">应用场景</h3>
 				<ul>
-					<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
-						<i class="ico-1" style="background-image: url(__static__/website/img/core-place-8.png);"></i>
+					<li v-for="(col,index) in column" v-if="col.class_id == 2" class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
+						<i class="ico-1" :style="'background-image: url('+col.thum+');'"></i>
 						<div class="des">
-							<h3>人脸门禁考勤</h3>
-							<p style="text-align: center;">集成人脸识别的功能，提供社区、园区、企业等各入口通行解决方案</p>
+							<h3>{{col.title}}</h3>
+							<p style="text-align: center;">{{col.content}}</p>
 						</div>
 					</li>
-					<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
+					<!-- <li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
 						<i class="ico-4" style="background-image: url(__static__/website/img/core-place-3.png);"></i>
 						<div class="des">
 							<h3>人数统计</h3>
@@ -569,23 +564,23 @@
 							<h3>课堂专注力检测</h3>
 							<p style="text-align: center;">通过IP摄像头，可对校园课堂内就学学生进行专注力检测，辅助提高教学质量</p>
 						</div>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 		</div>
 		<div class="container">
 			<h3 class="section-title">产品优势</h3>
 			<div class="row">
-				<div class="core-feature-item col-md-4" style="margin-top: 90px;">
-					<div class="core-feature-icon" style="background-image: url(__static__/website/img/core-feature-icon-1.png);"></div>
+				<div v-for="(col,index) in column" v-if="col.class_id == 3" class="core-feature-item col-md-4" style="margin-top: 90px;">
+					<div class="core-feature-icon" :style="'background-image: url('+col.thum+');'"></div>
 					<div class="core-feature-desc">
-						<div class="core-feature-desc-title">识别准确</div>
+						<div class="core-feature-desc-title">{{col.title}}</div>
 						<div class="core-feature-desc-info">
-							准确检测人脸，支持识别不同年龄、性别、服饰等属性的人群，为人脸验证、VIP识别等场景提供有力支撑，人脸比对在LFW公开测试集上的准确率为99.6%+
+							{{col.content}}
 						</div>
 					</div>
 				</div>
-				<div class="core-feature-item col-md-4" style="margin-top: 90px;">
+				<!-- <div class="core-feature-item col-md-4" style="margin-top: 90px;">
 					<div class="core-feature-icon" style="background-image: url(__static__/website/img/core-feature-icon-2.png);"></div>
 					<div class="core-feature-desc">
 						<div class="core-feature-desc-title">稳定可靠</div>
@@ -602,7 +597,7 @@
 							在线API、离线SDK、私有化部署多种服务形式全面开放，适配各种应用场景。
 						</div>
 					</div>
-				</div>
+				</div> -->
 			</div>
 
 		</div>
@@ -632,6 +627,8 @@ EOT;
 	</div>
 
 	</div>
+	</div>
+
 	<div class="met_clear"></div>
 	</section>
 
@@ -734,6 +731,7 @@ EOT;
 			</div>
 		</div>
 	</footer>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
 	<script src="__static__/website/js/sea.js" type="text/javascript"></script>
 	<script src="__static__/website/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="__static__/website/js/feather.min.js" type="text/javascript" charset="utf-8"></script>
@@ -743,6 +741,36 @@ EOT;
 	<script src="__static__/website/js/nav.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 		feather.replace()
+	</script>
+	<script>
+		feather.replace();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				column: ''
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						type_id: 66
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/articles_hxjs_list',
+					success: function (res) {
+						console.log(res);
+						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+
+			},
+		})
 	</script>
 </body>
 

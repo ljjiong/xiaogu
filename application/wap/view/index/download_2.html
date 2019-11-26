@@ -503,20 +503,20 @@
 				</div>
 				<div class="row col-sm-10 col-md-offset-1 service-list-contents">
 					<div class="service-list-contents-cl">
-						<div class="row item">
+						<div class="row item" v-for="(col,index) in postsale" v-if="col.type_id == 1">
 							<div class="col-sm-3">
-								<p class="title">长沙小钴科技有限公司</p>
+								<p class="title">{{col.title}}</p>
 							</div>
 							<div class="col-sm-3">
 								<p>
-									<a href="tel:+86 400 700 0303">0731-85058649</a>
+									<a href="tel:+86 400 700 0303">{{col.content}}</a>
 								</p>
 							</div>
 							<div class="col-sm-6">
-								<p>周一至周日 9:00-12:30；14:00-21:00（北京时间）</p>
+								<p>{{col.remark}}</p>
 							</div>
 						</div>
-						<div class="row item">
+						<!-- <div class="row item">
 							<div class="col-sm-3">
 								<p class="title">广西小钴科技有限公司</p>
 							</div>
@@ -528,16 +528,16 @@
 							<div class="col-sm-6">
 								<p>周一至周日 9:00-12:30；14:00-21:00（北京时间）</p>
 							</div>
-						</div>
+						</div> -->
 					</div>
 					<div class="service-list-contents-cl">
-						<div class="row item">
+						<div class="row item" v-for="(col,index) in postsale" v-if="col.type_id == 2">
 							<div class="col-sm-6">
-								<p class="title text-right">客服邮箱</p>
+								<p class="title text-right">{{col.title}}</p>
 							</div>
 							<div class="col-sm-6">
 								<p>
-									<a href="mailto:service@xiaogutech.com">service@xiaogutech.com</a>
+									<a href="mailto:service@xiaogutech.com">{{col.content}}</a>
 								</p>
 							</div>
 						</div>
@@ -554,8 +554,10 @@
 			</div>
 		</div>
   </div>-->
-					<div class="service-list-contents-cl">
-						<img src="http://www.xiaogutech.com/templates/xiaogu/img/1519450511.png" width="225">
+					<div class="service-list-contents-cl" >
+						<template v-for="(col,index) in postsale" v-if="col.type_id == 3">
+							<img :src="col.img" width="225">
+						</template>
 					</div>
 
 				</div>
@@ -703,7 +705,8 @@
 		var app = new Vue({
 			el: '#app',
 			data: {
-				column: ''
+				column: '',
+				postsale:''
 			},
 			mounted: function () {
 				$.ajax({
@@ -718,6 +721,22 @@
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						type_id: 0,
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/postsale_list',
+					success: function (res) {
+						console.log(res);
+						app.postsale = res.data;
 					},
 					error: function (res) {
 						console.log(res);
