@@ -2027,7 +2027,8 @@ Slider navigation
 }
 .cht-popover{
 	display: block;
-	position: absolute;
+	/* position: absolute; */
+	height: 20px;
     top: 0;
     left: 0;
     z-index: 1060;
