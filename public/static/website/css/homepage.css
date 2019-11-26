@@ -590,7 +590,7 @@ section.homepage-banner .banner-image {
 	bottom: 0;
 	width: 100%;
 	transition: all .6s;
-	opacity: 0;
+	opacity: 1;
 	-webkit-transform: translateY(120px);
 	transform: translateY(120px);
 	z-index: 200
