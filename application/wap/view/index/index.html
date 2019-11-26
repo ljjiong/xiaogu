@@ -61,7 +61,7 @@
 							<div class="dropdown-container">
 								<div class="nav-columns">
 									<div class="grid-container">
-										<div class="grid stretch left">
+										<div class="grid stretch left" id="app2">
 											<div class="column-item cell is-fifth">
 												<a data-ga-category="pc_nav" data-ga-action="click"
 													data-ga-label="智能人脸锁" href="wap/index/list_101_cn.html"
@@ -350,8 +350,8 @@
 					<div class="swiper-slide banner-swiper-slide" v-for="(item,index) in  dataList.banners">
 						<a :href="item.href" data-ga-category="pc-homepage" data-ga-action="click"
 							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);" class="banner-content">
-							<!-- background-image:url(/templates/xiaogu/img/banner-bg-1.png); -->
+						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://www.xiaogutech.com/templates/xiaogu/img/banner-bg-1.png);"
+							class="banner-content">
 							<div class="">
 								<h3>{{item.name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{item.name}}</p>
@@ -463,7 +463,7 @@
 				<figure class="effect-julia">
 					<img src="http://www.xiaogutech.com/templates/xiaogu/img/all-3d.jpg" alt="img21">
 					<figcaption>
-						<h2><span>3D</span>视觉算法 </h2>
+						<h2>{{dataList.articles_hxjs["3d"][0].title}}</h2>
 						<div>
 							<p>3D数据采集及数据处理</p>
 							<p>3D人脸识别算法</p>
@@ -722,7 +722,8 @@ EOT;
 		var app = new Vue({
 			el: '#app',
 			data: {
-				dataList: ''
+				dataList: '',
+				column: '',
 			},
 			mounted: function () {
 				$.ajax({
@@ -735,6 +736,47 @@ EOT;
 					success: function (res) {
 						console.log(res);
 						app.dataList = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/goods_list',
+					success: function (res) {
+						console.log(res);
+						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+
+			},
+		});
+		var app2 = new Vue({
+			el: '#app2',
+			data: {
+				column: '',
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/goods_list',
+					success: function (res) {
+						console.log(res);
+						app2.column = res.data;
 					},
 					error: function (res) {
 						console.log(res);
