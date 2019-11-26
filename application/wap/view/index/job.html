@@ -456,15 +456,14 @@
 						</dl>
 					</div>
 					<div class="show-banner">
-						<img src="http://www.xiaogutech.com/upload/201905/1558107301.jpg" />
+						<img :src="column.thum" />
 					</div>
 
 					<div class="show-list-content">
 						<div class="active" id="joblist">
-
 							<div class="clearfix"></div>
 							<div id="flip">
-								<div class='met_pager'>
+								<div class='met_pager' v-html="column.content">
 
 								</div>
 							</div>

@@ -456,53 +456,12 @@
 						</dl>
 					</div>
 					<div class="show-banner">
-						<img src="http://www.xiaogutech.com/upload/201802/1519560014.jpg" />
+						<img :src="column.thum" />
 					</div>
 
 					<div class="show-list-content">
 						<div class="text">
-							<div>
-								<h1 id="h1-u8054u7CFBu65B9u5F0F"><a name="联系方式" title="链接关键词"></a><span
-										class="header-link octicon octicon-link"></span>联系方式</h1>
-								<h2 id="h2-u957Fu6C99u5C0Fu94B4u79D1u6280u6709u9650u516Cu53F8"><a name="长沙小钴科技有限公司"
-										title="链接关键词"></a><span
-										class="header-link octicon octicon-link"></span>长沙小钴科技有限公司
-								</h2>
-								<ul class=" list-paddingleft-2">
-									<li>
-										<p>地址： 湖南省长沙市开福区黄兴北路北辰三角洲B1E1区北辰凤凰天阶苑1号写字楼38层38028</p>
-									</li>
-									<li>
-										<p>邮编： 410000</p>
-									</li>
-									<li>
-										<p>电话： 0731-85058649</p>
-									</li>
-									<li>
-										<p>邮箱： <a href="mailto:service@xiaogutech.com"
-												title="链接关键词">service@xiaogutech.com</a></p>
-									</li>
-								</ul>
-								<p><img src="http://www.xiaogutech.com/upload/201802/151982475058698.jpg"
-										alt="长沙小钴科技有限公司" title="长沙小钴科技有限公司" /></p>
-								<h2 id="h2-u5C0Fu94B4u79D1u6280u5E7Fu897Fu5206u516Cu53F8"><a name="小钴科技广西分公司"
-										title="链接关键词"></a><span
-										class="header-link octicon octicon-link"></span>小钴科技广西分公司
-								</h2>
-								<ul class=" list-paddingleft-2">
-									<li>
-										<p>地址：广西省南宁市东盟商务区桂花路泰国城3B-112商铺</p>
-									</li>
-									<li>
-										<p>邮编：530001</p>
-									</li>
-									<li>
-										<p>电话：17687654060</p>
-									</li>
-									<li>
-										<p>联系人：李峥</p>
-									</li>
-								</ul>
+							<div v-html="column.content">
 							</div>
 						</div>
 					</div>
