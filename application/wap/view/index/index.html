@@ -61,51 +61,51 @@
 							<div class="dropdown-container">
 								<div class="nav-columns">
 									<div class="grid-container">
-										<div class="grid stretch left">
-											<div class="column-item cell is-fifth">
+										<div class="grid stretch left" id="app2">
+											<div class="column-item cell is-fifth" v-for="(item,index) in column">
 												<a data-ga-category="pc_nav" data-ga-action="click"
 													data-ga-label="智能人脸锁" href="wap/index/list_101_cn.html"
 													target="_self" class="ga-data">
-													<p class="title">3D智能门锁系列</p>
-													<p class="content">真3D 智慧你的生活</p>
-													<div class="product-img"><img
-															src="http://www.xiaogutech.com/templates/xiaogu/img/products-1.jpg">
+													<p class="title">{{item.name}}</p>
+													<p class="content" style="padding-right: 0px;">{{item.name}}</p>
+													<div class="product-img">
+														<img style="width: 100%;height: 100%;" :src="item.thum">
 													</div>
 												</a>
 											</div>
-											<div class="column-item cell is-fifth">
-												<a data-ga-category="pc_nav" data-ga-action="click"
-													data-ga-label="人脸识别楼宇机" href="list_103_cn.html" target="_self"
-													class="ga-data">
-													<p class="title">智能楼宇设备</p>
-													<p class="content">刷脸出行 畅通无阻</p>
-													<div class="product-img"><img
-															src="http://www.xiaogutech.com/templates/xiaogu/img/products-2.jpg">
-													</div>
-												</a>
-											</div>
-											<div class="column-item cell is-fifth">
-												<a data-ga-category="pc_nav" data-ga-action="click"
-													data-ga-label="智能人脸门禁设备" href="list_123_cn.html" target="_self"
-													class="ga-data">
-													<p class="title">3D智能人脸门禁设备</p>
-													<p class="content">人脸识别 快速通行</p>
-													<div class="product-img"><img
-															src="http://www.xiaogutech.com/templates/xiaogu/img/products-3.jpg">
-													</div>
-												</a>
-											</div>
-											<div class="column-item cell is-fifth">
-												<a data-ga-category="pc_nav" data-ga-action="click"
-													data-ga-label="智能人脸设备" href="list-102-cn.html" target="_self"
-													class="ga-data">
-													<p class="title">智能人脸设备</p>
-													<p class="content">人脸识别 防止冒用</p>
-													<div class="product-img"><img
-															src="http://www.xiaogutech.com/templates/xiaogu/img/products-4.jpg">
-													</div>
-												</a>
-											</div>
+											<!-- <div class="column-item cell is-fifth">
+													<a data-ga-category="pc_nav" data-ga-action="click"
+														data-ga-label="人脸识别楼宇机" href="list_103_cn.html" target="_self"
+														class="ga-data">
+														<p class="title">智能楼宇设备</p>
+														<p class="content">刷脸出行 畅通无阻</p>
+														<div class="product-img"><img
+																src="http://www.xiaogutech.com/templates/xiaogu/img/products-2.jpg">
+														</div>
+													</a>
+												</div>
+												<div class="column-item cell is-fifth">
+													<a data-ga-category="pc_nav" data-ga-action="click"
+														data-ga-label="智能人脸门禁设备" href="list_123_cn.html" target="_self"
+														class="ga-data">
+														<p class="title">3D智能人脸门禁设备</p>
+														<p class="content">人脸识别 快速通行</p>
+														<div class="product-img"><img
+																src="http://www.xiaogutech.com/templates/xiaogu/img/products-3.jpg">
+														</div>
+													</a>
+												</div>
+												<div class="column-item cell is-fifth">
+													<a data-ga-category="pc_nav" data-ga-action="click"
+														data-ga-label="智能人脸设备" href="list-102-cn.html" target="_self"
+														class="ga-data">
+														<p class="title">智能人脸设备</p>
+														<p class="content">人脸识别 防止冒用</p>
+														<div class="product-img"><img
+																src="http://www.xiaogutech.com/templates/xiaogu/img/products-4.jpg">
+														</div>
+													</a>
+												</div> -->
 										</div>
 									</div>
 								</div>
@@ -736,6 +736,32 @@ EOT;
 					success: function (res) {
 						console.log(res);
 						app.dataList = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+
+			},
+		});
+		var app2 = new Vue({
+			el: '#app2',
+			data: {
+				column: '',
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/goods_list',
+					success: function (res) {
+						console.log(res);
+						app2.column = res.data;
 					},
 					error: function (res) {
 						console.log(res);
