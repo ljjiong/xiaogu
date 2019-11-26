@@ -151,20 +151,40 @@
                         <li class="el-upload-list__item is-ready" v-if="selectData.img">
                           <img :src="selectData.img" class="el-upload-list__item-thumbnail">
                           <span class="el-upload-list__item-actions">
-                            <span class="el-upload-list__item-edit" @click="fileClick">
+                            <span class="el-upload-list__item-edit" @click="fileClick('imgAdd');">
                               <i class="el-icon-edit"></i>
                             </span>
                           </span>
                         </li>
-                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick">
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('imgAdd');">
                           <i class="el-icon-plus"></i>
                         </div>
                       </ul>
                     </el-form-item>
                   </el-form>
                 </el-col>
+                <!-- <el-col span="9">
+                  <el-form label-position="left" label-width="120px">
+                    <el-form-item label="背景图" prop="sort">
+                      <ul class="el-upload-list el-upload-list--picture-card">
+                        <li class="el-upload-list__item is-ready" v-if="selectData.backdrop">
+                          <img :src="selectData.backdrop" class="el-upload-list__item-thumbnail">
+                          <span class="el-upload-list__item-actions">
+                            <span class="el-upload-list__item-edit" @click="fileClick('imgAdds');">
+                              <i class="el-icon-edit"></i>
+                            </span>
+                          </span>
+                        </li>
+                        <div class="el-upload el-upload--picture-card" v-else @click="fileClick('imgAdds');">
+                          <i class="el-icon-plus"></i>
+                        </div>
+                      </ul>
+                    </el-form-item>
+                  </el-form>
+                </el-col> -->
               </el-row>
               <input @change="fileChange($event)" type="file" id="imgAdd" style="display: none">
+              <!-- <input @change="fileChange($event)" type="file" id="imgAdds" style="display: none"> -->
             </el-dialog>
           </div>
         </main>
@@ -196,6 +216,8 @@
           name: '',
           type: ''
         },
+        currentUploadType: '',
+
         // 分类
         types: [],
         type_ids: [],
@@ -291,6 +313,8 @@
             model: '',
             model_id: '',
             img: '',
+            //默认值
+            backdrop: 'http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png',
           }
           this.select_type_ids = [];
           this.dialogVisible = true;
@@ -322,17 +346,27 @@
             }
           });
         },
-        fileClick() {
-          document.getElementById('imgAdd').click();
+        fileClick(type) {
+          this.currentUploadType = type;
+          if(type=='imgAdd'){
+            document.getElementById('imgAdd').click();
+          }else if(type=='imgAdds'){
+            document.getElementById('imgAdds').click();
+          }
         },
         fileChange(el) {
+          // console.log(el);return;
           Array.from(el.target.files).forEach(item => {
             let formData = new FormData();
             formData.append('file', item);
             formData.append('save_path', articleImagePath);
             formData.append('is_rename', 1);
             httpRequest('POST', 'api_systems/helper/upload_file', formData).then(resp => {
-              this.selectData.img = resp.data.host_file_path;
+                if(this.currentUploadType == 'imgAdd'){
+                  this.selectData.img = resp.data.host_file_path;
+                }else if(this.currentUploadType == 'imgAdds'){
+                  this.selectData.backdrop = resp.data.host_file_path;
+                }
             })
           })
         },
