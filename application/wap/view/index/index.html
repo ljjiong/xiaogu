@@ -350,10 +350,10 @@
 					<div class="swiper-slide banner-swiper-slide" v-for="(item,index) in  dataList.banners">
 						<a :href="item.href" data-ga-category="pc-homepage" data-ga-action="click"
 							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image:url(/templates/xiaogu/img/banner-bg-1.png) linear-gradient(top,#837C7C,#6A6161);" class="banner-content">
+						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<!-- background-image:url(/templates/xiaogu/img/banner-bg-1.png); -->
 							<div class="">
-								<h3>{{item.name}}</h3>
+								<h3>{{item.short_name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{item.name}}</p>
 							</div>
 							<div style="margin-top: 20px;"><img
@@ -361,70 +361,14 @@
 									style="height:480px;width:auto;"></div>
 						</div>
 					</div>
-					<!-- <div class="swiper-slide banner-swiper-slide">
-						<a href="cn_30.html" data-ga-category="pc-homepage" data-ga-action="click"
-							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image: -webkit-linear-gradient(top,#837C7C,#6A6161);background-image: -o-linear-gradient(top,#837C7C,#6A6161);background-image: -ms-linear-gradient(top,#837C7C,#6A6161);background-image: -moz-linear-gradient(top,#837C7C,#6A6161)"
-							class="banner-content">
-							<div class="banner-text">
-								<h3>3D智能人脸识别门锁</h3>
-								<p style="color:#ffffff" class="banner-slogan">智慧你的生活</p>
-							</div>
-							<div class="banner-image"><img
-									src="http://www.xiaogutech.com/templates/xiaogu/img/alphalooklock.png"
-									style="height:480px;width:auto;"></div>
-						</div>
-					</div>
-					<div class="swiper-slide banner-swiper-slide">
-						<a href="cn_32.html" data-ga-category="pc-homepage" data-ga-action="click"
-							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#5C6167,#5C6167);background-image: -webkit-linear-gradient(top,#5C6167,#5C6167);background-image: -o-linear-gradient(top,#5C6167,#5C6167);background-image: -ms-linear-gradient(top,#5C6167,#5C6167);background-image: -moz-linear-gradient(top,#5C6167,#5C6167)"
-							class="banner-content">
-							<div class="banner-text">
-								<h3><img src="http://www.xiaogutech.com/templates/xiaogu/img/alphalooklogo.png"
-										alt="alphalook 人脸识别锁模块" height="35">
-								</h3>
-								<p style="color:#ffffff" class="banner-slogan">
-									<img src="http://www.xiaogutech.com/templates/xiaogu/img/intelRealSenseLogo.png"
-										alt="intel realsense logo" height="30">
+				</div>
+				<div class="swiper-scroller">
+					 <ul class="swiper-scroller-list hidden">
+						<li data-index='1' class="swiper-scroller-item"  v-for="(item3,index) in  dataList.banners">
+							<a href="javascript:;">{{item3.short_name}}</a>
+						</li>
+					</ul> 
 
-									<img src="http://www.xiaogutech.com/templates/xiaogu/img/intelmovidiuslogo.png"
-										alt="intel movidius logo" height="30">
-								</p>
-							</div>
-							<div class="banner-image"><img
-									src="http://www.xiaogutech.com/templates/xiaogu/img/alphalook3Ddemo.png"
-									style="height:525px;width:auto"></div>
-						</div>
-					</div>
-					<div class="swiper-slide banner-swiper-slide">
-						<a href="list_103_cn.html" data-ga-category="pc-homepage" data-ga-action="click"
-							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#848484,#2E2E2E);background-image: -webkit-linear-gradient(top,#848484,#2E2E2E);background-image: -o-linear-gradient(top,#848484,#2E2E2E);background-image: -ms-linear-gradient(top,#848484,#2E2E2E);background-image: -moz-linear-gradient(top,#848484,#2E2E2E)"
-							class="banner-content">
-							<div class="banner-text">
-								<h3>人脸识别楼宇机</h3>
-								<p style="color:#ffffff" class="banner-slogan">刷脸出行 畅通无阻</p>
-							</div>
-							<div class="banner-image"><img
-									src="http://www.xiaogutech.com/templates/xiaogu/img/7mini.png"
-									style="height:524px;width:auto"></div>
-						</div>
-					</div>
-					<div class="swiper-slide banner-swiper-slide">
-						<a href="31-cn.html" data-ga-category="pc-homepage" data-ga-action="click"
-							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#6C6A61,#4D4844);background-image: -webkit-linear-gradient(top,#6C6A61,#4D4844);background-image: -o-linear-gradient(top,#6C6A61,#4D4844);background-image: -ms-linear-gradient(top,#6C6A61,#4D4844);background-image: -moz-linear-gradient(top,#6C6A61,#4D4844)"
-							class="banner-content">
-							<div class="banner-text">
-								<h3>视频结构化分析平台</h3>
-								<p style="color:#ffffff" class="banner-slogan">精准监控</p>
-							</div>
-							<div class="banner-image"><img
-									src="http://www.xiaogutech.com/templates/xiaogu/img/banner-products-assets/banner-products-4.png"
-									class="banner_img"></div>
-						</div>
-					</div> -->
 				</div>
 				<!-- <div class="swiper-scroller">
 					<ul class="swiper-scroller-list hidden">
@@ -465,13 +409,9 @@
 					<figcaption>
 						<h2><span>3D</span>视觉算法 </h2>
 						<div>
-							<p>3D数据采集及数据处理</p>
-							<p>3D人脸识别算法</p>
-							<p>3D防伪算法</p>
-							<p>3D人脸属性算法</p>
-							<p>3D手势识别算法</p>
-							<p>3D动作检测算法</p>
-
+							<template   v-for="(item,index) in  dataList.articles_hxjs['3d']">
+								<p>{{item.title}}</p>
+							</template>
 						</div>
 						<a href="list_3d.html">了解更多</a>
 					</figcaption>
@@ -481,13 +421,9 @@
 					<figcaption>
 						<h2><span>2D</span>视觉算法 </h2>
 						<div>
-							<p>人脸识别算法</p>
-							<p>人脸防伪算法</p>
-							<p>人脸属性算法</p>
-							<p>行人分析算法</p>
-							<p>动作识别算法</p>
-							<p>车辆分析算法
-							</p>
+							<template   v-for="(item,index) in  dataList.articles_hxjs['2d']">
+								<p>{{item.title}}</p>
+							</template>
 						</div>
 						<a href="list_2d_cn_2.html">了解更多</a>
 					</figcaption>
@@ -571,6 +507,9 @@ EOT;
 								<li class="selected">
 									<a href="#0">人脸识别智慧社区</a>
 								</li>
+								<li >
+									<a href="#0">人脸识别智慧社区</a>
+								</li>
 							</ul>
 						</nav>
 					</div>
@@ -578,7 +517,7 @@ EOT;
 						<li class="selected">
 							<div class="cd-full-width">
 								<div class="container cd-hero-target">
-									<h2>人脸识别智慧社区解决方案</h2>
+									<!-- <h2>人脸识别智慧社区解决方案</h2> -->
 									<a href="/product/33-cn.html" class="cht-popover right in slod_one">
 										<div class="arrow"></div>
 										<div class="cht-popover-inner">
@@ -604,6 +543,7 @@ EOT;
 					</ul>
 				</section>
 			</div>
+
 		</section>
 	</div>
 
