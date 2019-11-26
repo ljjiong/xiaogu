@@ -275,7 +275,7 @@ footer.site-footer .footer-about ul.nav-right:hover li>a {
 
 .gco-navbar .gco-dropdown-menu.full-screen .nav-columns .column-item .product-img img {
 	width: 100%;
-	height: auto
+	height: 100%;
 }
 
 .gco-navbar .gco-dropdown-menu.full-screen .nav-columns .column-item ul li.nav-item a {

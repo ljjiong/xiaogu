@@ -61,51 +61,51 @@
 							<div class="dropdown-container">
 								<div class="nav-columns">
 									<div class="grid-container">
-										<div class="grid stretch left">
-											<div class="column-item cell is-fifth">
+										<div class="grid stretch left" id="app2">
+											<div class="column-item cell is-fifth" v-for="(item,index) in column">
 												<a data-ga-category="pc_nav" data-ga-action="click"
 													data-ga-label="智能人脸锁" href="wap/index/list_101_cn.html"
 													target="_self" class="ga-data">
-													<p class="title">3D智能门锁系列</p>
-													<p class="content">真3D 智慧你的生活</p>
-													<div class="product-img"><img
-															src="http://www.xiaogutech.com/templates/xiaogu/img/products-1.jpg">
+													<p class="title">{{item.name}}</p>
+													<p class="content" style="padding-right: 0px;">{{item.name}}</p>
+													<div class="product-img">
+														<img style="width: 100%;height: 100%;" :src="item.thum">
 													</div>
 												</a>
 											</div>
-											<div class="column-item cell is-fifth">
-												<a data-ga-category="pc_nav" data-ga-action="click"
-													data-ga-label="人脸识别楼宇机" href="list_103_cn.html" target="_self"
-													class="ga-data">
-													<p class="title">智能楼宇设备</p>
-													<p class="content">刷脸出行 畅通无阻</p>
-													<div class="product-img"><img
-															src="http://www.xiaogutech.com/templates/xiaogu/img/products-2.jpg">
-													</div>
-												</a>
-											</div>
-											<div class="column-item cell is-fifth">
-												<a data-ga-category="pc_nav" data-ga-action="click"
-													data-ga-label="智能人脸门禁设备" href="list_123_cn.html" target="_self"
-													class="ga-data">
-													<p class="title">3D智能人脸门禁设备</p>
-													<p class="content">人脸识别 快速通行</p>
-													<div class="product-img"><img
-															src="http://www.xiaogutech.com/templates/xiaogu/img/products-3.jpg">
-													</div>
-												</a>
-											</div>
-											<div class="column-item cell is-fifth">
-												<a data-ga-category="pc_nav" data-ga-action="click"
-													data-ga-label="智能人脸设备" href="list-102-cn.html" target="_self"
-													class="ga-data">
-													<p class="title">智能人脸设备</p>
-													<p class="content">人脸识别 防止冒用</p>
-													<div class="product-img"><img
-															src="http://www.xiaogutech.com/templates/xiaogu/img/products-4.jpg">
-													</div>
-												</a>
-											</div>
+											<!-- <div class="column-item cell is-fifth">
+													<a data-ga-category="pc_nav" data-ga-action="click"
+														data-ga-label="人脸识别楼宇机" href="list_103_cn.html" target="_self"
+														class="ga-data">
+														<p class="title">智能楼宇设备</p>
+														<p class="content">刷脸出行 畅通无阻</p>
+														<div class="product-img"><img
+																src="http://www.xiaogutech.com/templates/xiaogu/img/products-2.jpg">
+														</div>
+													</a>
+												</div>
+												<div class="column-item cell is-fifth">
+													<a data-ga-category="pc_nav" data-ga-action="click"
+														data-ga-label="智能人脸门禁设备" href="list_123_cn.html" target="_self"
+														class="ga-data">
+														<p class="title">3D智能人脸门禁设备</p>
+														<p class="content">人脸识别 快速通行</p>
+														<div class="product-img"><img
+																src="http://www.xiaogutech.com/templates/xiaogu/img/products-3.jpg">
+														</div>
+													</a>
+												</div>
+												<div class="column-item cell is-fifth">
+													<a data-ga-category="pc_nav" data-ga-action="click"
+														data-ga-label="智能人脸设备" href="list-102-cn.html" target="_self"
+														class="ga-data">
+														<p class="title">智能人脸设备</p>
+														<p class="content">人脸识别 防止冒用</p>
+														<div class="product-img"><img
+																src="http://www.xiaogutech.com/templates/xiaogu/img/products-4.jpg">
+														</div>
+													</a>
+												</div> -->
 										</div>
 									</div>
 								</div>
@@ -347,20 +347,30 @@
 		<section class="homepage-banner">
 			<div class="swiper-container banner-swiper-container">
 				<div class="swiper-wrapper">
-					<div class="swiper-slide banner-swiper-slide" v-for="(item,index) in  dataList.banners">
-						<a :href="item.href" data-ga-category="pc-homepage" data-ga-action="click"
+					<div class="swiper-slide banner-swiper-slide">
+						<a href="product_2.html" data-ga-category="pc-homepage" data-ga-action="click"
 							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+<<<<<<< HEAD
 						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<!-- background-image:url(/templates/xiaogu/img/banner-bg-1.png); -->
 							<div class="">
 								<h3>{{item.short_name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{item.name}}</p>
+=======
+						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);" class="banner-content">
+							<!-- background-image:url(/templates/xiaogu/img/banner-bg-1.png); -->
+							<div class="banner-text">
+								<h3><img src="http://www.xiaogutech.com/templates/xiaogu/img/xiaogu-logo.png"
+										alt="xiaogu logo" height="35"></h3>
+								<p style="color:#ffffff" class="banner-slogan">3D视觉，开启无感通行与支付</p>
+>>>>>>> a91107ec71328531159a61c9bcc265a131abbd8a
 							</div>
-							<div style="margin-top: 20px;"><img
-									:src="item.img"
+							<div class="banner-image"><img
+									src="http://www.xiaogutech.com/templates/xiaogu/img/banner-item.png"
 									style="height:480px;width:auto;"></div>
 						</div>
 					</div>
+<<<<<<< HEAD
 				</div>
 				<div class="swiper-scroller">
 					 <ul class="swiper-scroller-list hidden">
@@ -369,8 +379,74 @@
 						</li>
 					</ul> 
 
+=======
+					<div class="swiper-slide banner-swiper-slide">
+						<a href="cn_30.html" data-ga-category="pc-homepage" data-ga-action="click"
+							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image: -webkit-linear-gradient(top,#837C7C,#6A6161);background-image: -o-linear-gradient(top,#837C7C,#6A6161);background-image: -ms-linear-gradient(top,#837C7C,#6A6161);background-image: -moz-linear-gradient(top,#837C7C,#6A6161)"
+							class="banner-content">
+							<div class="banner-text">
+								<h3>3D智能人脸识别门锁</h3>
+								<p style="color:#ffffff" class="banner-slogan">智慧你的生活</p>
+							</div>
+							<div class="banner-image"><img
+									src="http://www.xiaogutech.com/templates/xiaogu/img/alphalooklock.png"
+									style="height:480px;width:auto;"></div>
+						</div>
+					</div>
+					<div class="swiper-slide banner-swiper-slide">
+						<a href="cn_32.html" data-ga-category="pc-homepage" data-ga-action="click"
+							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+						<div style="background-image: linear-gradient(top,#5C6167,#5C6167);background-image: -webkit-linear-gradient(top,#5C6167,#5C6167);background-image: -o-linear-gradient(top,#5C6167,#5C6167);background-image: -ms-linear-gradient(top,#5C6167,#5C6167);background-image: -moz-linear-gradient(top,#5C6167,#5C6167)"
+							class="banner-content">
+							<div class="banner-text">
+								<h3><img src="http://www.xiaogutech.com/templates/xiaogu/img/alphalooklogo.png"
+										alt="alphalook 人脸识别锁模块" height="35">
+								</h3>
+								<p style="color:#ffffff" class="banner-slogan">
+									<img src="http://www.xiaogutech.com/templates/xiaogu/img/intelRealSenseLogo.png"
+										alt="intel realsense logo" height="30">
+
+									<img src="http://www.xiaogutech.com/templates/xiaogu/img/intelmovidiuslogo.png"
+										alt="intel movidius logo" height="30">
+								</p>
+							</div>
+							<div class="banner-image"><img
+									src="http://www.xiaogutech.com/templates/xiaogu/img/alphalook3Ddemo.png"
+									style="height:525px;width:auto"></div>
+						</div>
+					</div>
+					<div class="swiper-slide banner-swiper-slide">
+						<a href="list_103_cn.html" data-ga-category="pc-homepage" data-ga-action="click"
+							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+						<div style="background-image: linear-gradient(top,#848484,#2E2E2E);background-image: -webkit-linear-gradient(top,#848484,#2E2E2E);background-image: -o-linear-gradient(top,#848484,#2E2E2E);background-image: -ms-linear-gradient(top,#848484,#2E2E2E);background-image: -moz-linear-gradient(top,#848484,#2E2E2E)"
+							class="banner-content">
+							<div class="banner-text">
+								<h3>人脸识别楼宇机</h3>
+								<p style="color:#ffffff" class="banner-slogan">刷脸出行 畅通无阻</p>
+							</div>
+							<div class="banner-image"><img
+									src="http://www.xiaogutech.com/templates/xiaogu/img/7mini.png"
+									style="height:524px;width:auto"></div>
+						</div>
+					</div>
+					<div class="swiper-slide banner-swiper-slide">
+						<a href="31-cn.html" data-ga-category="pc-homepage" data-ga-action="click"
+							data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+						<div style="background-image: linear-gradient(top,#6C6A61,#4D4844);background-image: -webkit-linear-gradient(top,#6C6A61,#4D4844);background-image: -o-linear-gradient(top,#6C6A61,#4D4844);background-image: -ms-linear-gradient(top,#6C6A61,#4D4844);background-image: -moz-linear-gradient(top,#6C6A61,#4D4844)"
+							class="banner-content">
+							<div class="banner-text">
+								<h3>视频结构化分析平台</h3>
+								<p style="color:#ffffff" class="banner-slogan">精准监控</p>
+							</div>
+							<div class="banner-image"><img
+									src="http://www.xiaogutech.com/templates/xiaogu/img/banner-products-assets/banner-products-4.png"
+									class="banner_img"></div>
+						</div>
+					</div>
+>>>>>>> a91107ec71328531159a61c9bcc265a131abbd8a
 				</div>
-				<!-- <div class="swiper-scroller">
+				<div class="swiper-scroller">
 					<ul class="swiper-scroller-list hidden">
 						<li data-index='1' class="swiper-scroller-item">
 							<a href="javascript:;">小钴科技</a>
@@ -388,7 +464,7 @@
 							<a href="javascript:;">视频结构化分析平台</a>
 						</li>
 					</ul>
-				</div> -->
+				</div>
 				<div class="swiper-control-pre swiper-control">
 					<div class="control-cover"></div>
 					<div class="control-btn control-btn-left"><span class="control-arrow-left"></span></div>
@@ -675,6 +751,32 @@ EOT;
 					success: function (res) {
 						console.log(res);
 						app.dataList = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+
+			},
+		});
+		var app2 = new Vue({
+			el: '#app2',
+			data: {
+				column: '',
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/goods_list',
+					success: function (res) {
+						console.log(res);
+						app2.column = res.data;
 					},
 					error: function (res) {
 						console.log(res);
