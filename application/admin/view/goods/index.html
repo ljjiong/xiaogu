@@ -523,7 +523,7 @@
               <input @change="fileChange($event)" type="file" id="imgsAdd" style="display: none" multiple>
             </el-dialog>
             <el-dialog title="基本信息" :visible.sync="dialogVisible_en" fullscreen :before-close="handleClose">
-              <el-collapse v-model="activeCollapseName" accordion>
+              <el-collapse v-model="基本信息" accordion>
                 <el-collapse-item title="Basic Information" name="1">
                   <el-row>
                     <el-col :span="18" :offset="3">
