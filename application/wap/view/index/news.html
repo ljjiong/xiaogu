@@ -413,7 +413,9 @@
 						<li class="breadcrumb-item">
 							<a href="index.html" title="网站首页" class="fa fa-home"> 网站首页</a>
 						</li>
-						<li class="breadcrumb-item"><a href="../news" />新闻资讯 </a> <a href="list_4_cn.html">公司动态 </a>
+						<li class="breadcrumb-item"><a href="../news" />新闻资讯 </a> 
+							<a href="list_4_cn.html" v-if="dataList.type_id==42">公司动态 </a>
+							<a href="list_5_cn.html" v-else-if="dataList.type_id==41">业界资讯 </a>
 						</li>
 					</ol>
 				</div>
@@ -426,191 +428,21 @@
 			<div class="container">
 				<div class="gco-detail-content">
 					<div class="detail-head">
-						<h1 class="title">小钴3D视觉亮相腾讯数字生态大会，打造无感通行和支付体验</h1>
+						<h1 class="title">{{dataList.title}}</h1>
 						<div class="detail-info">
-							<span class="fa fa-clock-o"> 2019-05-23 14:57:02</span>
-							<span class="fa fa-eye"> 阅读 <span class="met_Clicks"></span></span>
+							<span class="fa fa-clock-o"> {{dataList.create_time}}</span>
+							<span class="fa fa-eye"> 阅读:{{dataList.click_num}} <span class="met_Clicks"></span></span>
 						</div>
 					</div>
 					<div class="detail-content">
 						<div>
 							<blockquote>
-								<p>小钴科技专注于3D视觉感知、AI算法，致力于提供高性能、低成本、低功耗、小体积的嵌入式人工智能软硬件解决方案，实现视觉感知与计算的一体化。小钴科技面向智能门锁、智慧零售、智慧校园等场景快速落地，打造无感通行与无感支付体验，为多种智能终端设备装上人工智能“大脑”；结合3D算法+AI硬件+软件应用，为客户打造场景定制的AI产品。小钴的使命是用3D视觉技术开启更精准、更符合人类认知的机器视觉时代。
+								<p>{{dataList.intro}}
 								</p>
 							</blockquote>
-							<p><span style="font-family:&#39;Arial&#39;sans-serif">2019</span>
-								<span style="font-family:宋体">年</span>
-								<span style="font-family:&#39;Arial&#39;sans-serif">5</span>
-								<span style="font-family:宋体">月</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">21-23</span><span
-									style="font-family:宋体">日，腾讯全球数字生态大会在昆明举行。此次大会是腾讯战略升级后规格最高的行业生态盛会，汇聚众多行业领袖、技术大咖共话产业智慧升级和数字经济发展趋势。专注于</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">3D</span><span
-									style="font-family:宋体">视觉感知的小钴科技与英特尔合作，携其最新的</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">3D</span><span
-									style="font-family:宋体">人脸识别技术亮相大会，此次展出的产品包括应用于智能门锁和人脸支付产品的</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">AlphaLook</span><span
-									style="font-family:宋体">™</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">3D</span><span
-									style="font-family:宋体">人脸模块，以及智能贩卖柜、储物柜等。</span></p>
-							<p><span style="font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span></p>
-							<p style="text-align: center;"><span style="font-family:&#39;Arial&#39;,sans-serif"><img
-										src="http://www.xiaogutech.com/upload/201905/1558594691151553.png"
-										data-width="414" width="414" data-height="203" height="203" alt="：小钴科技的产品在英特尔展区"
-										border="0" vspace="0" title="：小钴科技的产品在英特尔展区"
-										style="width: 414px; height: 203px;" /></span></p>
-							<p style="text-align: center;"><span
-									style="font-size:13px;font-family:宋体">图：小钴科技的产品在英特尔展区</span></p>
-							<p style="text-align:left"><span
-									style="font-size:13px;font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span></p>
-							<p><span style="font-family:宋体">小钴</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">AlphaLook</span><span
-									style="font-family:宋体">™</span><span
-									style="font-family: &#39;Arial&#39;,sans-serif">3D</span><span
-									style="font-family:宋体">人脸模块搭载</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">Intel<sup>®
-									</sup>RealSense</span><span style="font-family:宋体">™的</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">3D</span><span
-									style="font-family:宋体">深度视觉</span><span
-									style="font-family: &#39;Arial&#39;,sans-serif">VPU</span><span
-									style="font-family:宋体">芯片，以及</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">Intel<sup>®</sup>
-									Movidius</span><span style="font-family:宋体">™低功耗高性能的神经网络</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">VPU</span><span
-									style="font-family:宋体">芯片。<span style="color:black">小钴科技</span></span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">CEO</span><span
-									style="font-family:宋体;color:black">陈俊逸说：“为突破</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">2D</span><span
-									style="font-family:宋体;color:black">人脸识别在安全性和使用适应性等方面的瓶颈，小钴全力研发‘真</span><span
-									style="font-family: &#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family:宋体;color:black">’技术，其</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family:宋体;color:black">深度信息不仅仅用来做活体防伪，更将人脸的深度信息即鼻梁高度、嘴唇厚度等特征，转化为人脸特征，有效防止电子照片、电子视频、</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family:宋体;color:black">硅胶面具等伪装攻击，误识率达到百万分之一，实现更高安全等级的防护。”</span>
-								<span style="font-family: 宋体;color:black">得益于“真”</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family: 宋体;color:black">人脸算法的深度特征的使用，小钴</span><span
-									style="font-family: &#39;Arial&#39;,sans-serif">AlphaLook</span><span
-									style="font-family:宋体">™</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">3D</span><span
-									style="font-family:宋体">可实现纯室外光线，佩戴眼镜等现实使用场景。</span></p>
-							<p><span style="font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span></p>
-							<p style="text-align:left"><strong><span
-										style="font-family:宋体">加速智能门锁行业技术升级和应用普及</span></strong></p>
-							<p style="text-align:center"><span style="font-family:&#39;Arial&#39;,sans-serif"><img
-										src="http://www.xiaogutech.com/upload/201905/1558594951542378.png"
-										data-width="485" width="485" data-height="593" height="593"
-										alt="1558594951542378.png" /></span></p>
-							<p style="text-align:center"><span
-									style="font-size:13px;font-family:宋体;color:black">图：搭载</span><span
-									style="font-size:13px;font-family:&#39;Arial&#39;,sans-serif;color:black">AlphaLook</span><span
-									style="font-size:13px;font-family:宋体;color:black">™</span><span
-									style="font-size:13px;font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-size: 13px;font-family:宋体;color:black">人脸模块的智能锁</span></p>
-							<p style="text-align:center"><span
-									style="font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span>
-							</p>
-							<p style="text-align:left"><span style="font-family: 宋体;color:black">在智能门锁应用上，</span><span
-									style="font-family:宋体">相较于目前市场较为普遍的电子密码与指纹锁，</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">AlphaLook</span><span
-									style="font-family: 宋体;color:black">™</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family: 宋体;color:black">人脸</span><span
-									style="font-family:宋体">技术将为智能锁产品带来更高的安全性与便捷性。同时，<span
-										style="color:black">突破了室内外光照环境、身高差距以及低功耗等技术难点，</span></span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">AlphaLook</span><span
-									style="font-family: 宋体;color:black">™</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family: 宋体;color:black">将</span><span
-									style="font-family:宋体">为用户打造真正的无感通行体验。据艾瑞咨询的数据显示，预计到</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">2020</span><span
-									style="font-family:宋体">年，国内智能门锁需求将突破</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">3200</span><span
-									style="font-family:宋体">万套，形成百亿级市场。小钴科技研发的</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">3D</span><span
-									style="font-family:宋体">人脸视觉技术，致力于进一步加速智能门锁行业的技术升级和应用普及。</span></p>
-							<p><span style="font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span></p>
-							<p><strong><span style="font-family:宋体">以高效、安全的人脸支付技术赋能智慧零售</span></strong></p>
-							<p><strong><span style="font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span></strong>
-							</p>
-							<p style="text-align:center"><span style="font-family:&#39;Arial&#39;,sans-serif"><img
-										src="http://www.xiaogutech.com/upload/201905/1558595050349404.png"
-										data-width="543" width="543" data-height="406" height="406"
-										alt="图：用户体验小钴科技不同场景的产品" border="0" vspace="0" title="图：用户体验小钴科技不同场景的产品"
-										style="width: 543px; height: 406px;" /></span>
-							</p>
-							<p style="text-align:center"><span
-									style="font-size:13px;font-family:宋体">图：用户体验小钴科技不同场景的产品</span></p>
-							<p style="text-align:center"><span
-									style="font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span>
-							</p>
-							<p><span style="font-family:宋体;color:black">除了智能锁产品，</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">AlphaLook</span><span
-									style="font-family: 宋体;color:black">™</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family: 宋体;color:black">人脸模块还将其应用延伸到人脸支付。“靠脸吃饭”从玩笑话成为了现代人“日常必备操作”。与扫描二维码等支付方式相比，“刷脸”支付解决了用户不方便用手机、手机没电等痛点，为用户提供更便利的选择，同时也提高了商家的支付效率。</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">AlphaLook</span><span
-									style="font-family: 宋体;color:black">™</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family: 宋体;color:black">人脸模块旨在不断优化视觉感知与边缘计算解决方案，在升级支付技术的同时，将客流数据、消费习惯分析等融入零售生态，打通闭环，多维度赋能零售行业。</span>
-							</p>
-							<p><span style="font-family:&#39;Arial&#39;,sans-serif;color:black">&nbsp;</span></p>
-							<p style="text-align:center"><img
-									src="http://www.xiaogutech.com/upload/201905/1558595134832081.png" data-width="647"
-									width="647" data-height="470" height="470" title="图：人脸识别储物柜Demo" alt="图：人脸识别储物柜Demo"
-									border="0" vspace="0" style="width: 647px; height: 470px;" /></p>
-							<p style="text-align:center"><span
-									style="font-size:13px;font-family:宋体;color:black">图：</span><span
-									style="font-size:13px;font-family:宋体">人脸识别储物柜</span><span
-									style="font-size:13px;font-family:&#39;Arial&#39;,sans-serif">Demo</span></p>
-							<p style="text-align:center"><span
-									style="font-size:13px;font-family:&#39;Arial&#39;,sans-serif;color:black">&nbsp;</span>
-							</p>
-							<p><span style="font-family:宋体">在英特尔产品展区，小钴还展示了其新一代的人脸识别储物柜</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">Demo</span><span
-									style="font-family:宋体">。通过智能柜的采集器读取用户脸部信息进行数据采集后录入数据库，用户就可直接通过自己的人脸数据进行自助开箱存取。相较于传统的条码储物柜，人脸储物柜则带来了无损耗、安全性更高的用户体验，解决了过去条形码丢失、管理员日常人工维护、无法追踪存储记录等痛点。</span>
-							</p>
-							<p><span style="font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span></p>
-							<p><strong><span style="font-family:宋体">面向更广泛的应用场景</span></strong></p>
-							<p style="text-align: center"><img
-									src="http://www.xiaogutech.com/upload/201905/1558595167121475.png" data-width="629"
-									width="629" data-height="418" height="418" title="图：小钴科技与英特尔合作推出的人脸识别模块"
-									alt="图：小钴科技与英特尔合作推出的人脸识别模块" border="0" vspace="0"
-									style="width: 629px; height: 418px;" /></p>
-							<p style="text-align:center"><span
-									style="font-size:13px;font-family:宋体">图：小钴科技与英特尔合作推出的人脸识别模块</span></p>
-							<p style="text-align:center"><span
-									style="font-size:13px;font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span></p>
-							<p style="text-align:left"><span style="font-family:宋体;color:black">在应用层面，</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">AlphaLook</span><span
-									style="font-family:宋体;color:black">™</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family:宋体;color:black">人脸模块</span><span
-									style="font-family:宋体;color:black">通过</span><span
-									style="font-family: 宋体;color:black">整锁</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">ODM</span><span
-									style="font-family: 宋体;color:black">合作，以人脸锁、楼宇、门禁应用，成为智慧社区、智能家庭的入口。此外，</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">AlphaLook</span><span
-									style="font-family: 宋体;color:black">™</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family: 宋体;color:black">人脸模块还可应用于智慧零售、智慧驾驶、机器人等领域；应用场景包括</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family:宋体;color:black">人脸支付、人脸车锁、抗疲劳驾驶、</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif;color:black">3D</span><span
-									style="font-family:宋体;color:black">姿态交互、零售物体识别、物流测量、机器人视觉交互……</span></p>
-							<p><span style="font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span></p>
-							<p style="text-align:left"><span style="font-family:宋体">随着人工智能、</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">5G</span><span
-									style="font-family:宋体">和物联网技术的发展，万物互联的生态正呈现出全新的生机。小钴科技</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">CEO</span><span
-									style="font-family:宋体">陈俊逸说：“迎接‘智能</span><span
-									style="font-family:&#39;Arial&#39;,sans-serif">+</span><span
-									style="font-family:宋体">’的时代，小钴要做好这个百亿级市场的赋能者，利用机器视觉和人工智能算法，加速应用落地，创造更好更精准的无感识别体验。”</span>
-							</p>
-							<p style="text-align:left"><span
-									style="font-family:&#39;Arial&#39;,sans-serif">&nbsp;</span><span
-									style="font-family: Arial, sans-serif; text-align: center;">&nbsp;</span></p>
-							<p><br /></p>
+							<div v-html="dataList.content"></div>　　
+								
+							
 							<div id="metinfo_additional"></div>
 						</div>
 					</div>
@@ -742,7 +574,7 @@
 					async: true,
 					type: 'GET',
 					dataType: 'json',
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/goods_read?id=' + this.getQueryVariable("id"),
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/articles_read?id=' + this.getQueryVariable("id"),
 					success: function (res) {
 						console.log(res);
 						app.dataList = res.data;
