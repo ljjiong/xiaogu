@@ -436,10 +436,12 @@ class Articlesweb extends Rest
             '2d'=>$articles_hxjs_2d
         ];
         $commonality=model('commonality')->getAll(['type_id'=>57]);
+        $goods_list=model('goods')->getAll(['status'=>1],1,4);
         $lists=[
             'banners'=>$banners,
             'articles_hxjs'=>$articles_hxjs,
-            'commonality'=>$commonality
+            'commonality'=>$commonality,
+            'goods_xgcp'=>$goods_list
         ];
         $this->data['data'] = $lists;
         return $this->data;

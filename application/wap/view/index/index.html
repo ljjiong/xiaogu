@@ -463,54 +463,15 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-6">
-						<a href="list_101_cn.html" class="home-products-item">
+					<div class="col-sm-6" v-for="(item,index) in dataList.goods_xgcp">
+						<a :href="'alphalook3d_cn.html?id='+item.id" class="home-products-item">
 							<div class="home-products-item-tit">
-								<h3>3D智能门锁系列</h3>
+								<h3>{{item.name}}</h3>
 
-								<span>真3D 智慧你的生活</span>
+								<span>{{item.descriptive}}</span>
 							</div>
 							<div class="home-products-item-img">
-								<img src="http://www.xiaogutech.com/templates/xiaogu/img/alphalooklock.png">
-							</div>
-						</a>
-					</div>
-					<div class="col-sm-6">
-						<a href="list_103_cn.html" class="home-products-item">
-							<div class="home-products-item-tit">
-								<h3>智能楼宇设备</h3>
-								<span>刷脸出行 畅通无阻</span>
-
-
-							</div>
-							<div class="home-products-item-img">
-								<img src="http://www.xiaogutech.com/templates/xiaogu/img/7mini.png">
-							</div>
-						</a>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-6">
-						<a href="list_123_cn.html" class="home-products-item">
-							<div class="home-products-item-tit">
-								<h3>3D智能门禁设备</h3>
-
-
-								<span>人脸识别 快速通行</span>
-							</div>
-							<div class="home-products-item-img">
-								<img src="http://www.xiaogutech.com/templates/xiaogu/img/7miniS.png">
-							</div>
-						</a>
-					</div>
-					<div class="col-sm-6">
-						<a href="list-102-cn.html" class="home-products-item">
-							<div class="home-products-item-tit">
-								<h3>智能人脸设备</h3>
-								<span>人脸识别 防止冒用</span>
-							</div>
-							<div class="home-products-item-img">
-								<img src="http://www.xiaogutech.com/templates/xiaogu/img/double-camsha.png">
+								<img :src="item.thum">
 							</div>
 						</a>
 					</div>

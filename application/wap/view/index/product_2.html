@@ -429,13 +429,13 @@
 					<li class="product-item shown col-lg-3 col-md-4 col-sm-6" v-for="(item,index) in column">
 						<div class="widget">
 							<figure class="widget-header cover">
-								<a :href="'alphalook3d_cn.html?id='+item.id" title="AlphaLook 3D Module"
+								<a :href="'alphalook3d_cn.html?id='+item.id" :title="item.name"
 									target='_self'>
-									<img src="{{item.imgs[0]}}" />
+									<img :src="item.thum" />
 								</a>
 							</figure>
 							<h4 class="widget-title">
-								<a :href="'alphalook3d_cn.html?id='+item.id" title="AlphaLook 3D Module" target='_self'>
+								<a :href="'alphalook3d_cn.html?id='+item.id" :title="item.name" target='_self'>
 									{{item.name}}
 								</a>
 								<p></p>
@@ -444,7 +444,7 @@
 										查看详情
 									</a>
 								</span>
-								<p class="product-short">{{item.descriptive}}</p>
+								<p class="product-short" style="overflow:hidden; text-overflow:ellipsis;max-width: 100%">{{item.descriptive}}</p>
 							</h4>
 						</div>
 					</li>
