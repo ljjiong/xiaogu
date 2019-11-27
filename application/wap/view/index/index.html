@@ -348,30 +348,30 @@
 			<div class="swiper-container banner-swiper-container">
 				<div class="swiper-wrapper">
 					<div class="swiper-slide banner-swiper-slide">
-						<a href="/product/" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+						<a :href="banners1.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
 						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
-								<h3>{{banners1.alt}}</h3>
+								<h3>{{banners1.name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{banners1.alt}}</p>
 							</div>
 							<div class="banner-image"><img :src="banners1.img" style="height:480px;width:auto;"></div>
 						</div>
 					</div>
 					<div class="swiper-slide banner-swiper-slide">
-						<a href="/product/30-cn.html" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+						<a :href="banners2.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
 						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
-								<h3>{{banners2.alt}}</h3>
+								<h3>{{banners2.name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{banners2.alt}}</p>
 							</div>
 							<div class="banner-image"><img :src="banners2.img" style="height:480px;width:auto;"></div>
 						</div>
 					</div>
 					<div class="swiper-slide banner-swiper-slide">
-						<a href="/product/32-cn.html" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+						<a :href="banners3.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
 						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
-								<h3>{{banners3.alt}}</h3>
+								<h3>{{banners3.name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{banners3.alt}}
 								</p>
 							</div>
@@ -379,7 +379,7 @@
 						</div>
 					</div>
 					<div class="swiper-slide banner-swiper-slide">
-						<a href="/product/list-103-cn.html" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+						<a :href="banners4.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
 						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
 								<h3>{{banners4.name}}</h3>
@@ -389,7 +389,7 @@
 						</div>
 					</div>
 					<div class="swiper-slide banner-swiper-slide">
-						<a href="/product/31-cn.html" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
+						<a :href="banners5.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
 						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
 								<h3>{{banners5.name}}</h3>
@@ -438,13 +438,7 @@
 					<figcaption>
 						<h2><span>3D</span>视觉算法 </h2>
 						<div>
-							<p>3D数据采集及数据处理</p>
-							<p>3D人脸识别算法</p>
-							<p>3D防伪算法</p>
-							<p>3D人脸属性算法</p>
-							<p>3D手势识别算法</p>
-							<p>3D动作检测算法</p>
-
+							<p v-for="(item,index) in dataList.articles_hxjs['3d']">{{item.title}}</p>
 						</div>
 						<a href="list_3d.html">了解更多</a>
 					</figcaption>
@@ -454,13 +448,7 @@
 					<figcaption>
 						<h2><span>2D</span>视觉算法 </h2>
 						<div>
-							<p>人脸识别算法</p>
-							<p>人脸防伪算法</p>
-							<p>人脸属性算法</p>
-							<p>行人分析算法</p>
-							<p>动作识别算法</p>
-							<p>车辆分析算法
-							</p>
+							<p v-for="(item,index) in dataList.articles_hxjs['2d']">{{item.title}}</p>
 						</div>
 						<a href="list_2d_cn_2.html">了解更多</a>
 					</figcaption>
@@ -701,7 +689,9 @@
 		var app = new Vue({
 			el: '#app',
 			data: {
-				dataList: '',
+				dataList: {
+					articles_hxjs:[]
+				},
 				banners: '',
 				img1: '',
 				img2: '',
@@ -737,6 +727,7 @@
 						app.banners3 = res.data.banners[2];
 						app.banners4 = res.data.banners[3];
 						app.banners5 = res.data.banners[4];
+
 					},
 					error: function (res) {
 						console.log(res);
