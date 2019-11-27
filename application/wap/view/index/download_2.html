@@ -401,20 +401,20 @@
 				<div class="sub-nav-right">
 					<dl class="list-none navnow">
 						<dt class="on">
-							<a href="download_2.html" title="下载中心 " class="zm">
+							<a href="" title="下载中心 " class="zm"  @click="loadTableData(0)">
 								<span>全部</span>
 							</a>
 						</dt>
 					</dl>
 					<dl class="list-none navnow">
-						<dt id='part2_112'><a href='list_112_cn.html' title='文档与手册' class="zm"><span>文档与手册</span></a>
+						<dt id='part2_112'><a href='' @click="loadTableData(53)" title='文档与手册' class="zm"><span>文档与手册</span></a>
 						</dt>
 					</dl>
 					<dl class="list-none navnow">
-						<dt id='part2_117'><a href='list_117_cn.html' title='程序下载' class="zm"><span>程序下载</span></a></dt>
+						<dt id='part2_117'><a href='' @click="loadTableData(54)" title='程序下载' class="zm"><span>程序下载</span></a></dt>
 					</dl>
 					<dl class="list-none navnow">
-						<dt id='part2_113'><a href='list_113_cn.html' title='其他下载' class="zm"><span>其他下载</span></a></dt>
+						<dt id='part2_113'><a href='' @click="loadTableData(55)" title='其他下载' class="zm"><span>其他下载</span></a></dt>
 					</dl>
 				</div>
 
@@ -433,16 +433,16 @@
 						<li class="list-group-item list_1" v-for="(col,index) in column">
 							<div class="media">
 								<div class="media-left p-r-5 p-l-10 hidden-xs-down">
-									<a href="#" title="{{col.file_name}}">
+									<a href="#" :title="col.file_name">
 										<i class="fa fa-file-archive-o blue-grey-400"></i>
 									</a>
 								</div>
 								<div class="media-body">
-									<a class="gco-btn gco-btn-primary gco-btn-sm pull-right" href="{{col.file_url}}"
-										title="{{col.file_name}}" target="_self">立即下载</a>
+									<a class="gco-btn gco-btn-primary gco-btn-sm pull-right" :href="col.file_url"
+										:title="col.file_name" target="_self" :download="col.file_name+'.'+col.file_url.split('.').reverse()[0]">立即下载</a>
 									<h4 class="media-heading font-size-16">
-										<a class="name" href="#" title="{{col.file_name}}"
-											target="_self">{{col.file_name}}<span>1.6</span> </a>
+										<a class="name" href="#" :title="col.file_name"
+											target="_self">{{col.file_name}}<span></span> </a>
 									</h4>
 									<small>
 										<span>{{col.create_time}}</span>
@@ -709,23 +709,7 @@
 				postsale:''
 			},
 			mounted: function () {
-				$.ajax({
-					async: true,
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						type_id: 53,
-						user_type: 2
-					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/download_list',
-					success: function (res) {
-						console.log(res);
-						app.column = res.data;
-					},
-					error: function (res) {
-						console.log(res);
-					}
-				});
+				this.loadTableData(0);
 				$.ajax({
 					async: true,
 					type: 'POST',
@@ -744,7 +728,28 @@
 				});
 			},
 			methods: {
+				// handleClick(e){
 
+				// },
+				loadTableData(e){
+					$.ajax({
+						async: true,
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							type_id: e,
+							user_type: 2
+						},
+						url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/download_list',
+						success: function (res) {
+							console.log(res);
+							app.column = res.data;
+						},
+						error: function (res) {
+							console.log(res);
+						}
+					});
+				},
 			},
 		})
 
