@@ -121,11 +121,18 @@ class Articlesweb extends Rest
      * */
     public function read_tree($id)
     {
+        $map = $request->param();
         $data = model('categories')->getAllTree();
         $tree = list_to_tree($data);
-        $this->data['data'] = get_one_tree($tree, $id);
+        $this->data['data'] = get_one_tree($tree, $map['id']);
         return $this->data;
     }  
+    public function tree_one(Request $request)
+    {
+        $map = $request->param();
+        $this->data['data'] = model('categories')->getOne($map['id']);
+        return $this->data;
+    } 
     /**
      * 【web】查询全部售后
      */

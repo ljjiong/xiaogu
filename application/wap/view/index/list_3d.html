@@ -423,14 +423,14 @@
 		<div class="met_clear"></div>
 
 		<div class="tech-section core-banner"
-			style="background: url(__static__/website/img/banner3D.jpg) no-repeat 50%;background-color: black;">
+			:style="'background: url('+classify.imgs+') no-repeat 50%;background-color: black;'">
 			<div class="core-banner-shape"></div>
 			<div class="core-banner-content">
 				<div class="core-banner-title">
 					3D视觉算法
 				</div>
 				<div class="core-banner-info">
-					小钴科技基于深度学习的3D视觉方案，准确识别人脸深度信息，提供3D人脸识别算法、3D防伪算法、3D人脸属性算法、3D手势识别算法、3D动作检测算法。
+					{{classify.intro}}
 				</div>
 				<div class="core-banner-btn-list">
 				</div>
@@ -779,7 +779,8 @@
 		var app = new Vue({
 			el: '#app',
 			data: {
-				column: ''
+				column: '',
+				classify:{}
 			},
 			mounted: function () {
 				$.ajax({
@@ -793,6 +794,22 @@
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						id: 65
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/tree_one',
+					success: function (res) {
+						console.log(res);
+						app.classify = res.data;
 					},
 					error: function (res) {
 						console.log(res);

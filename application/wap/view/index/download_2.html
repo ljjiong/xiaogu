@@ -294,21 +294,31 @@
 						</li>
 						<li></li>
 						<li class="nav-account">
-							<a href="javascript:void(0);;" class="nav-link"><span class="user-icon"><i
-										data-feather="user"></i></span></a>
-							<div class="gco-dropdown-menu single">
-								<ul>
-									<li class="nav-item">
-										<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-login"
-											href="login.html" class="login-link ga-data">登录</a>
-									</li>
-									<li class="nav-item">
-										<a data-ga-category="pc_nav" data-ga-action="click"
-											data-ga-label="other-register" href="register_include.html"
-											class="register-link ga-data">注册</a>
-									</li>
-								</ul>
-							</div>
+							<template v-if="nick_name">
+								<span>{{nick_name}}</span>
+								<div class="gco-dropdown-menu single">
+									<ul>
+										<li class="nav-item">
+											<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-login"
+												href="#" class="login-link ga-data" @click="logout();">登出</a>
+										</li>
+									</ul>
+								</div>
+						    </template>
+						    <template v-else>
+						    	<a href="javascript:void(0);;" class="nav-link"><span class="user-icon"><i data-feather="user"></i></span></a>
+								<div class="gco-dropdown-menu single">
+									<ul>
+										<li class="nav-item">
+											<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-login" href="http://www.xiaogutech.com/member/login.php?lang=cn" class="login-link ga-data">登录</a>
+										</li>
+										<li class="nav-item">
+											<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-register" href="http://www.xiaogutech.com/member/register_include.php?lang=cn" class="register-link ga-data">注册</a>
+										</li>
+									</ul>
+								</div>
+
+						    </template>
 						</li>
 					</ul>
 				</div>
@@ -401,20 +411,20 @@
 				<div class="sub-nav-right">
 					<dl class="list-none navnow">
 						<dt class="on">
-							<a href="" title="下载中心 " class="zm"  @click="loadTableData(0)">
+							<a href="download_2.html" title="下载中心 " class="zm">
 								<span>全部</span>
 							</a>
 						</dt>
 					</dl>
 					<dl class="list-none navnow">
-						<dt id='part2_112'><a href='' @click="loadTableData(53)" title='文档与手册' class="zm"><span>文档与手册</span></a>
+						<dt id='part2_112'><a href='list_112_cn.html' title='文档与手册' class="zm"><span>文档与手册</span></a>
 						</dt>
 					</dl>
 					<dl class="list-none navnow">
-						<dt id='part2_117'><a href='' @click="loadTableData(54)" title='程序下载' class="zm"><span>程序下载</span></a></dt>
+						<dt id='part2_117'><a href='list_117_cn.html' title='程序下载' class="zm"><span>程序下载</span></a></dt>
 					</dl>
 					<dl class="list-none navnow">
-						<dt id='part2_113'><a href='' @click="loadTableData(55)" title='其他下载' class="zm"><span>其他下载</span></a></dt>
+						<dt id='part2_113'><a href='list_113_cn.html' title='其他下载' class="zm"><span>其他下载</span></a></dt>
 					</dl>
 				</div>
 
@@ -433,7 +443,7 @@
 						<li class="list-group-item list_1" v-for="(col,index) in column">
 							<div class="media">
 								<div class="media-left p-r-5 p-l-10 hidden-xs-down">
-									<a href="#" :title="col.file_name">
+									<a href="#" title="{{col.file_name}}">
 										<i class="fa fa-file-archive-o blue-grey-400"></i>
 									</a>
 								</div>
@@ -706,10 +716,29 @@
 			el: '#app',
 			data: {
 				column: '',
-				postsale:''
+				postsale:'',
+				nick_name:''
 			},
 			mounted: function () {
-				this.loadTableData(0);
+				this.nick_name=localStorage.getItem("name");
+				console.log(this.nick_name);
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						type_id: 0,
+						user_type: 2
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/download_list',
+					success: function (res) {
+						console.log(res);
+						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
 				$.ajax({
 					async: true,
 					type: 'POST',
@@ -728,28 +757,10 @@
 				});
 			},
 			methods: {
-				// handleClick(e){
-
-				// },
-				loadTableData(e){
-					$.ajax({
-						async: true,
-						type: 'POST',
-						dataType: 'json',
-						data: {
-							type_id: e,
-							user_type: 2
-						},
-						url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/download_list',
-						success: function (res) {
-							console.log(res);
-							app.column = res.data;
-						},
-						error: function (res) {
-							console.log(res);
-						}
-					});
-				},
+				logout(){
+					localStorage.removeItem("name");
+					window.location.reload();
+				}
 			},
 		})
 

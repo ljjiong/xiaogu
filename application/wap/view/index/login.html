@@ -97,6 +97,13 @@
 							success: function (res) {
 								console.log(res);
 								// app.column = res.data[0];
+								if(res.code===1){
+									alert(res.msg);
+									localStorage.setItem("name",res.data.nick_name);
+									window.open('http://www.xg.com/wap/index/download_2.html','_self');
+								}else{
+									alert(res.msg);
+								}
 							},
 							error: function (res) {
 								console.log(res);

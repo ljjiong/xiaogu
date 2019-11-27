@@ -428,8 +428,11 @@
                 <figcaption>
                     <h2><span>3D</span>视觉算法 </h2>
                     <div>
-                        <p v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 65">{{col.title}}</p>
-                       <!--  <p>3D人脸识别算法</p>
+                        <template v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 65">
+                            <p style="display: block;">{{col.title}}</p>
+                        </template>
+                        <!-- <p v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 65">{{col.title}}</p> -->
+                        <!-- <p>3D人脸识别算法</p>
                         <p>3D防伪算法</p>
                         <p>3D人脸属性算法</p>
                         <p>3D手势识别算法</p>
@@ -440,11 +443,14 @@
                 </figcaption>
             </figure>
             <figure class="effect-julia">
-                <img src="__static__/website/img/all-2d.jpg" alt="img21">
+                <img src="http://web.xiaogutech.com/public/upload/article_images/20191127/c06f9309a2a3f258efd303e30e3e0455.jpg" alt="img21">
                 <figcaption>
                     <h2><span>2D</span>视觉算法 </h2>
                     <div>
-                        <p v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 66">{{col.title}}</p>
+                        <template v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 66">
+                            <p style="display: block;">{{col.title}}</p>
+                        </template>
+                        <!-- <p v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 66">{{col.title}}</p> -->
                         <!-- <p>人脸防伪算法</p>
                         <p>人脸属性算法</p>
                         <p>行人分析算法</p>

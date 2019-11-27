@@ -420,14 +420,14 @@
 
 	<div class="met_clear"></div>
 
-	<div class="tech-section core-banner" style="background: url(__static__/website/img/banner2D.jpg) no-repeat 50%;">
+	<div class="tech-section core-banner" :style="'background: url('+classify.imgs+') no-repeat 50%;'">
 		<div class="core-banner-shape"></div>
 		<div class="core-banner-content">
 			<div class="core-banner-title">
 				2D视觉算法
 			</div>
 			<div class="core-banner-info">
-				小钴科技2D视觉算法基于AI深度学习算法，准确识别人脸特征信息。提供2D人脸识别算法、2D人脸防伪算法、2D人脸属性算法、2D行人分析算法、2D动作识别算法、2D车辆分析算法。
+				{{classify.intro}}
 			</div>
 			<div class="core-banner-btn-list">
 			</div>
@@ -747,7 +747,8 @@ EOT;
 		var app = new Vue({
 			el: '#app',
 			data: {
-				column: ''
+				column: '',
+				classify:{}
 			},
 			mounted: function () {
 				$.ajax({
@@ -761,6 +762,22 @@ EOT;
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						id: 66
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/tree_one',
+					success: function (res) {
+						console.log(res);
+						app.classify = res.data;
 					},
 					error: function (res) {
 						console.log(res);
