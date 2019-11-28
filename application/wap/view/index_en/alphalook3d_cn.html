@@ -348,7 +348,7 @@
 				<nav id="product-subnav" class="sub-nav-wrap-black">
 					<div class="container">
 						<div class="sub-nav-left">
-							<h1 class="title"> {{dataList.name}} </h1>
+							<h1 class="title"> {{dataList.name_en}} </h1>
 						</div>
 
 						
@@ -374,7 +374,7 @@
 							</div>
 							<div class="visible-xs-block visible-sm-block height-20"></div>
 							<div class="col-md-5 product-intro">
-								<h1>{{dataList.name}}</h1>
+								<h1>{{dataList.name_en}}</h1>
 
 								<p class="description"></p>
 
@@ -383,19 +383,19 @@
 
 
 										<div class="col-md-6 col-sm-6 col-xs-6 margin-bottom-15 blue-grey-500">
-											<span>短标题：</span> {{dataList.short_name}}
+											<span>短标题：</span> {{dataList.short_name_en}}
 										</div>
 
 										<div class="col-md-6 col-sm-6 col-xs-6 margin-bottom-15 blue-grey-500">
-											<span>型号：</span> {{dataList.xh}}
+											<span>型号：</span> {{dataList.xh_en}}
 										</div>
 
 										<div class="col-md-6 col-sm-6 col-xs-6 margin-bottom-15 blue-grey-500">
-											<span>品牌：</span> {{dataList.bank}}
+											<span>品牌：</span> {{dataList.bank_en}}
 										</div>
 
 										<div class="col-md-6 col-sm-6 col-xs-6 margin-bottom-15 blue-grey-500">
-											<span>价格：{{dataList.sell_price}}</span>
+											<span>价格：{{dataList.sell_price_en}}</span>
 										</div>
 
 
@@ -409,7 +409,7 @@
 					</div>
 				</div>
 				<div class="showproduct-body">
-					<div class="container" v-html="dataList.desc">
+					<div class="container" v-html="dataList.desc_en">
 						<!-- <div class="row no-space">
 							<div class="product-content-body">
 
