@@ -22,11 +22,11 @@ class IndexEn extends Controller
     {
         // // $host = $_SERVER['HTTP_HOST'];
         
-        // $url  = $_SERVER["REQUEST_URI"];
-        // $url  = substr($url, -21);
-        // if ($url != "/wap/index_en/index.html") {
-        //     echo "<script>location.href='/wap/index_en/index.html';</script>";
-        // }
+        $url  = $_SERVER["REQUEST_URI"];
+        $url  = substr($url, -24);
+        if ($url != "/wap/index_en/index.html") {
+            echo "<script>location.href='/wap/index_en/index.html';</script>";
+        }
 
         return view();
     }
