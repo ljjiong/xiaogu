@@ -28,11 +28,12 @@
 </head>
 
 <body>
+	{include file="header" /}
+
 	<div id="app">
 		
 		<!-- 头部导航栏 -->
-		{include file="header" /}
-
+		
 		<nav id="product-subnav" class="sub-nav-wrap-black">
 			<div class="container">
 				<div class="sub-nav-left">
@@ -88,7 +89,7 @@
 									<small>
 										<span>{{col.create_time}}</span>
 
-										<span>350.32kbs</span>
+										<span>{{col.file_size}}kbs</span>
 
 									</small>
 								</div>
@@ -244,11 +245,9 @@
 			data: {
 				column: '',
 				postsale:'',
-				nick_name:''
 			},
 			mounted: function () {
-				this.nick_name=localStorage.getItem("name");
-				console.log(this.nick_name);
+				
 				$.ajax({
 					async: true,
 					type: 'POST',
@@ -284,10 +283,7 @@
 				});
 			},
 			methods: {
-				logout(){
-					localStorage.removeItem("name");
-					window.location.reload();
-				}
+
 			},
 		})
 

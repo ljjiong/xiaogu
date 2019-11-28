@@ -99,8 +99,25 @@
 								// app.column = res.data[0];
 								if(res.code===1){
 									alert(res.msg);
-									localStorage.setItem("name",res.data.nick_name);
-									window.open('http://www.xg.com/wap/index/download_2.html','_self');
+									var last=document.referrer;
+									var host = window.location.host;
+									console.log(last.trim());
+									console.log(host);
+									// console.log(last);
+									if(last.trim() !=''){
+										////来自其它站点
+										if(last.indexOf(host) == -1){
+											window.open('http://www.xg.com/wap/index/index.html','_self');		
+										}else if(last.indexOf('register_include.html') !=-1 ){
+											window.open('http://www.xg.com/wap/index/index.html','_self');
+										}else{
+											window.open(last,'_self');
+										}
+									}else{
+										window.open('http://www.xg.com/wap/index/index.html','_self');
+									}
+									//设置登录信息
+									sessionStorage.setItem("name",res.data.nick_name);
 								}else{
 									alert(res.msg);
 								}

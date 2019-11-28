@@ -1,5 +1,5 @@
 <nav id="site-header" class="gco-navbar site-header collapsed" data-waypointsok="0">
-        <div class="navbar-container">
+        <div class="navbar-container" id="app2">
             <div class="navbar-header">
                 <a href="index.html" class="navbar-brand ga-data">
                     <span class="navbar-brand-logo"></span>
@@ -19,7 +19,7 @@
                             <div class="dropdown-container">
                                 <div class="nav-columns">
                                     <div class="grid-container">
-                                        <div class="grid stretch left" id="app2">
+                                        <div class="grid stretch left">
                                             <div class="column-item cell is-fifth" v-for="(item,index) in column">
                                                 <a data-ga-category="pc_nav" data-ga-action="click"
                                                     data-ga-label="智能人脸锁" href="wap/index/list_101_cn.html"
@@ -179,15 +179,20 @@
                     <!--<li class="nav-search">
                             <a data-ga-category="pc_nav" data-ga-action="click" href="#" class="nav-link nav-search-link ga-data"><span class="search-btn"><i data-feather="search"></i></span></a>
                         </li>-->
-                    <li class="nav-user">
+                      
+                    <!-- <li class="nav-account" >
                         <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-avatar" href="#"
                             class="nav-link ga-data"><img gco-lazy-src="{{avatar}}" class="gco-tpl avatar-icon"></a>
+                            <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-avatar" href="#"
+                            class="nav-link ga-data">欢迎,&nbsp;</a>
+                            <li class="nav-item nick-name gco-tpl hidden">{{nick_name}}
+                                <a href="javascript:;" rel="nofollow">欢迎,&nbsp;
+                                </a>
+                            </li>
                         <div class="gco-dropdown-menu single">
                             <ul>
-                                <li class="nav-item nick-name gco-tpl hidden">username
+                                <li class="nav-item nick-name gco-tpl hidden">{{nick_name}}
                                     <a href="javascript:;" rel="nofollow">欢迎,&nbsp;
-
-
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -196,13 +201,27 @@
                                 </li>
                                 <li class="nav-item">
                                     <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-logout"
-                                        gco-click="logout" href="#" class="logout-link ga-data">登出</a>
+                                        gco-click="logout" @click="logout();" href="#" class="logout-link ga-data">登出</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li> -->
+                  
+                    <li class="nav-account" style="margin-right: 20px" v-if="nick_name !=null && nick_name.length !=0">
+                        <a href="javascript:void(0);;" class="nav-link">欢迎,&nbsp;{{nick_name}}</a>
+                        <div class="gco-dropdown-menu single">
+                            <ul>
+                                <li class="nav-item">
+                                    <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-login"
+                                        href="" @click="logout();" class="login-link ga-data">登出</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
-                    <li></li>
-                    <li class="nav-account">
+                    
+                    
+                
+                    <li class="nav-account" style="margin-right: 20px" v-else>
                         <a href="javascript:void(0);;" class="nav-link"><span class="user-icon"><i
                                     data-feather="user"></i></span></a>
                         <div class="gco-dropdown-menu single">
@@ -214,6 +233,22 @@
                                 <li class="nav-item">
                                     <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-register"
                                         href="register_include.html" class="register-link ga-data">注册</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                   
+                    <li class="nav-account" >
+                        <a href="javascript:void(0);;" class="nav-link">语言</a>
+                        <div class="gco-dropdown-menu single">
+                            <ul>
+                                <li class="nav-item">
+                                    <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-login"
+                                        href="http://www.xg.com/wap/index/index.html" class="login-link ga-data">中文</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-register"
+                                        href="http://www.xg.com/wap/index_en/index.html" class="register-link ga-data">English</a>
                                 </li>
                             </ul>
                         </div>
@@ -354,8 +389,13 @@
         el: '#app2',
         data: {
             column: '',
+            nick_name:''
         },
         mounted: function () {
+            this.nick_name=sessionStorage.getItem("name");
+            
+            console.log(this.nick_name);
+
             $.ajax({
                 async: true,
                 type: 'POST',
@@ -373,7 +413,10 @@
             });
         },
         methods: {
-
+            logout(){
+                sessionStorage.clear();
+                window.location.reload();
+            }
         },
     })
 </script>
