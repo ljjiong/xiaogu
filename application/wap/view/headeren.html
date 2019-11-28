@@ -26,10 +26,10 @@
                                             <div class="column-item cell is-fifth" v-for="(item,index) in column">
                                                 <a :href="'alphalook3d_cn.html?id='+item.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="智能人脸锁" target="_self">
                                                     <p class="title">
-                                                        {{item.name}}
+                                                        {{item.name_en}}
                                                     </p>
                                                     <p class="content" style="padding-right: 0px;">
-                                                        {{item.name}}
+                                                        {{item.name_en}}
                                                     </p>
                                                     <div class="product-img">
                                                         <img :src="item.thum" style="width: 100%;height: 100%;">
@@ -331,7 +331,7 @@
                     <div class="a_txt2">
                         <template v-for="(item,index) in column">
                             <a :href="'alphalook3d_cn.html?id='+item.id">
-                                {{item.name}}
+                                {{item.name_en}}
                             </a>
                         </template>
                     </div>
