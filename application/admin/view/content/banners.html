@@ -104,11 +104,17 @@
                     <el-form-item label="轮播图名称" prop="name">
                       <el-input v-model="selectData.name" clearable></el-input>
                     </el-form-item>
+                    <el-form-item label="name" prop="name_en">
+                      <el-input v-model="selectData.name_en" clearable></el-input>
+                    </el-form-item>
                     <!-- <el-form-item label="轮播图类别" prop="type_id">
                       <el-cascader change-on-select v-model="select_type_ids" :options="types" expand-trigger="hover"></el-cascader>
                     </el-form-item> -->
-                    <el-form-item label="alt属性" prop="alt">
+                    <el-form-item label="alt" prop="alt">
                       <el-input v-model="selectData.alt" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="alt_en" prop="alt_en">
+                      <el-input v-model="selectData.alt_en" clearable></el-input>
                     </el-form-item>
                     <el-form-item label="轮播图链接" prop="href">
                       <el-input v-model="selectData.href" clearable placeholder="请以htpp/https开始,如:https://www.baidu.com"></el-input>

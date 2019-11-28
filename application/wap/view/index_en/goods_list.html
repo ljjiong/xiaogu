@@ -1,0 +1,390 @@
+<!-- 新建html模板页 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<style>
+  .warp {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    height: 50px;
+    background: #EEE;
+    overflow: hidden;
+
+    clear: both;
+    background-color: #fff;
+  }
+
+  .inner {
+    line-height: 40px;
+    width: 630px;
+    height: 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .inner span {
+    display: block;
+    padding: 0 10px;
+    float: left;
+    font-size: 14px;
+    color: #777;
+  }
+
+  .inner .active {
+    color: #358cff;
+    border-bottom: 1px solid #358cff;
+
+  }
+
+  .aui-grid .aui-grid-label {
+    color: #777;
+    margin-top: 0;
+  }
+
+  .aui-grid [class*=aui-col-] {
+    padding: .2rem .2rem;
+  }
+
+  .shouxin {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 30%;
+    transform: translate(-50%, -50%);
+  }
+</style>
+<script src="__static__/wap/script/horizontalMove.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 头部 -->
+    <header class="aui-bar aui-bar-nav aui-bar-light">
+      <div class="aui-title" style="left:0rem; right: 0rem;" onclick="gotowap('search_page')">
+        <div class="aui-searchbar aui-bg-white" id="search">
+          <div class="aui-searchbar-input aui-border-radius aui-bg-default">
+            <i class="aui-iconfont aui-icon-search"></i>
+            <input type="search" placeholder="请输入搜索内容" id="search-input" disabled>
+            <div class="aui-searchbar-clear-btn">
+              <i class="aui-iconfont aui-icon-close"></i>
+            </div>
+          </div>
+          <div class="aui-searchbar-btn" tapmode>取消</div>
+        </div>
+      </div>
+    </header>
+    <!-- 一级类目 -->
+    <div id="warp" class="warp">
+      <div id="inner" class="inner aui-margin-l-5 aui-margin-r-5">
+        <span :class="{active: (activeCateId == cate.id)}" v-for="(cate, cateKey) in cates" :key="cateKey" v-text="cate.name"
+          @click="selectCate(cate)"></span>
+      </div>
+    </div>
+    <!-- 二级类目 -->
+    <section class="aui-grid">
+      <div class="aui-row aui-margin-l-5 aui-margin-r-5">
+        <div class="aui-col-5 aui-padded-5" v-for="(subCate, subCateKey) in subCates" :key="subCateKey" @click="selectSubCate(subCate)">
+          <img :src="subCate.thum || '__static__/images/avatar.png'" style="width:80%;">
+          <div class="aui-grid-label aui-padded-t-5" v-text="subCate.name"></div>
+        </div>
+      </div>
+    </section>
+    <!-- 筛选 -->
+    <section>
+      <div id="tab" class="aui-tab">
+        <div class="aui-tab-item" v-for="header in navHeaders" :class="{'aui-active': activeTab == header.id}" @click="changeNav(header)"
+          tapmode v-html="header[header.flag].name"></div>
+      </div>
+    </section>
+    <!-- 商品列表 -->
+    <div v-if="haveNoData" class="aui-col-xs-12 aui-text-center" style="margin-top:30%;">
+      <img src="__static__/wap/images/no_content.png" style="width:18%;margin:0 auto;">
+      <h5 style="margin-top:1rem;" class="aui-font-size-14">啊哦,这里什么都没有~</h5>
+    </div>
+    <div v-else class="aui-content" style="margin-bottom:2.8rem;">
+      <div class="aui-flex-col aui-flex-center">
+        <div class="aui-flex-item-12">
+          <div class="aui-flex-col">
+            <div class="aui-flex-item-6" style="position: relative;padding:3px;" @click="goGoods(goods.id)" v-for="(goods,goodsKey) in goodslist"
+              :key="goodsKey">
+              <img :src="goods.thum">
+              <img src="__static__/images/shouxin.png" class="shouxin" v-if="goods.stock == 0">
+              <h5 style="height: 2.2rem;" class="aui-text-default aui-ellipsis-2 aui-font-size-12 aui-padded-t-5 aui-padded-l-10 aui-padded-r-10 aui-bg-white"
+                v-text="goods.name"></h5>
+              <p class="aui-padded-b-5 aui-padded-t-5 aui-padded-l-10 aui-padded-r-10 aui-bg-white">
+                <span class="aui-text-price aui-font-size-10">￥</span>
+                <span class="aui-text-price" v-text="goods.sell_price"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="aui-bar aui-bar-tab" id="footer">
+  <div class="aui-bar-tab-item" onclick="gotowap('index')" :class="{'icon-footer-active' : (activeFooterIndex == 1 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 1" src="__static__/wap/img/icon12.png">
+      <img v-else src="__static__/wap/img/icon11.png">
+    </div>
+    <div class="aui-bar-tab-label">任务</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="gotowap('personnel_page')"
+    :class="{'icon-footer-active' : (activeFooterIndex == 2 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 2" src="__static__/wap/img/icon22.png">
+      <img v-else src="__static__/wap/img/icon21.png">
+    </div>
+    <div class="aui-bar-tab-label">行政</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="gotowap('home')" :class="{'icon-footer-active' : (activeFooterIndex == 3 )}">
+    <!-- <div class="aui-badge">99</div> -->
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 3" src="__static__/wap/img/icon32.png">
+      <img v-else src="__static__/wap/img/icon31.png">
+    </div>
+    <div class="aui-bar-tab-label">我的</div>
+  </div>
+</footer>
+  </div>
+  <script>
+    var navHeaders = [{
+      id: 0,
+      flag: true,
+      true: {
+        name: '综合排序',
+        data: {
+          'sort_by': 'all',
+          'sort_type': 'desc'
+        }
+      },
+      false: {
+        name: '综合排序',
+        data: {
+          'sort_by': 'all',
+          'sort_type': 'asc'
+        }
+      },
+    }, {
+      id: 1,
+      flag: true,
+      true: {
+        name: '价格<span class="aui-font-size-12 aui-margin-l-5 aui-iconfont aui-icon-down"></span>',
+        data: {
+          'sort_by': 'sell_price',
+          'sort_type': 'desc'
+        }
+      },
+      false: {
+        name: '价格<span class="aui-font-size-12 aui-margin-l-5 aui-iconfont aui-icon-top"></span>',
+        data: {
+          'sort_by': 'sell_price',
+          'sort_type': 'asc'
+        }
+      },
+    }, {
+      id: 2,
+      flag: true,
+      true: {
+        name: '销量<span class="aui-font-size-12 aui-margin-l-5 aui-iconfont aui-icon-down"></span>',
+        data: {
+          'sort_by': 'sell_num',
+          'sort_type': 'desc'
+        }
+      },
+      false: {
+        name: '销量<span class="aui-font-size-12 aui-margin-l-5 aui-iconfont aui-icon-top"></span>',
+        data: {
+          'sort_by': 'sell_num',
+          'sort_type': 'asc'
+        }
+      },
+    }, {
+      id: 3,
+      flag: true,
+      true: {
+        name: '新品<span class="aui-font-size-12 aui-margin-l-5 aui-iconfont aui-icon-top"></span>',
+        data: {
+          'sort_by': 'new_goods',
+          'sort_type': 'desc'
+        }
+      },
+      false: {
+        name: '新品<span class="aui-font-size-12 aui-margin-l-5 aui-iconfont aui-icon-down"></span>',
+        data: {
+          'sort_by': 'new_goods',
+          'sort_type': 'asc'
+        }
+      },
+    }]
+    // 滚动到底部的事件
+    scrollEvent = function () {
+      var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+      if (document.documentElement.scrollHeight - scrollTop - document.documentElement.clientHeight < 10) {
+        app.loadData();
+      }
+    }
+    var page = 1;
+    var app = new Vue({
+      el: '#app',
+      data: {
+        activeFooterIndex: 2,
+        goodslist: [],
+        cates: [
+          {
+            name: '全部',
+            id: ''
+          }
+        ],
+        subCates: [],
+        activeCateId: '',
+        selectedCateId: '',
+        haveNoData: false,
+        navHeaders: navHeaders,
+        activeTab: 0,
+        other: {}
+      },
+      watch: {
+        activeCateId: function (value) {
+          var that = this;
+          this.cates.forEach(function (item) {
+            if (item.id == value) {
+              that.subCates = item._child || [];
+            }
+          })
+        }
+      },
+      methods: {
+        changeNav: function (item) {
+          this.activeTab = item.id;
+          this.other = item[item.flag].data;
+          item.flag = !item.flag;
+          this.goodslist = [];
+          page = 1;
+          this.loadData()
+        },
+        goGoods: function (goodsId) {
+          var prePageData = {
+            scrollTop: document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop,
+            page: page,
+            data: this.goodslist,
+            activeCateId: this.activeCateId,
+            subCates: this.subCates
+          }
+          setStorage('preGoodslistPageData', prePageData, sessionStorage);
+          gotowap('goods_detail', { goodsId: goodsId });
+        },
+        selectCate: function (cate) {
+          this.activeCateId = cate.id;
+          this.selectedCateId = cate.id;
+          page = 1;
+          this.goodslist = [];
+          this.loadData()
+        },
+        selectSubCate: function (subCate) {
+          this.selectedCateId = subCate.id;
+          page = 1;
+          this.goodslist = [];
+          this.loadData()
+        },
+        loadData: function () {
+          var that = this;
+          var data = this.selectedCateId ? { goods_cate_id: this.selectedCateId } : {};
+          for (var key in this.other) {
+            data[key] = this.other[key]
+          }
+          document.body.onscroll = null;
+          rmStorage('preGoodslistPageData', sessionStorage);
+          httpRequest('POST', 'api_goods/goods/lists', data, {
+            'page-num': page,
+            'page-limit': 10
+          }).then(function (resp) {
+            if (resp.data.length > 0) {
+              that.haveNoData = false;
+              resp.data.forEach(function (item) {
+                that.goodslist.push(item);
+              })
+              if (resp.data.length == 10) {
+                page++;
+                document.body.onscroll = scrollEvent;
+              } else {
+                document.body.onscroll = null;
+              }
+            } else {
+              if (page == 1) {
+                that.haveNoData = true;
+              }
+            }
+          });
+        }
+      },
+      mounted: function () {
+        var that = this;
+        // 加载分类
+        httpRequest('POST', 'api_goods/goods_cates/lists_tree').then(function (resp) {
+          resp.data.forEach(function (item) {
+            that.cates.push(item)
+          });
+          setTimeout(function () {
+            new horizontalMove({
+              innerId: "#inner",
+              warpId: "#warp",
+              speed: 0.5
+            });
+          }, 100)
+        }, {}, false);
+        var prePageData = getStorage('preGoodslistPageData', sessionStorage);
+        if (prePageData) {
+          that.activeCateId = prePageData.activeCateId;
+          that.subCates = prePageData.subCates;
+          that.goodslist = prePageData.data;
+          page = prePageData.page;
+          document.documentElement.scrollTop = prePageData.scrollTop;
+          if (prePageData.data.length % 10 == 0) {
+            document.body.onscroll = scrollEvent;
+          }
+        } else {
+          that.loadData();
+        }
+      },
+    })
+
+
+  </script>
+</body>
+
+</html>
