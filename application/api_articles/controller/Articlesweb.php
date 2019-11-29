@@ -236,7 +236,7 @@ class Articlesweb extends Rest
         }
         $map['status']=1;
         $count = model('download_file')->getAllCount($map);
-        $lists = model('download_file')->getAll($map);
+        $lists = model('download_file')->getAll($map,$this->page_num,$this->page_limit);
 
         $this->data['page'] = [
             'page_num'   => $this->page_num,
@@ -297,7 +297,7 @@ class Articlesweb extends Rest
         }
         $map['status']=1;
         $count = model('articles')->getAllCount($map);
-        $lists = model('articles')->getAll($map);
+        $lists = model('articles')->getAll($map,$this->page_num,$this->page_limit);
 
         $this->data['page'] = [
             'page_num'   => $this->page_num,
