@@ -119,7 +119,7 @@ class Articlesweb extends Rest
     /*
      * 【admin】查询一个分类树（tree）
      * */
-    public function read_tree($id)
+    public function read_tree(Request $request)
     {
         $map = $request->param();
         $data = model('categories')->getAllTree();
