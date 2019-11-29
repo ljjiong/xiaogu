@@ -261,7 +261,7 @@
 						type_id: 55,
 						user_type: 2
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/download_list',
+					url: '__localhost__/index.php/api_articles/Articlesweb/download_list',
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
@@ -277,7 +277,7 @@
 					data: {
 						type_id: 0,
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/postsale_list',
+					url: '__localhost__/index.php/api_articles/Articlesweb/postsale_list',
 					success: function (res) {
 						console.log(res);
 						app.postsale = res.data;

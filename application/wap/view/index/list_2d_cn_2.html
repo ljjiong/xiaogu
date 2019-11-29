@@ -300,7 +300,7 @@ EOT;
 					data: {
 						type_id: 66
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/articles_hxjs_list',
+					url: '__localhost__/index.php/api_articles/Articlesweb/articles_hxjs_list',
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
@@ -316,7 +316,7 @@ EOT;
 					data: {
 						id: 66
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/tree_one',
+					url: '__localhost__/index.php/api_articles/Articlesweb/tree_one',
 					success: function (res) {
 						console.log(res);
 						app.classify = res.data;

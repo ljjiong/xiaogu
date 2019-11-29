@@ -51,7 +51,7 @@
 				<div class="swiper-wrapper">
 					<div class="swiper-slide banner-swiper-slide">
 						<a :href="banners1.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
+						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(__localhost__/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
 								<h3>{{banners1.name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{banners1.alt}}</p>
@@ -61,7 +61,7 @@
 					</div>
 					<div class="swiper-slide banner-swiper-slide">
 						<a :href="banners2.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
+						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(__localhost__/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
 								<h3>{{banners2.name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{banners2.alt}}</p>
@@ -71,7 +71,7 @@
 					</div>
 					<div class="swiper-slide banner-swiper-slide">
 						<a :href="banners3.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
+						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(__localhost__/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
 								<h3>{{banners3.name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{banners3.alt}}
@@ -82,7 +82,7 @@
 					</div>
 					<div class="swiper-slide banner-swiper-slide">
 						<a :href="banners4.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
+						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(__localhost__/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
 								<h3>{{banners4.name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{banners4.alt}}</p>
@@ -92,7 +92,7 @@
 					</div>
 					<div class="swiper-slide banner-swiper-slide">
 						<a :href="banners5.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
-						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(http://web.xiaogutech.com/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
+						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(__localhost__/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
 								<h3>{{banners5.name}}</h3>
 								<p style="color:#ffffff" class="banner-slogan">{{banners5.alt}}</p>
@@ -101,7 +101,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="swiper-scroller">
+				<div class="swiper-scroller" style="z-index: 99999999999999999999999999999">
 					<ul class="swiper-scroller-list hidden">
 						<li data-index='1' class="swiper-scroller-item">
 							<a href="javascript:;">{{banners1.name}}</a>
@@ -270,7 +270,7 @@
 					dataType: 'json',
 					data: {
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/home_page',
+					url: '__localhost__/index.php/api_articles/Articlesweb/home_page',
 					success: function (res) {
 						console.log(res);
 						app.dataList = res.data;

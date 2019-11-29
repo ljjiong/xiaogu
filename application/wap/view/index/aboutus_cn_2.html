@@ -153,7 +153,7 @@
 					data:{
 						id:43
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/read_tree',
+					url: '__localhost__/index.php/api_articles/Articlesweb/read_tree',
 					success: function (res) {
 						console.log(res);
 						app.trees = res.data._child;
@@ -169,7 +169,7 @@
 					data: {
 						// type_id: 44
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/articles_single_list?type_id=' + this.getQueryVariable("id"),
+					url: '__localhost__/index.php/api_articles/Articlesweb/articles_single_list?type_id=' + this.getQueryVariable("id"),
 					success: function (res) {
 						console.log(res);
 						app.column = res.data[0];

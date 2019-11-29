@@ -259,7 +259,7 @@
 					data:{
 						id:52
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/read_tree',
+					url: '__localhost__/index.php/api_articles/Articlesweb/read_tree',
 					success: function (res) {
 						console.log(res);
 						app.trees = res.data._child;
@@ -276,7 +276,7 @@
 						// type_id: this.getQueryVariable("id"),
 						user_type: this.user_type
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/download_list?type_id=' + this.getQueryVariable("id"),
+					url: '__localhost__/index.php/api_articles/Articlesweb/download_list?type_id=' + this.getQueryVariable("id"),
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
@@ -292,7 +292,7 @@
 					data: {
 						type_id: 0,
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/postsale_list',
+					url: '__localhost__/index.php/api_articles/Articlesweb/postsale_list',
 					success: function (res) {
 						console.log(res);
 						app.postsale = res.data;

@@ -310,11 +310,11 @@
 								mobile: this.mobile,
 								password: this.password,
 							},
-							url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/register',
+							url: '__localhost__/index.php/api_articles/Articlesweb/register',
 							success: function (res) {
 								if(res.code==1){
 									alert("已提交管理员审核,等待审核通过");
-									window.open('http://www.xgg1.com/wap/index/login.html','_self');
+									window.open('__localhost__/wap/index/login.html','_self');
 								}else{
 									alert(res.msg);
 								}
