@@ -40,18 +40,15 @@
 
             <div class="sub-nav-right">
                 <dl class="list-none navnow">
-                    <dt class='on'>
+                    <dt>
                         <a href="all_list.html" title="核心技术 " class="zm">
                             <span>全部</span>
                         </a>
                     </dt>
                 </dl>
-                <dl class="list-none navnow">
-                    <dt id='part2_119'><a href='list_3D.html' title='3D视觉算法' class="zm"><span>3D视觉算法</span></a>
-                    </dt>
-                </dl>
-                <dl class="list-none navnow">
-                    <dt id='part2_120'><a href='list_2d_cn_2.html' title='2D视觉算法' class="zm"><span>2D视觉算法</span></a>
+                <dl class="list-none navnow" v-for="(col,index) in trees">
+                    <dt  class='on'><a :href="'list_3D.html?id='+ col.id" :title='col.name'
+                            class="zm"><span>{{col.name}}</span></a>
                     </dt>
                 </dl>
             </div>
