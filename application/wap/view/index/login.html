@@ -117,6 +117,7 @@
 										window.open('http://www.xg.com/wap/index/index.html','_self');
 									}
 									//设置登录信息
+									sessionStorage.setItem("id",res.data.id);
 									sessionStorage.setItem("name",res.data.nick_name);
 									sessionStorage.setItem("department",res.data.department);
 								}else{

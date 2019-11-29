@@ -41,23 +41,23 @@
 				</div>
 
 				<div class="sub-nav-right">
-					<dl class="list-none navnow">
-						<dt class="on">
+					<dl class="list-none navnow" >
+						<dt >
 							<a href="download_2.html" title="下载中心 " class="zm">
 								<span>全部</span>
 							</a>
 						</dt>
 					</dl>
-					<dl class="list-none navnow">
-						<dt id='part2_112'><a href='list_112_cn.html' title='文档与手册' class="zm"><span>文档与手册</span></a>
+					<dl class="list-none navnow" v-for="(col,index) in trees">
+						<dt id='part2_112'><a :href="'download_2.html?id='+ col.id" title='文档与手册' class="zm"><span>{{col.name}}</span></a>
 						</dt>
 					</dl>
-					<dl class="list-none navnow">
+					<!-- <dl class="list-none navnow">
 						<dt id='part2_117'><a href='list_117_cn.html' title='程序下载' class="zm"><span>程序下载</span></a></dt>
 					</dl>
 					<dl class="list-none navnow">
 						<dt id='part2_113'><a href='list_113_cn.html' title='其他下载' class="zm"><span>其他下载</span></a></dt>
-					</dl>
+					</dl> -->
 				</div>
 
 			</div>
@@ -246,19 +246,37 @@
 				column: '',
 				postsale:'',
 				user_type:'',
+				trees:{
+					name:'',
+				}
 			},
 			mounted: function () {
             	this.user_type=sessionStorage.getItem("department");
-				
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data:{
+						id:52
+					},
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/read_tree',
+					success: function (res) {
+						console.log(res);
+						app.trees = res.data._child;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
 				$.ajax({
 					async: true,
 					type: 'POST',
 					dataType: 'json',
 					data: {
-						type_id: 0,
+						// type_id: this.getQueryVariable("id"),
 						user_type: this.user_type
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/download_list',
+					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/download_list?type_id=' + this.getQueryVariable("id"),
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
@@ -285,7 +303,15 @@
 				});
 			},
 			methods: {
-
+				getQueryVariable(variable) {
+					var query = window.location.search.substring(1);
+					var vars = query.split("&");
+					for (var i = 0; i < vars.length; i++) {
+						var pair = vars[i].split("=");
+						if (pair[0] == variable) { return pair[1]; }
+					}
+					return (0);
+				}
 			},
 		})
 

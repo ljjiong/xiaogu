@@ -429,6 +429,9 @@ class Articlesweb extends Rest
                 if ($key == 'status') {
                     $map[$key] =  $value;
                 }
+                if ($key == 'goods_cate_id') {
+                    $map[$key] =  $value;
+                }
             } else {
                 unset($map[$key]);
             }

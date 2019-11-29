@@ -235,7 +235,7 @@
                             </ul>
                         </div>
                     </li> -->
-                    <li class="nav-account" style="margin-right: 20px" v-if="nick_name !=null && nick_name.length !=0">
+                    <li class="nav-account" style="margin-right: 20px" v-if="user_id !=null && user_id.length !=0">
                         <a class="nav-link" href="javascript:void(0);;">
                             欢迎, {{nick_name}}
                         </a>
@@ -421,12 +421,14 @@
             column: '',
             column2: '',
             nick_name:'',
+            user_id:'',
             host:'',
             hxjs:'',
             xwzx:'',
         },
         mounted: function () {
             this.nick_name=sessionStorage.getItem("name");
+            this.user_id=sessionStorage.getItem("id");
             this.host=window.location.protocol+"//"+window.location.host;
             console.log(this.nick_name);
 

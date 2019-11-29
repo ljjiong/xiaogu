@@ -37,7 +37,7 @@
 <body>
 	<!-- 头部导航栏 -->
 	{include file="header" /}
-	
+	<div id="app">
 	<nav id="product-subnav" class="sub-nav-wrap-black">
 		<div class="container">
 			<div class="sub-nav-left">
@@ -46,16 +46,16 @@
 
 			<div class="sub-nav-right">
 				<dl class="list-none navnow">
-					<dt class='on'>
+					<dt>
 						<a href="product_2.html" title="产品中心 " class="zm">
 							<span>全部</span>
 						</a>
 					</dt>
 				</dl>
-				<dl class="list-none navnow">
-					<dt id='part2_101'><a href='list_101_cn.html' title='主板模组' class="zm"><span>主板模组</span></a></dt>
+				<dl class="list-none navnow" v-for="(col,index) in trees">
+					<dt ><a :href="'product_2.html?id='+ col.id" title='主板模组' class="zm"><span>{{col.name}}</span></a></dt>
 				</dl>
-				<dl class="list-none navnow">
+				<!-- <dl class="list-none navnow">
 					<dt id='part2_103'><a href='list_103_cn.html' title='核心板模组' class="zm"><span>核心板模组</span></a></dt>
 				</dl>
 				<dl class="list-none navnow">
@@ -63,7 +63,7 @@
 				</dl>
 				<dl class="list-none navnow">
 					<dt id='part2_126'><a href='list_126_cn.html' title='系统应用' class="zm"><span>系统应用</span></a></dt>
-				</dl>
+				</dl> -->
 			</div>
 
 		</div>
@@ -75,7 +75,7 @@
 
 	<div class="products-list-page">
 		<div class="container">
-			<div class="row" id="app">
+			<div class="row" >
 
 				<ul class="products-list list_1" style="margin: 0px 10px;">
 					<li class="product-item shown col-lg-3 col-md-4 col-sm-6" v-for="(item,index) in column">
@@ -280,7 +280,7 @@
 
 	</div>
 	<div class="met_clear"></div>
-	</section>
+	</div>
 
 
 	<!-- 底部加css -->
@@ -291,16 +291,35 @@
 		var app = new Vue({
 			el: '#app',
 			data: {
-				column: ''
+				column: '',
+				trees:{
+					name:'',
+				}
 			},
 			mounted: function () {
 				$.ajax({
 					async: true,
 					type: 'POST',
 					dataType: 'json',
+					data:{
+						
+					},
+					url: 'http://www.xgg1.com/index.php/api_articles/Articlesweb/good_tree',
+					success: function (res) {
+						console.log(res);
+						app.trees = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
 					data: {
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/goods_list',
+					url: 'http://www.xgg1.com/index.php/api_articles/Articlesweb/goods_list?goods_cate_id=' + this.getQueryVariable("id"),
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
@@ -311,7 +330,15 @@
 				});
 			},
 			methods: {
-
+				getQueryVariable(variable) {
+					var query = window.location.search.substring(1);
+					var vars = query.split("&");
+					for (var i = 0; i < vars.length; i++) {
+						var pair = vars[i].split("=");
+						if (pair[0] == variable) { return pair[1]; }
+					}
+					return (0);
+				}
 			},
 		})
 	</script>
