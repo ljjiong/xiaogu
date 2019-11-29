@@ -280,6 +280,16 @@ class Articlesweb extends Rest
     }
 
     /**
+     * 【public】查询单个文章详情
+     */
+    public function article_click_num(Request $request)
+    {
+        $data = $request->param();
+        $data['data'] = model('articles')->getOne(@$data['id']);
+        model('article')->update(['click_num'=>(int)$data['click_num']+1]);
+    }
+
+    /**
      * 【web】查询全部新闻
      */
     public function articles_list(Request $request)
