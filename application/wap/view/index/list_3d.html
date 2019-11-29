@@ -326,7 +326,7 @@
 					data:{
 						id:64
 					},
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/read_tree',
+					url: '__localhost__/index.php/api_articles/Articlesweb/read_tree',
 					success: function (res) {
 						console.log(res);
 						app.trees = res.data._child;
@@ -339,7 +339,7 @@
 					async: true,
 					type: 'POST',
 					dataType: 'json',
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/articles_hxjs_list?type_id=' + this.getQueryVariable("id"),
+					url: '__localhost__/index.php/api_articles/Articlesweb/articles_hxjs_list?type_id=' + this.getQueryVariable("id"),
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
@@ -352,7 +352,7 @@
 					async: true,
 					type: 'POST',
 					dataType: 'json',
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/tree_one?id=' + this.getQueryVariable("id"),
+					url: '__localhost__/index.php/api_articles/Articlesweb/tree_one?id=' + this.getQueryVariable("id"),
 					success: function (res) {
 						console.log(res);
 						app.classify = res.data;

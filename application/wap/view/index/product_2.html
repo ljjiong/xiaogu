@@ -304,7 +304,7 @@
 					data:{
 						
 					},
-					url: 'http://www.xgg1.com/index.php/api_articles/Articlesweb/good_tree',
+					url: '__localhost__/index.php/api_articles/Articlesweb/good_tree',
 					success: function (res) {
 						console.log(res);
 						app.trees = res.data;
@@ -319,7 +319,7 @@
 					dataType: 'json',
 					data: {
 					},
-					url: 'http://www.xgg1.com/index.php/api_articles/Articlesweb/goods_list?goods_cate_id=' + this.getQueryVariable("id"),
+					url: '__localhost__/index.php/api_articles/Articlesweb/goods_list?goods_cate_id=' + this.getQueryVariable("id"),
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;

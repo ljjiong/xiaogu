@@ -58,8 +58,8 @@
 									<div class="met_imgshowbox">
 										<div class="my-simple-gallery slides">
 											<figure style="display: flex;justify-content: center;">
-												<a href="__static__/website/img/1556609807.png">
-													<img src="__static__/website/img/1556609807.png" alt="智能人脸门锁"
+												<a :href="dataList.thum">
+													<img :src="dataList.thum" alt="智能人脸门锁"
 														style="max-width: 100%;max-height: 400px;" />
 												</a>
 											</figure>
@@ -325,7 +325,7 @@
 					async: true,
 					type: 'GET',
 					dataType: 'json',
-					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/goods_read?id=' + this.getQueryVariable("id"),
+					url: '__localhost__/index.php/api_articles/Articlesweb/goods_read?id=' + this.getQueryVariable("id"),
 					success: function (res) {
 						console.log(res);
 						app.dataList = res.data;
