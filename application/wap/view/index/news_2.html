@@ -137,7 +137,7 @@
 	                data: {
 	                    // type_id: 0
 	                },
-	                url: 'http://www.xgg1.com/index.php/api_articles/Articlesweb/articles_list?type_id=' + this.getQueryVariable("id"),
+	                url: '__localhost__/index.php/api_articles/Articlesweb/articles_list?type_id=' + this.getQueryVariable("id"),
 	                success: function (res) {
 	                    console.log(res);
 	                    app.column = res.data;
@@ -185,7 +185,7 @@
 		                data: {
 		                    // type_id: 0
 		                },
-		                url: 'http://www.xgg1.com/index.php/api_articles/Articlesweb/articles_list?type_id=' + this.getQueryVariable("id"),
+		                url: '__localhost__/index.php/api_articles/Articlesweb/articles_list?type_id=' + this.getQueryVariable("id"),
 		                success: function (res) {
 		                    console.log(res);
 		                    app.column = res.data;
