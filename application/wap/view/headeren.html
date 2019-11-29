@@ -196,10 +196,10 @@
                                     <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="关于小钴科技" href="aboutus_cn_2.html" target="_self">
                                         <!-- 关于小钴科技 -->About Us
                                     </a>
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="联系我们" href="contact_cn_2.html" target="_self">
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="联系我们" href="aboutus_cn_2.html?id=45" target="_self">
                                         <!-- 联系我们 -->Contact Us
                                     </a>
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="加入我们" href="job.html" target="_self">
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="加入我们" href="aboutus_cn_2.html?id=46" target="_self">
                                         <!-- 加入我们 -->Join Us
                                     </a>
                                 </li>
@@ -323,12 +323,12 @@
             <ul>
                 <li>
                     <a href="index.html" onclick="goto()">
-                        首页
+                        Home
                     </a>
                 </li>
                 <li>
                     <a class="a_js2" href="javascript:;">
-                        产品中心
+                        <!-- 产品中心 -->Product
                     </a>
                     <div class="a_txt2">
                         <template v-for="(item,index) in column">
@@ -338,7 +338,7 @@
                         </template>
                     </div>
                 </li>
-                <li>
+                <!-- <li>
                     <a class="a_js2" href="javascript:;">
                         解决方案
                     </a>
@@ -347,64 +347,64 @@
                             人脸识别智慧社区
                         </a>
                     </div>
-                </li>
+                </li> -->
                 <li>
                     <a class="a_js2" href="javascript:;">
-                        核心技术
+                        <!-- 核心技术 -->CoreTechnology
                     </a>
                     <div class="a_txt2">
-                        <a href="list_3d.html" target="_blank">
-                            3D视觉算法
+                        <a  :href="'list_3d.html?id='+item.id" v-for="(item,index) in hxjs._child">
+                             {{item.name_en}}
                         </a>
-                        <a href="list_2d_cn_2.html" target="_blank">
+                        <!-- <a href="list_2d_cn_2.html" target="_blank">
                             2D视觉算法
-                        </a>
+                        </a> -->
                     </div>
                 </li>
                 <li>
                     <a class="a_js2" href="javascript:;">
-                        服务支持
+                        <!-- 服务支持 -->Service
                     </a>
                     <div class="a_txt2">
-                        <a href="download_2.html" target="_blank">
-                            下载中心
+                        <a href="download_2.html" >
+                            <!-- 下载中心 -->Download
                         </a>
-                        <a href="download_2.html#service" target="_blank">
-                            售后服务
+                        <a href="download_2.html#service">
+                            <!-- 售后服务2 -->Service
                         </a>
                     </div>
                 </li>
                 <li>
                     <a class="a_js2" href="partner_2.html">
-                        合作伙伴
+                        <!-- 合作伙伴 -->Partners
                     </a>
                 </li>
                 <li>
                     <a class="a_js2" href="javascript:;">
-                        新闻中心
+                        <!-- 新闻中心 -->News
                     </a>
                     <div class="a_txt2">
-                        <a href="list_4_cn.html">
-                            公司动态
+                        <a  :href="'news_2.html?id='+item.id" v-for="(item,index) in xwzx._child">
+                            {{item.name_en}}
                         </a>
-                        <a href="list_5_cn.html">
+                        <!-- <a href="list_5_cn.html">
                             业界资讯
-                        </a>
+                        </a> -->
                     </div>
                 </li>
                 <li>
                     <a class="a_js2" href="javascript:;">
-                        关于我们
+                        <!-- 关于我们 -->About
                     </a>
                     <div class="a_txt2">
                         <a href="aboutus_cn_2.html">
-                            关于小钴科技
+                            <!-- 关于小钴科技 -->About Us
                         </a>
-                        <a href="contact_cn_2.html">
-                            联系我们
+                        <a href="aboutus_cn_2.html?id=45">
+                            <!-- 联系我们 -->Contact Us
                         </a>
-                        <a href="job.html">
-                            加入我们
+                        <a href="aboutus_cn_2.html?id=46">
+                            <!-- 加入我们 -->Join Us
                         </a>
                     </div>
                 </li>

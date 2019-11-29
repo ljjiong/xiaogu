@@ -174,7 +174,7 @@
                         <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="公司动态" :href="'list_4_cn.html?id='+col.id" target="_self" v-for="(col,index) in xwzx._child">
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="公司动态" :href="'news_2.html?id='+col.id" target="_self" v-for="(col,index) in xwzx._child">
                                         {{col.name}}
                                     </a>
                                     <!-- <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="业界资讯" href="list_5_cn.html" target="_self">
@@ -191,13 +191,13 @@
                         <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="关于小钴科技" href="aboutus_cn_2.html" target="_self">
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="关于小钴科技" href="aboutus_cn_2.html?id=44" target="_self">
                                         关于小钴科技
                                     </a>
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="联系我们" href="contact_cn_2.html" target="_self">
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="联系我们" href="aboutus_cn_2.html?id=45" target="_self">
                                         联系我们
                                     </a>
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="加入我们" href="job.html" target="_self">
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="加入我们" href="aboutus_cn_2.html?id=46" target="_self">
                                         加入我们
                                     </a>
                                 </li>
@@ -336,7 +336,7 @@
                         </template>
                     </div>
                 </li>
-                <li>
+                <!-- <li>
                     <a class="a_js2" href="javascript:;">
                         解决方案
                     </a>
@@ -345,18 +345,18 @@
                             人脸识别智慧社区
                         </a>
                     </div>
-                </li>
+                </li> -->
                 <li>
                     <a class="a_js2" href="javascript:;">
                         核心技术
                     </a>
                     <div class="a_txt2">
-                        <a href="list_3d.html" target="_blank">
-                            3D视觉算法
+                        <a :href="'list_3d.html?id='+item.id" target="_blank" v-for="(item,index) in hxjs._child">
+                            {{item.name}}
                         </a>
-                        <a href="list_2d_cn_2.html" target="_blank">
+                        <!-- <a href="list_2d_cn_2.html" target="_blank">
                             2D视觉算法
-                        </a>
+                        </a> -->
                     </div>
                 </li>
                 <li>
@@ -367,7 +367,7 @@
                         <a href="download_2.html" target="_blank">
                             下载中心
                         </a>
-                        <a href="download_2.html#service" target="_blank">
+                        <a href="download_2.html" target="_blank">
                             售后服务
                         </a>
                     </div>
@@ -381,13 +381,13 @@
                     <a class="a_js2" href="javascript:;">
                         新闻中心
                     </a>
-                    <div class="a_txt2">
-                        <a href="list_4_cn.html">
-                            公司动态
+                    <div class="a_txt2" >
+                        <a :href="'news_2.html?id='+item.id" v-for="(item,index) in xwzx._child">
+                            {{item.name}}
                         </a>
-                        <a href="list_5_cn.html">
+                       <!--  <a href="list_5_cn.html">
                             业界资讯
-                        </a>
+                        </a> -->
                     </div>
                 </li>
                 <li>
@@ -395,13 +395,13 @@
                         关于我们
                     </a>
                     <div class="a_txt2">
-                        <a href="aboutus_cn_2.html">
+                        <a href="aboutus_cn_2.html?id=44">
                             关于小钴科技
                         </a>
-                        <a href="contact_cn_2.html">
+                        <a href="aboutus_cn_2.html?id=45">
                             联系我们
                         </a>
-                        <a href="job.html">
+                        <a href="aboutus_cn_2.html?id=46">
                             加入我们
                         </a>
                     </div>
