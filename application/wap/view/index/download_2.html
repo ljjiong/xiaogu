@@ -99,11 +99,13 @@
 				</div>
 
 				<div class='met_pager'>
-					<span class='PreSpan'>上一页</span><a href=../download/ class='Ahover'>1</a><span
-						class='NextSpan'>下一页</span>
-					<span class='PageText'>转至第</span>
-					<input type='text' id='metPageT' data-pageurl='list-32-|-cn.html|1' value='1' />
-					<input type='button' id='metPageB' value='页' />
+					<span class='PreSpan' v-on:click="minuspage">上一页</span>
+	                <a href="javascript:void(0);" class="Ahover">{{pagenum}}</a>
+	                <span class='NextSpan' v-on:click="addpage">下一页</span>
+	                <span>共计:{{pagecount}}页</span>
+	                <span class='PageText'>转至第</span>
+	                <input type='text' id='metPageT' data-pageurl='list_4_|_cn.html|1' value='1'/>
+	                <input type='button' id='metPageB' value='页'/>
 				</div>
 
 			</div>
@@ -245,10 +247,13 @@
 			data: {
 				column: '',
 				postsale:'',
-				user_type:'',
+				user_type:2,
 				trees:{
 					name:'',
-				}
+				},
+				pagenum: 1,
+	            pagelimit: 10,
+	            pagecount: 0,
 			},
 			mounted: function () {
             	this.user_type=sessionStorage.getItem("department");
@@ -272,6 +277,10 @@
 					async: true,
 					type: 'POST',
 					dataType: 'json',
+					headers: {
+	                    "page-num": this.pagenum,//此处放置请求到的用户token
+	                    "page-limit": this.pagelimit,//此处放置请求到的用户token
+	                },
 					data: {
 						// type_id: this.getQueryVariable("id"),
 						user_type: this.user_type
@@ -280,6 +289,8 @@
 					success: function (res) {
 						console.log(res);
 						app.column = res.data;
+	                    app.pagecount = Math.ceil(res.page.data_count / app.pagelimit);
+
 					},
 					error: function (res) {
 						console.log(res);
@@ -311,7 +322,44 @@
 						if (pair[0] == variable) { return pair[1]; }
 					}
 					return (0);
-				}
+				},
+				addpage: function () {
+	                if (app.pagecount  > app.pagenum) {
+	                    app.pagenum++;
+	                    this.join()
+	                    console.log(app.pagenum)
+	                }
+	            },
+	            minuspage: function () {
+	                if (app.pagenum > 1) {
+			                app.pagenum--
+			                this.join()
+			                console.log(app.pagenum)
+			            }
+		        },
+		        join: function () {
+		            $.ajax({
+		                // async: true,
+		                headers: {
+		                    "page-num": app.pagenum,//此处放置请求到的用户token
+		                    "page-limit": app.pagelimit,//此处放置请求到的用户token
+		                },
+		                type: 'POST',
+		                dataType: 'json',
+		                data: {
+		                    // type_id: 0
+		                },
+		                url: '__localhost__/index.php/api_articles/Articlesweb/download_list?type_id=' + this.getQueryVariable("id"),
+		                success: function (res) {
+		                    console.log(res);
+		                    app.column = res.data;
+		                    app.pagecount =  Math.ceil(res.page.data_count / app.pagelimit);
+		                },
+		                error: function (res) {
+		                    console.log(res);
+		                }
+		            });
+		        }
 			},
 		})
 
