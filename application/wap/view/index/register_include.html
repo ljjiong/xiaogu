@@ -219,7 +219,7 @@
 
 
 				<a class="btn btn-lg btn-primary btn-block" @click="submint()">立即注册</a>
-				<div class="login_link"><a href="http://www.xiaogutech.com/member/login.php?lang=cn">已有账号？</a></div>
+				<div class="login_link"><a href="login.html">已有账号？</a></div>
 			</form>
 		</div>
 	</div>
@@ -280,8 +280,11 @@
                 password:'',
                 repassword:'',
                 is_yz:'',
+				host:'',
+
             },
             mounted: function () {
+				app.host=window.location.protocol+"//"+window.location.host;
                 
             },
             methods: {
@@ -314,7 +317,7 @@
 							success: function (res) {
 								if(res.code==1){
 									alert("已提交管理员审核,等待审核通过");
-									window.open('__localhost__/wap/index/login.html','_self');
+									window.open(app.host+'/wap/index/login.html','_self');
 								}else{
 									alert(res.msg);
 								}

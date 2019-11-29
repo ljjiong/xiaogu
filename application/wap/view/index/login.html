@@ -54,7 +54,7 @@
 				<!-- <div class="login_link"><a href="http://www.xiaogutech.com/member/getpassword.php?lang=cn">忘记密码？</a> -->
 				<!-- </div> -->
 				<a class="btn btn-lg btn-primary btn-block" @click="login">登录</a>
-				<a class="btn btn-lg btn-info btn-block" href="register_include.html?lang=cn">没有账号？现在去注册</a>
+				<a class="btn btn-lg btn-info btn-block" href="register_include.html">没有账号？现在去注册</a>
 			</form>
 		</div>
 	</div>
@@ -73,9 +73,11 @@
 			el: '#app',
 			data: {
 				mobile: '',
-				password: ''
+				password: '',
+				hosts:'',
 			},
 			mounted: function () {
+				app.hosts=window.location.protocol+"//"+window.location.host;
 
 			},
 			methods: {
@@ -107,14 +109,14 @@
 									if(last.trim() !=''){
 										////来自其它站点
 										if(last.indexOf(host) == -1){
-											window.open('http://www.xg.com/wap/index/index.html','_self');		
+											window.open(app.hosts+'/wap/index/index.html','_self');		
 										}else if(last.indexOf('register_include.html') !=-1 ){
-											window.open('http://www.xg.com/wap/index/index.html','_self');
+											window.open(app.hosts+'/wap/index/index.html','_self');
 										}else{
 											window.open(last,'_self');
 										}
 									}else{
-										window.open('http://www.xg.com/wap/index/index.html','_self');
+										window.open(app.hosts+'/wap/index/index.html','_self');
 									}
 									//设置登录信息
 									sessionStorage.setItem("id",res.data.id);
