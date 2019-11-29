@@ -40,18 +40,15 @@
 
             <div class="sub-nav-right">
                 <dl class="list-none navnow">
-                    <dt class='on'>
+                    <dt>
                         <a href="all_list.html" title="核心技术 " class="zm">
                             <span>全部</span>
                         </a>
                     </dt>
                 </dl>
-                <dl class="list-none navnow">
-                    <dt id='part2_119'><a href='list_3D.html' title='3D视觉算法' class="zm"><span>3D视觉算法</span></a>
-                    </dt>
-                </dl>
-                <dl class="list-none navnow">
-                    <dt id='part2_120'><a href='list_2d_cn_2.html' title='2D视觉算法' class="zm"><span>2D视觉算法</span></a>
+                <dl class="list-none navnow" v-for="(col,index) in trees">
+                    <dt  class='on'><a :href="'list_3D.html?id='+ col.id" :title='col.name'
+                            class="zm"><span>{{col.name}}</span></a>
                     </dt>
                 </dl>
             </div>
@@ -65,42 +62,16 @@
 
     <div class="container">
         <div class="grid" id="app">
-            <figure class="effect-julia">
-                <img src="__static__/website/img/all-3d.jpg" alt="img21">
+            <figure class="effect-julia" v-for="(item,index) in trees">
+                <img :src="item.imgs" alt="img21">
                 <figcaption>
-                    <h2><span>3D</span>视觉算法 </h2>
+                    <h2><span> {{item.name}} </span> </h2>
                     <div>
-                        <template v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 65">
+                        <template v-for="(col,index) in column" v-if="col.type_id == item.id">
                             <p style="display: block;">{{col.title}}</p>
                         </template>
-                        <!-- <p v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 65">{{col.title}}</p> -->
-                        <!-- <p>3D人脸识别算法</p>
-                        <p>3D防伪算法</p>
-                        <p>3D人脸属性算法</p>
-                        <p>3D手势识别算法</p>
-                        <p>3D动作检测算法</p> -->
-
                     </div>
-                    <a href="list_3d.html">了解更多</a>
-                </figcaption>
-            </figure>
-            <figure class="effect-julia">
-                <img src="http://web.xiaogutech.com/public/upload/article_images/20191127/c06f9309a2a3f258efd303e30e3e0455.jpg" alt="img21">
-                <figcaption>
-                    <h2><span>2D</span>视觉算法 </h2>
-                    <div>
-                        <template v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 66">
-                            <p style="display: block;">{{col.title}}</p>
-                        </template>
-                        <!-- <p v-for="(col,index) in column" v-if="col.class_id == 1 && col.type_id == 66">{{col.title}}</p> -->
-                        <!-- <p>人脸防伪算法</p>
-                        <p>人脸属性算法</p>
-                        <p>行人分析算法</p>
-                        <p>动作识别算法</p>
-                        <p>车辆分析算法
-                        </p> -->
-                    </div>
-                    <a href="list_2d_cn_2.html">了解更多</a>
+                    <a :href="'list_3D.html?id='+ item.id">了解更多</a>
                 </figcaption>
             </figure>
         </div>
@@ -135,9 +106,28 @@ EOT;
         var app = new Vue({
             el: '#app',
             data: {
-                column: ''
+                column: '',
+                trees:{
+                    name:'',
+                }
             },
             mounted: function () {
+                $.ajax({
+                    async: true,
+                    type: 'POST',
+                    dataType: 'json',
+                    data:{
+                        id:64
+                    },
+                    url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/read_tree',
+                    success: function (res) {
+                        console.log(res);
+                        app.trees = res.data._child;
+                    },
+                    error: function (res) {
+                        console.log(res);
+                    }
+                });
                 $.ajax({
                     async: true,
                     type: 'POST',
