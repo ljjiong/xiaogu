@@ -118,6 +118,7 @@
 									}
 									//设置登录信息
 									sessionStorage.setItem("name",res.data.nick_name);
+									sessionStorage.setItem("department",res.data.department);
 								}else{
 									alert(res.msg);
 								}

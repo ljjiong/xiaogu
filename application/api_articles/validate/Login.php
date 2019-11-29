@@ -33,7 +33,7 @@ class Login extends Validate
                     $user = model('users')->getOne($user_account['user_id']);
                     if ($user) {
                         if ($user['status'] == 9) {
-                            return '会员已被拉黑';
+                            return '账号未通过审核';
                         } else {
                             return true;
                         }

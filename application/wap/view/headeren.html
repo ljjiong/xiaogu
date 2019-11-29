@@ -91,9 +91,9 @@
                             </div>
                         </div>
                     </li>
-                    <li class="category-item" data-load-lazyr="false">
+                   <!--  <li class="category-item" data-load-lazyr="false">
                         <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="解决方案" href="solutions_2.html" target="_self">
-                            <!-- 解决方案 -->Solution
+                            解决方案Solution
                         </a>
                         <div class="gco-dropdown-menu full-screen">
                             <div class="dropdown-container">
@@ -103,7 +103,7 @@
                                             <div class="column-item cell is-fifth">
                                                 <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="人脸识别智慧社区" href="solutions_2.html" target="_self">
                                                     <p class="title">
-                                                        <!-- 人脸识别智慧社区 -->Smart community for face recognition
+                                                        人脸识别智慧社区Smart community for face recognition
                                                     </p>
                                                     <div class="product-img">
                                                         <img src="http://www.xiaogutech.com/templates/xiaogu/img/case-1.jpg">
@@ -122,14 +122,14 @@
                                                 </i>
                                             </span>
                                             <p>
-                                                <!-- 浏览详细 -->Browse the detailed
+                                                浏览详细Browse the detailed
                                             </p>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </li> -->
                     <li class="category-item relative">
                         <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="核心技术" href="list_3d.html" target="_self">
                             <!-- 核心技术 -->CoreTechnology
@@ -137,12 +137,12 @@
                         <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="3D视觉算法" href="list_3d.html" target="_self">
-                                        <!-- 3D视觉算法 -->3D Facial Recognition
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="3D视觉算法" :href="'list_3d.html?id='+col.id" target="_self" v-for="(col,index) in hxjs._child">
+                                        <!-- 3D视觉算法3D Facial Recognition -->{{col.name_en}}
                                     </a>
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="2D视觉算法" href="list_2d_cn_2.html" target="_self">
-                                        <!-- 2D视觉算法 -->2D Facial Recognition
-                                    </a>
+                                    <!-- <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="2D视觉算法" href="list_2d_cn_2.html" target="_self">
+                                        2D视觉算法2D Facial Recognition
+                                    </a> -->
                                 </li>
                             </ul>
                         </div>
@@ -176,12 +176,12 @@
                         <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="公司动态" href="list_4_cn.html" target="_self">
-                                        <!-- 公司动态 -->Company Dynamic
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="公司动态" :href="'list_4_cn.html?id='+col.id" target="_self" v-for="(col,index) in xwzx._child">
+                                        <!-- 公司动态 Company Dynamic-->{{col.name_en}}
                                     </a>
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="业界资讯" href="list_5_cn.html" target="_self">
-                                        <!-- 业界资讯 -->The industry information
-                                    </a>
+                                    <!-- <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="业界资讯" href="list_5_cn.html" target="_self"> -->
+                                        <!-- 业界资讯 The industry information-->
+                                    <!-- </a> -->
                                 </li>
                             </ul>
                         </div>
@@ -280,12 +280,12 @@
                         <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
-                                    <a class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login" href="http://www.xg.com/wap/index/index.html">
+                                    <a class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login" :href="host+'/wap/index/index.html'">
                                         Chinese
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="register-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-register" href="http://www.xg.com/wap/index_en/index.html">
+                                    <a class="register-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-register" :href="host+'/wap/index_en/index.html'">
                                         English
                                     </a>
                                 </li>
@@ -421,11 +421,14 @@
         el: '#app2',
         data: {
             column: '',
-            nick_name:''
+            nick_name:'',
+            host:'',
+            hxjs:'',
+            xwzx:'',
         },
         mounted: function () {
             this.nick_name=sessionStorage.getItem("name");
-            
+            this.host=window.location.protocol+"//"+window.location.host;
             console.log(this.nick_name);
 
             $.ajax({
@@ -438,6 +441,36 @@
                 success: function (res) {
                     console.log(res);
                     app2.column = res.data;
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+            $.ajax({
+                async: true,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    
+                },
+                url: 'http://www.xgg1.com/index.php/api_articles/Articlesweb/tree',
+                success: function (res) {
+                    console.log(res);
+                    app2.column2 = res.data;
+                    for ( i =0; i< res.data.length;i++) {
+                       switch(res.data[i].id)
+                        {
+                            case 64:
+                                app2.hxjs=res.data[i];
+                                break;
+                            case 40:
+                                app2.xwzx=res.data[i];
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    
                 },
                 error: function (res) {
                     console.log(res);

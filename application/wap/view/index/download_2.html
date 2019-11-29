@@ -245,8 +245,10 @@
 			data: {
 				column: '',
 				postsale:'',
+				user_type:'',
 			},
 			mounted: function () {
+            	this.user_type=sessionStorage.getItem("department");
 				
 				$.ajax({
 					async: true,
@@ -254,7 +256,7 @@
 					dataType: 'json',
 					data: {
 						type_id: 0,
-						user_type: 2
+						user_type: this.user_type
 					},
 					url: 'http://web.xiaogutech.com/index.php/api_articles/Articlesweb/download_list',
 					success: function (res) {

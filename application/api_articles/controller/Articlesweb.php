@@ -116,15 +116,31 @@ class Articlesweb extends Rest
 
         return $this->data;
     }
+    public function good_tree(Request $request)
+    {
+        $data               = model('goods_cates')->getAllTree();
+        $this->data['data'] = list_to_tree($data);
+
+        return $this->data;
+    }
     /*
      * 【admin】查询一个分类树（tree）
      * */
-    public function read_tree($id)
+    public function read_tree(Request $request)
     {
         $map = $request->param();
         $data = model('categories')->getAllTree();
         $tree = list_to_tree($data);
         $this->data['data'] = get_one_tree($tree, $map['id']);
+        return $this->data;
+    }  
+    public function tree(Request $request)
+    {
+        $map = $request->param();
+        $data = model('categories')->getAllTree();
+        $tree = list_to_tree($data);
+        $this->data['data'] =$tree;
+        // $this->data['data'] = get_one_tree($tree, $map['id']);
         return $this->data;
     }  
     public function tree_one(Request $request)

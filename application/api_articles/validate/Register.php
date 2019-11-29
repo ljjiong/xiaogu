@@ -7,7 +7,7 @@ class Register extends Validate
 {
     protected $rule = [
         ['mobile', 'require', '手机号不能为空'],
-        // ['code', 'require|checkValue:code', '验证码不能为空'],
+        ['nick_name', 'require', '昵称不能为空'],
         ['password', 'require|min:6|max:15', '密码不能为空|密码最少6位|密码最大15位'],
         ['qq_openid', 'checkValue:qq_openid'],
         ['wechat_openid', 'checkValue:wechat_openid'],

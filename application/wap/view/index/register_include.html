@@ -53,7 +53,19 @@
 				<div class="form-group">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-user"></i></span>
-						<input v-model="mobile" type="text" name="username" required class="form-control" placeholder="会员名"
+						<input v-model="nick_name" type="text" name="nick_name" required class="form-control" placeholder="会员名"
+							data-bv-remote="true"
+							data-bv-remote-url="http://www.xiaogutech.com/member/register_include.php?lang=cn&a=douserok"
+							data-bv-remote-message="用户名已存在" data-bv-notempty="true" data-bv-notempty-message="此项不能为空"
+							data-bv-stringlength="true" data-bv-stringlength-min="2" data-bv-stringlength-max="30"
+							data-bv-stringlength-message="用户名必须在2-30个字符之间" />
+
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
+						<input v-model="mobile" type="text" name="username" required class="form-control" placeholder="账号"
 							data-bv-remote="true"
 							data-bv-remote-url="http://www.xiaogutech.com/member/register_include.php?lang=cn&a=douserok"
 							data-bv-remote-message="用户名已存在" data-bv-notempty="true" data-bv-notempty-message="此项不能为空"
@@ -263,6 +275,7 @@
 	     var app = new Vue({
             el: '#app',
             data: {
+            	nick_name:'',
                 mobile: '',
                 password:'',
                 repassword:'',
@@ -276,7 +289,9 @@
                 submint(){
                 	this.is_yz=document.getElementById('is_yz').value;
                    if (this.mobile == '') {
-						alert("请填写用户名")
+						alert("请填写账号")
+					} else if (this.nick_name == '') {
+						alert("请填写昵称")
 					} else if (this.password == '') {
 						alert("请填写密码")
 					} else if (this.repassword == '') {
@@ -291,6 +306,7 @@
 							type: 'POST',
 							dataType: 'json',
 							data: {
+								nick_name:this.nick_name,
 								mobile: this.mobile,
 								password: this.password,
 							},
@@ -298,7 +314,7 @@
 							success: function (res) {
 								if(res.code==1){
 									alert("已提交管理员审核,等待审核通过");
-									window.open('http://www.xg.com/wap/index/login.html','_self');
+									window.open('http://www.xgg1.com/wap/index/login.html','_self');
 								}else{
 									alert(res.msg);
 								}
