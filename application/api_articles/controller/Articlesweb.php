@@ -285,8 +285,8 @@ class Articlesweb extends Rest
     public function article_click_num(Request $request)
     {
         $data = $request->param();
-        $data['data'] = model('articles')->getOne(@$data['id']);
-        model('article')->update(['click_num'=>(int)$data['click_num']+1]);
+        $datas = model('articles')->getOne($data['id']);
+        model('articles')->update(['click_num'=>(int)$datas['click_num']+1,'id'=>$data['id']]);
     }
 
     /**

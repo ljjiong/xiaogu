@@ -117,13 +117,25 @@
 					dataType: 'json',
 					url: '__localhost__/index.php/api_articles/Articlesweb/articles_read?id=' + this.getQueryVariable("id"),
 					success: function (res) {
-						console.log(res);
 						app.dataList = res.data;
 					},
 					error: function (res) {
 						console.log(res);
 					}
 				});
+				$.ajax({
+					async: true,
+					type: 'GET',
+					dataType: 'json',
+					url: '__localhost__/index.php/api_articles/Articlesweb/article_click_num?id=' + this.getQueryVariable("id"),
+					success: function (res) {
+						app.dataList = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				
 			},
 			methods: {
 				getQueryVariable(variable) {

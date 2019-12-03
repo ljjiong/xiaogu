@@ -119,6 +119,18 @@
 						console.log(res);
 					}
 				});
+				$.ajax({
+					async: true,
+					type: 'GET',
+					dataType: 'json',
+					url: 'http://www.xg.com/index.php/api_articles/Articlesweb/article_click_num?id=' + this.getQueryVariable("id"),
+					success: function (res) {
+						app.dataList = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
 			},
 			methods: {
 				getQueryVariable(variable) {

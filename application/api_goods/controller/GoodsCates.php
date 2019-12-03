@@ -136,7 +136,7 @@ class GoodsCates extends Rest
     public function delete()
     {
         $id     = input('id/d', 0);
-        $goods = model('goods')->findOne(['goods_cate_id'=>$id]);
+        $goods = model('goods')->findOne(['goods_cate_id'=>$id,'data_state' => 1]);
         if ($goods) {
             $this->data['code'] = 0;
             $this->data['msg']  = '当前商品分类下含有商品, 不可删除';

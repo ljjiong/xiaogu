@@ -140,7 +140,7 @@
 					<figcaption>
 						<h2><span>3D</span>视觉算法 </h2>
 						<div>
-							<p v-for="(item,index) in dataList.articles_hxjs['3d']">{{item.title}}</p>
+							<p style="display: block;" v-for="(item,index) in dataList.articles_hxjs['3d']">{{item.title}}</p><br>
 						</div>
 						<a href="list_3d.html">了解更多</a>
 					</figcaption>
@@ -150,7 +150,7 @@
 					<figcaption>
 						<h2><span>2D</span>视觉算法 </h2>
 						<div>
-							<p v-for="(item,index) in dataList.articles_hxjs['2d']">{{item.title}}</p>
+							<p style="display: block;" v-for="(item,index) in dataList.articles_hxjs['2d']">{{item.title}}</p>
 						</div>
 						<a href="list_2d_cn_2.html">了解更多</a>
 					</figcaption>
@@ -180,7 +180,7 @@
 				</div>
 			</div>
 		</section>
-		<section class="homepage-grids">
+		<!-- <section class="homepage-grids">
 			<div class="product-grid-container">
 				<h3 class="section-title">行业解决方案</h3>
 				<section class="cd-hero">
@@ -209,18 +209,6 @@
 											</div>
 										</a>
 									</div>
-									<!-- <a href="list_103_cn.html" class="cht-popover right in slod_two">
-										<div class="arrow"></div>
-										<div class="cht-popover-inner">
-											<h3 class="cht-popover-title">人脸楼宇机</h3>
-										</div>
-									</a>
-									<a href="list_101_cn.html" class="cht-popover left in slod_three">
-										<div class="arrow"></div>
-										<div class="cht-popover-inner">
-											<h3 class="cht-popover-title">智能人脸门锁</h3>
-										</div>
-									</a> -->
 								</div>
 
 							</div>
@@ -228,11 +216,11 @@
 					</ul>
 				</section>
 			</div>
-		</section>
+		</section> -->
 	</div>
 
 	<!-- 底部加css -->
-	{include file="footeren" /}
+	{include file="footer" /}
 	<script>
 		feather.replace();
 		$(function() { 

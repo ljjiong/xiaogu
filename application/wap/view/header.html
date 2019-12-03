@@ -20,58 +20,23 @@
                         </a>
                         <div class="gco-dropdown-menu full-screen">
                             <div class="dropdown-container">
-                                <div class="nav-columns">
-                                    <div class="grid-container">
-                                        <div class="grid stretch left">
-                                            <div class="column-item cell is-fifth" v-for="(item,index) in column">
-                                                <a :href="'alphalook3d_cn.html?id='+item.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="智能人脸锁" target="_self">
-                                                    <p class="title">
-                                                        {{item.name}}
-                                                    </p>
-                                                    <p class="content" style="padding-right: 0px;">
-                                                        {{item.name}}
-                                                    </p>
-                                                    <div class="product-img">
-                                                        <img :src="item.thum" style="width: 100%;height: 100%;">
-                                                        </img>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                            <!-- <div class="column-item cell is-fifth">
-                                                    <a data-ga-category="pc_nav" data-ga-action="click"
-                                                        data-ga-label="人脸识别楼宇机" href="list_103_cn.html" target="_self"
-                                                        class="ga-data">
-                                                        <p class="title">智能楼宇设备</p>
-                                                        <p class="content">刷脸出行 畅通无阻</p>
-                                                        <div class="product-img"><img
-                                                                src="http://www.xiaogutech.com/templates/xiaogu/img/products-2.jpg">
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="column-item cell is-fifth">
-                                                    <a data-ga-category="pc_nav" data-ga-action="click"
-                                                        data-ga-label="智能人脸门禁设备" href="list_123_cn.html" target="_self"
-                                                        class="ga-data">
-                                                        <p class="title">3D智能人脸门禁设备</p>
-                                                        <p class="content">人脸识别 快速通行</p>
-                                                        <div class="product-img"><img
-                                                                src="http://www.xiaogutech.com/templates/xiaogu/img/products-3.jpg">
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                                <div class="column-item cell is-fifth">
-                                                    <a data-ga-category="pc_nav" data-ga-action="click"
-                                                        data-ga-label="智能人脸设备" href="list-102-cn.html" target="_self"
-                                                        class="ga-data">
-                                                        <p class="title">智能人脸设备</p>
-                                                        <p class="content">人脸识别 防止冒用</p>
-                                                        <div class="product-img"><img
-                                                                src="http://www.xiaogutech.com/templates/xiaogu/img/products-4.jpg">
-                                                        </div>
-                                                    </a>
-                                                </div> -->
+                                <div class="column-item cell is-fifth" v-for="(item,index) in column">
+                                    <a :href="'alphalook3d_cn.html?id='+item.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="智能人脸锁" target="_self" style="max-width: 200px;max-height: 100%; display: table-cell;
+
+text-align: center;
+
+vertical-align: middle;">
+                                        <p class="title">
+                                            {{item.name}}
+                                        </p>
+                                        <p class="content" style="padding-right: 0px;">
+                                            {{item.descriptive}}
+                                        </p>
+                                        <div class="product-img" style="max-width: 80%;margin-left: 10%;margin-right:10%; max-height: 100%;">
+                                            <img :src="item.thum" style="width: 100%;height: 100%;">
+                                            </img>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                                 <div class="nav-pills-bottom">
                                     <div class="grid-container">
@@ -89,7 +54,7 @@
                             </div>
                         </div>
                     </li>
-                  <!--   <li class="category-item" data-load-lazyr="false">
+                    <!--   <li class="category-item" data-load-lazyr="false">
                         <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="解决方案" href="solutions_2.html" target="_self">
                             解决方案
                         </a>
@@ -129,13 +94,13 @@
                         </div>
                     </li> -->
                     <li class="category-item relative">
-                        <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="核心技术" href="list_3d.html" target="_self">
+                        <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="核心技术" href="all_list.html" target="_self">
                             核心技术
                         </a>
                         <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="3D视觉算法" :href="'list_3d.html?id='+col.id" target="_self" v-for="(col,index) in hxjs._child">
+                                    <a :href="'list_3d.html?id='+col.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="3D视觉算法" target="_self" v-for="(col,index) in hxjs._child">
                                         {{col.name}}
                                     </a>
                                     <!-- <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="2D视觉算法" href="list_2d_cn_2.html" target="_self">
@@ -174,7 +139,7 @@
                         <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
-                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="公司动态" :href="'news_2.html?id='+col.id" target="_self" v-for="(col,index) in xwzx._child">
+                                    <a :href="'news_2.html?id='+col.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="公司动态" target="_self" v-for="(col,index) in xwzx._child">
                                         {{col.name}}
                                     </a>
                                     <!-- <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="业界资讯" href="list_5_cn.html" target="_self">
@@ -204,6 +169,26 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="category-item relative">
+                        <a class="ga-data">
+                            语言
+                        </a>
+                        <div class="gco-dropdown-menu single">
+                            <ul>
+                                <li class="nav-item">
+                                    <a :href="host+'/wap/index/index.html'" class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login">
+                                        中文
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a :href="host+'/wap/index_en/index.html'" class="register-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-register">
+                                        English
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    
                 </ul>
                 <ul class="navbar-right">
                     <!--<li class="nav-search">
@@ -236,7 +221,14 @@
                         </div>
                     </li> -->
                     <li class="nav-account" style="margin-right: 20px" v-if="user_id !=null && user_id.length !=0">
-                        <a class="nav-link" href="javascript:void(0);;">
+                        <a class="nav-link" href="javascript:void(0);;" style="    padding: 0px 30px;
+    display: inline-block;
+    transition: all .3s;
+    color: #303233;
+    vertical-align: middle;
+    line-height: 14px;
+    font-weight: 600;
+    cursor: pointer;">
                             欢迎, {{nick_name}}
                         </a>
                         <div class="gco-dropdown-menu single">
@@ -250,7 +242,14 @@
                         </div>
                     </li>
                     <li class="nav-account" style="margin-right: 20px" v-else="">
-                        <a class="nav-link" href="javascript:void(0);;">
+                        <a class="nav-link" href="javascript:void(0);;" style="    padding: 0px 30px;
+    display: inline-block;
+    transition: all .3s;
+    color: #303233;
+    vertical-align: middle;
+    line-height: 14px;
+    font-weight: 600;
+    cursor: pointer;">
                             <span class="user-icon">
                                 <i data-feather="user">
                                 </i>
@@ -271,25 +270,7 @@
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-account">
-                        <a class="nav-link" href="javascript:void(0);;">
-                            语言
-                        </a>
-                        <div class="gco-dropdown-menu single">
-                            <ul>
-                                <li class="nav-item">
-                                    <a class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login" :href="host+'/wap/index/index.html'">
-                                        中文
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="register-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-register" :href="host+'/wap/index_en/index.html'">
-                                        English
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                    
                 </ul>
             </div>
         </div>
@@ -381,11 +362,11 @@
                     <a class="a_js2" href="javascript:;">
                         新闻中心
                     </a>
-                    <div class="a_txt2" >
+                    <div class="a_txt2">
                         <a :href="'news_2.html?id='+item.id" v-for="(item,index) in xwzx._child">
                             {{item.name}}
                         </a>
-                       <!--  <a href="list_5_cn.html">
+                        <!--  <a href="list_5_cn.html">
                             业界资讯
                         </a> -->
                     </div>
@@ -406,8 +387,22 @@
                         </a>
                     </div>
                 </li>
+                <li>
+                    <a class="a_js2" href="javascript:;">
+                        语言
+                    </a>
+                    <div class="a_txt2">
+                        <a :href="host+'/wap/index/index.html'">
+                            中文
+                        </a>
+                        <a :href="host+'/wap/index_en/index.html'">
+                            English
+                        </a>
+                    </div>
+                </li>
                 <div class="clear">
                 </div>
+
             </ul>
         </div>
     </div>
