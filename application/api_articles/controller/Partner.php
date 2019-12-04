@@ -138,9 +138,9 @@ class Partner extends Rest
     {
         $ids = $request->param()['id'];
 
-        $result = model('articles')->delAll($ids);
+        $result = model('Partner')->delAll($ids);
         if ($result['code']) {
-            $this->data['msg'] = '批量删除文章成功';
+            $this->data['msg'] = '批量删除成功';
         } else {
             $this->data['code'] = 0;
             $this->data['msg']  = $result['msg'];

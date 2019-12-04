@@ -54,7 +54,7 @@
                                         </span>
                                     </div>
                                     <div style="margin-bottom: 10px;">
-                                        <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('pull_black')" icon="el-icon-error" plain="" size="small" type="danger" v-if="is_role != -1">
+                                        <el-button :disabled="multipleSelection.length == 0" @click="multiOperate('delete')" icon="el-icon-error" plain="" size="small" type="danger" v-if="is_role != -1">
                                             批量删除
                                         </el-button>
                                         <el-button @click="goAdd()" icon="el-icon-plus" size="mini" style="float: right;" type="primary">
@@ -271,7 +271,7 @@
         multiOperate(type) {
           let ids = this.multipleSelection.map(item => item.id);
           this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
-            httpRequest('POST', 'api_articles/articles/batch_' + type, { id: ids }).then(resp => {
+            httpRequest('POST', 'api_articles/partner/batch_' + type, { id: ids }).then(resp => {
               this.$message.success(resp.msg);
               setTimeout(_ => {
                 location.reload();
