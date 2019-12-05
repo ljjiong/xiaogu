@@ -24,6 +24,12 @@ class Config extends BaseModel
             case 'version':
                 return $value ? $value : 'v1.4.2';
                 break;
+            case 'head':
+                return $value ? $value : '';
+                break;
+            case 'body':
+                return $value ? $value : '';
+                break;
             case 'copyright':
                 return $value ? $value : '湖南蜗壳科技有限公司';
                 break;

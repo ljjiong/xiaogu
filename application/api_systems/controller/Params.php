@@ -232,7 +232,6 @@ class Params extends Rest
     public function updateParams(Request $request)
     {
         $data = $request->param();
-        return $data;
         $type = input('update_type');
         if ($type) {
             unset($data['update_type']);
@@ -247,6 +246,7 @@ class Params extends Rest
                         model('config')->where(['name' => $key])->setField('value', $value);
                     }
                     $this->data['msg'] = '基础配置更新成功';
+                    $this->data['code'] = 1;
                     break;
                 default:
                     $this->data['code'] = 0;
