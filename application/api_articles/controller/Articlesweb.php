@@ -306,6 +306,7 @@ class Articlesweb extends Rest
             }
         }
         $map['status']=1;
+        $map['issue_time']=['<',date('Y-m-d H:i:s')];
         $count = model('articles')->getAllCount($map);
         $lists = model('articles')->getAll($map,$this->page_num,$this->page_limit);
 

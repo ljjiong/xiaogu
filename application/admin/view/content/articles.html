@@ -77,6 +77,8 @@
                                             </el-table-column>
                                             <el-table-column fixed="" label="点击量" prop="click_num" sortable="">
                                             </el-table-column>
+                                            <el-table-column fixed="" label="发布日期" prop="issue_time" sortable="">
+                                            </el-table-column>
                                             <el-table-column :filter-method="statusFilterHandler" :filters="statusFilters" label="状态" prop="status">
                                                 <template slot-scope="scope">
                                                     <el-tag size="mini" type="success" v-if="scope.row.status == 1">
@@ -144,6 +146,10 @@
                                             <el-input clearable="" v-model="selectData.click_num">
                                             </el-input>
                                         </el-form-item>
+                                        <el-form-item label="发布日期" prop="issue_time">
+                                        <el-date-picker v-model="selectData.issue_time" type="datetime" placeholder="请输入开始日期" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+                                        </el-form-item>
+
                                         <el-form-item label="音频链接" prop="audio_url">
                                             <el-input clearable="" type="textarea" v-model="selectData.audio_url">
                                             </el-input>
@@ -332,6 +338,9 @@
           // selectData_en: {},
           rules: {
             click_num: [
+              { required: true, message: '不能为空！', trigger: 'blur' },
+            ],
+            issue_time: [
               { required: true, message: '不能为空！', trigger: 'blur' },
             ],
             aa: [

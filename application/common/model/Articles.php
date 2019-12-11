@@ -71,9 +71,9 @@ class Articles extends BaseModel
     public function getAll($where = [], $page_num = '', $page_limit = '')
     {
         if ($page_num && $page_limit) {
-            $data = $this->where($where)->order('id desc')->page($page_num, $page_limit)->select();
+            $data = $this->where($where)->order('issue_time desc,id desc')->page($page_num, $page_limit)->select();
         } else {
-            $data = $this->where($where)->order('id desc')->select();
+            $data = $this->where($where)->order('issue_time desc,id desc')->select();
         }
 
         foreach ($data as $key => $value) {
