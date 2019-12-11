@@ -66,7 +66,7 @@
 				<div class="core-banner-title">
 					{{classify.name}}
 				</div>
-				<div class="core-banner-info">
+				<div class="core-banner-info" style="overflow: hidden;text-overflow: ellipsis;display:-webkit-box;">
 					{{classify.intro}}
 				</div>
 				<div class="core-banner-btn-list">
@@ -78,7 +78,7 @@
 			<div class="container">
 				<h3 class="section-title">产品功能</h3>
 				<div class="row">
-					<div class="col-md-4" v-for="(col,index) in column" v-if="col.class_id == 1">
+					<div class="col-md-4" v-for="(col,index) in column" v-if="col.class_id == 1" >
 						<div class="core-list-container">
 							<div class="core-list-item-img">
 								<div class="core-list-poster"
@@ -93,82 +93,6 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="col-md-4">
-						<div class="core-list-container">
-							<div class="core-list-item-img">
-								<div class="core-list-poster"
-									style="background-image: url(__static__/website/img/core-list-2.jpg);"></div>
-								<div class="core-list-sign"></div>
-							</div>
-							<div class="core-list-info">
-								<div class="core-list-name">3D人脸识别算法</div>
-								<div class="core-list-intro">
-									自主研发的基于深度学习的3D人脸识别算法，误识率百万分之一，处于国际领先水平，适合应用于各个场景。
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="core-list-container">
-							<div class="core-list-item-img">
-								<div class="core-list-poster"
-									style="background-image: url(__static__/website/img/core-list-3.jpg);"></div>
-								<div class="core-list-sign"></div>
-							</div>
-							<div class="core-list-info">
-								<div class="core-list-name">3D防伪算法</div>
-								<div class="core-list-intro">
-									行业领先的双目立体成像及3D结构光活体识别算法，可针对打印照片、手机照片、视频等多种伪装人脸攻击进行防伪识别。
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="core-list-container">
-							<div class="core-list-item-img">
-								<div class="core-list-poster"
-									style="background-image: url(__static__/website/img/core-list-4.jpg);"></div>
-								<div class="core-list-sign"></div>
-							</div>
-							<div class="core-list-info">
-								<div class="core-list-name">3D人脸属性算法</div>
-								<div class="core-list-intro">
-									构建基于3D空间的人脸关键点检测算法，能够实时检测人脸特征点，并进行人脸角度预测和情绪识别。
-								</div>
-							</div>
-						</div>
-
-					</div>
-					<div class="col-md-4">
-						<div class="core-list-container">
-							<div class="core-list-item-img">
-								<div class="core-list-poster"
-									style="background-image: url(__static__/website/img/core-list-5.jpg);"></div>
-								<div class="core-list-sign"></div>
-							</div>
-							<div class="core-list-info">
-								<div class="core-list-name">3D手势识别算法</div>
-								<div class="core-list-intro">
-									使用深度图像作为手势识别算法输入，首先预处理滤除背景信息，之后使用DNN进行特征提取并进行手势识别，识别准确率达到99%以上。
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="core-list-container">
-							<div class="core-list-item-img">
-								<div class="core-list-poster"
-									style="background-image: url(__static__/website/img/core-list-6.jpg);"></div>
-								<div class="core-list-sign"></div>
-							</div>
-							<div class="core-list-info">
-								<div class="core-list-name">3D动作检测算法</div>
-								<div class="core-list-intro">
-									根据深度图进行人体姿态估计，根据姿态时序图对动作进行分类，可应用于人体行为检测、跌倒检测等功能。
-								</div>
-							</div>
-						</div>
-					</div> -->
 				</div>
 			</div>
 
@@ -176,62 +100,13 @@
 				<div class="container">
 					<h3 class="section-title">应用场景</h3>
 					<ul>
-						<li v-for="(col,index) in column" v-if="col.class_id == 2" class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
+						<li v-for="(col,index) in column" v-if="col.class_id == 2" class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;padding-right: 0px;padding-left: 0px;">
 							<i class="ico-1" :style="'background-image: url('+col.thum+');'"></i>
 							<div class="des">
 								<h3>{{col.title}}</h3>
 								<p style="text-align: center;">{{col.content}}</p>
 							</div>
 						</li>
-						<!-- <li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
-							<i class="ico-2" style="background-image: url(__static__/website/img/core-place-6.png);"></i>
-							<div class="des">
-								<h3>智能门锁行业</h3>
-								<p style="text-align: center;">结合3D识别功能，为门锁行业提供高安全、低功耗、无感的智能家居体验</p>
-							</div>
-						</li>
-						<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
-							<i class="ico-3" style="background-image: url(__static__/website/img/core-place-7.png);"></i>
-							<div class="des">
-								<h3>3D无感支付</h3>
-								<p style="text-align: center;">利用3D高安全性、便捷的特性，提供3D无感支付的解决方案</p>
-							</div>
-						</li>
-						<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
-							<i class="ico-4" style="background-image: url(__static__/website/img/core-place-3.png);"></i>
-							<div class="des">
-								<h3>人数统计</h3>
-								<p style="text-align: center;">依托3D人脸属性算法，人数进行精准统计，辅助客户进行客流分析等功能</p>
-							</div>
-						</li>
-						<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
-							<i class="ico-5" style="background-image: url(__static__/website/img/core-place-1.png);"></i>
-							<div class="des">
-								<h3>驾驶疲劳监测</h3>
-								<p style="text-align: center;">对交通、物流等安全高要求行业的司机进行疲劳驾驶检测</p>
-							</div>
-						</li>
-						<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
-							<i class="ico-5" style="background-image: url(__static__/website/img/core-place-2.png);"></i>
-							<div class="des">
-								<h3>课堂专注力检测</h3>
-								<p style="text-align: center;">通过3D摄像头，可对校园课堂内就学学生进行专注力检测，辅助提高教学质量</p>
-							</div>
-						</li>
-						<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
-							<i class="ico-5" style="background-image: url(__static__/website/img/core-place-4.png);"></i>
-							<div class="des">
-								<h3>刑侦测谎</h3>
-								<p style="text-align: center;">通过3D人脸属性算法及3D动作检测算法，可辅助公安等部门对犯罪人进行测谎</p>
-							</div>
-						</li>
-						<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
-							<i class="ico-5" style="background-image: url(__static__/website/img/core-place-5.png);"></i>
-							<div class="des">
-								<h3>AR/VR</h3>
-								<p style="text-align: center;">在AR和VR场景应用中，通过3D摄像头，结合3D算法，可实现多种虚拟现实交互方式</p>
-							</div>
-						</li> -->
 					</ul>
 				</div>
 			</div>
@@ -248,26 +123,6 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="core-feature-item col-md-4">
-						<div class="core-feature-icon"
-							style="background-image: url(__static__/website/img/core-feature-icon-2.png);"></div>
-						<div class="core-feature-desc">
-							<div class="core-feature-desc-title">稳定可靠</div>
-							<div class="core-feature-desc-info">
-								支持在海量图片特征库中进行人脸搜索，检测、比对等功能经华为企业客户的长期实践，功能稳定，时延可控
-							</div>
-						</div>
-					</div>
-					<div class="core-feature-item col-md-4">
-						<div class="core-feature-icon"
-							style="background-image: url(__static__/website/img/core-feature-icon-3.png);"></div>
-						<div class="core-feature-desc">
-							<div class="core-feature-desc-title">端云能力齐备</div>
-							<div class="core-feature-desc-info">
-								在线API、离线SDK、私有化部署多种服务形式全面开放，适配各种应用场景。
-							</div>
-						</div>
-					</div> -->
 				</div>
 
 			</div>

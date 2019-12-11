@@ -369,6 +369,9 @@ class Articlesweb extends Rest
                 unset($map[$key]);
             }
         }
+        if(!isset($map['type_id'])){
+            $map['class_id'] = 1;
+        }
         $map['status']=1;
         $count = model('articleshxjs')->getAllCount($map);
         $lists = model('articleshxjs')->getAll($map);
