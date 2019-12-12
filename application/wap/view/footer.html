@@ -12,55 +12,8 @@
                                 {{col.name}}
                             </a>
                         </li>
-                       <!--  <li class="nav-item">
-                            <a class="ga-data" href="list_103_cn.html" target="_self">
-                                人脸识别楼宇设备
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="ga-data" href="list_123_cn.html" target="_self">
-                                智能人脸门禁设备
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="ga-data" href="list_103_cn.html" target="_self">
-                                智能人脸设备
-                            </a>
-                        </li> -->
                     </ul>
                 </div>
-               <!--  <div class="cell is-3">
-                    <p class="title">
-                        解决方案
-                    </p>
-                    <ul>
-                        <li class="nav-item">
-                            <a class="ga-data" href="solutions_2.html" target="_blank">
-                                人脸识别智慧社区
-                            </a>
-                        </li>
-                    </ul>
-                </div> -->
-                <!--<div class="cell is-3">
-							<p class="title">成功案例</p>
-							<ul>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">社区成功案例</a>
-								</li>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">酒店成功案例</a>
-								</li>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">政府成功案例</a>
-								</li>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">企业成功案例</a>
-								</li>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">学校成功案例</a>
-								</li>
-							</ul>
-						</div>-->
                 <div class="cell is-3">
                     <p class="title">
                         核心技术
@@ -71,11 +24,6 @@
                                 {{col.name}}
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="ga-data" href="list_2d_cn_2.html" target="_blank">
-                                2D人脸识别
-                            </a>
-                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -128,6 +76,7 @@
                 </div>
             </div>
         </div>
+            {{bodysss.body}}
     </div>
 </footer>
 <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js">
@@ -157,6 +106,7 @@
             hxjs:'',
             xwzx:'',
             cpzx:'',
+            bodysss:'',
         },
         mounted: function () {
             $.ajax({
@@ -200,6 +150,23 @@
                 success: function (res) {
                     console.log(res);
                     app3.cpzx = res.data;
+                    
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+             $.ajax({
+                async: true,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    
+                },
+                url: '__localhost__/index.php/api_systems/Params/getParams?type=basic',
+                success: function (res) {
+                    console.log(res);
+                    app3.bodysss = res.data;
                     
                 },
                 error: function (res) {
