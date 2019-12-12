@@ -33,7 +33,7 @@
                                                     <p class="content" style="padding-right: 0px;">
                                                         {{item.descriptive_en}}
                                                     </p>
-                                                    <div class="product-img" style="max-width: 80%;margin-left: 10%;margin-right:10%; max-height: 200%;">
+                                                    <div class="product-img" style="max-width: 120px;margin-left: 10%;margin-right:10%; max-height: 200%;">
                                                         <img :src="item.thum" style="width: 100%;height: 100%;">
                                                         </img>
                                                     </div>
@@ -135,7 +135,7 @@
                         <a class="ga-data">
                             LANGUAGE
                         </a>
-                        <div class="gco-dropdown-menu single" style="right: 0px;">
+                        <div class="gco-dropdown-menu single" >
                             <ul>
                                 <li class="nav-item">
                                     <a :href="host+'/wap/index/index.html'" class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login">
@@ -152,35 +152,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-right">
-                    <!--<li class="nav-search">
-                            <a data-ga-category="pc_nav" data-ga-action="click" href="#" class="nav-link nav-search-link ga-data"><span class="search-btn"><i data-feather="search"></i></span></a>
-                        </li>-->
-                    <!-- <li class="nav-account" >
-                        <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-avatar" href="#"
-                            class="nav-link ga-data"><img gco-lazy-src="{{avatar}}" class="gco-tpl avatar-icon"></a>
-                            <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-avatar" href="#"
-                            class="nav-link ga-data">欢迎,&nbsp;</a>
-                            <li class="nav-item nick-name gco-tpl hidden">{{nick_name}}
-                                <a href="javascript:;" rel="nofollow">欢迎,&nbsp;
-                                </a>
-                            </li>
-                        <div class="gco-dropdown-menu single">
-                            <ul>
-                                <li class="nav-item nick-name gco-tpl hidden">{{nick_name}}
-                                    <a href="javascript:;" rel="nofollow">欢迎,&nbsp;
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-my-account"
-                                        href="#" class="ga-data">我的帐号</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="other-logout"
-                                        gco-click="logout" @click="logout();" href="#" class="logout-link ga-data">登出</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li> -->
+                    
                     <li class="nav-account" style="margin-right: 20px" v-if="user_id !=null && user_id.length !=0">
                         <a class="nav-link" href="javascript:void(0);;" style="    padding: 0px 30px;
     display: inline-block;
@@ -192,7 +164,7 @@
     cursor: pointer;">
                             Welcome, {{nick_name}}
                         </a>
-                        <div class="gco-dropdown-menu single">
+                        <div class="gco-dropdown-menu single" style="width: 130px;">
                             <ul>
                                 <li class="nav-item">
                                     <a @click="logout();" class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login" href="">
@@ -216,7 +188,7 @@
                                 </i>
                             </span>
                         </a>
-                        <div class="gco-dropdown-menu single">
+                        <div class="gco-dropdown-menu single" style="width: 130px;">
                             <ul>
                                 <li class="nav-item">
                                     <a class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login" href="login.html">

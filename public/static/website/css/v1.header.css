@@ -1,6 +1,3 @@
-body {
-}
-
 .gco-navbar {
 	height: 64px;
 	background-color: #fff;
@@ -357,7 +354,7 @@ footer.site-footer .footer-about ul.nav-right:hover li>a {
 	border: none;
 	color: #303233;
 	height: auto;
-	padding: 0
+	padding: 0;
 }
 
 .gco-navbar .gco-dropdown-menu.single>ul {
