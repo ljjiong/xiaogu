@@ -128,6 +128,7 @@
                 </div>
             </div>
         </div>
+            {{bodysss.body}}
     </div>
 </footer>
 <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js">
@@ -157,6 +158,7 @@
             hxjs:'',
             xwzx:'',
             cpzx:'',
+            bodysss:'',
         },
         mounted: function () {
             $.ajax({
@@ -200,6 +202,23 @@
                 success: function (res) {
                     console.log(res);
                     app3.cpzx = res.data;
+                    
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+              $.ajax({
+                async: true,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    
+                },
+                url: '__localhost__/index.php/api_systems/Params/getParams?type=basic',
+                success: function (res) {
+                    console.log(res);
+                    app3.bodysss = res.data;
                     
                 },
                 error: function (res) {

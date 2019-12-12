@@ -7,8 +7,8 @@ use think\Request;
 class Params extends Rest
 {
     protected $beforeActionList = [
-        'checkClientType',
-        'checkAuth',
+        // 'checkClientType',
+        // 'checkAuth',
         'checkToken' => ['only' => 'batch_update'],
         'checkAdmin' => ['only' => 'batch_update'],
     ];
