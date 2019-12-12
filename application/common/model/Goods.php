@@ -96,7 +96,7 @@ class Goods extends BaseModel
         // 新增或更新时处理图片
         self::beforeWrite(function ($model) {
             if (isset($model->data['thum'])) {
-                $model->thum = deal_upload_img([$model->data['thum']], 500, 500)[0];
+                $model->thum = base64_to_img([$model->data['thum']],500,500)[0];
             }
 
             if (isset($model->data['imgs'])) {
