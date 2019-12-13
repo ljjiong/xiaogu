@@ -362,6 +362,10 @@
             console.log(this.nick_name);
 
             $.ajax({
+                headers: {
+                    "page-num": 1,//此处放置请求到的用户token
+                    "page-limit":4,//此处放置请求到的用户token
+                },
                 async: true,
                 type: 'POST',
                 dataType: 'json',
