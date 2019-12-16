@@ -27,7 +27,7 @@
                                     <div class="grid-container">
                                         <div class="grid stretch left">
                                             <div class="column-item cell is-fifth" v-for="(item,index) in column">
-                                                <a :href="'alphalook3d_cn.html?id='+item.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="智能人脸锁" target="_self" style="max-width: 200px;max-height: 100%; display: table-cell;text-align: center;vertical-align: middle;">
+                                                <a :href="'alphalook.html?id='+item.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="智能人脸锁" target="_self" style="max-width: 200px;max-height: 100%; display: table-cell;text-align: center;vertical-align: middle;">
                                                     <p class="title">
                                                         {{item.short_name_en==''?item.short_name_en:item.name_en}}
                                                     </p>
@@ -244,7 +244,7 @@
                     </a>
                     <div class="a_txt2">
                         <template v-for="(item,index) in column">
-                            <a :href="'alphalook3d_cn.html?id='+item.id">
+                            <a :href="'alphalook.html?id='+item.id">
                                 {{item.name_en}}
                             </a>
                         </template>
@@ -255,7 +255,7 @@
                         解决方案
                     </a>
                     <div class="a_txt2">
-                        <a href="solutions_2.html">
+                        <a href="solutions.html">
                             人脸识别智慧社区
                         </a>
                     </div>
