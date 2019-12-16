@@ -28,7 +28,7 @@
 </head>
 
 <body>
-	{include file="header" /}
+	{include file="headeren" /}
 
 	<div id="app">
 		
@@ -37,19 +37,19 @@
 		<nav id="product-subnav" class="sub-nav-wrap-black">
 			<div class="container">
 				<div class="sub-nav-left">
-					<h1 class="title">下载中心</h1>
+					<h1 class="title"><!-- 下载中心 -->Download center</h1>
 				</div>
 
 				<div class="sub-nav-right">
 					<dl class="list-none navnow" >
 						<dt >
-							<a href="download_2.html" title="下载中心 " class="zm">
-								<span>全部</span>
+							<a href="download.html" title="Download center " class="zm">
+								<span><!-- 全部 -->All</span>
 							</a>
 						</dt>
 					</dl>
 					<dl class="list-none navnow" v-for="(col,index) in trees">
-						<dt id='part2_112'><a :href="'download_2.html?id='+ col.id" title='文档与手册' class="zm"><span>{{col.name}}</span></a>
+						<dt id='part2_112'><a :href="'download.html?id='+ col.id" title='文档与手册' class="zm"><span>{{col.name_en}}</span></a>
 						</dt>
 					</dl>
 					<!-- <dl class="list-none navnow">
@@ -75,16 +75,16 @@
 						<li class="list-group-item list_1" v-for="(col,index) in column">
 							<div class="media">
 								<div class="media-left p-r-5 p-l-10 hidden-xs-down">
-									<a href="#" title="{{col.file_name}}">
+									<a href="#" title="{{col.file_name_en}}">
 										<i class="fa fa-file-archive-o blue-grey-400"></i>
 									</a>
 								</div>
 								<div class="media-body">
 									<a class="gco-btn gco-btn-primary gco-btn-sm pull-right" :href="col.file_url"
-										:title="col.file_name" target="_self" :download="col.file_name+'.'+col.file_url.split('.').reverse()[0]">立即下载</a>
+										:title="col.file_name_en" target="_self" :download="col.file_name_en+'.'+col.file_url.split('.').reverse()[0]">Download</a>
 									<h4 class="media-heading font-size-16">
-										<a class="name" href="#" :title="col.file_name"
-											target="_self">{{col.file_name}}<span></span> </a>
+										<a class="name" href="#" :title="col.file_name_en"
+											target="_self">{{col.file_name_en}}<span></span> </a>
 									</h4>
 									<small>
 										<span>{{col.create_time}}</span>
@@ -99,11 +99,11 @@
 				</div>
 
 				<div class='met_pager'>
-					<span class='PreSpan' v-on:click="minuspage">上一页</span>
+					<span class='PreSpan' v-on:click="minuspage">Up</span>
 	                <a href="javascript:void(0);" class="Ahover">{{pagenum}}</a>
-	                <span class='NextSpan' v-on:click="addpage">下一页</span>
-	                <span>共计:{{pagecount}}页</span>
-	                <span class='PageText'>转至第</span>
+	                <span class='NextSpan' v-on:click="addpage">Down</span>
+	                <span>Total:{{pagecount}}Page</span>
+	                <span class='PageText'>Goto</span>
 	                <input type='text' id='metPageT' data-pageurl='list_4_|_cn.html|1' value='1'/>
 	                <input type='button' id='metPageB' value='页'/>
 				</div>
@@ -113,7 +113,7 @@
 		<nav id="product-subnav" class="sub-nav-wrap-black">
 			<div class="container">
 				<div class="sub-nav-left">
-					<h1 class="title" id="service">售后服务</h1>
+					<h1 class="title" id="service">Service</h1>
 				</div>
 			</div>
 		</nav>
@@ -123,7 +123,7 @@
 					<div class="col-sm-4 service-list-item">
 						<a href="javascript:;" class="service-item">
 							<i class="fa fa-phone-square"></i>
-							<span>电话</span>
+							<span>Phone</span>
 						</a>
 					</div>
 					<div class="col-sm-4 service-list-item">
@@ -141,7 +141,7 @@
 					<div class="col-sm-4 service-list-item">
 						<a href="javascript:;" class="service-item">
 							<i class="fa fa-weixin"></i>
-							<span>微信公众号</span>
+							<span>WeChat</span>
 						</a>
 					</div>
 				</div>
@@ -238,7 +238,7 @@
 
 	</div>
 	<!-- 底部加css -->
-	{include file="footer" /}
+	{include file="footeren" /}
 	
 	<script>
 		feather.replace();
