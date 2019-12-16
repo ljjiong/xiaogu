@@ -10,6 +10,7 @@
 namespace app\wap\controller;
 
 use think\Controller;
+use think\Request;
 
 /**
  * 网站首页控制器
