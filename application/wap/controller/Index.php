@@ -101,14 +101,34 @@ class Index extends Controller
     // 官网！！！！
     // 官网！！！！
     // 官网！！！！
-    public function aboutus()
+    public function aboutus(Request $request)
     {
         $this->inclued_head();
         $this->inclued_foot();
+        $map = $request->param();
+        foreach ($map as $key => $value) {
+            if ($value) {
+                // 类别模糊查询
+                if ($key == 'id') {
+                    $map['type_id'] =  $value ;
+                    unset($map[$key]);
+                }
+            } else {
+                unset($map[$key]);
+            }
+        }
+        $map['status']=1;
+        // $count = model('articles_single')->getAllCount($map);
+        $articles_single = model('articles_single')->findOne($map);
+        $trees=$this->read_tree(43);
+        $this->assign('trees',$trees);
+        $this->assign('articles_single',$articles_single);
         return view();
     }
     public function download()
     {
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
     public function aboutus_cn_2()
@@ -144,42 +164,6 @@ class Index extends Controller
         $this->assign('column',$column);
         $this->inclued_head();
         $this->inclued_foot();
-        return view();
-    }
-    public function cn_26()
-    {
-        return view();
-    }
-    public function cn_27()
-    {
-        return view();
-    }
-    public function cn_28()
-    {
-        return view();
-    }
-    public function cn_29()
-    {
-        return view();
-    }
-    public function cn_30()
-    {
-        return view();
-    }
-    public function cn_31_2()
-    {
-        return view();
-    }
-    public function cn_32()
-    {
-        return view();
-    }
-    public function cn_33()
-    {
-        return view();
-    }
-    public function cn_34()
-    {
         return view();
     }
     public function contact_cn_2()
@@ -240,8 +224,25 @@ class Index extends Controller
     {
         return view();
     }
-    public function news_2()
+    public function read_tree($id)
     {
+        $data = model('categories')->getAllTree();
+        $tree = list_to_tree($data);
+        return get_one_tree($tree, $id);
+    }
+    public function news_list()
+    {
+        $this->inclued_head();
+        $this->inclued_foot();
+        return view();
+    }
+    public function news(Request $request)
+    {
+        $this->inclued_head();
+        $this->inclued_foot();
+        $map = $request->param();
+        $articles_read = model('articles')->getOne($map['id']);
+        $this->assign('articles_read',$articles_read);
         return view();
     }
     public function partner_2()
@@ -250,7 +251,15 @@ class Index extends Controller
     }
     public function partner()
     {
-        return view();
+        $this->inclued_head();
+        $this->inclued_foot();
+        $core = model('partner')->getAll(['status'=>1,'type_id'=>49]);
+        $strategy = model('partner')->getAll(['status'=>1,'type_id'=>50]);
+        $algorithm = model('partner')->getAll(['status'=>1,'type_id'=>['in',[60,61,62,63]]]);
+        $this->assign('core', $core);
+        $this->assign('strategy', $strategy);
+        $this->assign('algorithm', $algorithm);
+        return view('partner_2');
     }
     public function privacy_cn_2()
     {

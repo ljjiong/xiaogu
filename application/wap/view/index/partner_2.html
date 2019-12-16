@@ -59,19 +59,23 @@
 			<div class="container">
 				<h3 class="section-title">核心合作单位</h3>
 				<div class="row">
-					<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for="(col,index) in core">
-						<a :href="col.hyperlink" title="Intel Movidius" target="_blank">
-							<img :src="col.picture">
+					{foreach $core as $key=>$vo}
+					<div class="list-item col-xs-12 col-sm-6 col-md-4">
+						<a href="{$vo.hyperlink}" title="Intel Movidius" target="_blank">
+							<img src="{$vo.picture}">
 						</a>
 					</div>
+                    {/foreach}
 				</div>
 				<h3 class="section-title">战略合作单位</h3>
 				<div class="row">
-					<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for="(col,index) in strategy">
-						<a :href="col.hyperlink" title="" target="_blank">
-							<img :src="col.picture">
+					{foreach $strategy as $key=>$vo}
+					<div class="list-item col-xs-12 col-sm-6 col-md-4">
+						<a href="{$vo.hyperlink}" title="" target="_blank">
+							<img src="{$vo.picture}">
 						</a>
 					</div>
+                    {/foreach}
 				</div>
 				<h3 class="section-title">算法应用单位</h3>
 				<ul class="partner-tab clearfix">
@@ -84,12 +88,15 @@
 					<div class="tab-content">
 						<div class="tab-pane fade active in" id="3d">
 							<div class="row">
-								<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for='(col,index) in algorithm' v-if="col.type_id==60">
-									<a :href="col.hyperlink" title="德施曼" target="_blank">
-										<img :src="col.picture">
+								{foreach $algorithm as $key=>$vo}
+								{if $vo.type_id==60}
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" >
+									<a href="{$vo.hyperlink}" title="" target="_blank">
+										<img src="{$vo.picture}">
 									</a>
 								</div>
-								
+								{/if}
+								{/foreach}
 								<!-- <div class="list-item col-xs-12 col-sm-6 col-md-4">
 									<a href="http://www.gdctwl.com/" title="常通" target="_blank">
 										<img src="__static__/website/img/changt.png">
@@ -99,11 +106,15 @@
 						</div>
 						<div class="tab-pane fade" id="eyes">
 							<div class="row">
-								<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for='(col,index) in algorithm' v-if="col.type_id==61">
-									<a :href="col.hyperlink" title="中国人民银行" target="_blank">
-										<img :src="col.picture">
+								{foreach $algorithm as $key=>$vo}
+								{if $vo.type_id==61}
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" >
+									<a href="{$vo.hyperlink}" title="" target="_blank">
+										<img src="{$vo.picture}">
 									</a>
 								</div>
+								{/if}
+								{/foreach}
 								<!-- <div class="list-item col-xs-12 col-sm-6 col-md-4">
 									<a href="http://www.3qvideo.com/" title="深圳市三全视讯科技有限公司" target="_blank">
 										<img src="__static__/website/img/3qvideo.png">
@@ -123,11 +134,15 @@
 						</div>
 						<div class="tab-pane fade" id="light">
 							<div class="row">
-								<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for='(col,index) in algorithm' v-if="col.type_id==62">
-									<a :href="col.hyperlink" title="上海城智科技有限公司" target="_blank">
-										<img :src="col.picture">
+								{foreach $algorithm as $key=>$vo}
+								{if $vo.type_id==62}
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" >
+									<a href="{$vo.hyperlink}" title="" target="_blank">
+										<img src="{$vo.picture}">
 									</a>
 								</div>
+								{/if}
+								{/foreach}
 								<!-- <div class="list-item col-xs-12 col-sm-6 col-md-4">
 									<a href="http://www.seaskylight.com/" title="深圳海云天科技股份有限公司" target="_blank">
 										<img src="__static__/website/img/hyt.png">
@@ -142,11 +157,15 @@
 						</div>
 						<div class="tab-pane fade" id="person">
 							<div class="row">
-								<div class="list-item col-xs-12 col-sm-6 col-md-4" v-for='(col,index) in algorithm' v-if="col.type_id==63">
-									<a :href="col.hyperlink" title="南宁市骏腾建设投资有限公司" target="_blank">
-										<img :src="col.picture">
+								{foreach $algorithm as $key=>$vo}
+								{if $vo.type_id==63}
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" >
+									<a href="{$vo.hyperlink}" title="" target="_blank">
+										<img src="{$vo.picture}">
 									</a>
 								</div>
+								{/if}
+								{/foreach}
 							</div>
 						</div>
 					</div>
@@ -183,43 +202,43 @@
 				algorithm: '',
 			},
 			mounted: function () {
-				$.ajax({
-					async: true,
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						type_id: '49'
-					},
-					url: '__localhost__/index.php/api_articles/Articlesweb/partner_list',
-					success: function (res) {
-						console.log('---------------1--------------');
-						console.log(res);
-						app.core = res.data;
-					},
-					error: function (res) {
-						console.log(res);
-						alert("网络错误，请联系管理员！")
-					}
-				});
-				$.ajax({
-					async: true,
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						type_id: '50'
-					},
-					url: '__localhost__/index.php/api_articles/Articlesweb/partner_list',
-					success: function (res) {
-						console.log('---------------2--------------');
-						console.log(res);
-						app.strategy = res.data;
-					},
-					error: function (res) {
-						console.log(res);
-						alert("网络错误，请联系管理员！")
-					}
-				});
-				this.GetAlgorithmData();
+				// $.ajax({
+				// 	async: true,
+				// 	type: 'POST',
+				// 	dataType: 'json',
+				// 	data: {
+				// 		type_id: '49'
+				// 	},
+				// 	url: '__localhost__/index.php/api_articles/Articlesweb/partner_list',
+				// 	success: function (res) {
+				// 		console.log('---------------1--------------');
+				// 		console.log(res);
+				// 		app.core = res.data;
+				// 	},
+				// 	error: function (res) {
+				// 		console.log(res);
+				// 		alert("网络错误，请联系管理员！")
+				// 	}
+				// });
+				// $.ajax({
+				// 	async: true,
+				// 	type: 'POST',
+				// 	dataType: 'json',
+				// 	data: {
+				// 		type_id: '50'
+				// 	},
+				// 	url: '__localhost__/index.php/api_articles/Articlesweb/partner_list',
+				// 	success: function (res) {
+				// 		console.log('---------------2--------------');
+				// 		console.log(res);
+				// 		app.strategy = res.data;
+				// 	},
+				// 	error: function (res) {
+				// 		console.log(res);
+				// 		alert("网络错误，请联系管理员！")
+				// 	}
+				// });
+				// this.GetAlgorithmData();
 
 			},
 			methods: {

@@ -57,10 +57,12 @@
 						</a>
 					</dt>
 				</dl> -->
-				<dl class="list-none navnow" v-for="(col,index) in trees">
-					<dt id='part2_19'><a :href="'aboutus.html?id='+ col.id" title='公司简介'
-							class="zm"><span>{{col.name}}</span></a></dt>
+				{foreach $trees._child as $key=>$vo}
+				<dl class="list-none navnow" >
+					<dt id='part2_19'><a href="aboutus.html?id={$vo.id}" title='{$vo.name}'
+							class="zm"><span>{$vo.name}</span></a></dt>
 				</dl>
+				{/foreach}
 				<!-- <dl class="list-none navnow">
 					<dt id='part2_98'><a href='contact_cn_2.html' title='联系我们' class="zm"><span>联系我们</span></a></dt>
 				</dl>
@@ -89,10 +91,12 @@
 			<div class="show-list-bg">
 
 				<div class="nav" style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
-					<dl class="list-none navnow" v-for="(col,index) in trees">
-						<dt id='part2_19' ><a :href="'aboutus.html?id='+ col.id" title='公司简介'
-								class="zm"><span>{{col.name}}</span></a></dt>
+					{foreach $trees._child as $key=>$vo}
+					<dl class="list-none navnow" >
+						<dt id='part2_19' ><a href="aboutus.html?id={$vo.id}" title='{$vo.name}'
+								class="zm"><span>{$vo.name}</span></a></dt>
 					</dl>
+					{/foreach}
 					<!-- <dl class="list-none navnow">
 						<dt id='part2_98'><a href='contact_cn_2.html' title='联系我们' class="zm"><span>联系我们</span></a>
 						</dt>
@@ -106,7 +110,7 @@
 					</dl> -->
 				</div>
 				<div class="show-banner">
-					<img :src="column.thum" />
+					<img src="{$articles_single.thum}" />
 				</div>
 
 				<div class="show-list-content">
@@ -114,10 +118,11 @@
 						<div>
 							<ul class=" list-paddingleft-2" style="list-style-type: square;">
 								<li>
-									<p><span style="font-size: 18px;" v-html="column.title"></span></p>
+									<p><span style="font-size: 18px;">{$articles_single.title}</span></p>
 								</li>
 								<li>
-									<p style="font-size: 18px;" v-html="column.content">
+									<p style="font-size: 18px;">
+										{$articles_single.content}
 									</p>
 								</li>
 							</ul>
@@ -146,38 +151,38 @@
 				}
 			},
 			mounted: function () {
-				$.ajax({
-					async: true,
-					type: 'POST',
-					dataType: 'json',
-					data:{
-						id:43
-					},
-					url: '__localhost__/index.php/api_articles/Articlesweb/read_tree',
-					success: function (res) {
-						console.log(res);
-						app.trees = res.data._child;
-					},
-					error: function (res) {
-						console.log(res);
-					}
-				});
-				$.ajax({
-					async: true,
-					type: 'POST',
-					dataType: 'json',
-					data: {
-						// type_id: 44
-					},
-					url: '__localhost__/index.php/api_articles/Articlesweb/articles_single_list?type_id=' + this.getQueryVariable("id"),
-					success: function (res) {
-						console.log(res);
-						app.column = res.data[0];
-					},
-					error: function (res) {
-						console.log(res);
-					}
-				});
+				// $.ajax({
+				// 	async: true,
+				// 	type: 'POST',
+				// 	dataType: 'json',
+				// 	data:{
+				// 		id:43
+				// 	},
+				// 	url: '__localhost__/index.php/api_articles/Articlesweb/read_tree',
+				// 	success: function (res) {
+				// 		console.log(res);
+				// 		app.trees = res.data._child;
+				// 	},
+				// 	error: function (res) {
+				// 		console.log(res);
+				// 	}
+				// });
+				// $.ajax({
+				// 	async: true,
+				// 	type: 'POST',
+				// 	dataType: 'json',
+				// 	data: {
+				// 		// type_id: 44
+				// 	},
+				// 	url: '__localhost__/index.php/api_articles/Articlesweb/articles_single_list?type_id=' + this.getQueryVariable("id"),
+				// 	success: function (res) {
+				// 		console.log(res);
+				// 		app.column = res.data[0];
+				// 	},
+				// 	error: function (res) {
+				// 		console.log(res);
+				// 	}
+				// });
 			},
 			methods: {
 				getQueryVariable(variable) {

@@ -65,24 +65,23 @@
 		</div>
 		<div class="met_clear">
 		</div>
-
 		<div class="gco-detail">
 			<div class="container">
 				<div class="gco-detail-content">
 					<div class="detail-head">
-						<h1 class="title">{{dataList.title}}</h1>
+						<h1 class="title">{$articles_read.title}</h1>
 						<div class="detail-info">
-							<span class="fa fa-clock-o"> {{dataList.create_time}}</span>
-							<span class="fa fa-eye"> 阅读:{{dataList.click_num}} <span class="met_Clicks"></span></span>
+							<span class="fa fa-clock-o"> {$articles_read.create_time}</span>
+							<span class="fa fa-eye"> 阅读:{$articles_read.click_num} <span class="met_Clicks"></span></span>
 						</div>
 					</div>
 					<div class="detail-content">
 						<div>
 							<blockquote>
-								<p>{{dataList.intro}}
+								<p>{$articles_read.intro}
 								</p>
 							</blockquote>
-							<div v-html="dataList.content"></div>　　
+							<div>{$articles_read.content}</div>　　
 								
 							
 							<div id="metinfo_additional"></div>
@@ -106,26 +105,26 @@
 				dataList: ''
 			},
 			mounted: function () {
+				// $.ajax({
+				// 	async: true,
+				// 	type: 'GET',
+				// 	dataType: 'json',
+				// 	url: '__localhost__/index.php/api_articles/Articlesweb/articles_read?id=' + this.getQueryVariable("id"),
+				// 	success: function (res) {
+				// 		console.log(res);
+				// 		app.dataList = res.data;
+				// 	},
+				// 	error: function (res) {
+				// 		console.log(res);
+				// 	}
+				// });
 				$.ajax({
 					async: true,
 					type: 'GET',
 					dataType: 'json',
-					url: '__localhost__/index.php/api_articles/Articlesweb/articles_read?id=' + this.getQueryVariable("id"),
+					url: '__localhost__/index.php/api_articles/Articlesweb/article_click_num?id=' + this.getQueryVariable("id"),
 					success: function (res) {
-						console.log(res);
-						app.dataList = res.data;
-					},
-					error: function (res) {
-						console.log(res);
-					}
-				});
-				$.ajax({
-					async: true,
-					type: 'GET',
-					dataType: 'json',
-					url: 'http://www.xg.com/index.php/api_articles/Articlesweb/article_click_num?id=' + this.getQueryVariable("id"),
-					success: function (res) {
-						app.dataList = res.data;
+						// app.dataList = res.data;
 					},
 					error: function (res) {
 						console.log(res);
