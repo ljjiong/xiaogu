@@ -17,6 +17,55 @@ use think\Controller;
  */
 class Index extends Controller
 {
+    public function inclued_head()
+    {
+
+        if (isset($map['sort_by'])) {
+            $sort_by = $map['sort_by'];
+            unset($map['sort_by']);
+        } else {
+            $sort_by = 'new_goods';
+        }
+
+        if (isset($map['sort_type'])) {
+            $sort_type = $map['sort_type'];
+            unset($map['sort_type']);
+        } else {
+            $sort_type = 'desc';
+        }
+        $map['status']=1;
+        $goods = model('goods')->getAll($map, 1, 4, $sort_by, $sort_type);
+        $this->assign('goods',$goods);
+        $data = model('categories')->getAllTree();
+        $tree = list_to_tree($data);
+        for ( $i =0; $i< count($tree);$i++) {
+           switch($tree[$i]['id'])
+            {
+                case 64:
+                    $hxjs=$tree[$i];
+                    break;
+                case 40:
+                    $xwzx=$tree[$i];
+                    break;
+                default:
+                    break;
+            }
+           
+        }
+        $this->assign('hxjs',$hxjs);
+        $this->assign('xwzx',$xwzx);
+    }
+    public function inclued_foot()
+    {
+        $data               = model('goods_cates')->getAllTree();
+        $goods_tree= list_to_tree($data);
+        $this->assign('cpzx',$goods_tree);
+        
+    }
+    // public function __construct()
+    // {
+    //     $this->inclued_head();
+    // }
     // 搜索项目
     public function index()
     {
@@ -38,7 +87,8 @@ class Index extends Controller
         $this->assign('articles_hxjs_3d',$articles_hxjs_3d);
         $this->assign('commonality',$commonality);
         $this->assign('goods_list',$goods_list);
-
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
     // 我的项目
@@ -592,7 +642,7 @@ class Index extends Controller
     {
         return view();
     }
-    public function download_2()
+    public function download()
     {
         return view();
     }

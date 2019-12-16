@@ -23,20 +23,22 @@
                                 <div class="nav-columns">
                                     <div class="grid-container">
                                         <div class="grid stretch left">
-                                            <div class="column-item cell is-fifth" v-for="(item,index) in column">
-                                                <a :href="'alphalook3d_cn.html?id='+item.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="智能人脸锁" target="_self" style="max-width: 200px;max-height: 100%; display: table-cell;text-align: center;vertical-align: middle;">
+                                            {foreach $goods as $key=>$vo}
+                                            <div class="column-item cell is-fifth">
+                                                <a href="alphalook3d_cn.html?id={$vo.id}" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="智能人脸锁" target="_self" style="max-width: 200px;max-height: 100%; display: table-cell;text-align: center;vertical-align: middle;">
                                                     <p class="title">
-                                                        {{item.short_name==''?item.short_name:item.name}}
+                                                        {$vo.short_name?$vo.short_name:$vo.name}
                                                     </p>
                                                     <p class="content" style="padding-right: 0px;">
-                                                        {{item.descriptive}}
+                                                        {$vo.descriptive}
                                                     </p>
                                                     <div class="product-img" style="max-width: 120px;margin-left: 10%;margin-right:10%; max-height: 120px;">
-                                                        <img :src="item.thum" style="width: 100%;height: 100%;">
+                                                        <img src="{$vo.thum}" style="width: 100%;height: 100%;">
                                                         </img>
                                                     </div>
                                                 </a>
                                             </div>
+                                            {/foreach}
                                         </div>  
                                     </div>
                                 </div>
@@ -63,9 +65,11 @@
                         <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
-                                    <a :href="'list_3d.html?id='+col.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="3D视觉算法" target="_self" v-for="(col,index) in hxjs._child">
-                                        {{col.name}}
+                                    {foreach $hxjs._child as $key=>$vo}
+                                    <a href="list_3d.html?id={$vo.id}" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="3D视觉算法" target="_self">
+                                        {$vo.name}
                                     </a>
+                                    {/foreach}
                                     <!-- <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="2D视觉算法" href="list_2d_cn_2.html" target="_self">
                                         2D视觉算法
                                     </a> -->
@@ -102,9 +106,11 @@
                         <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
-                                    <a :href="'news_2.html?id='+col.id" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="公司动态" target="_self" v-for="(col,index) in xwzx._child">
-                                        {{col.name}}
+                                    {foreach $xwzx._child as $key=>$vo}
+                                    <a href="news_2.html?id={$vo.id}" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="公司动态" target="_self">
+                                        {$vo.name}
                                     </a>
+                                    {/foreach}
                                     <!-- <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="业界资讯" href="list_5_cn.html" target="_self">
                                         业界资讯
                                     </a> -->
@@ -244,11 +250,13 @@
                         产品中心
                     </a>
                     <div class="a_txt2">
-                        <template v-for="(item,index) in column">
-                            <a :href="'alphalook3d_cn.html?id='+item.id">
-                                {{item.name}}
+                        <!-- <template v-for="(item,index) in column"> -->
+                            {foreach $goods as $key=>$vo}
+                            <a href="alphalook3d_cn.html?id={$vo.id}">
+                                {$vo.name}
                             </a>
-                        </template>
+                            {/foreach}
+                        <!-- </template> -->
                     </div>
                 </li>
                 <!-- <li>
@@ -266,9 +274,11 @@
                         核心技术
                     </a>
                     <div class="a_txt2">
-                        <a :href="'list_3d.html?id='+item.id" target="_blank" v-for="(item,index) in hxjs._child">
-                            {{item.name}}
+                        {foreach $hxjs._child as $key=>$vo}
+                        <a href="list_3d.html?id={$vo.id}" target="_blank" >
+                            {$vo.name}
                         </a>
+                        {/foreach}
                         <!-- <a href="list_2d_cn_2.html" target="_blank">
                             2D视觉算法
                         </a> -->
@@ -297,9 +307,11 @@
                         新闻中心
                     </a>
                     <div class="a_txt2">
-                        <a :href="'news_2.html?id='+item.id" v-for="(item,index) in xwzx._child">
-                            {{item.name}}
+                        {foreach $xwzx._child as $key=>$vo}
+                        <a href="news_2.html?id={$vo.id}" >
+                            {$vo.name}
                         </a>
+                        {/foreach}
                         <!--  <a href="list_5_cn.html">
                             业界资讯
                         </a> -->
@@ -361,60 +373,60 @@
             this.host=window.location.protocol+"//"+window.location.host;
             console.log(this.nick_name);
 
-            $.ajax({
-                async: true,
-                type: 'POST',
-                dataType: 'json',
-                data: {
+            // $.ajax({
+            //     async: true,
+            //     type: 'POST',
+            //     dataType: 'json',
+            //     data: {
 
-                },
-                headers: {
-                    "page-num": 1,//此处放置请求到的用户token
-                    "page-limit":4,//此处放置请求到的用户token
-                },
-                url: '__localhost__/index.php/api_articles/Articlesweb/goods_list',
-                success: function (res) {
-                    console.log(res);
-                    app2.column = res.data;
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
-            $.ajax({
-                async: true,
-                type: 'POST',
-                dataType: 'json',
-                data: {
+            //     },
+            //     headers: {
+            //         "page-num": 1,//此处放置请求到的用户token
+            //         "page-limit":4,//此处放置请求到的用户token
+            //     },
+            //     url: '__localhost__/index.php/api_articles/Articlesweb/goods_list',
+            //     success: function (res) {
+            //         console.log(res);
+            //         app2.column = res.data;
+            //     },
+            //     error: function (res) {
+            //         console.log(res);
+            //     }
+            // });
+            // $.ajax({
+            //     async: true,
+            //     type: 'POST',
+            //     dataType: 'json',
+            //     data: {
                     
-                },
-                url: '__localhost__/index.php/api_articles/Articlesweb/tree',
-                success: function (res) {
-                    console.log(res);
-                    app2.column2 = res.data;
-                    for ( i =0; i< res.data.length;i++) {
-                       switch(res.data[i].id)
-                        {
-                            case 64:
-                                app2.hxjs=res.data[i];
-                                break;
-                            case 40:
-                                app2.xwzx=res.data[i];
-                                break;
-                            default:
-                                break;
-                        }
-                        // if(res.data[i].id==64){
-                        //     app2.hxjs=res.data[i];
-                        // }
-                        // if()
-                    }
+            //     },
+            //     url: '__localhost__/index.php/api_articles/Articlesweb/tree',
+            //     success: function (res) {
+            //         console.log(res);
+            //         app2.column2 = res.data;
+            //         for ( i =0; i< res.data.length;i++) {
+            //            switch(res.data[i].id)
+            //             {
+            //                 case 64:
+            //                     app2.hxjs=res.data[i];
+            //                     break;
+            //                 case 40:
+            //                     app2.xwzx=res.data[i];
+            //                     break;
+            //                 default:
+            //                     break;
+            //             }
+            //             // if(res.data[i].id==64){
+            //             //     app2.hxjs=res.data[i];
+            //             // }
+            //             // if()
+            //         }
                     
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
+            //     },
+            //     error: function (res) {
+            //         console.log(res);
+            //     }
+            // });
         },
         methods: {
             logout(){
