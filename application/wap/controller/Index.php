@@ -10,6 +10,7 @@
 namespace app\wap\controller;
 
 use think\Controller;
+use think\Request;
 
 /**
  * 网站首页控制器
@@ -17,6 +18,8 @@ use think\Controller;
  */
 class Index extends Controller
 {
+    
+
     public function inclued_head()
     {
 
@@ -112,8 +115,35 @@ class Index extends Controller
     {
         return view();
     }
-    public function all_list()
+    public function all_list(Request $request)
     {
+        $map = $request->param();
+        $data = model('categories')->getAllTree();
+        $tree = list_to_tree($data);
+        $trees = get_one_tree($tree, 64);
+        foreach ($map as $key => $value) {
+            if ($value) {
+                 // 类别模糊查询
+                if ($key == 'type_id') {
+                    $map[$key] =  $value ;
+                }
+                 // 类别模糊查询
+                if ($key == 'class_id') {
+                    $map[$key] =  $value ;
+                }
+            } else {
+                unset($map[$key]);
+            }
+        }
+        if(!isset($map['type_id'])){
+            $map['class_id'] = 1;
+        }
+        $map['status']=1;
+        $column = model('articleshxjs')->getAll($map);
+        $this->assign('trees',$trees);
+        $this->assign('column',$column);
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
     public function cn_26()
@@ -166,6 +196,8 @@ class Index extends Controller
     }
     public function list_3d()
     {
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
     public function list_3_2_cn()
@@ -232,20 +264,29 @@ class Index extends Controller
     {
         return view();
     }
-    public function product()
+    public function product(Request $request)
     {
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
     public function register_include()
     {
         return view();
     }
-    public function solutions_2()
+    public function solutions()
     {
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
-    public function alphalook3d_cn()
+    public function alphalook(Request $request)
     {
+        $map = $request->param();
+        $dataList = model('goods')->getOne($map['id']);
+        $this->assign('dataList',$dataList);
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
 }
