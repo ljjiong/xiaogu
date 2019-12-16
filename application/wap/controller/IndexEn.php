@@ -17,6 +17,51 @@ use think\Controller;
  */
 class IndexEn extends Controller
 {
+    public function inclued_head()
+    {
+
+        if (isset($map['sort_by'])) {
+            $sort_by = $map['sort_by'];
+            unset($map['sort_by']);
+        } else {
+            $sort_by = 'new_goods';
+        }
+
+        if (isset($map['sort_type'])) {
+            $sort_type = $map['sort_type'];
+            unset($map['sort_type']);
+        } else {
+            $sort_type = 'desc';
+        }
+        $map['status']=1;
+        $goods = model('goods')->getAll($map, 1, 4, $sort_by, $sort_type);
+        $this->assign('goods',$goods);
+        $data = model('categories')->getAllTree();
+        $tree = list_to_tree($data);
+        for ( $i =0; $i< count($tree);$i++) {
+           switch($tree[$i]['id'])
+            {
+                case 64:
+                    $hxjs=$tree[$i];
+                    break;
+                case 40:
+                    $xwzx=$tree[$i];
+                    break;
+                default:
+                    break;
+            }
+           
+        }
+        $this->assign('hxjs',$hxjs);
+        $this->assign('xwzx',$xwzx);
+    }
+    public function inclued_foot()
+    {
+        $data               = model('goods_cates')->getAllTree();
+        $goods_tree= list_to_tree($data);
+        $this->assign('cpzx',$goods_tree);
+        
+    }
     // 搜索项目
     public function index()
     {
@@ -38,7 +83,8 @@ class IndexEn extends Controller
         $this->assign('articles_hxjs_3d',$articles_hxjs_3d);
         $this->assign('commonality',$commonality);
         $this->assign('goods_list',$goods_list);
-
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
     // 官网！！！！
@@ -48,56 +94,81 @@ class IndexEn extends Controller
     // 官网！！！！
     // 官网！！！！
     // 官网！！！！
-    public function news()
+    
+    public function login()
     {
+        return view();
+    }
+    // 官网！！！！
+    // 官网！！！！
+    // 官网！！！！
+    // 官网！！！！
+    // 官网！！！！
+    // 官网！！！！
+    // 官网！！！！
+    public function aboutus(Request $request)
+    {
+        $this->inclued_head();
+        $this->inclued_foot();
+        $map = $request->param();
+        foreach ($map as $key => $value) {
+            if ($value) {
+                // 类别模糊查询
+                if ($key == 'id') {
+                    $map['type_id'] =  $value ;
+                    unset($map[$key]);
+                }
+            } else {
+                unset($map[$key]);
+            }
+        }
+        $map['status']=1;
+        // $count = model('articles_single')->getAllCount($map);
+        $articles_single = model('articles_single')->findOne($map);
+        $trees=$this->read_tree(43);
+        $this->assign('trees',$trees);
+        $this->assign('articles_single',$articles_single);
         return view();
     }
     public function download()
     {
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
-    public function aboutus()
+    public function aboutus_cn_2()
     {
         return view();
     }
-    public function all_list()
+    public function all_list(Request $request)
     {
-        return view();
-    }
-    public function cn_26()
-    {
-        return view();
-    }
-    public function cn_27()
-    {
-        return view();
-    }
-    public function cn_28()
-    {
-        return view();
-    }
-    public function cn_29()
-    {
-        return view();
-    }
-    public function cn_30()
-    {
-        return view();
-    }
-    public function cn_31_2()
-    {
-        return view();
-    }
-    public function cn_32()
-    {
-        return view();
-    }
-    public function cn_33()
-    {
-        return view();
-    }
-    public function cn_34()
-    {
+        $map = $request->param();
+        $data = model('categories')->getAllTree();
+        $tree = list_to_tree($data);
+        $trees = get_one_tree($tree, 64);
+        foreach ($map as $key => $value) {
+            if ($value) {
+                 // 类别模糊查询
+                if ($key == 'type_id') {
+                    $map[$key] =  $value ;
+                }
+                 // 类别模糊查询
+                if ($key == 'class_id') {
+                    $map[$key] =  $value ;
+                }
+            } else {
+                unset($map[$key]);
+            }
+        }
+        if(!isset($map['type_id'])){
+            $map['class_id'] = 1;
+        }
+        $map['status']=1;
+        $column = model('articleshxjs')->getAll($map);
+        $this->assign('trees',$trees);
+        $this->assign('column',$column);
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
     public function contact_cn_2()
@@ -114,6 +185,8 @@ class IndexEn extends Controller
     }
     public function list_3d()
     {
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
     public function list_3_2_cn()
@@ -156,8 +229,25 @@ class IndexEn extends Controller
     {
         return view();
     }
-    public function news_2()
+    public function read_tree($id)
     {
+        $data = model('categories')->getAllTree();
+        $tree = list_to_tree($data);
+        return get_one_tree($tree, $id);
+    }
+    public function news_list()
+    {
+        $this->inclued_head();
+        $this->inclued_foot();
+        return view();
+    }
+    public function news(Request $request)
+    {
+        $this->inclued_head();
+        $this->inclued_foot();
+        $map = $request->param();
+        $articles_read = model('articles')->getOne($map['id']);
+        $this->assign('articles_read',$articles_read);
         return view();
     }
     public function partner_2()
@@ -166,7 +256,15 @@ class IndexEn extends Controller
     }
     public function partner()
     {
-        return view();
+        $this->inclued_head();
+        $this->inclued_foot();
+        $core = model('partner')->getAll(['status'=>1,'type_id'=>49]);
+        $strategy = model('partner')->getAll(['status'=>1,'type_id'=>50]);
+        $algorithm = model('partner')->getAll(['status'=>1,'type_id'=>['in',[60,61,62,63]]]);
+        $this->assign('core', $core);
+        $this->assign('strategy', $strategy);
+        $this->assign('algorithm', $algorithm);
+        return view('partner_2');
     }
     public function privacy_cn_2()
     {
@@ -180,20 +278,29 @@ class IndexEn extends Controller
     {
         return view();
     }
-    public function product()
+    public function product(Request $request)
     {
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
     public function register_include()
     {
         return view();
     }
-    public function solutions_2()
+    public function solutions()
     {
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
-    public function alphalook3d_cn()
+    public function alphalook(Request $request)
     {
+        $map = $request->param();
+        $dataList = model('goods')->getOne($map['id']);
+        $this->assign('dataList',$dataList);
+        $this->inclued_head();
+        $this->inclued_foot();
         return view();
     }
 }

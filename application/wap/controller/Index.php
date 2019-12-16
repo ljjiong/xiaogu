@@ -94,6 +94,10 @@ class Index extends Controller
         $this->inclued_foot();
         return view();
     }
+    public function login()
+    {
+        return view();
+    }
     // 官网！！！！
     // 官网！！！！
     // 官网！！！！
