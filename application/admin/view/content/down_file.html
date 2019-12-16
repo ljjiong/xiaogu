@@ -408,7 +408,7 @@
 
                   let ids = this.multipleSelection.map(item => item.id);
                   this.$confirm('确认批量操作?', '提示', { type: 'warning' }).then(_ => {
-                    httpRequest('POST', 'api_file/company/' + type, { id: ids }).then(resp => {
+                    httpRequest('POST', 'api_articles/download_file/' + type, { id: ids }).then(resp => {
                       this.$message.success(resp.msg);
                       setTimeout(_ => {
                         location.reload();
