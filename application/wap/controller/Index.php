@@ -27,6 +27,17 @@ class Index extends Controller
         if ($url != "/wap/index/index.html") {
             echo "<script>location.href='/wap/index/index.html';</script>";
         }
+        $banners = model('banners')->getAll(['status'=>1], 1, 7);
+        $articles_hxjs_3d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>65,'status'=>1]);
+        $articles_hxjs_2d=model('articleshxjs')->getAll(['class_id'=>1,'type_id'=>66,'status'=>1]);
+        $commonality=model('commonality')->getAll(['type_id'=>57]);
+        $goods_list=model('goods')->getAll(['status'=>1],1,4);
+        
+        $this->assign('award',$banners);
+        $this->assign('articles_hxjs_2d',$articles_hxjs_2d);
+        $this->assign('articles_hxjs_3d',$articles_hxjs_3d);
+        $this->assign('commonality',$commonality);
+        $this->assign('goods_list',$goods_list);
 
         return view();
     }

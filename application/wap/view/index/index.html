@@ -40,8 +40,9 @@
 </head>
 
 <body>
-	
 
+	
+	
 	{include file="header" /}
 
 
@@ -49,17 +50,20 @@
 		<section class="homepage-banner">
 			<div class="swiper-container banner-swiper-container">
 				<div class="swiper-wrapper">
+
+					{foreach $award as $key=>$vo}
 					<div class="swiper-slide banner-swiper-slide">
 						<a :href="banners1.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
 						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(__localhost__/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
-								<h3>{{banners1.name}}</h3>
-								<p style="color:#ffffff" class="banner-slogan">{{banners1.alt}}</p>
+								<h3>{$vo.name}</h3>
+								<p style="color:#ffffff" class="banner-slogan">{$vo.alt}</p>
 							</div>
-							<div class="banner-image"><img :src="banners1.img" style="height:480px;width:auto;"></div>
+							<div class="banner-image"><img src="{$vo.img}" style="height:480px;width:auto;"></div>
 						</div>
 					</div>
-					<div class="swiper-slide banner-swiper-slide">
+					{/foreach}
+					<!-- <div class="swiper-slide banner-swiper-slide">
 						<a :href="banners2.href" data-ga-category="pc-homepage" data-ga-action="click" data-ga-label="kv-banner_mavic-air" class="banner-link ga-data"></a>
 						<div style="background-image: linear-gradient(top,#837C7C,#6A6161);background-image:url(__localhost__/public/upload/article_images/20191126/6867e80e5823cf02460093f64cb68347.png);" class="banner-content">
 							<div class="banner-text">
@@ -99,14 +103,16 @@
 							</div>
 							<div class="banner-image"><img :src="banners5.img" style="height:524px;width:auto"></div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="swiper-scroller" style="z-index: 99999999999999999999999999999">
 					<ul class="swiper-scroller-list hidden">
-						<li data-index='1' class="swiper-scroller-item">
-							<a href="javascript:;">{{banners1.name}}</a>
+						{foreach $award as $key=>$vo}
+						<li data-index='{$key+1}' class="swiper-scroller-item">
+							<a href="javascript:;">{$vo.name}</a>
 						</li>
-						<li data-index='2' class="swiper-scroller-item">
+						{/foreach}
+						<!-- <li data-index='2' class="swiper-scroller-item">
 							<a href="javascript:;">{{banners2.name}}</a>
 						</li>
 						<li data-index='3' class="swiper-scroller-item">
@@ -117,7 +123,7 @@
 						</li>
 						<li data-index='5' class="swiper-scroller-item">
 							<a href="javascript:;">{{banners5.name}}</a>
-						</li>
+						</li> -->
 					</ul>
 				</div>
 				<div class="swiper-control-pre swiper-control">
@@ -140,7 +146,9 @@
 					<figcaption>
 						<h2><span>3D</span>视觉算法 </h2>
 						<div>
-							<p style="display: block;" v-for="(item,index) in dataList.articles_hxjs['3d']">{{item.title}}</p><br>
+							{foreach $articles_hxjs_3d as $key=>$vo}
+							<p style="display: block;">{$vo.title}</p>
+							{/foreach}
 						</div>
 						<a href="list_3d.html">了解更多</a>
 					</figcaption>
@@ -150,7 +158,9 @@
 					<figcaption>
 						<h2><span>2D</span>视觉算法 </h2>
 						<div>
-							<p style="display: block;" v-for="(item,index) in dataList.articles_hxjs['2d']">{{item.title}}</p>
+							{foreach $articles_hxjs_2d as $key=>$vo}
+							<p style="display: block;">{$vo.title}</p>
+							{/foreach}
 						</div>
 						<a href="list_2d_cn_2.html">了解更多</a>
 					</figcaption>
@@ -165,18 +175,20 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-6" v-for="(item,index) in dataList.goods_xgcp">
-						<a :href="'alphalook3d_cn.html?id='+item.id" class="home-products-item">
+					{foreach $goods_list as $key=>$vo}
+					<div class="col-sm-6" >
+						<a href="alphalook3d_cn.html?id={$vo.id}" class="home-products-item">
 							<div class="home-products-item-tit">
-								<h3>{{item.name}}</h3>
+								<h3>{$vo.name}</h3>
 
-								<span>{{item.descriptive}}</span>
+								<span>{$vo.descriptive}</span>
 							</div>
 							<div class="home-products-item-img">
-								<img :src="item.thum">
+								<img src="{$vo.thum}">
 							</div>
 						</a>
 					</div>
+					{/foreach}
 				</div>
 			</div>
 		</section>
@@ -252,29 +264,29 @@
 				banners5: {},
 			},
 			mounted: function () {
-				$.ajax({
-					async: true,
-					type: 'POST',
-					dataType: 'json',
-					data: {
-					},
-					url: '__localhost__/index.php/api_articles/Articlesweb/home_page',
-					success: function (res) {
-						console.log(res);
-						app.dataList = res.data;
-						app.banners = res.data.banners;
+				// $.ajax({
+				// 	async: true,
+				// 	type: 'POST',
+				// 	dataType: 'json',
+				// 	data: {
+				// 	},
+				// 	url: '__localhost__/index.php/api_articles/Articlesweb/home_page',
+				// 	success: function (res) {
+				// 		console.log(res);
+				// 		app.dataList = res.data;
+				// 		app.banners = res.data.banners;
 
-						app.banners1 = res.data.banners[0];
-						app.banners2 = res.data.banners[1];
-						app.banners3 = res.data.banners[2];
-						app.banners4 = res.data.banners[3];
-						app.banners5 = res.data.banners[4];
+				// 		app.banners1 = res.data.banners[0];
+				// 		app.banners2 = res.data.banners[1];
+				// 		app.banners3 = res.data.banners[2];
+				// 		app.banners4 = res.data.banners[3];
+				// 		app.banners5 = res.data.banners[4];
 
-					},
-					error: function (res) {
-						console.log(res);
-					}
-				});
+				// 	},
+				// 	error: function (res) {
+				// 		console.log(res);
+				// 	}
+				// });
 			},
 			methods: {
 				sum(m, n) {
