@@ -7,6 +7,11 @@
                         Product Center
                     </p>
                     <ul>
+                        <!-- <li class="nav-item" v-for="(col,index) in cpzx"> -->
+                            <!-- <a class="ga-data" :href="'list_101_cn.html?id='+col.id" target="_self"> -->
+                                <!-- Intelligent door lock series --> 
+                            <!-- </a> -->
+                        <!-- </li> -->
                         {foreach $cpzx as $key=>$vo}
                         <li class="nav-item">
                             <a class="ga-data" href="product.html?id={$vo.id}" target="_self">
@@ -14,6 +19,21 @@
                             </a>
                         </li>
                         {/foreach}
+                        <!-- <li class="nav-item">
+                            <a class="ga-data" href="list_103_cn.html" target="_self">
+                                Face recognition building equipment
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="ga-data" href="list_123_cn.html" target="_self">
+                                Intelligent face access control device
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="ga-data" href="list_103_cn.html" target="_self">
+                                Intelligent face device
+                            </a>
+                        </li> -->
                     </ul>
                 </div>
                 <!-- <div class="cell is-3">
@@ -29,30 +49,35 @@
                     </ul>
                 </div> -->
                 <!--<div class="cell is-3">
-							<p class="title">成功案例</p>
-							<ul>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">社区成功案例</a>
-								</li>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">酒店成功案例</a>
-								</li>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">政府成功案例</a>
-								</li>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">企业成功案例</a>
-								</li>
-								<li class="nav-item">
-									<a href="#" target="_blank" class="ga-data">学校成功案例</a>
-								</li>
-							</ul>
-						</div>-->
+                            <p class="title">成功案例</p>
+                            <ul>
+                                <li class="nav-item">
+                                    <a href="#" target="_blank" class="ga-data">社区成功案例</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" target="_blank" class="ga-data">酒店成功案例</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" target="_blank" class="ga-data">政府成功案例</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" target="_blank" class="ga-data">企业成功案例</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" target="_blank" class="ga-data">学校成功案例</a>
+                                </li>
+                            </ul>
+                        </div>-->
                 <div class="cell is-3">
                     <p class="title">
                         Core Technology
                     </p>
                     <ul>
+                      <!--   <li class="nav-item" v-for="(col,index) in hxjs._child">
+                            <a class="ga-data" :href="'list_3d.html?id='+col.id" target="_blank"> -->
+                                <!-- 3D Facial Recognition -->
+                            <!-- </a>
+                        </li> -->
                         {foreach $hxjs._child as $key=>$vo}
                         <li class="nav-item">
                             <a class="ga-data" href="list_3d.html?id={$vo.id}" target="_blank">
@@ -150,6 +175,53 @@
             bodysss:'',
         },
         mounted: function () {
+            // $.ajax({
+            //     async: true,
+            //     type: 'POST',
+            //     dataType: 'json',
+            //     data: {
+                    
+            //     },
+            //     url: '__localhost__/index.php/api_articles/Articlesweb/tree',
+            //     success: function (res) {
+            //         console.log(res);
+            //         app3.column2 = res.data;
+            //         for ( i =0; i< res.data.length;i++) {
+            //            switch(res.data[i].id)
+            //             {
+            //                 case 64:
+            //                     app3.hxjs=res.data[i];
+            //                     break;
+            //                 // case 40:
+            //                 //     app3.cpzx=res.data[i];
+            //                 //     break;
+            //                 default:
+            //                     break;
+            //             }
+            //         }
+                    
+            //     },
+            //     error: function (res) {
+            //         console.log(res);
+            //     }
+            // });
+            //  $.ajax({
+            //     async: true,
+            //     type: 'POST',
+            //     dataType: 'json',
+            //     data: {
+                    
+            //     },
+            //     url: '__localhost__/index.php/api_articles/Articlesweb/good_tree',
+            //     success: function (res) {
+            //         console.log(res);
+            //         app3.cpzx = res.data;
+                    
+            //     },
+            //     error: function (res) {
+            //         console.log(res);
+            //     }
+            // });
               $.ajax({
                 async: true,
                 type: 'POST',
