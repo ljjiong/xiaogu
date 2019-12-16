@@ -176,69 +176,7 @@
 
 	<!-- 底部加css -->
 	{include file="footeren" /}
-	<script>
-		feather.replace();
-		$(function() { 
-			window.onload = function() { 
-				// console.log(1)
-				// $(".swiper-scroller-list li:eq(1) a").val('111'); //这个是jquery代码 
-			}; 
-		
-		});
-		function goto(params) {
-			window.location.href = 'index.html';
-		}
-		var app = new Vue({
-			el: '#app',
-			data: {
-				dataList: {
-					articles_hxjs:[]
-				},
-				banners: '',
-				img1: '',
-				img2: '',
-				img3: '',
-				img4: '',
-				img5: '',
-				banners1: {},
-				banners2: {},
-				banners3: {},
-				banners4: {},
-				banners5: {},
-			},
-			mounted: function () {
-				$.ajax({
-					async: true,
-					type: 'POST',
-					dataType: 'json',
-					data: {
-					},
-					url: '__localhost__/index.php/api_articles/Articlesweb/home_page',
-					success: function (res) {
-						console.log(res);
-						app.dataList = res.data;
-						app.banners = res.data.banners;
-
-						app.banners1 = res.data.banners[0];
-						app.banners2 = res.data.banners[1];
-						app.banners3 = res.data.banners[2];
-						app.banners4 = res.data.banners[3];
-						app.banners5 = res.data.banners[4];
-
-					},
-					error: function (res) {
-						console.log(res);
-					}
-				});
-			},
-			methods: {
-				sum(m, n) {
-					var num = Math.floor(Math.random() * (m - n) + n);
-					alert(num)
-				}
-			},
-		});
-	</script>
+	
 </body>
 
 </html>
