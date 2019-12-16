@@ -119,9 +119,9 @@ class DownloadFile  extends Rest
     public function delete()
     {
         $id     = input('id/d', 0);
-        $result = model('articles')->delOne($id);
+        $result = model('download_file')->delOne($id);
         if ($result['code']) {
-            $this->data['msg'] = '删除文章成功';
+            $this->data['msg'] = '删除文件成功';
         } else {
             $this->data['code'] = 0;
             $this->data['msg']  = $result['msg'];
@@ -137,9 +137,9 @@ class DownloadFile  extends Rest
     {
         $ids = $request->param()['id'];
 
-        $result = model('articles')->delAll($ids);
+        $result = model('download_file')->delAll($ids);
         if ($result['code']) {
-            $this->data['msg'] = '批量删除文章成功';
+            $this->data['msg'] = '批量删除文件成功';
         } else {
             $this->data['code'] = 0;
             $this->data['msg']  = $result['msg'];
