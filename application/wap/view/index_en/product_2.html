@@ -72,18 +72,18 @@
 					<li class="product-item shown col-lg-3 col-md-4 col-sm-6" v-for="(item,index) in column">
 						<div class="widget">
 							<figure class="widget-header cover">
-								<a :href="'alphalook.html?id='+item.id" :title="item.name"
+								<a :href="'products.html?id='+item.id" :title="item.name"
 									target='_self'>
 									<img :src="item.thum" />
 								</a>
 							</figure>
 							<h4 class="widget-title">
-								<a :href="'alphalook.html?id='+item.id" :title="item.name" target='_self'>
+								<a :href="'products.html?id='+item.id" :title="item.name" target='_self'>
 									{{item.name_en}}
 								</a>
 								<p></p>
 								<span class="btn-detail">
-									<a :href="'alphalook.html?id='+item.id" title="AlphaLook 3D Module" target='_self'>
+									<a :href="'products.html?id='+item.id" title="AlphaLook 3D Module" target='_self'>
 										view details
 									</a>
 								</span>
