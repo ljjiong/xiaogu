@@ -54,11 +54,11 @@ return [
     // +----------------------------------------------------------------------
 
     // 默认模块名
-    'default_module'         => 'wap',  //admin 后台    wap 前端
+    'default_module'         => 'home',  //admin 后台    wap 前端
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     // 默认控制器名
-    'default_controller'     => 'Index',
+    'default_controller'     => 'Cn',
     // 默认操作名
     'default_action'         => 'index',
     // 默认验证器
@@ -141,7 +141,7 @@ return [
     // 视图输出字符串内容替换
     'view_replace_str'       => [
         '__static__' => '/public/static',
-        '__localhost__' => 'http://wwww.xiaogutech.com',
+        '__localhost__' => 'http://www.xiaogutech.com',
     ],
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => THINK_PATH . 'tpl' . DS . 'dispatch_jump.tpl',

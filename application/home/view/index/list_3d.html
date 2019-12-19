@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>小钴科技3D视觉算法</title>
+	<meta name="description" content="小钴科技基于深度学习的3D视觉方案，准确识别人脸深度信息，提供3D人脸识别算法、3D防伪算法、3D人脸属性算法、3D手势识别算法、3D动作检测算法。" />
+	<meta name="keywords" content="深度学习,3D视觉方案,人脸深度信息,3D人脸识别算法,3D防伪算法,3D人脸属性算法,3D手势识别算法,3D动作检测算法" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<meta name="generator" content="MetInfo 5.3.19" data-variable="http://www.xiaogutech.com/|cn|119||2|xiaogu" />
+	<link href="__static__/website/img/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/metinfo.css" />
+	<!--[if IE]><script src="../public/js/html5.js" type="text/javascript"></script><![endif]-->
+	<script>
+		var _hmt = _hmt || [];
+		(function () {
+			var hm = document.createElement("script");
+			hm.src = "https://hm.baidu.com/hm.js?dbdc657b731eb41870ead6ab84e3b2f1";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+	{include file="head" /}
+</head>
+
+<body>
+	
+	{include file="header" /}
+
+	<div id="app">
+		<nav id="product-subnav" class="sub-nav-wrap-black">
+			<div class="container">
+				<div class="sub-nav-left">
+					<h1 class="title">核心技术</h1>
+				</div>
+
+				<div class="sub-nav-right">
+					<dl class="list-none navnow">
+						<dt>
+							<a href="all_list.html" title="核心技术 " class="zm">
+								<span>全部</span>
+							</a>
+						</dt>
+					</dl>
+					<dl class="list-none navnow" v-for="(col,index) in trees">
+						<dt><a :href="'list_3D.html?id='+ col.id" :title='col.name'
+								class="zm"><span>{{col.name}}</span></a>
+						</dt>
+					</dl>
+				</div>
+
+			</div>
+		</nav>
+
+
+
+		<div class="met_clear"></div>
+
+		<div class="tech-section core-banner"
+			:style="'background: url('+classify.imgs+') no-repeat 50%;background-color: black;'">
+			<div class="core-banner-shape"></div>
+			<div class="core-banner-content">
+				<div class="core-banner-title">
+					{{classify.name}}
+				</div>
+				<div class="core-banner-info" style="overflow: hidden;text-overflow: ellipsis;display:-webkit-box;">
+					{{classify.intro}}
+				</div>
+				<div class="core-banner-btn-list">
+				</div>
+			</div>
+			<span class="core-banner-box"></span>
+		</div>
+		<div class="core-contents">
+			<div class="container">
+				<h3 class="section-title">产品功能</h3>
+				<div class="row">
+					<div class="col-md-4" v-for="(col,index) in column" v-if="col.class_id == 1" >
+						<div class="core-list-container">
+							<div class="core-list-item-img">
+								<div class="core-list-poster"
+									:style="'background-image: url('+col.thum+');'"></div>
+								<div class="core-list-sign"></div>
+							</div>
+							<div class="core-list-info">
+								<div class="core-list-name">{{col.title}}</div>
+								<div class="core-list-intro">
+									{{col.content}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="core-scene">
+				<div class="container">
+					<h3 class="section-title">应用场景</h3>
+					<ul>
+						<li v-for="(col,index) in column" v-if="col.class_id == 2" class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;padding-right: 0px;padding-left: 0px;">
+							<i class="ico-1" :style="'background-image: url('+col.thum+');'"></i>
+							<div class="des">
+								<h3>{{col.title}}</h3>
+								<p style="text-align: center;">{{col.content}}</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="container">
+				<h3 class="section-title">产品优势</h3>
+				<div class="row">
+					<div class="core-feature-item col-md-4" v-for="(col,index) in column" v-if="col.class_id == 3" >
+						<div class="core-feature-icon"
+							:style="'background-image: url('+col.thum+');'"></div>
+						<div class="core-feature-desc">
+							<div class="core-feature-desc-title">{{col.title}}</div>
+							<div class="core-feature-desc-info">
+								{{col.content}}
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="container">
+				<h3 class="section-title">了解更多</h3>
+				<p class="contact-tel">
+					0731-85058649
+				</p>
+			</div>
+		</div>
+
+		<!--
+	EOT;
+	?>-->
+
+		<div class="container">
+			<div class="met_module2_list">
+				<ul>
+
+				</ul>
+
+				<div class='met_pager'>
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	<div class="met_clear"></div>
+	</section>
+	<!-- 底部加css -->
+	{include file="footer" /}
+
+	
+	<!-- <script>
+		feather.replace()
+	</script> -->
+	<script>
+		feather.replace();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				column: '',
+				classify:{},
+				trees:{
+					name:'',
+				}
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data:{
+						id:64
+					},
+					url: '__localhost__/index.php/api_articles/Articlesweb/read_tree',
+					success: function (res) {
+						console.log(res);
+						app.trees = res.data._child;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					url: '__localhost__/index.php/api_articles/Articlesweb/articles_hxjs_list?type_id=' + this.getQueryVariable("id"),
+					success: function (res) {
+						console.log(res);
+						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					url: '__localhost__/index.php/api_articles/Articlesweb/tree_one?id=' + this.getQueryVariable("id"),
+					success: function (res) {
+						console.log(res);
+						app.classify = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+				getQueryVariable(variable) {
+					var query = window.location.search.substring(1);
+					var vars = query.split("&");
+					for (var i = 0; i < vars.length; i++) {
+						var pair = vars[i].split("=");
+						if (pair[0] == variable) { return pair[1]; }
+					}
+					return (false);
+				}
+			},
+		})
+	</script>
+</body>
+
+</html>

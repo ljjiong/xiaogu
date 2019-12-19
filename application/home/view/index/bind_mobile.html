@@ -1,0 +1,158 @@
+<!-- 新建html模板页 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+</head>
+
+<body>
+  <div id="app">
+    <!-- 头部 -->
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header" style="background-color:#f4f4f4!important;">
+      <a class="aui-pull-left aui-btn" onclick="gotowap('index')">
+        <span class="aui-iconfont aui-icon-left" style="color:#333!important;"></span>
+      </a>
+      <div class="aui-title" v-text="title" style="color:#333!important;"></div>
+    </header>
+    <!-- 中间页 -->
+    <div class="aui-content aui-text-center">
+      <img :src="login_logo" style="width:65%;margin:2.5rem auto 0 auto;margin-bottom: 2rem;">
+      <div class="area">
+        <div class="tips aui-text-left">请先绑定手机号,下次可直接用第三方账号登录</div>
+        <div class="mix">
+          <i class="aui-iconfont aui-icon-mobile"></i>
+          <input type="text" class="input short" pattern="[0-9]*" onkeyup="value=value.replace(/[^\d]/g,'')"
+            placeholder="输入手机号码" v-model="mobile">
+          <div class="get-varicode" id="get-varicode" onclick="sendVaricode(this, 2)">发送验证码</div>
+        </div>
+
+        <div class="mix">
+          <i class="aui-iconfont aui-icon-lock"></i>
+          <input type="text" class="input" v-model="varicode" pattern="[0-9]*" placeholder="输入验证码">
+        </div>
+        <div class="submit" @click="doBind()" v-text="title"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    debugger;
+    var third_type = querystring.third_type;
+    var app = new Vue({
+      el: '#app',
+      data: {
+        title: '绑定手机号',
+        mobile: '',
+        varicode: '',
+        openid: querystring.openid,
+        login_logo: '',
+      },
+      methods: {
+        doBind: function () {
+          var data = {
+            mobile: this.mobile,
+            code: this.varicode,
+            openid: this.openid,
+            openid_type: third_type
+          }
+          if (third_type == 'wechat') {
+            data.avatar = querystring.avatar;
+            data.nick_name = decodeURIComponent(querystring.nick_name);
+            data.real_openid = querystring.real_openid;
+          }
+
+          httpRequest('POST', 'api_users/binding/save_in_no_login', data).then(function (resp) {
+            layer.msg(resp.msg);
+            setTimeout(function () {
+              gotowap('login');
+            }, 500)
+          })
+        },
+        getParams: function () {
+          var that = this
+          httpRequest('POST', 'api_systems/params/getParams', {
+            type: 'basic'
+          }).then(function (resp) {
+            that.login_logo = resp.data.wap_login_logo
+            document.title = resp.data.system_title
+            setStorage('systemParams', resp.data)
+          })
+        }
+      },
+      mounted: function () {
+        this.getParams()
+      }
+    })
+    sendVaricode = function (evn, type) {
+      if (wait == 90) {
+        var mobile = app.mobile;
+        if (!variTelephone(mobile)) {
+          layer.msg('请填写正确的手机号码')
+          return;
+        }
+        httpRequest('POST', 'api_systems/helper/send_code', {
+          mobile: mobile,
+          type: type
+        }).then(function (resp) {
+          layer.msg(resp.msg)
+          if (resp.code == 1) {
+            sendclick(evn);
+          }
+        })
+      }
+    }
+
+    wait = 90;
+    sendclick = function (evn) {
+      var obj = $(evn);
+      if (wait == 0) {
+        obj.attr('disabled', false);
+        obj.text('获取验证码');
+        obj.css('backgroundColor', '#358cff');
+        wait = 60;
+      } else {
+        obj.css('backgroundColor', '#696969');
+        obj.attr('disabled', true);
+        obj.text(wait + '秒再次发送');
+        wait--;
+        setTimeout(function () {
+          sendclick(evn);
+        }, 1000);
+      }
+    }
+  </script>
+</body>
+
+</html>

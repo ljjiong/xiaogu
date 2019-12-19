@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>产品中心-小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技</title>
+	<meta name="description" content="小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|认证对比|gco-小钴科技" />
+	<meta name="keywords" content="小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<meta name="generator" content="MetInfo 5.3.19" data-variable="http://www.xiaogutech.com/|cn|3||3|xiaogu" />
+	<link href="__static__/website/img/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/metinfo.css" />
+	<!--[if IE]><script src="../public/js/html5.js" type="text/javascript"></script><![endif]-->
+	<script>
+		var _hmt = _hmt || [];
+		(function () {
+			var hm = document.createElement("script");
+			hm.src = "https://hm.baidu.com/hm.js?dbdc657b731eb41870ead6ab84e3b2f1";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/v1.base.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/v1.header.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/editormd.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/products.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/nav.css" />
+	<script src="__static__/website/js/jquery-2.1.4.js" type="text/javascript" charset="utf-8">
+	</script>
+	<script src="__static__/website/js/modernizr.js" type="text/javascript" charset="utf-8">
+	</script>
+</head>
+
+<body>
+	<!-- 头部导航栏 -->
+	{include file="headeren" /}
+	<div id="app">
+	<nav id="product-subnav" class="sub-nav-wrap-black">
+		<div class="container">
+			<div class="sub-nav-left">
+				<h1 class="title">Product center</h1>
+			</div>
+
+			<div class="sub-nav-right">
+				<dl class="list-none navnow">
+					<dt>
+						<a href="product.html" title="产品中心 " class="zm">
+							<span>All</span>
+						</a>
+					</dt>
+				</dl>
+				<dl class="list-none navnow" v-for="(col,index) in trees">
+					<dt ><a :href="'product.html?id='+ col.id" title='主板模组' class="zm"><span>{{col.name_en}}</span></a></dt>
+				</dl>
+			</div>
+
+		</div>
+	</nav>
+
+
+
+	<div class="met_clear"></div>
+
+	<div class="products-list-page">
+		<div class="container">
+			<div class="row" >
+
+				<ul class="products-list list_1" style="margin: 0px 10px;">
+					<li class="product-item shown col-lg-3 col-md-4 col-sm-6" v-for="(item,index) in column">
+						<div class="widget">
+							<figure class="widget-header cover">
+								<a :href="'alphalook.html?id='+item.id" :title="item.name_en"
+									target='_self'>
+									<img :src="item.thum" />
+								</a>
+							</figure>
+							<h4 class="widget-title">
+								<a :href="'alphalook.html?id='+item.id" :title="item.name_en" target='_self'>
+									{{item.name_en}}
+								</a>
+								<p></p>
+								<span class="btn-detail">
+									<a :href="'alphalook.html?id='+item.id" title="AlphaLook 3D Module" target='_self'>
+										view details
+									</a>
+								</span>
+								<p class="product-short" style="overflow:hidden; text-overflow:ellipsis;max-width: 100%">{{item.descriptive_en}}</p>
+							</h4>
+						</div>
+					</li>
+				</ul>
+
+
+				<div class='met_pager'>
+                <!--<a href="javascript:void(0);" v-on:click="addpage">hahaha</a>-->
+                <span class='PreSpan' v-on:click="minuspage">Up</span>
+                <a href="javascript:void(0);" class="Ahover">{{pagenum}}</a>
+                <span class='NextSpan' v-on:click="addpage">Down</span>
+                <span>Sum:{{pagecount}}Page</span>
+                <span class='PageText'>转至第</span>
+                <input type='text' id='metPageT' data-pageurl='list_4_|_cn.html|1' value='1'/>
+                <input type='button' id='metPageB' value='页'/>
+            </div>
+
+			</div>
+		</div>
+	</div>
+
+	</div>
+	<div class="met_clear"></div>
+	</div>
+
+
+	<!-- 底部加css -->
+	{include file="footeren" /}
+
+	<script>
+		feather.replace();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				column: '',
+				trees:{
+					name:'',
+				},
+				pagenum: 1,
+		        pagelimit: 12,
+		        pagecount: 1,
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data:{
+						
+					},
+					url: '__localhost__/index.php/api_articles/Articlesweb/good_tree',
+					success: function (res) {
+						console.log(res);
+						app.trees = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					headers: {
+                        "page-num": this.pagenum,//此处放置请求到的用户token
+                        "page-limit": this.pagelimit,//此处放置请求到的用户token
+                    },
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+					},
+					url: '__localhost__/index.php/api_articles/Articlesweb/goods_list?goods_cate_id=' + this.getQueryVariable("id"),
+					success: function (res) {
+						console.log(res);
+						app.column = res.data;
+						app.count_ = res.page.data_count;
+                    	app.pagecount = Math.ceil(app.count_ / app.pagelimit);
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+				getQueryVariable(variable) {
+					var query = window.location.search.substring(1);
+					var vars = query.split("&");
+					for (var i = 0; i < vars.length; i++) {
+						var pair = vars[i].split("=");
+						if (pair[0] == variable) { return pair[1]; }
+					}
+					return (0);
+				},
+				addpage: function () {
+                if (Math.ceil(app.count_ / app.pagelimit) > app.pagenum) {
+                    app.pagenum++;
+                    this.join()
+                    console.log(app.pagenum)
+	                }
+	            },
+	            minuspage: function () {
+	                if (app.pagenum > 1) {
+	                    app.pagenum--
+	                    this.join()
+	                    console.log(app.pagenum)
+	                }
+	            },
+	            join: function () {
+	                $.ajax({
+	                    // async: true,
+	                    headers: {
+	                        "page-num": app.pagenum,//此处放置请求到的用户token
+	                        "page-limit": app.pagelimit,//此处放置请求到的用户token
+	                    },
+	                    async: true,
+						type: 'POST',
+						dataType: 'json',
+						data: {
+						},
+						url: '__localhost__/index.php/api_articles/Articlesweb/goods_list?goods_cate_id=' + this.getQueryVariable("id"),
+						success: function (res) {
+							console.log(res);
+							app.column = res.data;
+						},
+						error: function (res) {
+							console.log(res);
+						}
+	                });
+	            }
+			},
+		})
+	</script>
+</body>
+
+</html>

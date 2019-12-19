@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>新闻资讯-小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技</title>
+	<meta name="description" content="小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|认证对比|gco-小钴科技" />
+	<meta name="keywords" content="小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<meta name="generator" content="MetInfo 5.3.19" data-variable="http://www.xiaogutech.com/|cn|2||2|xiaogu" />
+	<link href="__static__/website/img/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/metinfo.css" />
+	<!--[if IE]><script src="../public/js/html5.js" type="text/javascript"></script><![endif]-->
+	<script>
+		var _hmt = _hmt || [];
+		(function () {
+			var hm = document.createElement("script");
+			hm.src = "https://hm.baidu.com/hm.js?dbdc657b731eb41870ead6ab84e3b2f1";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/v1.base.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/v1.header.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/editormd.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/page.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/nav.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/font-awesome.min.css" />
+	<script src="__static__/website/js/jquery-2.1.4.js" type="text/javascript" charset="utf-8">
+	</script>
+	<script src="__static__/website/js/modernizr.js" type="text/javascript" charset="utf-8">
+	</script>
+</head>
+
+<body style="background-color: #fff;font-size: 100%;">
+	{include file="headeren" /}
+	<div id="app">
+		
+
+
+
+
+
+
+		<nav id="product-subnav" class="sub-nav-wrap-black">
+			<div class="container">
+				<div class="sub-nav-left">
+					<h1 class="title">News</h1>
+				</div>
+			</div>
+		</nav>
+		<div class="location met-crumbs">
+			<div class="container">
+				<div class="row">
+					<ol class="breadcrumb ">
+						<li class="breadcrumb-item">
+							<a href="index.html" title="Home" class="fa fa-home"> Home</a>
+						</li>
+						<li class="breadcrumb-item"><a href="news.html" />News </a> >
+							<a href="news.html?id=42" v-if="dataList.type_id==42">Company Dynamic </a>
+							<a href="news.html?id=41" v-else-if="dataList.type_id==41">Industry News </a>
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+		<div class="met_clear">
+		</div>
+
+		<div class="gco-detail">
+			<div class="container">
+				<div class="gco-detail-content">
+					<div class="detail-head">
+						<h1 class="title">{{dataList.title_en}}</h1>
+						<div class="detail-info">
+							<span class="fa fa-clock-o"> {{dataList.create_time}}</span>
+							<span class="fa fa-eye"> Reading:{{dataList.click_num}} <span class="met_Clicks"></span></span>
+						</div>
+					</div>
+					<div class="detail-content">
+						<div>
+							<blockquote>
+								<p>{{dataList.intro_en}}
+								</p>
+							</blockquote>
+							<div v-html="dataList.content_en"></div>　　
+								
+							
+							<div id="metinfo_additional"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="met_clear"></div>
+
+
+	{include file="footeren" /}
+	
+	<script>
+		feather.replace();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				dataList: ''
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'GET',
+					dataType: 'json',
+					url: '__localhost__/index.php/api_articles/Articlesweb/articles_read?id=' + this.getQueryVariable("id"),
+					success: function (res) {
+						app.dataList = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'GET',
+					dataType: 'json',
+					url: '__localhost__/index.php/api_articles/Articlesweb/article_click_num?id=' + this.getQueryVariable("id"),
+					success: function (res) {
+						app.dataList = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				
+			},
+			methods: {
+				getQueryVariable(variable) {
+					var query = window.location.search.substring(1);
+					var vars = query.split("&");
+					for (var i = 0; i < vars.length; i++) {
+						var pair = vars[i].split("=");
+						if (pair[0] == variable) { return pair[1]; }
+					}
+					return (false);
+				}
+			},
+		})
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,208 @@
+<!-- 完善个人信息 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+</head>
+
+<body>
+  <div id="app">
+    <!-- 头部 -->
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header" style="background-image:none;">
+      <a class="aui-pull-left aui-btn" onclick="javascript:window.history.back(); return false;">
+        <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title" v-text="title"></div>
+    </header>
+    <!-- 中间页 -->
+    <div class="aui-content">
+      <div class="input aui-list aui-form-list">
+        <div class="input-bank aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">昵称</div>
+            <div class="aui-list-item-input">
+              <input type="text" placeholder="请输入昵称" v-model="user.nick_name">
+            </div>
+          </div>
+        </div>
+        <div class="input-bank aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">qq号</div>
+            <div class="aui-list-item-input">
+              <input type="text" placeholder="请输入qq号" v-model="user.qq">
+            </div>
+          </div>
+        </div>
+        <div class="input-bank aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">微信号</div>
+            <div class="aui-list-item-input">
+              <input type="text" placeholder="请输入微信号" v-model="user.wechat">
+            </div>
+          </div>
+        </div>
+        <div class="input-bank aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">邮箱</div>
+            <div class="aui-list-item-input">
+              <input type="text" placeholder="请输入邮箱" v-model="user.email">
+            </div>
+          </div>
+        </div>
+        <div class="input-bank aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">省</div>
+            <div class="aui-list-item-input">
+              <select v-model="user.province_code" @change="provinceChange(user.province_code);">
+                <option value="">请选择省份</option>
+                <option :value="province.id" v-for="(province, provinceKey) in provinces" :key="provinceKey" v-text="province.name"></option>
+              </select>
+
+            </div>
+          </div>
+        </div>
+        <div class="input-bank aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">市</div>
+            <div class="aui-list-item-input">
+              <select v-model="user.city_code" @change="cityChange(user.city_code);">
+                <option value="">请选择城市</option>
+                <option :value="city.id" v-for="(city, cityKey) in cities" :key="cityKey" v-text="city.name"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="input-bank aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">县</div>
+            <div class="aui-list-item-input">
+              <select v-model="user.area_code">
+                <option value="">请选择县</option>
+                <option :value="area.id" v-for="(area, areaKey) in areas" :key="areaKey" v-text="area.name"></option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="aui-btn aui-btn-info aui-btn-block" style="width: 80%; margin: 1rem auto" @click="submit">提交</div>
+    </div>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        title: '完善个人信息',
+        user: {},
+        provinces: [],
+        cities: [],
+        areas: [],
+      },
+      methods: {
+        provinceChange: function (province_code) {
+          var that = this;
+          this.user.city_code = '';
+          this.user.area_code = ''
+          this.cities = [];
+          this.areas = [];
+          this.provinces.forEach(function (item) {
+            if (item.id == province_code) {
+              that.cities = item.citys;
+            }
+          })
+        },
+        cityChange: function (city_code) {
+          var that = this;
+          this.user.area_code = '';
+          this.areas = [];
+          this.cities.forEach(function (item) {
+            if (item.id == city_code) {
+              that.areas = item.areas;
+            }
+          })
+        },
+        submit: function () {
+
+          if (this.user.nick_name && this.user.qq && this.user.wechat && this.user.email && this.user.province_code && this.user.city_code && this.user.area_code) {
+            httpRequest('POST', 'api_users/users/update', {
+              qq: this.user.qq,
+              wechat: this.user.wechat,
+              email: this.user.email,
+              province_code: this.user.province_code,
+              city_code: this.user.city_code,
+              area_code: this.user.area_code,
+              nick_name: this.user.nick_name,
+            }).then(function (resp) {
+              layer.msg(resp.msg);
+              setTimeout(function () {
+                history.back();
+              }, 800)
+            })
+          } else {
+            layer.msg('请填写完整的信息');
+          }
+        },
+      },
+      computed: {
+
+      },
+      filters: {
+
+      },
+      mounted: function () {
+        var that = this;
+        httpRequest('POST', 'api_systems/regions/index').then(function (resp) {
+          that.provinces = resp.data;
+          return httpRequest('POST', 'api_users/users/read');
+        }).then(function (resp) {
+          that.user = resp.data;
+          //  设置省市县
+          that.provinces.forEach(function (item) {
+            if (item.id == that.user.province_code) {
+              that.cities = item.citys;
+            }
+          });
+          that.cities.forEach(function (item) {
+            if (item.id == that.user.city_code) {
+              that.areas = item.areas;
+            }
+          })
+        })
+      }
+    })
+  </script>
+</body>
+
+</html>

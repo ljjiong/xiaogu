@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>会员中心-小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<meta name="generator" content="MetInfo" data-variable="http://www.xiaogutech.com/|cn||||xiaogu" />
+	<link href="http://www.xiaogutech.com/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/login.css" />
+	<script src="__static__/website/js/jquery-2.1.4.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+	<div class="container met-head">
+
+		<div class="row">
+			<div class="col-xs-6 col-sm-6 logo">
+				<ul class="list-none">
+					<li><a href="http://www.xiaogutech.com/index.php?lang=cn" class="met-logo"><img src="" /></a></li>
+
+					<li>会员登录</li>
+
+				</ul>
+			</div>
+
+			<div class="col-xs-6 col-sm-6 user-info">
+				<ol class="breadcrumb pull-right">
+
+					<li><a href="index.html" title="返回首页">返回首页</a></li>
+				</ol>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="login_index met-member" id="app">
+		<div class="container">
+			<form>
+				<input type="hidden" name="gourl" value="" />
+				<div class="form-group">
+					<input type="text" name="username" required class="form-control" placeholder="用户名/邮箱/手机"
+						v-model="mobile" data-bv-notempty="true" data-bv-notempty-message="此项不能为空">
+				</div>
+				<div class="form-group">
+					<input type="password" name="password" required class="form-control" placeholder="密码"
+						v-model="password" data-bv-notempty="true" data-bv-notempty-message="此项不能为空">
+				</div>
+
+				<!-- <div class="login_link"><a href="http://www.xiaogutech.com/member/getpassword.php?lang=cn">忘记密码？</a> -->
+				<!-- </div> -->
+				<a class="btn btn-lg btn-primary btn-block" @click="login">登录</a>
+				<a class="btn btn-lg btn-info btn-block" href="register_include.html">没有账号？现在去注册</a>
+			</form>
+		</div>
+	</div>
+
+	<footer class="container met-footer">
+		<p>Copyright © 2018-2019 小钴科技 版权所有 </p>
+		<p>
+			<p>浙ICP备17041436号-1</p>
+		</p>
+
+	</footer>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="__static__/website/seajs.js"></script>
+	<script>
+		var app = new Vue({
+			el: '#app',
+			data: {
+				mobile: '',
+				password: '',
+				hosts:'',
+			},
+			mounted: function () {
+				app.hosts=window.location.protocol+"//"+window.location.host;
+
+			},
+			methods: {
+				login() {
+					if (this.mobile == '') {
+						alert("请填写用户名")
+					} else if (this.password == '') {
+						alert("请填写密码")
+					} else {
+						$.ajax({
+							async: true,
+							type: 'POST',
+							dataType: 'json',
+							data: {
+								mobile: this.mobile,
+								password: this.password
+							},
+							url: '__localhost__/index.php/api_articles/Articlesweb/login',
+							success: function (res) {
+								console.log(res);
+								// app.column = res.data[0];
+								if(res.code===1){
+									alert(res.msg);
+									var last=document.referrer;
+									var host = window.location.host;
+									console.log(last.trim());
+									console.log(host);
+									// console.log(last);
+									if(last.trim() !=''){
+										////来自其它站点
+										if(last.indexOf(host) == -1){
+											window.open(app.hosts+'/wap/index/index.html','_self');		
+										}else if(last.indexOf('register_include.html') !=-1 ){
+											window.open(app.hosts+'/wap/index/index.html','_self');
+										}else{
+											window.open(last,'_self');
+										}
+									}else{
+										window.open(app.hosts+'/wap/index/index.html','_self');
+									}
+									//设置登录信息
+									sessionStorage.setItem("id",res.data.id);
+									sessionStorage.setItem("name",res.data.nick_name);
+									sessionStorage.setItem("department",res.data.department);
+								}else{
+									alert(res.msg);
+								}
+							},
+							error: function (res) {
+								console.log(res);
+							},
+							catch: function () {
+								alert("网络出错了！")
+							}
+						});
+					}
+				},
+			}
+		})
+	</script>
+</body>
+
+</html>

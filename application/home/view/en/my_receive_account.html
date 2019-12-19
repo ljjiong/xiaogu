@@ -1,0 +1,170 @@
+<!-- 第三方收款账户 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<script src="__static__/wap/aui/script/aui-actionsheet.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 头部 -->
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header" style="background-image:none;">
+      <a class="aui-pull-left aui-btn" onclick="gotowap('home')">
+        <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title" v-text="title"></div>
+    </header>
+    <!-- 中间页 -->
+    <section class="aui-content" style="margin-bottom:2.5rem;">
+      <div class="aui-card-list">
+        <div>
+          <div class="aui-card-list-header aui-font-size-14">
+            <span v-if="aliAccount.id" v-text="aliAccount.account + ' (' + aliAccount.name +  ')'"></span>
+            <span v-else>未绑定</span>
+            <i class="iconfont icon-zhifubao" style="color: rgb(0, 170, 238);"></i>
+          </div>
+        </div>
+        <div class="aui-card-list-footer aui-border-t">
+          <div>
+            <div @click="modifyAccount('ali')" style="display:inline;" v-if="aliAccount.id">
+              <i class="aui-iconfont iconfont icon-icon- aui-margin-r-5 aui-font-size-15"></i>更新
+            </div>
+            <div @click="modifyAccount('ali')" style="display:inline;" v-else>
+              <i class="aui-iconfont iconfont icon-icon- aui-margin-r-5 aui-font-size-15"></i>绑定
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="aui-card-list">
+        <div>
+          <div class="aui-card-list-header aui-font-size-14">
+            <span v-if="wechatAccount.id">已绑定</span>
+            <span v-else>未绑定</span>
+            <i class="iconfont icon-weixinzhifu" style="color:#09bb07;"></i>
+          </div>
+        </div>
+        <div class="aui-card-list-footer aui-border-t" v-if="isWeChatClient">
+          <div>
+            <div @click="modifyAccount('wechat')" style="display:inline;" v-if="wechatAccount.id">
+              <i class="aui-iconfont iconfont icon-icon- aui-margin-r-5 aui-font-size-15"></i>更新
+            </div>
+            <div @click="modifyAccount('wechat')" style="display:inline;" v-else>
+              <i class="aui-iconfont iconfont icon-icon- aui-margin-r-5 aui-font-size-15"></i>绑定
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- <footer class="aui-bar aui-bar-tab">
+      <div class="aui-bar-tab-item aui-padded-l-15 aui-padded-r-15" @click="addAccount">
+        <div class="aui-btn aui-btn-block aui-btn-sm aui-btn-info">添加收款账户</div>
+      </div>
+    </footer> -->
+  </div>
+  <script>
+    var actionsheet = new auiActionsheet();
+    var app = new Vue({
+      el: '#app',
+      data: {
+        title: '我的收款账户',
+        aliAccount: {},
+        wechatAccount: {},
+        isWeChatClient: isWeiXin()
+      },
+      methods: {
+        modifyAccount: function (type) {
+          var that = this;
+          if (type == 'ali') {
+            that.updateAliAccount();
+          } else {
+            httpRequest('POST', 'api_systems/Oauth/wap_wechat_get_code', {
+              state: 'add_receive_account'
+            }).then(function (resp) {
+              location = resp.data;
+            })
+          }
+        },
+        updateAccount: function (data) {
+          httpRequest('POST', 'api_users/user_third_accounts/update', data).then(function (resp) {
+            location.reload();
+          })
+        },
+        updateAliAccount: function () {
+          var that = this;
+          layer.prompt({
+            title: '请输入支付宝账号/手机号/邮箱',
+            formType: 0,
+          }, function (acct, index, elem) {
+            layer.prompt({
+              title: '请输入真实姓名',
+              formType: 0,
+            }, function (name, index, elem) {
+              that.updateAccount({
+                type: 'ali',
+                account: acct,
+                name: name
+              })
+              layer.close(index);
+            });
+            layer.close(index);
+          });
+        }
+      },
+      computed: {
+
+      },
+      filters: {
+
+      },
+      mounted: function () {
+        var that = this;
+        httpRequest('POST', 'api_users/user_third_accounts/lists').then(function (resp) {
+          resp.data.forEach(function (item) {
+            if (item.type == 'ali') {
+              that.aliAccount = item;
+            } else if (item.type == 'wechat') {
+              that.wechatAccount = item;
+            }
+          })
+        })
+      }
+    })
+  </script>
+</body>
+
+</html>

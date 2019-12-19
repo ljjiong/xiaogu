@@ -1,0 +1,212 @@
+{include file="index/top" /}
+</head>
+
+<body>
+
+  <div id="app">
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header" style="background-image:none;">
+      <a class="aui-pull-left aui-btn" onclick="javascript:window.history.back(); return false;">
+        <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title" v-text="title"></div>
+    </header>
+
+    <div class="aui-content aui-margin-b-15">
+      <ul class="aui-list aui-form-list">
+        <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">
+              收件人
+            </div>
+            <div class="aui-list-item-input">
+              <input type="text" placeholder="请输入收件人姓名" v-model="address.consignee_name">
+            </div>
+          </div>
+        </li>
+        <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">
+              联系电话
+            </div>
+            <div class="aui-list-item-input">
+              <input type="text" pattern="[0-9]*" placeholder="请输入联系电话" onkeyup="value=value.replace(/[^\d]/g,'')" v-model="address.mobile">
+            </div>
+          </div>
+        </li>
+        <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">
+              省
+            </div>
+            <div class="aui-list-item-input">
+              <select v-model="address.province_code" @change="provinceChange(address.province_code);">
+                <option value="">请选择省份</option>
+                <option :value="province.id" v-for="(province, provinceKey) in provinces" :key="provinceKey" v-text="province.name"></option>
+              </select>
+            </div>
+          </div>
+        </li>
+        <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">
+              市
+            </div>
+            <div class="aui-list-item-input">
+              <select v-model="address.city_code" @change="cityChange(address.city_code);">
+                <option value="">请选择城市</option>
+                <option :value="city.id" v-for="(city, cityKey) in cities" :key="cityKey" v-text="city.name"></option>
+              </select>
+            </div>
+          </div>
+        </li>
+        <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">
+              县
+            </div>
+            <div class="aui-list-item-input">
+              <select v-model="address.area_code">
+                <option value="">请选择县</option>
+                <option :value="area.id" v-for="(area, areaKey) in areas" :key="areaKey" v-text="area.name"></option>
+              </select>
+            </div>
+          </div>
+        </li>
+        <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">
+              详细地址
+            </div>
+            <div class="aui-list-item-input">
+              <textarea placeholder="请输入详细地址" v-model="address.address"></textarea>
+            </div>
+          </div>
+        </li>
+        <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">
+              是否默认
+            </div>
+            <div class="aui-list-item-input">
+              <label>
+                <input class="aui-radio" type="radio" v-model="address.is_default" name="demo1" value="1">是</label>
+              <label style="margin-left: 1rem;">
+                <input class="aui-radio" type="radio" v-model="address.is_default" name="demo1" value="0">否</label>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <footer class="aui-bar aui-bar-tab">
+      <div class="aui-bar-tab-item aui-padded-l-15 aui-padded-r-15" @click="submit();">
+        <div class="aui-btn aui-btn-block aui-btn-sm aui-btn-info">提交</div>
+      </div>
+    </footer>
+  </div>
+  <script type="text/javascript">
+    var app = new Vue({
+      el: '#app',
+      data: {
+        title: '我的地址',
+        provinces: [],
+        cities: [],
+        areas: [],
+        addressId: querystring.addressId,
+        address: {
+          province_code: '',
+          city_code: '',
+          area_code: '',
+          consignee_name: '',
+          mobile: '',
+          address: '',
+          is_default: 1,
+        }
+
+      },
+      methods: {
+        provinceChange: function (province_code) {
+          var that = this;
+          this.address.city_code = '';
+          this.address.area_code = ''
+          this.cities = [];
+          this.areas = [];
+          this.provinces.forEach(function (item) {
+            if (item.id == province_code) {
+              that.cities = item.citys;
+            }
+          })
+        },
+        cityChange: function (city_code) {
+          var that = this;
+          this.address.area_code = '';
+          this.areas = [];
+          this.cities.forEach(function (item) {
+            if (item.id == city_code) {
+              that.areas = item.areas;
+            }
+          })
+        },
+        submit: function () {
+          if(typeof lastSubmitTime === 'undefined'){
+              lastSubmitTime = Date.now();
+          }else if(Date.now() - lastSubmitTime < 2000){
+              lastSubmitTime = Date.now()
+              return;
+          }
+          
+          if (!this.address.province_code || !this.address.area_code || !this.address.city_code || !this.address.consignee_name || !this.address.mobile || !this.address.address) {
+            layer.msg('请填写完整的信息');
+            return;
+          };
+          if (!variTelephone(this.address.mobile)) {
+            layer.msg('请填写正确的手机号码');
+            return;
+          }
+          var router = querystring.addressId ? 'api_users/addresses/update' : 'api_users/addresses/save'
+          httpRequest('POST', router, this.address)
+            .then(function (resp) {
+              layer.msg(resp.msg);
+              setTimeout(function() {
+                gotowap('address_list')
+              }, 500);
+            })
+        }
+      },
+      computed: {
+
+      },
+      filters: {
+
+      },
+      mounted: function () {
+        httpRequest('POST', 'api_systems/regions/index')
+          .then(function (resp) {
+            app.provinces = resp.data;
+
+            if (querystring.addressId) {
+              return httpRequest('POST', 'api_users/addresses/read', {
+                id: querystring.addressId
+              })
+            }
+          }).then(function (resp) {
+            if (querystring.addressId) {
+              app.address = resp.data;
+              //  设置省市县
+              app.provinces.forEach(function (item) {
+                if (item.id == app.address.province_code) {
+                  app.cities = item.citys;
+                }
+              });
+              app.cities.forEach(function (item) {
+                if (item.id == app.address.city_code) {
+                  app.areas = item.areas;
+                }
+              })
+            }
+          })
+      }
+    })
+  </script>
+</body>
+
+</html>

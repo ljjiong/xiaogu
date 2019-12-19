@@ -1,0 +1,185 @@
+<!-- 新建html模板页 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+
+</head>
+
+<body>
+  <div id="app">
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header" style="background-image:none;">
+      <a class="aui-pull-left aui-btn" href="javascript:gotowap('wallet')">
+        <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title" v-text="title"></div>
+    </header>
+    <div class="aui-content">
+      <ul class="aui-list aui-list aui-media-list aui-bg-default" style="background-image:none;">
+        <!-- 选择银行卡 -->
+        <li v-if="!bankcard.bank_name" class="aui-list-item aui-list-item-middle aui-margin-t-10 aui-margin-b-10 aui-bg-white" @click="selectBankCard">
+          <div class="aui-media-list-item-inner">
+            <div class="aui-list-item-inner aui-list-item-arrow">
+              <div class="aui-list-item-title">请选择银行卡</div>
+            </div>
+          </div>
+        </li>
+        <li v-else class="aui-list-item aui-list-item-middle aui-margin-t-10 aui-margin-b-10 aui-bg-white" @click="selectBankCard">
+          <div class="aui-media-list-item-inner">
+            <div class="aui-list-item-media" style="width: 3rem;">
+              <i class="iconfont" :class="selectBankFontClassObj" style="font-size: 2rem;" :style="{color: selectBankStyle}"></i>
+            </div>
+            <div class="aui-list-item-inner aui-list-item-arrow">
+              <div class="aui-list-item-title" v-text="bankcard.bank_name"></div>
+              <div class="aui-list-item-text" v-text="bankcard.card_number"></div>
+            </div>
+          </div>
+        </li>
+        <!-- 提现金额 -->
+        <li class="aui-list-item aui-margin-t-10 aui-bg-white" style="background-image:none;">
+          <div class="aui-list-item-inner">
+            <div class="aui-list-item-label">
+              提现金额
+            </div>
+          </div>
+        </li>
+        <li class="aui-list-item aui-padded-b-15 aui-bg-white" style="background-image:none;">
+          <span>￥</span>
+          <div class="aui-list-item-input">
+            <div class="aui-list-item-input aui-padded-b-10 aui-border-b">
+              <input class="aui-text-center" type="text" pattern="[0-9]*" style="font-size:1.8rem;letter-spacing:.2rem;" v-model="money">
+            </div>
+          </div>
+        </li>
+        <!-- <span class="aui-padded-l-15 aui-font-size-12">余额:334</span> -->
+      </ul>
+      <div class="area">
+        <div class="submit" @click="submit">提交</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        title: '提现',
+        money: '',
+        bankcard: {
+          bank_name: ''
+        },
+        cardNameMapping: {
+          '中国农业银行': { color: '#018a6e', fontClass: { 'icon-nongyeyinxing': true } },
+          '中国建设银行': { color: '#0c4290', fontClass: { 'icon-jiansheyinxing': true } },
+          '中国工商银行': { color: '#b0091a', fontClass: { 'icon-gongshangyinxing': true } },
+          '中国银行': { color: '#d90000', fontClass: { 'icon-zhongguoyinxing': true } },
+          '招商银行': { color: '#cb0101', fontClass: { 'icon-zhaoshangyinhangbank1193432easyiconnet': true } },
+          '光大银行': { color: '#52047b', fontClass: { 'icon-guangdayinxing': true } },
+          '中国邮政储蓄银行': { color: '#0b6c37', fontClass: { 'icon-youzhengyinxing': true } },
+          '兴业银行': { color: '#143981', fontClass: { 'icon-changyonglogo05': true } },
+          '中信银行': { color: '#d50202', fontClass: { 'icon-zhongxinyinxing': true } },
+          '浦发银行': { color: '#062561', fontClass: { 'icon-pufayinxing': true } },
+          '广发银行': { color: '#a01d1d', fontClass: { 'icon-yinhangqia': true } },
+          '平安银行': { color: '#f15a21', fontClass: { 'icon-yinhangqia': true } },
+          '交通银行': { color: '#003267', fontClass: { 'icon-jiaotongyinxing': true } },
+          '华夏银行': { color: '#d50202', fontClass: { 'icon-changyonglogo17': true } },
+          '民生银行': { color: '#28a1a3', fontClass: { 'icon-minshengyinxing': true } },
+        },
+      },
+      computed: {
+        selectBankFontClassObj: function () {
+          return this.cardNameMapping[this.bankcard.bank_name].fontClass
+        },
+        selectBankStyle: function () {
+          return this.cardNameMapping[this.bankcard.bank_name].color
+        },
+      },
+      methods: {
+        selectBankCard: function () {
+          var innerHeight = window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
+          layer.open({
+            type: 2,
+            title: '请选择银行卡',
+            content: location.origin + '/' + getClientType() + '/index/bankcard_list_select.html',
+            offset: 'b',
+            area: [document.body.offsetWidth + 'px', innerHeight * 0.6 + 'px'],
+            anim: 2,
+            fixed: true,
+            resize: false,
+          })
+        },
+        submit: function () {
+          if (!this.bankcard.bank_name) {
+            layer.msg('请选择银行卡');
+            return;
+          }
+          if (!this.money || isNaN(this.money)) {
+            layer.msg('请输入正确的提现金额');
+            return;
+          }
+
+          httpRequest('POST', 'api_query/users/is_set_pay_password').then(function (resp) {
+            if (resp.data.is_set_pay_password == 0) {
+              layer.msg('请设置支付密码');
+              setTimeout(function () {
+                gotowap('reset_password', { type: 2 })
+              }, 500)
+            } else {
+              layer.prompt({ title: '请输入支付密码', formType: 1 }, function (pass, index) {
+                layer.close(index);
+                httpRequest('POST', 'api_users/user_drawcashs/save', {
+                  asset_type: 'money',
+                  type: 'withdrawToBankCard',
+                  money: app.money,
+                  bank_card_id: app.bankcard.id,
+                  pay_password: pass
+                }).then(function (resp) {
+                  layer.msg(resp.msg);
+                  setTimeout(function() {
+                    gotowap('wallet')
+                  }, 500);
+                })
+              });
+            }
+          })
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

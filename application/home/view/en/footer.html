@@ -1,0 +1,25 @@
+<footer class="aui-bar aui-bar-tab" id="footer">
+  <div class="aui-bar-tab-item" onclick="gotowap('index')" :class="{'icon-footer-active' : (activeFooterIndex == 1 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 1" src="__static__/wap/img/icon12.png">
+      <img v-else src="__static__/wap/img/icon11.png">
+    </div>
+    <div class="aui-bar-tab-label">任务</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="gotowap('personnel_page')"
+    :class="{'icon-footer-active' : (activeFooterIndex == 2 )}">
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 2" src="__static__/wap/img/icon22.png">
+      <img v-else src="__static__/wap/img/icon21.png">
+    </div>
+    <div class="aui-bar-tab-label">行政</div>
+  </div>
+  <div class="aui-bar-tab-item" onclick="gotowap('home')" :class="{'icon-footer-active' : (activeFooterIndex == 3 )}">
+    <!-- <div class="aui-badge">99</div> -->
+    <div class="icon-div">
+      <img v-if="activeFooterIndex == 3" src="__static__/wap/img/icon32.png">
+      <img v-else src="__static__/wap/img/icon31.png">
+    </div>
+    <div class="aui-bar-tab-label">我的</div>
+  </div>
+</footer>

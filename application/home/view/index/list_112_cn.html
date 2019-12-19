@@ -1,0 +1,297 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>下载中心-小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技</title>
+	<meta name="description" content="小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|认证对比|gco-小钴科技" />
+	<meta name="keywords" content="小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<meta name="generator" content="MetInfo 5.3.19" data-variable="http://www.xiaogutech.com/|cn|32||4|xiaogu" />
+	<link href="__static__/website/img/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/metinfo.css" />
+	<!--[if IE]><script src="../public/js/html5.js" type="text/javascript"></script><![endif]-->
+	<script>
+		var _hmt = _hmt || [];
+		(function () {
+			var hm = document.createElement("script");
+			hm.src = "https://hm.baidu.com/hm.js?dbdc657b731eb41870ead6ab84e3b2f1";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/v1.base.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/v1.header.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/editormd.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/download.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/nav.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/font-awesome.min.css" />
+	<script src="__static__/website/js/jquery-2.1.4.js" type="text/javascript" charset="utf-8">
+	</script>
+	<script src="__static__/website/js/modernizr.js" type="text/javascript" charset="utf-8">
+	</script>
+</head>
+
+<body>
+	<div id="app">
+		<!-- 头部导航栏 -->
+		{include file="header" /}
+		<nav id="product-subnav" class="sub-nav-wrap-black">
+			<div class="container">
+				<div class="sub-nav-left">
+					<h1 class="title">下载中心</h1>
+				</div>
+
+				<div class="sub-nav-right">
+					<dl class="list-none navnow">
+						<dt>
+							<a href="download.html" title="下载中心 " class="zm">
+								<span>全部</span>
+							</a>
+						</dt>
+					</dl>
+					<dl class="list-none navnow">
+						<dt id='part2_112' class="on"><a href='list_112_cn.html' title='文档与手册' class="zm"><span>文档与手册</span></a>
+						</dt>
+					</dl>
+					<dl class="list-none navnow">
+						<dt id='part2_117'><a href='list_117_cn.html' title='程序下载' class="zm"><span>程序下载</span></a></dt>
+					</dl>
+					<dl class="list-none navnow">
+						<dt id='part2_113'><a href='list_113_cn.html' title='其他下载' class="zm"><span>其他下载</span></a></dt>
+					</dl>
+				</div>
+
+			</div>
+		</nav>
+
+
+
+		<div class="met_clear"></div>
+
+		<div class="download-list" style="background-color: #fff;">
+			<div class="container">
+				　<div class="row">
+					<ul class="list-group list-group-dividered list-group-full">
+
+						<li class="list-group-item list_1" v-for="(col,index) in column">
+							<div class="media">
+								<div class="media-left p-r-5 p-l-10 hidden-xs-down">
+									<a href="#" title="{{col.file_name}}">
+										<i class="fa fa-file-archive-o blue-grey-400"></i>
+									</a>
+								</div>
+								<div class="media-body">
+									<a class="gco-btn gco-btn-primary gco-btn-sm pull-right" :href="col.file_url"
+										:title="col.file_name" target="_self" :download="col.file_name+'.'+col.file_url.split('.').reverse()[0]">立即下载</a>
+									<h4 class="media-heading font-size-16">
+										<a class="name" href="#" :title="col.file_name"
+											target="_self">{{col.file_name}}<span></span> </a>
+									</h4>
+									<small>
+										<span>{{col.create_time}}</span>
+
+										<span>{{col.file_size}}kbs</span>
+
+									</small>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<div class='met_pager'>
+					<span class='PreSpan'>上一页</span><a href=../download/ class='Ahover'>1</a><span
+						class='NextSpan'>下一页</span>
+					<span class='PageText'>转至第</span>
+					<input type='text' id='metPageT' data-pageurl='list-32-|-cn.html|1' value='1' />
+					<input type='button' id='metPageB' value='页' />
+				</div>
+
+			</div>
+		</div>
+		<nav id="product-subnav" class="sub-nav-wrap-black">
+			<div class="container">
+				<div class="sub-nav-left">
+					<h1 class="title" id="service">售后服务</h1>
+				</div>
+			</div>
+		</nav>
+		<div class="service-list" style="background-color: #fff;">
+			<div class="container">
+				<div class="row col-sm-10 col-md-offset-1 service-list-important">
+					<div class="col-sm-4 service-list-item">
+						<a href="javascript:;" class="service-item">
+							<i class="fa fa-phone-square"></i>
+							<span>电话</span>
+						</a>
+					</div>
+					<div class="col-sm-4 service-list-item">
+						<a href="javascript:;" class="service-item">
+							<i class="fa fa-envelope"></i>
+							<span>Email</span>
+						</a>
+					</div>
+					<!--<div class="col-sm-3 service-list-item">
+						<a href="javascript:;" class="service-item">
+							<i class="fa fa-qq"></i>
+							<span>QQ联系</span>
+						</a>
+					</div>-->
+					<div class="col-sm-4 service-list-item">
+						<a href="javascript:;" class="service-item">
+							<i class="fa fa-weixin"></i>
+							<span>微信公众号</span>
+						</a>
+					</div>
+				</div>
+				<div class="row col-sm-10 col-md-offset-1 service-list-contents">
+					<div class="service-list-contents-cl">
+						<div class="row item" v-for="(col,index) in postsale" v-if="col.type_id == 1">
+							<div class="col-sm-3">
+								<p class="title">{{col.title}}</p>
+							</div>
+							<div class="col-sm-3">
+								<p>
+									<a href="tel:+86 400 700 0303">{{col.content}}</a>
+								</p>
+							</div>
+							<div class="col-sm-6">
+								<p>{{col.remark}}</p>
+							</div>
+						</div>
+						<!-- <div class="row item">
+							<div class="col-sm-3">
+								<p class="title">广西小钴科技有限公司</p>
+							</div>
+							<div class="col-sm-3">
+								<p>
+									<a href="tel:+86 400 700 0303">0731-85058649</a>
+								</p>
+							</div>
+							<div class="col-sm-6">
+								<p>周一至周日 9:00-12:30；14:00-21:00（北京时间）</p>
+							</div>
+						</div> -->
+					</div>
+					<div class="service-list-contents-cl">
+						<div class="row item" v-for="(col,index) in postsale" v-if="col.type_id == 2">
+							<div class="col-sm-6">
+								<p class="title text-right">{{col.title}}</p>
+							</div>
+							<div class="col-sm-6">
+								<p>
+									<a href="mailto:service@xiaogutech.com">{{col.content}}</a>
+								</p>
+							</div>
+						</div>
+					</div>
+					<!--<div class="service-list-contents-cl">
+		<div class="row item">
+			<div class="col-sm-6">
+				<p class="title text-right">qq客服</p>
+			</div>
+			<div class="col-sm-6">
+				<p>
+					1234567
+				</p>
+			</div>
+		</div>
+  </div>-->
+					<div class="service-list-contents-cl" >
+						<template v-for="(col,index) in postsale" v-if="col.type_id == 3">
+							<img :src="col.img" width="225">
+						</template>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function () {
+				var tabNum = $(".service-list-important").find(".service-list-item");
+				var contentNum = $(".service-list-contents").children();
+				var timer;
+				$(tabNum).each(function (index) {
+					$(this).hover(function () {
+						var that = $(this)
+						timer = window.setTimeout(function () {
+							$(contentNum).eq(index).css({
+								"opacity": "1"
+							});
+							$(contentNum).eq(index).siblings().css({
+								"opacity": "0"
+							});
+						}, 100)
+					}, function () {
+						window.clearTimeout(timer);
+					})
+				})
+			})
+		</script>
+
+
+	</div>
+	<div class="met_clear"></div>
+	</section>
+
+
+	<!-- 底部加css -->
+	{include file="footer" /}
+	<script>
+		feather.replace();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				column: '',
+				postsale:''
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						type_id: 53,
+						user_type: 2
+					},
+					url: '__localhost__/index.php/api_articles/Articlesweb/download_list',
+					success: function (res) {
+						console.log(res);
+						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						type_id: 0,
+					},
+					url: '__localhost__/index.php/api_articles/Articlesweb/postsale_list',
+					success: function (res) {
+						console.log(res);
+						app.postsale = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+
+			},
+		})
+
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>合作伙伴-小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技</title>
+	<meta name="description" content="小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|认证对比|gco-小钴科技" />
+	<meta name="keywords" content="小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<meta name="generator" content="MetInfo 5.3.19" data-variable="http://www.xiaogutech.com/|cn|115|115|1|xiaogu" />
+	<link href="__static__/website/img/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/metinfo.css" />
+	<!--[if IE]><script src="../public/js/html5.js" type="text/javascript"></script><![endif]-->
+	<script>
+		var _hmt = _hmt || [];
+		(function () {
+			var hm = document.createElement("script");
+			hm.src = "https://hm.baidu.com/hm.js?dbdc657b731eb41870ead6ab84e3b2f1";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/v1.base.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/v1.header.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/editormd.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/page.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/nav.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/font-awesome.min.css" />
+	<script src="__static__/website/js/jquery-2.1.4.js" type="text/javascript" charset="utf-8">
+	</script>
+	<script src="__static__/website/js/modernizr.js" type="text/javascript" charset="utf-8">
+	</script>
+</head>
+
+<body style="background-color: #fff;">
+	<!-- 头部导航栏 -->
+	{include file="header" /}
+	<div id='app'>
+		
+
+		<nav id="product-subnav" class="sub-nav-wrap-black">
+			<div class="container">
+				<div class="sub-nav-left">
+					<h1 class="title">合作伙伴</h1>
+				</div>
+
+			</div>
+		</nav>
+
+
+
+		<div class="met_clear"></div>
+
+		<div class="partner-list">
+			<div class="container">
+				<h3 class="section-title">核心合作单位</h3>
+				<div class="row">
+					{foreach $core as $key=>$vo}
+					<div class="list-item col-xs-12 col-sm-6 col-md-4">
+						<a href="{$vo.hyperlink}" title="Intel Movidius" target="_blank">
+							<img src="{$vo.picture}">
+						</a>
+					</div>
+                    {/foreach}
+				</div>
+				<h3 class="section-title">战略合作单位</h3>
+				<div class="row">
+					{foreach $strategy as $key=>$vo}
+					<div class="list-item col-xs-12 col-sm-6 col-md-4">
+						<a href="{$vo.hyperlink}" title="" target="_blank">
+							<img src="{$vo.picture}">
+						</a>
+					</div>
+                    {/foreach}
+				</div>
+				<h3 class="section-title">算法应用单位</h3>
+				<ul class="partner-tab clearfix">
+					<li class="active"><a href="#3d" data-toggle="tab">3D视觉算法</a></li>
+					<li><a href="#eyes" data-toggle="tab">双目防伪算法</a></li>
+					<li><a href="#light" data-toggle="tab">可见光识别算法</a></li>
+					<li class=""><a href="#person" data-toggle="tab">人证比对算法</a></li>
+				</ul>
+				<div class="partners-list">
+					<div class="tab-content">
+						<div class="tab-pane fade active in" id="3d">
+							<div class="row">
+								{foreach $algorithm as $key=>$vo}
+								{if $vo.type_id==60}
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" >
+									<a href="{$vo.hyperlink}" title="" target="_blank">
+										<img src="{$vo.picture}">
+									</a>
+								</div>
+								{/if}
+								{/foreach}
+								<!-- <div class="list-item col-xs-12 col-sm-6 col-md-4">
+									<a href="http://www.gdctwl.com/" title="常通" target="_blank">
+										<img src="__static__/website/img/changt.png">
+									</a>
+								</div> -->
+							</div>
+						</div>
+						<div class="tab-pane fade" id="eyes">
+							<div class="row">
+								{foreach $algorithm as $key=>$vo}
+								{if $vo.type_id==61}
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" >
+									<a href="{$vo.hyperlink}" title="" target="_blank">
+										<img src="{$vo.picture}">
+									</a>
+								</div>
+								{/if}
+								{/foreach}
+								<!-- <div class="list-item col-xs-12 col-sm-6 col-md-4">
+									<a href="http://www.3qvideo.com/" title="深圳市三全视讯科技有限公司" target="_blank">
+										<img src="__static__/website/img/3qvideo.png">
+									</a>
+								</div>
+								<div class="list-item col-xs-12 col-sm-6 col-md-4">
+									<a href="http://www.fsfid.com/" title="深圳华思福科技有限公司" target="_blank">
+										<img src="__static__/website/img/hsf.png">
+									</a>
+								</div>
+								<div class="list-item col-xs-12 col-sm-6 col-md-4">
+									<a href="http://massky.cn/" title="江苏众天力信息科技有限公司" target="_blank">
+										<img src="__static__/website/img/massky.png">
+									</a>
+								</div> -->
+							</div>
+						</div>
+						<div class="tab-pane fade" id="light">
+							<div class="row">
+								{foreach $algorithm as $key=>$vo}
+								{if $vo.type_id==62}
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" >
+									<a href="{$vo.hyperlink}" title="" target="_blank">
+										<img src="{$vo.picture}">
+									</a>
+								</div>
+								{/if}
+								{/foreach}
+								<!-- <div class="list-item col-xs-12 col-sm-6 col-md-4">
+									<a href="http://www.seaskylight.com/" title="深圳海云天科技股份有限公司" target="_blank">
+										<img src="__static__/website/img/hyt.png">
+									</a>
+								</div>
+								<div class="list-item col-xs-12 col-sm-6 col-md-4">
+									<a href="http://www.szjxj.com/" title="深圳佳信捷技术股份有限公司" target="_blank">
+										<img src="__static__/website/img/jxj.png">
+									</a>
+								</div> -->
+							</div>
+						</div>
+						<div class="tab-pane fade" id="person">
+							<div class="row">
+								{foreach $algorithm as $key=>$vo}
+								{if $vo.type_id==63}
+								<div class="list-item col-xs-12 col-sm-6 col-md-4" >
+									<a href="{$vo.hyperlink}" title="" target="_blank">
+										<img src="{$vo.picture}">
+									</a>
+								</div>
+								{/if}
+								{/foreach}
+							</div>
+						</div>
+					</div>
+				</div>
+				<h3 class="section-title">加盟小钴科技</h3>
+				<div class="row" style="margin: 0px;">
+					<div class="alert alert-info" role="alert">
+						<p>小钴科技欢迎拥有丰富行业资源和深厚行业积累的合作伙伴，共同开拓人脸识别市场，为用户量身定制人脸识别整体解决方案，促进双方的双赢。</p>
+						<h3>加盟方式</h3>
+						<p>详情请咨询：0731-85058649</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+
+	</div>
+	<div class="met_clear"></div>
+	</section>
+
+	<!-- 底部加css -->
+	{include file="footer" /}
+	<script>
+		feather.replace();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				core: '',
+				strategy: '',
+				algorithm: '',
+			},
+			mounted: function () {
+				// $.ajax({
+				// 	async: true,
+				// 	type: 'POST',
+				// 	dataType: 'json',
+				// 	data: {
+				// 		type_id: '49'
+				// 	},
+				// 	url: '__localhost__/index.php/api_articles/Articlesweb/partner_list',
+				// 	success: function (res) {
+				// 		console.log('---------------1--------------');
+				// 		console.log(res);
+				// 		app.core = res.data;
+				// 	},
+				// 	error: function (res) {
+				// 		console.log(res);
+				// 		alert("网络错误，请联系管理员！")
+				// 	}
+				// });
+				// $.ajax({
+				// 	async: true,
+				// 	type: 'POST',
+				// 	dataType: 'json',
+				// 	data: {
+				// 		type_id: '50'
+				// 	},
+				// 	url: '__localhost__/index.php/api_articles/Articlesweb/partner_list',
+				// 	success: function (res) {
+				// 		console.log('---------------2--------------');
+				// 		console.log(res);
+				// 		app.strategy = res.data;
+				// 	},
+				// 	error: function (res) {
+				// 		console.log(res);
+				// 		alert("网络错误，请联系管理员！")
+				// 	}
+				// });
+				// this.GetAlgorithmData();
+
+			},
+			methods: {
+				GetAlgorithmData: function () {
+					$.ajax({
+						async: true,
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							type_id: '60,61,62,63'
+						},
+						url: '__localhost__/index.php/api_articles/Articlesweb/partner_list',
+						success: function (res) {
+							console.log('---------------3--------------');
+							console.log(res);
+							app.algorithm = res.data;
+						},
+						error: function (res) {
+							console.log(res);
+							alert("网络错误，请联系管理员！")
+						}
+					});
+				}
+			},
+		})
+	</script>
+</body>
+
+</html>

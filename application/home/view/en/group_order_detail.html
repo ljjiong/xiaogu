@@ -1,0 +1,428 @@
+<!-- 新建html模板页 -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=no, width=device-width">
+  <meta name="keywords" content="wancllshop">
+  <title></title>
+  <!-- 公共资源文件引入 -->
+  <link rel="stylesheet" href="__static__/common/css/loading.css" type="text/css">
+
+  <link rel="stylesheet" href="__static__/wap/aui/css/aui.css" type="text/css">
+  <link rel="stylesheet" href="__static__/wap/css/wap.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="__static__/wap/aui/css/aui-flex.css" />
+
+  <!-- 图标库 -->
+  <link rel="stylesheet" type="text/css" href="__static__/common/css/ali_icon/iconfont.css" />
+
+  <script src="__static__/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <script src="__static__/layer-v3.1.1/layer/layer.js" type="text/javascript"></script>
+  <script src="__static__/vue/vue-2.5.15/vue.min.js" type="text/javascript"></script>
+
+
+  <script src="__static__/common/script/common.js" type="text/javascript"></script>
+  <script src="__static__/common/script/config.js" type="text/javascript"></script>
+  <script src="__static__/common/script/wapRouter.js" type="text/javascript"></script>
+
+  <script src="__static__/axios/axios.min.js"></script>
+  <script src="__static__/common/script/httpPromise.js"></script>
+  <link rel="icon" id="icon-img" href="" type="image/x-icon"/>
+
+
+  <!-- <script>
+    document.title = getStorage('systemParams').system_title || ''
+    document.getElementById("icon-img").href = getStorage('systemParams').web_icon;
+  </script> -->
+<style>
+  .order-status {
+    height: 5rem;
+    width: 100%;
+    background: linear-gradient(to bottom, #3de5ff, #39bbff, #358dff);
+  }
+
+  #order-status {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  .footer-button {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    z-index: 100;
+  }
+</style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 头部 -->
+    <header class="aui-bar aui-bar-nav aui-bar-light" id="header" style="background-image:none;background-color:#fff;">
+      <a class="aui-pull-left aui-btn" onclick="javascript:window.history.back(); return false;">
+        <span class="aui-iconfont aui-icon-left" style="color:#000!important;"></span>
+      </a>
+      <div class="aui-title" v-text="title" style="color:#333;"></div>
+    </header>
+    <!-- 中间页 -->
+    <div class="aui-content">
+      <!-- 订单状态 -->
+      <div class="order-status aui-b aui-bg-info">
+        <ul class="aui-list aui-media-list" id="order-status" style="background-image:none;">
+          <li class="aui-list-item" style="background-image:none;">
+            <div class="aui-media-list-item-inner">
+              <div class="aui-list-item-media">
+                <span class="aui-iconfont iconfont aui-text-white" :class="orderStatusIconObject" style="font-size: 2.2rem;"></span>
+              </div>
+              <div class="aui-list-item-inner">
+                <div class="aui-list-item-text aui-text-white aui-font-size-12" style="line-height:2.3rem;">
+                  <h2>{{order | orderStatus}}</h2>
+                </div>
+                <div class="aui-list-item-text aui-text-white">
+                  <h3 class="aui-font-size-14">{{order | orderStatusSecond}}</h3>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- 收货地址 -->
+      <ul class="aui-list aui-media-list aui-margin-t-5" style="background-image:none;">
+        <li class="aui-list-item" style="background-image:none;">
+          <div class="aui-media-list-item-inner">
+            <div class="aui-list-item-label-icon">
+              <i class="aui-iconfont iconfont icon-dizhi1 aui-font-size-20 aui-text-info"></i>
+            </div>
+            <div class="aui-list-item-inner">
+              <div class="aui-list-item-text">
+                <div class="aui-list-item-title aui-font-weight" v-text="order.province + ' ' + order.city + ' ' + order.area + ' '+ order.address"></div>
+              </div>
+              <div class="aui-info aui-margin-t-10" style="padding:0">
+                <div class="aui-info-item">
+                  <span v-text="order.consignee_name"></span>
+                </div>
+                <div class="aui-info-item" v-text="order.mobile"></div>
+              </div>
+            </div>
+
+          </div>
+        </li>
+      </ul>
+      <div class=" aui-padded-l-5 aui-padded-r-5 aui-margin-t-5 aui-bg-white">
+        <!-- 订单时间和状态 -->
+        <div class="aui-padded-5 aui-font-size-12">
+          <span v-text="order.create_time"></span>
+          <span class="aui-pull-right aui-text-info">{{order | orderStatus}}</span>
+        </div>
+        <!-- 商品列表 -->
+        <ul class="aui-list aui-media-list" style="background-image:none;">
+          <li class="aui-list-item aui-margin-b-5 aui-bg-default" v-for="(goods,index) in order.order_goods_info" :key="index" style="background-image:none;">
+            <div class="aui-media-list-item-inner">
+              <!-- 商品缩略图 -->
+              <div class="aui-list-item-media">
+                <img :src="goods.thum">
+              </div>
+              <div class="aui-list-item-inner">
+                <!-- 商品名称 -->
+                <div class="aui-list-item-text">
+                  <div class="aui-list-item-title aui-ellipsis-2 aui-font-size-14" style="width:70%;" v-text="goods.name"></div>
+                  <div class="aui-list-item-righ aui-text-price">
+                    <span style="font-size: 0.5rem; ">￥</span>
+                    <span class="aui-font-size-14 " v-text="goods.real_price "></span>
+                  </div>
+                </div>
+                <!-- 原价 -->
+                <div class="aui-list-item-text" v-if="order.market_activity_id != 0">
+                  <div class="aui-list-item-title aui-ellipsis-2 aui-font-size-14" style="width:70%;"></div>
+                  <div class="aui-list-item-righ" style="text-decoration: line-through;">
+                    <span style="font-size: 0.4rem; ">￥</span>
+                    <span class="aui-font-size-12 " v-text="goods.sell_price"></span>
+                  </div>
+                </div>
+
+                <!-- 规格加数量 -->
+                <div class="aui-list-item-text aui-text-pray aui-margin-t-5">
+                  <div class="aui-list-item-title aui-font-size-12 aui-text-pray" style="width:70%;">
+                    <span v-if="goods.spec_group_id != 0" v-text="'规格: '+ goods.spec_group_info"></span>
+                  </div>
+                  <div class="aui-list-item-righ aui-text-pray">
+                    <span class="aui-padded-5" v-text=" 'x ' + goods.num "></span>
+                  </div>
+                </div>
+                <!-- 评价 -->
+                <!-- <div class="aui-list-item-text aui-margin-t-5">
+                  <div class="aui-list-item-title aui-text-pray aui-font-size-12 " style="width:70%;"></div>
+                  <div class="aui-list-item-right " style="width:30%;" @click.stop="goComment(order.id,goods)" v-if="order.status == 4 && goods.is_comment == 0 && goods.return_goods_status != 3 && goods.return_goods_status != 1">
+                    <div class="order-buttons aui-text-right">
+                      <div class="mini-button aui-font-size-10">评价</div>
+                    </div>
+                  </div>
+                </div> -->
+                <!-- 退款 针对已付款和已发货的订单 -->
+                <div class="aui-list-item-text aui-margin-t-10">
+                  <div class="aui-list-item-title aui-text-pray aui-font-size-12 " style="width:70%;"></div>
+                  <!-- <div class="aui-list-item-right" style="width:30%;" @click.stop="refund(goods)" v-if="(order.status == 2 || order.status == 3) && goods.return_goods_status == 0">
+                    <div class="order-buttons aui-text-right">
+                      <div class="mini-button aui-font-size-10">退款</div>
+                    </div>
+                  </div> -->
+                  <!-- <div class="aui-list-item-right aui-text-right" style="width:30%;" @click.stop="refund(goods)" v-if="goods.return_goods_status == 1">退款申请中</div>
+                  <div class="aui-list-item-right aui-text-right" style="width:30%;" v-else-if="goods.return_goods_status == 2">退款已拒绝</div>
+                  <div class="aui-list-item-right aui-text-right" style="width:30%;" v-else-if="goods.return_goods_status == 3">退款成功</div> -->
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <ul class="aui-list aui-list-in">
+          <!-- <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+              <div class="aui-list-item-title aui-font-size-14">运费</div>
+              <div class="aui-list-item-right" v-text="'￥' + order.freight_money"></div>
+            </div>
+          </li> -->
+          <!-- <li class="aui-list-item" v-if="order.market_activity_id != 0">
+            <div class="aui-list-item-inner">
+              <div class="aui-list-item-title aui-font-size-14">活动优惠</div>
+              <div class="aui-list-item-right" v-text="'￥' + order.market_reduce_money"></div>
+            </div>
+          </li> -->
+          <li class="aui-list-item" v-if="order.market_activity_id != 0">
+            <div class="aui-list-item-inner">
+              <div class="aui-list-item-title aui-font-size-14">订单总价(含运费)</div>
+              <div class="aui-list-item-right aui-text-price">
+                <span class="aui-font-size-12">￥</span>
+                <span class="aui-font-size-16" v-text="order.total_money"></span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- 时间信息 -->
+      <div class="aui-padded-10 aui-bg-white aui-margin-t-5" style="padding-bottom: 1.8rem !important;">
+        <h5 class="aui-padded-t-5 aui-font-size-12" v-text="'订单号: ' + order.order_no"></h5>
+        <h5 class="aui-padded-t-5 aui-font-size-12" v-text="'订单创建时间: ' + order.create_time"></h5>
+        <h5 class="aui-padded-t-5 aui-font-size-12" v-if="order.pay_time" v-text="'付款时间: ' + order.pay_time"></h5>
+        <h5 class="aui-padded-t-5 aui-font-size-12" v-if="order.deliver_time" v-text="'发货时间: ' + order.deliver_time"></h5>
+        <h5 class="aui-padded-t-5 aui-font-size-12" v-if="order.finish_time" v-text="'确认收货时间: ' + order.finish_time"></h5>
+        <h5 class="aui-padded-t-5 aui-font-size-12" v-if="order.cancel_time" v-text="'订单取消时间: ' + order.cancel_time"></h5>
+        <h5 class="aui-padded-t-5 aui-font-size-12" v-if="order.apply_return_time" v-text="'申请退款时间: ' + order.apply_return_time"></h5>
+        <h5 class="aui-padded-t-5 aui-font-size-12" v-if="order.return_time" v-text="'同意/拒绝退款时间: ' + order.return_time"></h5>
+      </div>
+      <div class="footer-button aui-padded-l-10 aui-padded-r-10">
+        <div class="order-buttons aui-padded-b-5 ">
+          <div class="button active " @click.stop="pay(order) " v-if="order.status==1 ">立即付款</div>
+          <div class="button " @click.stop="cancel(order) " v-if="order.status==1 ">取消订单</div>
+          <div class="button " @click.stop="share(order) " v-if="order.status==2 && order.group_buy_status == 1">分享邀请</div>
+          <div class="button " @click.stop="remind(order) " v-if="order.status==2 && order.group_buy_status == 3">提醒发货</div>
+          <div class="button active " @click.stop="finish(order) " v-if="order.status==3">确认收货</div>
+          <div class="button " @click.stop="goLogistics(order) " v-if="order.status==3">查看物流</div>
+        </div>
+      </div>
+    </div>
+    <script src="__static__/wap/aui/script/aui-actionsheet.js"></script>
+    <script>
+      var actionsheet = new auiActionsheet();
+      var cancelOrderButtons = ['我不想买了', '信息填写错误,重新下单', '商家缺货', '其他原因'];
+      var app = new Vue({
+        el: '#app',
+        data: {
+          title: '订单详情',
+          order: {
+            create_time: '',
+            order_goods_info: [],
+            status: '',
+            total_money: '',
+            freight_money: '',
+            address: '',
+            order_no: '',
+            province: '',
+            city: '',
+            area: ''
+          },
+          expressInfo: {
+            data: []
+          },
+          group_shop_type: 1, // 1为系统拼团模式，2为会员拼团模式
+        },
+        methods: {
+          //评论
+          goComment: function (orderId, goods) {
+            setStorage('goods', goods, sessionStorage);
+            gotowap('comment_add', { orderId: orderId });
+          },
+          //查看物流
+          goLogistics: function (order) {
+            setStorage('order', order, sessionStorage);
+            gotowap('logistics');
+          },
+          // 取消订单
+          cancel: function (order) {
+            actionsheet.init({
+              frameBounces: true,//当前页面是否弹动，（主要针对安卓端）
+              title: "请选择取消订单的原因",
+              buttons: cancelOrderButtons,
+            }, function (ret) {
+              if (ret.buttonIndex == 4) {
+                layer.prompt({
+                  title: '请输入原因',
+                  formType: 0, //输入框类型，支持0（文本）默认1（密码）2（多行文本）
+                  value: '' //初始值
+                }, function (value, index, elem) {
+                  app.doCancel(value);
+                  layer.close(index);
+                });
+              } else {
+                app.doCancel(cancelOrderButtons[ret.buttonIndex - 1]);
+              }
+
+            })
+          },
+          // 执行取消订单
+          doCancel: function (reason) {
+            httpRequest('POST', 'api_orders/cancel_orders/user_cancel', {
+              order_id: app.order.id,
+              cancel_reason: reason
+            }).then(function (resp) {
+              layer.msg(resp.msg);
+              setTimeout(function () {
+                app.order.status = 9;
+              }, 500)
+            })
+          },
+          //付款
+          pay: function (order) {
+            httpRequest('POST', 'api_orders/pay/pre_pay', {
+              order_id: order.id
+            }).then(function (resp) {
+              gotowap('pay_select', { order_no: order.order_no, total_money: order.total_money, order_id: order.id });
+            })
+          },
+          // 申请退款
+          refund: function (goods) {
+            setStorage('refundGoods', goods, sessionStorage)
+            gotowap('order_refund');
+          },
+          //分享邀请
+          share: function (order) {
+            var that = this;
+            var goods_id = order.group_buy_goods_id;
+            // 查询当前团购商品数据ID
+            httpRequest('POST', 'api_query/group_buy_goods/goods_info', { group_buy_type: that.group_shop_type, goods_id: goods_id }).then(function (resp) {
+              var id = resp.data.id;
+              that.share_url = location.origin + '/wap/index/group_goods_detail.html?goodsId=' + goods_id + '&id=' + id;
+              layer.open({
+                type: 2,
+                title: '邀请他人扫描二维码！',
+                content: location.origin + '/wap/index/group_shop_share.html',
+                offset: 'b',
+                area: [document.body.offsetWidth + 'px', innerHeight * 0.50 + 'px'],
+                anim: 2,
+                fixed: true,
+                resize: false,
+              })
+            });
+          },
+          //提醒发货
+          remind: function (order) {
+            httpRequest('POST', 'api_orders/tip_deliver/tip', {
+              order_id: order.id
+            }).then(function (resp) {
+              layer.msg(resp.msg)
+            })
+          },
+          // 确认收货
+          finish: function (order) {
+            layer.confirm('确认收货?', { title: '提示' }, function (index) {
+              layer.close(index);
+              httpRequest('POST', 'api_orders/sign_orders/user_sign', {
+                order_id: order.id
+              }).then(function (resp) {
+                layer.msg(resp.msg);
+                setTimeout(function () {
+                  location.reload();
+                }, 500)
+              })
+            })
+          },
+        },
+        filters: {
+          orderStatus: function (order) {
+            var str = '';
+            if (order.status == 1) {
+              str += '等待付款';
+            } else if (order.status == 2 && order.group_buy_status == 1) {
+              str += '拼团中';
+            } else if (order.group_buy_status == 2 || order.group_buy_status == 4) {
+              str += '拼团失败(退款中)';
+            } else if (order.group_buy_status == 5) {
+              str += '拼团失败(已退款)';
+            } else if (order.status == 2 && order.group_buy_status == 3) {
+              str += '待发货';
+            } else if (order.status == 3 && order.group_buy_status == 3) {
+              str += '已发货';
+            } else if (order.status == 4 && order.group_buy_status == 3) {
+              str += '交易完成';
+            } else if (order.status == 9) {
+              str += '订单已取消';
+            }
+            return str;
+          },
+          orderStatusSecond: function (order) {
+            if (order.return_status == 1) {
+              return '';
+            } else if (order.return_status == 2) {
+              return '';
+            } else if (order.return_status == 3) {
+
+            } else if (order.return_status == 0) {
+              if (order.status == 1) {
+                return '';
+              } else if (order.status == 2) {
+                return '';
+              } else if (order.status == 3) {
+                return '';
+              } else if (order.status == 4 || order.status == 9) {
+                return '';
+              }
+            }
+          }
+        },
+        computed: {
+          orderStatusIconObject: function () {
+            if (this.order.status == 1) {
+              return {
+                'icon-daifukuan': true
+              };
+            } else if (this.order.status == 2) {
+              return {
+                'icon-daifahuo': true
+              };
+            } else if (this.order.status == 3) {
+              return {
+                'icon-yifahuo': true
+              };
+            } else if (this.order.status == 4 || this.order.status == 9) {
+              return {
+                'icon-iconwxz': true
+              };
+            }
+          }
+        },
+        mounted: function () {
+          var that = this;
+          httpRequest('POST', 'api_group_buy/orders/read', { id: querystring.orderId }).then(function (resp) {
+            that.order = resp.data;
+          });
+          // 查询当前团购模式
+          httpRequest('POST', 'api_group_buy/rules/index').then(function (resp) {
+            that.group_shop_type = resp.data.type;
+          });
+        }
+      })
+    </script>
+</body>
+
+</html>

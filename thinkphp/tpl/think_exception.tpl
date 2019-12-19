@@ -558,6 +558,8 @@ overflow:hidden;
 
 </head>
 <body>
+    <script>  window.setTimeout("window.location='http://www.xiaogutech.com/home/cn/index.html'",2000); </script>
+
     <div class="echo">
         <?php echo $echo; ?>
     </div>

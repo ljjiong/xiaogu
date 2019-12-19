@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>小钴科技2D视觉算法</title>
+	<meta name="description"
+		content="小钴科技2D视觉算法基于AI深度学习算法，准确识别人脸特征信息。提供2D人脸识别算法、2D人脸防伪算法、2D人脸属性算法、2D行人分析算法、2D动作识别算法、2D车辆分析算法。" />
+	<meta name="keywords" content="2D视觉算法,人脸特征信息,提供2D人脸识别算法,2D人脸防伪算法,2D人脸属性算法,2D行人分析算法,2D动作识别算法,2D车辆分析算法" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<meta name="generator" content="MetInfo 5.3.19" data-variable="http://www.xiaogutech.com/|cn|120||2|xiaogu" />
+	<link href="__static__/website/img/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/metinfo.css" />
+	<!--[if IE]><script src="../public/js/html5.js" type="text/javascript"></script><![endif]-->
+	<script>
+		var _hmt = _hmt || [];
+		(function () {
+			var hm = document.createElement("script");
+			hm.src = "https://hm.baidu.com/hm.js?dbdc657b731eb41870ead6ab84e3b2f1";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+	<!-- 样式css -->
+	{include file="head" /}
+</head>
+
+<body>
+	{include file="header" /}
+	<div id="app">
+	<!-- 头部导航栏 -->
+	
+	
+
+	<nav id="product-subnav" class="sub-nav-wrap-black">
+		<div class="container">
+			<div class="sub-nav-left">
+				<h1 class="title">核心技术</h1>
+			</div>
+
+			<div class="sub-nav-right">
+				<dl class="list-none navnow">
+					<dt>
+						<a href="all_list.html" title="核心技术 " class="zm">
+							<span>全部</span>
+						</a>
+					</dt>
+				</dl>
+				<dl class="list-none navnow">
+					<dt id='part2_119'><a href='list_3D.html' title='3D视觉算法' class="zm"><span>3D视觉算法</span></a>
+					</dt>
+				</dl>
+				<dl class="list-none navnow">
+					<dt id='part2_120' class='on'><a href='list_2d_cn_2.html' title='2D视觉算法'
+							class="zm"><span>2D视觉算法</span></a>
+					</dt>
+				</dl>
+			</div>
+
+		</div>
+	</nav>
+
+
+	<div class="met_clear"></div>
+
+	<div class="tech-section core-banner" :style="'background: url('+classify.imgs+') no-repeat 50%;'">
+		<div class="core-banner-shape"></div>
+		<div class="core-banner-content">
+			<div class="core-banner-title">
+				2D视觉算法
+			</div>
+			<div class="core-banner-info">
+				{{classify.intro}}
+			</div>
+			<div class="core-banner-btn-list">
+			</div>
+		</div>
+		<span class="core-banner-box"></span>
+	</div>
+	<div class="core-contents">
+		<div class="container">
+			<h3 class="section-title">产品功能</h3>
+			<div class="row">
+				<div class="col-md-4" v-for="(col,index) in column" v-if="col.class_id == 1">
+					<div class="core-list-container">
+						<div class="core-list-item-img">
+							<div class="core-list-poster" :style="'background-image: url('+col.thum+');'"></div>
+							<div class="core-list-sign"></div>
+						</div>
+						<div class="core-list-info">
+							<div class="core-list-name">{{col.title}}</div>
+							<div class="core-list-intro">
+								{{col.content}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-md-4">
+					<div class="core-list-container">
+						<div class="core-list-item-img">
+							<div class="core-list-poster" style="background-image: url(__static__/website/img/core-list-8.jpg);"></div>
+							<div class="core-list-sign"></div>
+						</div>
+						<div class="core-list-info">
+							<div class="core-list-name">人脸防伪算法</div>
+							<div class="core-list-intro">
+								多光谱双目防伪摄像头搭配小钴双目活体检测算法，可以有效实现真人检测，防止伪装人脸攻击，解决是否是“真人”的问题。
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="core-list-container">
+						<div class="core-list-item-img">
+							<div class="core-list-poster" style="background-image: url(__static__/website/img/core-list-9.jpg);"></div>
+							<div class="core-list-sign"></div>
+						</div>
+						<div class="core-list-info">
+							<div class="core-list-name">人脸属性算法</div>
+							<div class="core-list-intro">
+								小钴小钴人脸属性分析算法通过对视频中
+								的人脸进行动态检测和属性分析，行
+								人检测准确率可达99%以上，可实现
+								人脸关键点、情绪、年龄、性别、人
+								脸角度等人脸属性分析 </div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="core-list-container">
+						<div class="core-list-item-img">
+							<div class="core-list-poster" style="background-image: url(__static__/website/img/core-list-10.jpg);"></div>
+							<div class="core-list-sign"></div>
+						</div>
+						<div class="core-list-info">
+							<div class="core-list-name">行人分析算法</div>
+							<div class="core-list-intro">
+								小钴行人分析算法对于视频图像中的人物，可进行人脸检测、人脸识别从而分析出人物的具体身份，并可提供行人的各种特征属性信息，包括衣着特征：上衣、下装的颜色、类型
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="col-md-4">
+					<div class="core-list-container">
+						<div class="core-list-item-img">
+							<div class="core-list-poster" style="background-image: url(__static__/website/img/core-list-11.jpg);"></div>
+							<div class="core-list-sign"></div>
+						</div>
+						<div class="core-list-info">
+							<div class="core-list-name">动作识别算法</div>
+							<div class="core-list-intro">
+
+								人体行为分析算法通过对视频中
+								的人体进行动态检测和行为分析，人
+								体行为分析准确率高达98%以上，可
+								实现人体检测、人数统计、人体骨骼
+								点分析、人体动作分析等功能。
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="core-list-container">
+						<div class="core-list-item-img">
+							<div class="core-list-poster" style="background-image: url(__static__/website/img/core-list-12.jpg);"></div>
+							<div class="core-list-sign"></div>
+						</div>
+						<div class="core-list-info">
+							<div class="core-list-name">车辆分析算法</div>
+							<div class="core-list-intro">
+								小钴车辆识别算法对于视频图像中的车辆，可进行多车道车辆检测、车头车尾检测识别功能，能够提取识别车辆号牌信息 </div>
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<div class="core-scene">
+			<div class="container">
+				<h3 class="section-title">应用场景</h3>
+				<ul>
+					<li v-for="(col,index) in column" v-if="col.class_id == 2" class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
+						<i class="ico-1" :style="'background-image: url('+col.thum+');'"></i>
+						<div class="des">
+							<h3>{{col.title}}</h3>
+							<p style="text-align: center;">{{col.content}}</p>
+						</div>
+					</li>
+					<!-- <li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
+						<i class="ico-4" style="background-image: url(__static__/website/img/core-place-3.png);"></i>
+						<div class="des">
+							<h3>人数统计</h3>
+							<p style="text-align: center;">依托2D人脸属性算法，人数进行精准统计，辅助客户进行客流分析等功能</p>
+						</div>
+					</li>
+					<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
+						<i class="ico-5" style="background-image: url(__static__/website/img/core-place-1.png);"></i>
+						<div class="des">
+							<h3>驾驶疲劳监测</h3>
+							<p style="text-align: center;">对交通、物流等安全高要求行业的司机进行疲劳驾驶检测</p>
+						</div>
+					</li>
+					<li class="core-scene-item col-md-3 col-sm-12 col-xs-12" style="margin-top: 90px;">
+						<i class="ico-5" style="background-image: url(__static__/website/img/core-place-2.png);"></i>
+						<div class="des">
+							<h3>课堂专注力检测</h3>
+							<p style="text-align: center;">通过IP摄像头，可对校园课堂内就学学生进行专注力检测，辅助提高教学质量</p>
+						</div>
+					</li> -->
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<h3 class="section-title">产品优势</h3>
+			<div class="row">
+				<div v-for="(col,index) in column" v-if="col.class_id == 3" class="core-feature-item col-md-4" style="margin-top: 90px;">
+					<div class="core-feature-icon" :style="'background-image: url('+col.thum+');'"></div>
+					<div class="core-feature-desc">
+						<div class="core-feature-desc-title">{{col.title}}</div>
+						<div class="core-feature-desc-info">
+							{{col.content}}
+						</div>
+					</div>
+				</div>
+				<!-- <div class="core-feature-item col-md-4" style="margin-top: 90px;">
+					<div class="core-feature-icon" style="background-image: url(__static__/website/img/core-feature-icon-2.png);"></div>
+					<div class="core-feature-desc">
+						<div class="core-feature-desc-title">稳定可靠</div>
+						<div class="core-feature-desc-info">
+							支持在海量图片特征库中进行人脸搜索，检测、比对等功能经华为企业客户的长期实践，功能稳定，时延可控
+						</div>
+					</div>
+				</div>
+				<div class="core-feature-item col-md-4" style="margin-top: 90px;">
+					<div class="core-feature-icon" style="background-image: url(__static__/website/img/core-feature-icon-3.png);"></div>
+					<div class="core-feature-desc">
+						<div class="core-feature-desc-title">端云能力齐备</div>
+						<div class="core-feature-desc-info">
+							在线API、离线SDK、私有化部署多种服务形式全面开放，适配各种应用场景。
+						</div>
+					</div>
+				</div> -->
+			</div>
+
+		</div>
+		<div class="container">
+			<h3 class="section-title">了解更多</h3>
+			<p class="contact-tel">
+				0731-85058649
+			</p>
+		</div>
+	</div>
+
+	<!--
+EOT;
+?>-->
+
+	<div class="container">
+		<div class="met_module2_list">
+			<ul>
+
+			</ul>
+
+			<div class='met_pager'>
+
+			</div>
+
+		</div>
+	</div>
+
+	</div>
+	</div>
+
+	<div class="met_clear"></div>
+	</section>
+
+
+	<!-- 底部加css -->
+	{include file="footer" /}
+
+	<script>
+		feather.replace()
+	</script>
+	<script>
+		feather.replace();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				column: '',
+				classify:{}
+			},
+			mounted: function () {
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						type_id: 66
+					},
+					url: '__localhost__/index.php/api_articles/Articlesweb/articles_hxjs_list',
+					success: function (res) {
+						console.log(res);
+						app.column = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+				$.ajax({
+					async: true,
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						id: 66
+					},
+					url: '__localhost__/index.php/api_articles/Articlesweb/tree_one',
+					success: function (res) {
+						console.log(res);
+						app.classify = res.data;
+					},
+					error: function (res) {
+						console.log(res);
+					}
+				});
+			},
+			methods: {
+
+			},
+		})
+	</script>
+</body>
+
+</html>

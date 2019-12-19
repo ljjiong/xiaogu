@@ -1,0 +1,341 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>会员中心-小钴科技官方网站|3D人脸识别|人脸检测|人脸分析|证件识别|身份证识别|视频结构化|图像识别|API|SDK|人证识别|3D门禁|3D楼宇|gco-小钴科技</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+	<meta name="generator" content="MetInfo" data-variable="http://www.xiaogutech.com/|cn||||xiaogu" />
+	<link href="http://www.xiaogutech.com/favicon.ico" rel="shortcut icon" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/css/include.css" />
+	<link rel="stylesheet" type="text/css" href="__static__/website/js/verify-master/css/verify.css" />
+</head>
+<style>
+	.met-member {
+		background-color: ;
+	}
+
+	.login_index {
+		background-color: ;
+	}
+</style>
+
+<body>
+	<div class="container met-head">
+
+		<div class="row">
+			<div class="col-xs-6 col-sm-6 logo">
+				<ul class="list-none">
+					<li><a href="index.html?lang=cn" class="met-logo"><img src="" /></a></li>
+
+					<li>Register</li>
+
+				</ul>
+			</div>
+
+			<div class="col-xs-6 col-sm-6 user-info">
+				<ol class="breadcrumb pull-right">
+
+					<li><a href="index.html?lang=cn" title="Back Home">Back Home</a></li>
+				</ol>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="register_index met-member" id="app">
+		<div class="container">
+			<form class="form-register met-form">
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
+						<input v-model="nick_name" type="text" name="nick_name" required class="form-control" placeholder="nickname"
+							data-bv-remote="true"
+							data-bv-remote-url="http://www.xiaogutech.com/member/register_include.php?lang=cn&a=douserok"
+							data-bv-remote-message="用户名已存在" data-bv-notempty="true" data-bv-notempty-message="此项不能为空"
+							data-bv-stringlength="true" data-bv-stringlength-min="2" data-bv-stringlength-max="30"
+							data-bv-stringlength-message="用户名必须在2-30个字符之间" />
+
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
+						<input v-model="mobile" type="text" name="username" required class="form-control" placeholder="Account"
+							data-bv-remote="true"
+							data-bv-remote-url="http://www.xiaogutech.com/member/register_include.php?lang=cn&a=douserok"
+							data-bv-remote-message="用户名已存在" data-bv-notempty="true" data-bv-notempty-message="此项不能为空"
+							data-bv-stringlength="true" data-bv-stringlength-min="2" data-bv-stringlength-max="30"
+							data-bv-stringlength-message="用户名必须在2-30个字符之间" />
+
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-unlock-alt"></i></span>
+						<input v-model="password" type="password" name="password" required class="form-control" placeholder="password"
+							data-bv-notempty="true" data-bv-notempty-message="此项不能为空" data-bv-identical="true"
+							data-bv-identical-field="confirmpassword" data-bv-identical-message="两次密码输入不一致"
+							data-bv-stringlength="true" data-bv-stringlength-min="6" data-bv-stringlength-max="30"
+							data-bv-stringlength-message="密码必须在6-30个字符之间">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-unlock-alt"></i></span>
+						<input v-model="repassword" type="password" name="confirmpassword" required data-password="password"
+							class="form-control" placeholder="Repeat the password" data-bv-identical="true"
+							data-bv-identical-field="password" data-bv-identical-message="两次密码输入不一致"
+							data-bv-notempty-message="此项不能为空">
+
+					</div>
+				</div>
+				<div class="form-group">
+					<input type="hidden" name="is_yz" id="is_yz" >
+					<div id="mpanel1" >
+        			</div>
+				</div>
+				<!-- <div class="row login_code">
+						<h3>普通验证码</h3>
+		    	<div id="mpanel2" >
+		        </div>
+		        
+		        <button type="button" id="check-btn" class="verify-btn">确定</button>
+					
+					<div class="col-xs-8">
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-shield"></i></span>
+								<input type="text" name="code" required class="form-control" placeholder="验证码"
+									data-bv-notempty="true" data-bv-notempty-message="此项不能为空">
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-4 login_code_img">
+						<img src="http://www.xiaogutech.com/app/system/entrance.php?m=include&c=ajax_pin&a=dogetpin"
+							class="img-responsive" id="getcode" title="看不清？点击更换验证码" align="absmiddle">
+					</div>
+				</div> -->
+				
+
+				<!-- <div class="form-group met-more text-muted">
+					<hr />
+					<span>更多资料</span>
+				</div>
+
+
+
+
+				<div class="form-group met-form-choice">
+					<div class="row">
+						<div class="met-form-file-title col-md-3">公司名称</div>
+						<div class="col-md-9">
+							<input type="text" name="info_100" class="form-control" value="" placeholder="公司名称">
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+
+
+
+
+				<div class="form-group met-form-choice">
+					<div class="row">
+						<div class="met-form-file-title col-md-3">公司传真</div>
+						<div class="col-md-9">
+							<input type="text" name="info_103" class="form-control" value="" placeholder="公司传真">
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+
+
+
+
+				<div class="form-group met-form-choice">
+					<div class="row">
+						<div class="met-form-file-title col-md-3">公司联系地址</div>
+						<div class="col-md-9">
+							<input type="text" name="info_106" class="form-control" value="" placeholder="公司联系地址">
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+
+
+
+
+				<div class="form-group met-form-choice">
+					<div class="row">
+						<div class="met-form-file-title col-md-3">公司邮政编码</div>
+						<div class="col-md-9">
+							<input type="text" name="info_109" class="form-control" value="" placeholder="公司邮政编码">
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+
+
+
+
+				<div class="form-group met-form-choice">
+					<div class="row">
+						<div class="met-form-file-title col-md-3">公司网址</div>
+						<div class="col-md-9">
+							<input type="text" name="info_112" class="form-control" value="" placeholder="公司网址">
+						</div>
+					</div>
+				</div>
+ -->
+
+
+
+
+
+
+
+
+				<a class="btn btn-lg btn-primary btn-block" @click="submint()">Register</a>
+				<div class="login_link"><a href="login.html">Existing account?</a></div>
+			</form>
+		</div>
+	</div>
+	
+	<script charset="utf-8" src="__static__/website/js/verify-master/js/jquery.min.js" type="text/javascript">
+	</script>
+	<script charset="utf-8" src="__static__/website/js/verify-master/js/verify.js" type="text/javascript">
+	</script>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js">
+	</script>
+	<!-- <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script> -->
+
+	<!-- <script charset="utf-8" src="__static__/website/js/verify-master/js/verify.min.js" type="text/javascript">
+	</script> -->
+<!-- 	<script>
+		var upfiletext = '选择',
+			uploadUrl = 'http://www.xiaogutech.com/app/system/entrance.php?c=uploadify&m=include&lang=cn&a=doupfile&type=1';
+	</script> -->
+
+	<footer class="container met-footer">
+		<p>Copyright © 2018-2019 小钴科技 版权所有 </p>
+		<p>
+			<p>浙ICP备17041436号-1</p>
+		</p>
+
+	</footer>
+	<!-- <script src="http://www.xiaogutech.com/app/system/include/public/js/seajs.js"></script> -->
+	<script>
+		window.onload = function(){
+			$('#mpanel1').slideVerify({
+	    		type : 1,		//类型
+	    		vOffset : 5,	//误差量，根据需求自行调整
+		        barSize : {
+		        	width : '100%',
+		        	height : '40px',
+		        },
+		        ready : function() {
+		    	},
+		        success : function() {
+		        	// alert('验证成功，添加你自己的代码！');
+		        	var aa= document.getElementById('is_yz');
+		        	aa.value=1;
+		  
+		        	//......后续操作
+		        },
+		        error : function() {
+			        	alert('验证失败！');
+		        }
+		        
+		    });
+		}
+	    	
+	     var app = new Vue({
+            el: '#app',
+            data: {
+            	nick_name:'',
+                mobile: '',
+                password:'',
+                repassword:'',
+                is_yz:'',
+				hosts:'',
+
+            },
+            mounted: function () {
+				this.hosts=window.location.protocol+"//"+window.location.host;
+                
+            },
+            methods: {
+            	
+                submint(){
+                	this.is_yz=document.getElementById('is_yz').value;
+                   if (this.mobile == '') {
+						alert("Please fill in the account number")
+					} else if (this.nick_name == '') {
+						alert("Please fill in your nickname")
+					} else if (this.password == '') {
+						alert("Please fill in the password")
+					} else if (this.repassword == '') {
+						alert("Please fill in the duplicate password")
+					}else if(this.repassword != this.password){
+						alert("The two passwords are not the same")
+					}else if(this.is_yz != 1){
+						alert("Please verify")
+					}else {
+						$.ajax({
+							// async: true,
+							type: 'POST',
+							dataType: 'json',
+							data: {
+								nick_name:this.nick_name,
+								mobile: this.mobile,
+								password: this.password,
+							},
+							url: '__localhost__/index.php/api_articles/Articlesweb/register',
+							success: function (res) {
+								if(res.code==1){
+									alert("已提交管理员审核,等待审核通过");
+									window.open(app.hosts+'/wap/index_en/login.html','_self');
+								}else{
+									alert(res.msg);
+								}
+							},
+							error: function (res) {
+								console.log(res);
+							},
+							catch: function () {
+								alert("网络出错了！")
+							}
+						});
+					}
+                }
+            },
+        })
+		
+
+	</script>
+</body>
+
+</html>

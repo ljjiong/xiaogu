@@ -1,0 +1,457 @@
+<div id="app2">
+    <nav class="gco-navbar site-header collapsed" data-waypointsok="0" id="site-header">
+        <div class="navbar-container">
+            <div class="navbar-header">
+                <a class="navbar-brand ga-data" href="index.html">
+                    <span class="navbar-brand-logo">
+                    </span>
+                </a>
+            </div>
+            <div id="siteHeaderNavbar">
+                <ul class="navbar-category">
+                    <li class="category-item relative">
+                        <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="首页" href="index.html" target="_self">
+                            首页
+                        </a>
+                    </li>
+                    <li class="category-item" data-load-lazyr="false">
+                        <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="top-click-产品中心" href="product.html" target="_self">
+                            产品中心
+                        </a>
+                        <div class="gco-dropdown-menu full-screen">
+                            <div class="dropdown-container">
+                                <div class="nav-columns">
+                                    <div class="grid-container">
+                                        <div class="grid stretch left">
+                                            {foreach $goods as $key=>$vo}
+                                            <div class="column-item cell is-fifth">
+                                                <a href="alphalook.html?id={$vo.id}" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="智能人脸锁" target="_self" style="max-width: 200px;max-height: 100%; display: table-cell;text-align: center;vertical-align: middle;">
+                                                    <p class="title">
+                                                        {$vo.short_name?$vo.short_name:$vo.name}
+                                                    </p>
+                                                    <p class="content" style="padding-right: 0px;">
+                                                        {$vo.descriptive}
+                                                    </p>
+                                                    <div class="product-img" style="max-width: 120px;margin-left: 10%;margin-right:10%; max-height: 120px;">
+                                                        <img src="{$vo.thum}" style="width: 100%;height: 100%;">
+                                                        </img>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            {/foreach}
+                                        </div>  
+                                    </div>
+                                </div>
+                                <div class="nav-pills-bottom">
+                                    <div class="grid-container">
+                                        <a class="gco-btn btn-compare ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="更多产品" href="product.html" target="_self">
+                                            <span class="icon">
+                                                <i data-feather="chevron-right">
+                                                </i>
+                                            </span>
+                                            <p>
+                                                更多产品
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="category-item relative">
+                        <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="核心技术" href="all_list.html" target="_self">
+                            核心技术
+                        </a>
+                        <div class="gco-dropdown-menu single">
+                            <ul>
+                                <li class="nav-item">
+                                    {foreach $hxjs._child as $key=>$vo}
+                                    <a href="list_3d.html?id={$vo.id}" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="3D视觉算法" target="_self">
+                                        {$vo.name}
+                                    </a>
+                                    {/foreach}
+                                    <!-- <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="2D视觉算法" href="list_2d_cn_2.html" target="_self">
+                                        2D视觉算法
+                                    </a> -->
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="category-item relative">
+                        <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="服务支持" href="download.html" target="_self">
+                            服务支持
+                        </a>
+                        <div class="gco-dropdown-menu single">
+                            <ul>
+                                <li class="nav-item">
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="下载中心" href="download.html" target="_self">
+                                        下载中心
+                                    </a>
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="售后服务" href="download.html#service" target="_self">
+                                        售后服务
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="category-item relative">
+                        <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="合作伙伴" href="partner.html" target="_self">
+                            合作伙伴
+                        </a>
+                    </li>
+                    <li class="category-item relative">
+                        <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="新闻中心" href="news_list.html" target="_self">
+                            新闻中心
+                        </a>
+                        <div class="gco-dropdown-menu single">
+                            <ul>
+                                <li class="nav-item">
+                                    {foreach $xwzx._child as $key=>$vo}
+                                    <a href="news_list.html?id={$vo.id}" class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="公司动态" target="_self">
+                                        {$vo.name}
+                                    </a>
+                                    {/foreach}
+                                    <!-- <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="业界资讯" href="list_5_cn.html" target="_self">
+                                        业界资讯
+                                    </a> -->
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="category-item relative">
+                        <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="关于我们" href="aboutus.html" target="_self">
+                            关于我们
+                        </a>
+                        <div class="gco-dropdown-menu single">
+                            <ul>
+                                <li class="nav-item">
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="关于小钴科技" href="aboutus.html?id=44" target="_self">
+                                        关于小钴科技
+                                    </a>
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="联系我们" href="aboutus.html?id=45" target="_self">
+                                        联系我们
+                                    </a>
+                                    <a class="ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="加入我们" href="aboutus.html?id=46" target="_self">
+                                        加入我们
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <!-- <li class="category-item relative">
+                        <a class="ga-data">
+                            语言
+                        </a>
+                        <div class="gco-dropdown-menu single">
+                            <ul>
+                                <li class="nav-item">
+                                    <a :href="host+'/wap/index/index.html'" class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login">
+                                        中文
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a :href="host+'/wap/index_en/index.html'" class="register-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-register">
+                                        English
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li> -->
+
+                    
+                    
+                </ul>
+                <ul class="navbar-right">
+                    <li class="nav-account" style="margin-right: 20px" v-if="user_id !=null && user_id.length !=0">
+                        <a class="nav-link" href="javascript:void(0);;" style="    padding: 0px 30px;
+    display: inline-block;
+    transition: all .3s;
+    color: #303233;
+    vertical-align: middle;
+    line-height: 14px;
+    font-weight: 600;
+    cursor: pointer;">
+                            欢迎, {{nick_name}}
+                        </a>
+                        <div class="gco-dropdown-menu single">
+                            <ul>
+                                <li class="nav-item">
+                                    <a @click="logout();" class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login" href="">
+                                        登出
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-account" style="margin-right: 20px" v-else="">
+                        <a class="nav-link" href="javascript:void(0);;" style="    padding: 0px 30px;
+    display: inline-block;
+    transition: all .3s;
+    color: #303233;
+    vertical-align: middle;
+    line-height: 14px;
+    font-weight: 600;
+    cursor: pointer;">
+                            <span class="user-icon">
+                                <i data-feather="user">
+                                </i>
+                            </span>
+                        </a>
+                        <div class="gco-dropdown-menu single" style="right: 0px;">
+                            <ul>
+                                <li class="nav-item">
+                                    <a class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login" href="login.html">
+                                        登录
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="register-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-register" href="register_include.html">
+                                        注册
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-language" style="padding-top: 25px;
+    padding-bottom: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 124px;
+    text-align: center;">
+                    <a  href=" " data-ga-category="pc_nav" data-ga-action="click"  class="language-text"> LANGUAGE </a>
+                   <div class="gco-dropdown-menu single">
+                    <ul>
+                     <li class="nav-item">
+                      <a :href="host+'/home/cn/index.html'" data-ga-category="pc_nav" data-ga-action="click" class="ga-data">中文</a>
+                      <a :href="host+'/home/en/index.html'" data-ga-category="pc_nav" data-ga-action="click" class="ga-data">English</a>
+                     </li>
+                    </ul>
+                   </div>
+                   </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!--移动端导航开始-->
+    <div class="moblie_head">
+        <div class="lf">
+            <a href="javascript:;">
+                <img src="__static__/website/img/webimages_gco_logo.png"/>
+            </a>
+        </div>
+        <div class="rg">
+            <a class="a_js" href="javascript:;">
+                <img src="__static__/website/img/list.png"/>
+            </a>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="a_txt">
+        <div class="div1 a_closed">
+        </div>
+        <div class="div2">
+            <a class="a_closed" href="javascript:;">
+                <img src="__static__/website/img/close.png" width="22"/>
+            </a>
+        </div>
+        <div class="div3">
+            <ul>
+                <li>
+                    <a href="index.html" onclick="goto()">
+                        首页
+                    </a>
+                </li>
+                <li>
+                    <a class="a_js2" href="javascript:;">
+                        产品中心
+                    </a>
+                    <div class="a_txt2">
+                        <!-- <template v-for="(item,index) in column"> -->
+                            {foreach $goods as $key=>$vo}
+                            <a href="alphalook.html?id={$vo.id}">
+                                {$vo.name}
+                            </a>
+                            {/foreach}
+                        <!-- </template> -->
+                    </div>
+                </li>
+                <!-- <li>
+                    <a class="a_js2" href="javascript:;">
+                        解决方案
+                    </a>
+                    <div class="a_txt2">
+                        <a href="solutions.html">
+                            人脸识别智慧社区
+                        </a>
+                    </div>
+                </li> -->
+                <li>
+                    <a class="a_js2" href="javascript:;">
+                        核心技术
+                    </a>
+                    <div class="a_txt2">
+                        {foreach $hxjs._child as $key=>$vo}
+                        <a href="list_3d.html?id={$vo.id}" target="_blank" >
+                            {$vo.name}
+                        </a>
+                        {/foreach}
+                        <!-- <a href="list_2d_cn_2.html" target="_blank">
+                            2D视觉算法
+                        </a> -->
+                    </div>
+                </li>
+                <li>
+                    <a class="a_js2" href="javascript:;">
+                        服务支持
+                    </a>
+                    <div class="a_txt2">
+                        <a href="download.html" target="_blank">
+                            下载中心
+                        </a>
+                        <a href="download.html" target="_blank">
+                            售后服务
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <a class="a_js2" href="partner.html">
+                        合作伙伴
+                    </a>
+                </li>
+                <li>
+                    <a class="a_js2" href="javascript:;">
+                        新闻中心
+                    </a>
+                    <div class="a_txt2">
+                        {foreach $xwzx._child as $key=>$vo}
+                        <a href="news.html?id={$vo.id}" >
+                            {$vo.name}
+                        </a>
+                        {/foreach}
+                        <!--  <a href="list_5_cn.html">
+                            业界资讯
+                        </a> -->
+                    </div>
+                </li>
+                <li>
+                    <a class="a_js2" href="javascript:;">
+                        关于我们
+                    </a>
+                    <div class="a_txt2">
+                        <a href="aboutus.html?id=44">
+                            关于小钴科技
+                        </a>
+                        <a href="aboutus.html?id=45">
+                            联系我们
+                        </a>
+                        <a href="aboutus.html?id=46">
+                            加入我们
+                        </a>
+                    </div>
+                </li>
+                <li>
+                    <a class="a_js2" href="javascript:;">
+                        语言
+                    </a>
+                    <div class="a_txt2">
+                        <a :href="host+'/wap/index/index.html'">
+                            中文
+                        </a>
+                        <a :href="host+'/wap/index_en/index.html'">
+                            English
+                        </a>
+                    </div>
+                </li>
+                <div class="clear">
+                </div>
+
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js">
+    </script>
+    <!--移动端导航结束-->
+    <script>
+        var app2 = new Vue({
+        el: '#app2',
+        data: {
+            column: '',
+            column2: '',
+            nick_name:'',
+            user_id:'',
+            host:'',
+            hxjs:'',
+            xwzx:'',
+        },
+        mounted: function () {
+            this.nick_name=sessionStorage.getItem("name");
+            this.user_id=sessionStorage.getItem("id");
+            this.host=window.location.protocol+"//"+window.location.host;
+            console.log(this.nick_name);
+
+            // $.ajax({
+            //     async: true,
+            //     type: 'POST',
+            //     dataType: 'json',
+            //     data: {
+
+            //     },
+            //     headers: {
+            //         "page-num": 1,//此处放置请求到的用户token
+            //         "page-limit":4,//此处放置请求到的用户token
+            //     },
+            //     url: '__localhost__/index.php/api_articles/Articlesweb/goods_list',
+            //     success: function (res) {
+            //         console.log(res);
+            //         app2.column = res.data;
+            //     },
+            //     error: function (res) {
+            //         console.log(res);
+            //     }
+            // });
+            // $.ajax({
+            //     async: true,
+            //     type: 'POST',
+            //     dataType: 'json',
+            //     data: {
+                    
+            //     },
+            //     url: '__localhost__/index.php/api_articles/Articlesweb/tree',
+            //     success: function (res) {
+            //         console.log(res);
+            //         app2.column2 = res.data;
+            //         for ( i =0; i< res.data.length;i++) {
+            //            switch(res.data[i].id)
+            //             {
+            //                 case 64:
+            //                     app2.hxjs=res.data[i];
+            //                     break;
+            //                 case 40:
+            //                     app2.xwzx=res.data[i];
+            //                     break;
+            //                 default:
+            //                     break;
+            //             }
+            //             // if(res.data[i].id==64){
+            //             //     app2.hxjs=res.data[i];
+            //             // }
+            //             // if()
+            //         }
+                    
+            //     },
+            //     error: function (res) {
+            //         console.log(res);
+            //     }
+            // });
+        },
+        methods: {
+            logout(){
+                sessionStorage.clear();
+                window.location.reload();
+            }
+        },
+    })
+    </script>
+</div>
