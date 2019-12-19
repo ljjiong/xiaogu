@@ -4,6 +4,7 @@
             <div class="navbar-header">
                 <a class="navbar-brand ga-data" href="index.html">
                     <span class="navbar-brand-logo">
+                        <img src="http://www.xiaogutech.com/public/upload/user_images/20190328/69f2eeda5f2e2c753545e05e5792c8f8.png">
                     </span>
                 </a>
             </div>
@@ -162,7 +163,6 @@
                     </li> -->
                 </ul>
                 <ul class="navbar-right">
-                    
                     <li class="nav-account" style="margin-right: 20px" v-if="user_id !=null && user_id.length !=0">
                         <a class="nav-link" href="javascript:void(0);;" style="    padding: 0px 30px;
     display: inline-block;
@@ -172,13 +172,13 @@
     line-height: 14px;
     font-weight: 600;
     cursor: pointer;">
-                            Welcome, {{nick_name}}
+                            欢迎, {{nick_name}}
                         </a>
-                        <div class="gco-dropdown-menu single" style="width: 130px;">
+                        <div class="gco-dropdown-menu single">
                             <ul>
                                 <li class="nav-item">
                                     <a @click="logout();" class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login" href="">
-                                        <!-- 登出 -->Logout
+                                        登出
                                     </a>
                                 </li>
                             </ul>
@@ -198,16 +198,16 @@
                                 </i>
                             </span>
                         </a>
-                        <div class="gco-dropdown-menu single" style="width: 130px;">
+                        <div class="gco-dropdown-menu single" style="right: 0px;">
                             <ul>
                                 <li class="nav-item">
                                     <a class="login-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-login" href="login.html">
-                                        <!-- 登录 -->Login
+                                        登录
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="register-link ga-data" data-ga-action="click" data-ga-category="pc_nav" data-ga-label="other-register" href="register_include.html">
-                                        <!-- 注册 -->Register
+                                        注册
                                     </a>
                                 </li>
                             </ul>
@@ -229,6 +229,7 @@
                     </ul>
                    </div>
                    </li>
+                    
                 </ul>
             </div>
         </div>
