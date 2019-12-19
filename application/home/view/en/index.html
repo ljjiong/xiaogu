@@ -176,7 +176,19 @@
 
 	<!-- 底部加css -->
 	{include file="footeren" /}
-	
+	<script>
+		feather.replace();
+		$(function() { 
+			window.onload = function() { 
+				// console.log(1)
+				// $(".swiper-scroller-list li:eq(1) a").val('111'); //这个是jquery代码 
+			}; 
+		
+		});
+		function goto(params) {
+			window.location.href = 'index.html';
+		}
+		</script>
 </body>
 
 </html>
