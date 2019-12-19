@@ -293,7 +293,7 @@ class Cn extends Controller
         $this->inclued_foot();
         return view();
     }
-    public function alphalook(Request $request)
+    public function products(Request $request)
     {
         $map = $request->param();
         $dataList = model('goods')->getOne($map['id']);
