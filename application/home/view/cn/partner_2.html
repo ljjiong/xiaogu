@@ -57,7 +57,9 @@
 
 		<div class="partner-list">
 			<div class="container">
-				<h3 class="section-title">核心合作单位</h3>
+				<!-- <h3 class="section-title">核心合作单位</h3> -->
+				<h3 class="section-title">{$core_name}</h3>
+
 				<div class="row">
 					{foreach $core as $key=>$vo}
 					<div class="list-item col-xs-12 col-sm-6 col-md-4">
@@ -67,7 +69,7 @@
 					</div>
                     {/foreach}
 				</div>
-				<h3 class="section-title">战略合作单位</h3>
+				<h3 class="section-title">{$strategy_name}</h3>
 				<div class="row">
 					{foreach $strategy as $key=>$vo}
 					<div class="list-item col-xs-12 col-sm-6 col-md-4">
@@ -77,12 +79,12 @@
 					</div>
                     {/foreach}
 				</div>
-				<h3 class="section-title">算法应用单位</h3>
+				<h3 class="section-title">{$algorithm_name}</h3>
 				<ul class="partner-tab clearfix">
-					<li class="active"><a href="#3d" data-toggle="tab">3D视觉算法</a></li>
-					<li><a href="#eyes" data-toggle="tab">双目防伪算法</a></li>
-					<li><a href="#light" data-toggle="tab">可见光识别算法</a></li>
-					<li class=""><a href="#person" data-toggle="tab">人证比对算法</a></li>
+					<li class="active"><a href="#3d" data-toggle="tab">{$data[3]['name']}</a></li>
+					<li><a href="#eyes" data-toggle="tab">{$data[2]['name']}</a></li>
+					<li><a href="#light" data-toggle="tab">{$data[1]['name']}</a></li>
+					<li class=""><a href="#person" data-toggle="tab">{$data[0]['name']}</a></li>
 				</ul>
 				<div class="partners-list">
 					<div class="tab-content">

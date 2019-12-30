@@ -257,9 +257,16 @@ class Cn extends Controller
     {
         $this->inclued_head();
         $this->inclued_foot();
+        $tree=$this->read_tree(48);
+        $data = model('categories')->getAll(['id'=>['in',[60,61,62,63]]]);
+        
         $core = model('partner')->getAll(['status'=>1,'type_id'=>49]);
         $strategy = model('partner')->getAll(['status'=>1,'type_id'=>50]);
         $algorithm = model('partner')->getAll(['status'=>1,'type_id'=>['in',[60,61,62,63]]]);
+        $this->assign('core_name', $tree['_child'][0]['name']);
+        $this->assign('strategy_name', $tree['_child'][1]['name']);
+        $this->assign('algorithm_name', $tree['_child'][2]['name']);
+        $this->assign('data', $data);
         $this->assign('core', $core);
         $this->assign('strategy', $strategy);
         $this->assign('algorithm', $algorithm);
