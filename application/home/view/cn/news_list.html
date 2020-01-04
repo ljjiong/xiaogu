@@ -55,9 +55,12 @@
 							</a>
 						</dt>
 					</dl>
-					<dl class="list-none navnow" v-for="(col,index) in trees">
-						<dt id='part2_4'><a  :href="'news_list.html?id='+ col.id" title='公司动态' class="zm"><span>{{col.name}}</span></a></dt>
+					{foreach $trees as $key=> $vo}
+					<dl class="list-none navnow">
+						<dt id='part2_4'><a  href="news_list.html?id={$vo.id}" title='公司动态' class="zm"><span>{$vo.name}</span></a></dt>
 					</dl>
+					{/foreach}
+
 					<!-- <dl class="list-none navnow">
 						<dt id='part2_5'><a href='list_5_cn.html' title='业界资讯' class="zm"><span>业界资讯</span></a></dt>
 					</dl> -->

@@ -222,8 +222,8 @@
                    <div class="gco-dropdown-menu single">
                     <ul>
                      <li class="nav-item">
-                      <a :href="host+'/home/cn/index.html'" data-ga-category="pc_nav" data-ga-action="click" class="ga-data">中文</a>
-                      <a :href="host+'/home/en/index.html'" data-ga-category="pc_nav" data-ga-action="click" class="ga-data">English</a>
+                      <a href="{$host}/home/cn/index.html" data-ga-category="pc_nav" data-ga-action="click" class="ga-data">中文</a>
+                      <a href="{$host}/home/en/index.html" data-ga-category="pc_nav" data-ga-action="click" class="ga-data">English</a>
                      </li>
                     </ul>
                    </div>
@@ -356,10 +356,10 @@
                         语言
                     </a>
                     <div class="a_txt2">
-                        <a :href="host+'/wap/index/index.html'">
+                        <a href="{$host}/wap/index/index.html">
                             中文
                         </a>
-                        <a :href="host+'/wap/index_en/index.html'">
+                        <a href="{$host}/wap/index_en/index.html">
                             English
                         </a>
                     </div>
@@ -389,7 +389,7 @@
             this.nick_name=sessionStorage.getItem("name");
             this.user_id=sessionStorage.getItem("id");
             this.host=window.location.protocol+"//"+window.location.host;
-            console.log(this.nick_name);
+            console.log(this.host);
 
             // $.ajax({
             //     async: true,

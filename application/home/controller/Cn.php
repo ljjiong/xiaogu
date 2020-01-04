@@ -57,6 +57,8 @@ class Cn extends Controller
         }
         $this->assign('hxjs',$hxjs);
         $this->assign('xwzx',$xwzx);
+        //获取当前域名
+        $this->assign('host',$_SERVER['SERVER_NAME']);
     }
     public function inclued_foot()
     {
@@ -238,6 +240,8 @@ class Cn extends Controller
     {
         $this->inclued_head();
         $this->inclued_foot();
+        $trees=$this->read_tree(40);
+        $this->assign('trees',$trees['_child']);
         return view();
     }
     public function news(Request $request)
