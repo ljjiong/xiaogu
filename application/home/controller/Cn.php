@@ -58,7 +58,9 @@ class Cn extends Controller
         $this->assign('hxjs',$hxjs);
         $this->assign('xwzx',$xwzx);
         //获取当前域名
-        $this->assign('host',$_SERVER['SERVER_NAME']);
+        $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
+        $host=$http_type.$_SERVER['SERVER_NAME'];
+        $this->assign('host',$host);
     }
     public function inclued_foot()
     {
